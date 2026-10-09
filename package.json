@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --test tests/agent-readiness.test.mjs",
+    "test": "node --import ./tests/register-typescript.mjs --test tests/agent-readiness.test.mjs tests/prism-chat.test.mjs",
     "brand:sync": "node scripts/sync-brand-dist.mjs"
   },
   "dependencies": {
