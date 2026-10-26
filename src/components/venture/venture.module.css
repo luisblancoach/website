@@ -1353,3 +1353,17 @@
   .creed { min-height: 400px; padding: 64px 22px; }
   .creed .creedContent blockquote { font-size: clamp(32px, 8vw, 48px); }
 }
+
+/* Audience switch: navigates between the Clients and Community narratives.
+   It sits at the start of the primary navigation; appearance stays with the
+   celestial theme toggle. */
+.audienceSwitch { align-items: center; border-right: 1px solid rgba(239,233,215,.24); display: flex; gap: 4px; padding-right: clamp(12px, 1.3vw, 20px); }
+.nav .audienceSwitch a { border-radius: 100px; opacity: .72; padding: 4px 10px; transition: background .25s, color .25s, opacity .25s; }
+.nav .audienceSwitch a:hover { opacity: 1; }
+.nav .audienceSwitch a[aria-current="page"] { background: var(--paper); color: var(--ink); opacity: 1; text-shadow: none; }
+:global(html[data-theme="dark"]) .site .nav .audienceSwitch a[aria-current="page"] { background: var(--color-cyan); color: var(--color-navy); }
+@media (max-width: 900px) {
+  .audienceSwitch { border-bottom: 1px solid rgba(239,233,215,.25); border-right: 0; gap: 10px; margin-bottom: 8px; padding: 0 0 24px; width: 100%; }
+  .nav .audienceSwitch a { border: 1px solid rgba(239,233,215,.38); font-family: var(--font-mono), monospace; font-size: 13px; letter-spacing: .14em; padding: 9px 16px; text-transform: uppercase; }
+  .nav .audienceSwitch a[aria-current="page"] { border-color: transparent; }
+}

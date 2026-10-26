@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import type { Mercenary } from "@/lib/data/members";
-import styles from "./HomeExperience.module.css";
+import styles from "./venture/venture.module.css";
 
 export default function TeamWall({ members, suspended = false }: { members: Mercenary[]; suspended?: boolean }) {
   const viewport = useRef<HTMLDivElement>(null);

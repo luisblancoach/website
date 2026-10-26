@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import styles from "./HomeExperience.module.css";
+import styles from "./venture/venture.module.css";
 
 export default function LoopBand({ children, label, reverse = false }: { children: ReactNode; label: string; reverse?: boolean }) {
   const element = useRef<HTMLElement>(null);

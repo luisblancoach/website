@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
-import HomeExperience from "@/components/HomeExperience";
+import Hero from "@/components/venture/sections/Hero";
+import GuildTicker from "@/components/venture/sections/GuildTicker";
+import GuildPrologue from "@/components/venture/sections/GuildPrologue";
+import GuildPeople from "@/components/venture/sections/GuildPeople";
+import WallOfCuriosities from "@/components/venture/sections/WallOfCuriosities";
+import ActiveSpears from "@/components/venture/sections/ActiveSpears";
+import GuildInquiry from "@/components/venture/sections/GuildInquiry";
+import Creed from "@/components/venture/sections/Creed";
+import SectionSlope from "@/components/venture/primitives/SectionSlope";
 
 const publicAssetOrigin = process.env.RAILWAY_PUBLIC_DOMAIN
   ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
@@ -60,7 +68,17 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
-      <HomeExperience />
+      <Hero />
+      <GuildTicker />
+      <GuildPrologue />
+      <GuildPeople />
+      <SectionSlope variant="communityField" />
+      <WallOfCuriosities />
+      <SectionSlope variant="fieldPractice" />
+      <ActiveSpears />
+      <SectionSlope variant="practiceContact" />
+      <GuildInquiry />
+      <Creed />
     </>
   );
 }

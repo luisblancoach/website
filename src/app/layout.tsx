@@ -12,6 +12,7 @@ import "./globals.css";
 // import { ThemeProvider } from "next-themes";
 import { Providers } from "@/providers/providers";
 import VercelAnalytics from "@/components/VercelAnalytics";
+import { themeBootScript } from "@/lib/theme";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.raidguild.org"),
@@ -45,11 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var k="raidguild-theme",s=localStorage.getItem(k),t=s==="light"||s==="dark"?s:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t}catch(e){document.documentElement.dataset.theme="light"}})();`,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
         <script
           async
           src="https://plausible-production-78b3.up.railway.app/js/pa-FkymWO7gixkQ6_9ux01Qn.js"

@@ -3,7 +3,7 @@
 // Adapted from portal-artifacts/studies/portal-motion/app/page.tsx.
 // Mixed-palette filament and spark study; optional destination artwork stays behind the rim.
 import { useEffect, useMemo, useRef, useState } from 'react';
-import styles from './HomeExperience.module.css';
+import styles from './venture/venture.module.css';
 
 type Settings = { mixed: boolean; scale: number; hue: number; saturation: number; lightness: number; energy: number; speed: number; oval: number; paused: boolean; hover: boolean; replay: number; enter: number; reduced: boolean };
 type Spark = { tint:number; x:number; y:number; vx:number; vy:number; life:number; age:number; size:number };
