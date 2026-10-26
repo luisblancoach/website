@@ -2,11 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import type { HeroContent } from "@/lib/narrative/types";
+import { CopyText } from "../primitives/Review";
+import NarrativeAnchor from "../primitives/NarrativeAnchor";
 import { useVenture } from "../shell/VentureShell";
 import styles from "../venture.module.css";
 
-export default function Hero() {
-  const { portalOpen, followSectionLink, sectionHref } = useVenture();
+export default function Hero({ content }: { content: HeroContent }) {
+  const { portalOpen } = useVenture();
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -123,19 +126,25 @@ export default function Hero() {
         </div>
         <div className={styles.heroWash} />
         <div className={styles.heroCopy}>
-          <p className={styles.eyebrow}><span /> Independent digital mercenaries</p>
-          <div className={styles.heroTitle}>
-            <h1><span>VENTURE</span><br /><em>BEYOND</em></h1>
+          <p className={styles.eyebrow}><span /><CopyText copy={content.eyebrow} before=" " /></p>
+          <div className={content.title.long ? `${styles.heroTitle} ${styles.heroTitleLong}` : styles.heroTitle}>
+            <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} /></em></h1>
           </div>
         </div>
         <div className={styles.heroSupplement}>
           <p className={styles.heroDek}>
-            RaidGuild is a builder-owned community where creative and technical people explore emerging technology and build together.
+            <CopyText copy={content.dek} />
           </p>
           <div className={styles.heroPaths} aria-label="Ways into RaidGuild">
-            <a className={`${styles.pill} ${styles.pillFilled} ${styles.heroPrimaryPath}`} href={sectionHref("guild")} onClick={(event) => followSectionLink(event, "guild")}><span>Explore the Guild</span><i className={styles.pillIcon} aria-hidden="true">↓</i></a>
-            <a className={`${styles.pill} ${styles.pillOutline}`} href="https://portal.raidguild.org/join" target="_blank" rel="noopener noreferrer"><span>Join through Portal</span><i className={styles.pillIcon} aria-hidden="true">↗</i></a>
-            <a className={`${styles.pill} ${styles.pillOutline}`} href={sectionHref("spears")} onClick={(event) => followSectionLink(event, "spears")}><span>Bring a project</span><i className={styles.pillIcon} aria-hidden="true">↓</i></a>
+            {content.paths.map((path) => (
+              <NarrativeAnchor
+                key={path.label.id}
+                link={path}
+                className={[styles.pill, path.variant === "filled" ? styles.pillFilled : styles.pillOutline, path.primary ? styles.heroPrimaryPath : ""].filter(Boolean).join(" ")}
+              >
+                <span><CopyText copy={path.label} /></span><i className={styles.pillIcon} aria-hidden="true">{path.icon}</i>
+              </NarrativeAnchor>
+            ))}
           </div>
         </div>
         <div className={styles.heroIndex}>

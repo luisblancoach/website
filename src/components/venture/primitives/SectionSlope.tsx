@@ -4,6 +4,8 @@ const variants = {
   communityField: styles.slopeCommunityField,
   fieldPractice: styles.slopeFieldPractice,
   practiceContact: styles.slopePracticeContact,
+  paperDeep: styles.slopePaperDeep,
+  skyPaper: styles.slopeSkyPaper,
 } as const;
 
 // Angled transition between two section backgrounds.

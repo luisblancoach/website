@@ -1367,3 +1367,109 @@
   .nav .audienceSwitch a { border: 1px solid rgba(239,233,215,.38); font-family: var(--font-mono), monospace; font-size: 13px; letter-spacing: .14em; padding: 9px 16px; text-transform: uppercase; }
   .nav .audienceSwitch a[aria-current="page"] { border-color: transparent; }
 }
+
+/* ── Community narrative ───────────────────────────────────────────────────
+   New sections reuse the Venture Beyond tokens, type scale and card language
+   (practice cards, guild kit, stewards). Light: paper / deep / sky. Dark: navy. */
+.slopePaperDeep { --slope-upper: var(--paper); --slope-lower: var(--deep); }
+.slopeSkyPaper { --slope-upper: var(--sky); --slope-lower: var(--paper); }
+
+.hero .heroTitleLong { width: min(640px, calc(100vw - 48px)); }
+.hero .heroTitleLong h1 { font-size: 34px; letter-spacing: -.01em; line-height: .98; }
+@media (min-width: 600px) { .hero .heroTitleLong h1 { font-size: 46px; } }
+@media (min-width: 1000px) { .hero .heroTitleLong h1 { font-size: 58px; line-height: .94; } }
+
+.narrativeHeading { margin: 0 0 clamp(32px, 4vw, 56px); max-width: 880px; }
+.narrativeHeading h2 { color: var(--color-navy); font: italic 500 30px/1.06 var(--font-display), sans-serif; margin: 0; }
+.narrativeHeading h2 em { color: var(--coral); display: inline-block; font-family: var(--font-retalic), sans-serif; font-size: 1.3em; font-style: normal; line-height: 1.02; }
+.narrativeIntro { font: 17px/1.5 var(--font-body), sans-serif; margin: 20px 0 0; max-width: 640px; }
+@media (min-width: 1000px) { .narrativeHeading h2 { font-size: 40px; } }
+
+.tension, .pathSection, .joinSection { padding: clamp(72px, 8vw, 120px) var(--composition-gutter, clamp(24px, 6vw, 96px)); position: relative; }
+.tension { background: var(--paper); color: var(--ink); }
+.tensionSides { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); position: relative; }
+.tensionSide { border: 1px solid rgba(16,45,44,.28); border-radius: 22px; min-width: 0; padding: clamp(24px, 3vw, 40px); }
+.tensionSide h3 { font: 700 18px/1.3 var(--font-mono), monospace; letter-spacing: .04em; margin: 0 0 12px; text-transform: uppercase; }
+.tensionSide ul { list-style: none; margin: 0; padding: 0; }
+.tensionSide li { border-top: 1px solid rgba(16,45,44,.2); font: 16px/1.5 var(--font-body), sans-serif; padding: 12px 0; }
+.tensionOwned { background: var(--deep); border-color: var(--deep); box-shadow: 14px 14px 0 var(--coral); color: var(--paper); }
+.tensionOwned li { border-color: rgba(239,233,215,.22); }
+.tensionVersus { display: none; }
+@media (min-width: 800px) {
+  .tensionSides { gap: clamp(32px, 5vw, 72px); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tensionVersus { align-items: center; background: var(--coral); border-radius: 50%; color: var(--paper); display: flex; font: italic 900 20px/1 var(--font-display), sans-serif; height: 60px; justify-content: center; left: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); width: 60px; z-index: 2; }
+}
+
+.pathSection { background: var(--deep); color: var(--paper); }
+.pathSection .narrativeHeading h2 { color: var(--paper); }
+.pathSteps { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); list-style: none; margin: 0; padding: 0; }
+.pathStep { background: rgba(239,233,215,.06); border: 1px solid rgba(239,233,215,.35); border-radius: 22px; min-width: 0; padding: clamp(24px, 3vw, 36px); position: relative; }
+.pathIndex { color: var(--coral); display: block; font: italic 900 44px/1 var(--font-display), sans-serif; }
+.pathStep h3 { font: 500 26px/1.1 var(--font-display), sans-serif; margin: 16px 0 12px; text-transform: uppercase; }
+.pathStep p { font: 15px/1.5 var(--font-body), sans-serif; margin: 0; }
+.pathFootnote { margin: 28px 0 0; }
+.pathSection .handbookLink, .joinSection .handbookLink { color: var(--paper); }
+@media (min-width: 800px) {
+  .pathSteps { gap: 36px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pathStep:not(:last-child)::after { color: var(--coral); content: "→"; font: 700 24px/1 var(--font-mono), monospace; position: absolute; right: -30px; top: 44px; }
+}
+
+.activity .narrativeHeading h2 { color: var(--ink); }
+.activity .collectionHeading h3 { color: var(--ink); font: italic 400 clamp(32px, 4vw, 50px)/1.12 var(--font-display), sans-serif; margin: 0; text-transform: uppercase; }
+.activity .collectionHeading h3 em { color: var(--coral); font-family: var(--font-retalic), sans-serif; font-style: normal; }
+.recentPosts { margin: 0 0 clamp(56px, 7vw, 96px); }
+.recentPosts h3 { color: var(--coral); font: italic 700 14px/1.3 var(--font-mono), monospace; letter-spacing: .06em; margin: 0 0 14px; text-transform: uppercase; }
+.recentPosts ol { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); list-style: none; margin: 0 0 8px; padding: 0; }
+.recentPosts li a { background: var(--paper); border: 2px solid var(--ink); color: var(--ink); display: flex; flex-direction: column; gap: 8px; height: 100%; padding: 20px; text-decoration: none; transition: box-shadow .25s, transform .25s; }
+.recentPosts li a:hover, .recentPosts li a:focus-visible { box-shadow: 8px 8px 0 var(--coral); transform: translateY(-4px); }
+.recentPosts li a:focus-visible { outline: 2px solid var(--coral); outline-offset: 4px; }
+.recentPosts time { color: var(--coral); font: 700 11px/1.3 var(--font-mono), monospace; letter-spacing: .12em; text-transform: uppercase; }
+.recentPosts strong { font: 500 20px/1.15 var(--font-display), sans-serif; text-transform: uppercase; }
+.recentPosts li span { -webkit-box-orient: vertical; display: -webkit-box; font: 14px/1.45 var(--font-body), sans-serif; -webkit-line-clamp: 3; overflow: hidden; }
+.recentPostPlaceholder { border: 2px dashed rgba(16,45,44,.25); min-height: 168px; }
+.recentPostsEmpty { font: 16px/1.5 var(--font-body), sans-serif; }
+@media (min-width: 800px) { .recentPosts ol { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { .recentPosts li a { transition: none; } .recentPosts li a:hover { transform: none; } }
+
+.joinSection { align-items: center; background: var(--deep); color: var(--paper); display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr); }
+.joinArt { height: auto; justify-self: center; max-width: 360px; width: 70%; }
+.joinCopy { min-width: 0; }
+.joinCopy h2 { color: var(--paper); font: italic 500 40px/1 var(--font-display), sans-serif; margin: 0; }
+.joinCopy h2 em { color: var(--coral); display: inline-block; font-family: var(--font-retalic), sans-serif; font-size: 1.3em; font-style: normal; }
+@media (min-width: 900px) { .joinSection { gap: clamp(32px, 5vw, 80px); grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); } .joinCopy h2 { font-size: 56px; } }
+
+:global(html[data-theme="dark"]) .site .tension,
+:global(html[data-theme="dark"]) .site .pathSection,
+:global(html[data-theme="dark"]) .site .joinSection { background: var(--color-navy); color: var(--color-cream); }
+:global(html[data-theme="dark"]) .site .narrativeHeading h2,
+:global(html[data-theme="dark"]) .site .activity .collectionHeading h3 { color: var(--paper); }
+:global(html[data-theme="dark"]) .site .tensionSide { border-color: rgba(239,233,215,.25); }
+:global(html[data-theme="dark"]) .site .tensionSide li { border-color: rgba(239,233,215,.18); }
+:global(html[data-theme="dark"]) .site .tensionOwned { background: var(--color-cyan); border-color: var(--color-cyan); color: var(--color-navy); }
+:global(html[data-theme="dark"]) .site .tensionOwned li { border-color: rgba(25,30,78,.2); }
+:global(html[data-theme="dark"]) .site .pathStep { background: rgba(184,224,223,.05); border-color: rgba(184,224,223,.3); }
+:global(html[data-theme="dark"]) .site .recentPosts li a { background: rgba(184,224,223,.06); border-color: rgba(184,224,223,.42); color: var(--color-cream); }
+:global(html[data-theme="dark"]) .site .recentPostPlaceholder { border-color: rgba(184,224,223,.25); }
+
+/* ── Review flags (development and preview only) ───────────────────────────
+   Deliberately off-brand so nobody mistakes them for design. */
+.reviewFlag { border-radius: 2px; outline: 2px dashed #ff6a00; outline-offset: 2px; }
+.reviewFlag[data-review-reason="wording"] { outline: 1px dotted #8b7cff; }
+.reviewFlagBlock { display: block; }
+.reviewFlagFocus { background: rgba(255,106,0,.22); outline-width: 4px; }
+.reviewMark { background: #ff6a00; border-radius: 3px; color: #fff; font: normal 700 10px/1 system-ui, sans-serif; letter-spacing: 0; margin-left: 3px; padding: 1px 3px; text-transform: none; vertical-align: super; }
+.reviewFlag[data-review-reason="wording"] > .reviewMark { background: #7b6cff; }
+.heroPaths > .reviewFlag { display: block; min-width: 0; }
+.heroPaths > .reviewFlag:has(> .heroPrimaryPath) { grid-column: 1 / -1; }
+.heroPaths > .reviewFlag > .pill { width: 100%; }
+.guildActions > .reviewFlag { display: inline-flex; }
+.eyebrow > .reviewFlag { background: none; border-radius: 2px; box-shadow: none; flex: 0 0 auto; height: auto; margin-right: 0; white-space: nowrap; width: auto; }
+.reviewPanel { bottom: 16px; font: 12px/1.4 system-ui, sans-serif; right: 16px; max-width: min(440px, calc(100vw - 32px)); position: fixed; z-index: 40; }
+.reviewPanel > button { background: #1b1b1f; border: 1px solid #ff6a00; border-radius: 999px; box-shadow: 0 6px 20px rgba(0,0,0,.3); color: #fff; cursor: pointer; font: inherit; font-weight: 600; padding: 8px 14px; }
+.reviewPanel ol { background: #1b1b1f; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.35); color: #f4f4f5; list-style: none; margin: 8px 0 0; max-height: 55vh; overflow: auto; padding: 6px; }
+.reviewPanel li button { background: none; border: 0; border-radius: 8px; color: inherit; cursor: pointer; display: block; font: inherit; padding: 8px; text-align: left; width: 100%; }
+.reviewPanel li button:hover, .reviewPanel li button:focus-visible { background: rgba(255,255,255,.08); }
+.reviewPanel li b { display: block; font-weight: 600; }
+.reviewPanel li[data-reason="claim"] b { color: #ffb27a; }
+.reviewPanel li[data-reason="wording"] b { color: #c4bbff; }
+.reviewPanel li small { color: #c4c4cc; display: block; margin-top: 2px; }

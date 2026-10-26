@@ -2,6 +2,17 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 
+// Source modules import siblings without extensions ("./types"), as the Next
+// bundler allows. Retry relative specifiers from TypeScript files with ".ts".
+export async function resolve(specifier, context, nextResolve) {
+  try {
+    return await nextResolve(specifier, context);
+  } catch (error) {
+    if (!specifier.startsWith(".") || !context.parentURL?.endsWith(".ts") || specifier.endsWith(".ts")) throw error;
+    return nextResolve(`${specifier}.ts`, context);
+  }
+}
+
 export async function load(url, context, nextLoad) {
   if (!url.endsWith(".ts")) return nextLoad(url, context);
   const source = await readFile(fileURLToPath(url), "utf8");

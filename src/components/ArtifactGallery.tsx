@@ -191,15 +191,15 @@ export default function ArtifactGallery({ collaborators = [], showFeatured = tru
     </div>
     <aside className={styles.detail} id="artifact-detail" aria-label="Discovery details">
       <div className={styles.filters} aria-label="Filter the collection">
-        {[["all", "Everything"], ["post", "Field notes"], ["experiment", "Experiments"], ["collaborator", "Built with"]].map(([value, label]) =>
+        {[["all", "Everything"], ["post", "Field notes"], ["experiment", "Experiments"], ...(collaborators.length ? [["collaborator", "Built with"]] : [])].map(([value, label]) =>
           <button key={value} type="button" aria-pressed={filter === value} onClick={() => { setSelected(null); previous.current = null; setFilter(value); setPeek(null); zones.current = []; }}>{label}</button>)}
       </div>
       {active ? <>
           <button ref={closeButton} className={styles.back} onClick={() => select(null)}>← Back to the collection <span aria-hidden="true">×</span></button>
           <div className={styles.feature}>{preview(active, true)}<div><p>{active.category}</p><h4>{active.title}</h4><p>{active.description}</p>{active.id === guildPortal.id ? <Dialog.Trigger asChild><button className={styles.portalLaunch} type="button" onClick={onOpenPortal}>Open the Portal · Begin the hunt ↗<small>Opens an experience on this page</small></button></Dialog.Trigger> : (active.href || active.kind !== "collaborator") && <a href={active.href || `https://portal-artifacts-production.up.railway.app/${active.id}/`} target="_blank" rel="noopener noreferrer">{active.kind === "collaborator" ? `Visit ${active.title}` : active.kind === "post" ? "Read the post" : "Explore experiment"} ↗<small>Opens in a new tab</small></a>}</div></div>
-      </> : <div className={styles.empty}><span aria-hidden="true">↖</span><h4>Follow your curiosity.</h4><p>Select a card to explore a field note, a public experiment, or someone we’ve built with.</p><p>Choose a category above to narrow the collection.</p></div>}
+      </> : <div className={styles.empty}><span aria-hidden="true">↖</span><h4>Follow your curiosity.</h4><p>{collaborators.length ? "Select a card to explore a field note, a public experiment, or someone we’ve built with." : "Select a card to explore a field note or a public experiment."}</p><p>Choose a category above to narrow the collection.</p></div>}
     </aside>
     </div>
-    <p className={styles.footnote}>{catalogState === 'fallback' ? 'The live experiment catalog is unavailable. Showing selected experiments. ' : 'Field notes, public experiments, clients, collaborators, and member-built projects. '}<a href="https://portal.raidguild.org/modules" target="_blank" rel="noopener noreferrer">Browse Portal modules ↗</a></p>
+    <p className={styles.footnote}>{catalogState === 'fallback' ? 'The live experiment catalog is unavailable. Showing selected experiments. ' : collaborators.length ? 'Field notes, public experiments, clients, collaborators, and member-built projects. ' : 'Field notes and public experiments from across the network. '}<a href="https://portal.raidguild.org/modules" target="_blank" rel="noopener noreferrer">Browse Portal modules ↗</a></p>
   </section>;
 }

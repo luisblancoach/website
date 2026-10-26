@@ -3,16 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import { PORTAL_JOIN_URL } from "@/lib/data/constants";
-import { audienceForPath } from "@/lib/venture-routes";
+import { audienceForPath, type SectionId } from "@/lib/venture-routes";
 import Sigil from "../primitives/Sigil";
 import AudienceSwitch from "./AudienceSwitch";
 import ThemeSwitch from "./ThemeSwitch";
 import { useVenture } from "./VentureShell";
 import styles from "../venture.module.css";
 
-type NavItem = { label: string; section: "guild" | "work" | "spears" } | { label: string; inquiry: true };
+type NavItem = { label: string; section: SectionId } | { label: string; inquiry: true };
 
-// Interim audience navigation: links only to sections each route carries today.
+// Each route links only to sections it carries. /clients keeps its interim
+// navigation until its narrative lands.
 const navItems: Record<string, NavItem[]> = {
   "/": [
     { label: "Guild", section: "guild" },
@@ -20,8 +21,10 @@ const navItems: Record<string, NavItem[]> = {
     { label: "Practices", section: "spears" },
   ],
   "/community": [
-    { label: "Guild", section: "guild" },
-    { label: "Community stories", section: "work" },
+    { label: "The path", section: "path" },
+    { label: "Membership", section: "guild" },
+    { label: "Activity", section: "work" },
+    { label: "People", section: "team" },
   ],
   "/clients": [
     { label: "Practices", section: "spears" },
@@ -34,6 +37,7 @@ export default function SiteHeader() {
   const { pathname, followSectionLink, followInquiryLink, sectionHref } = useVenture();
   const audience = audienceForPath(pathname);
   const items = navItems[pathname] ?? navItems["/"];
+  const joinLabel = audience === "community" ? "Join the DAO ↗" : "Join through Portal ↗";
 
   return (
     <header className={styles.header}>
@@ -56,7 +60,7 @@ export default function SiteHeader() {
         ) : (
           <a key={item.label} href={sectionHref("project-inquiry")} onClick={(event) => { setMenuOpen(false); followInquiryLink(event); }}>{item.label}</a>
         ))}
-        <a href={PORTAL_JOIN_URL} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>Join through Portal ↗</a>
+        <a href={PORTAL_JOIN_URL} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>{joinLabel}</a>
       </nav>
 
       <ThemeSwitch />

@@ -8,6 +8,7 @@ import ActiveSpears from "@/components/venture/sections/ActiveSpears";
 import GuildInquiry from "@/components/venture/sections/GuildInquiry";
 import Creed from "@/components/venture/sections/Creed";
 import SectionSlope from "@/components/venture/primitives/SectionSlope";
+import { entryGuild, entryHero } from "@/lib/narrative/entry";
 
 const publicAssetOrigin = process.env.RAILWAY_PUBLIC_DOMAIN
   ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
@@ -68,9 +69,9 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
-      <Hero />
+      <Hero content={entryHero} />
       <GuildTicker />
-      <GuildPrologue />
+      <GuildPrologue content={entryGuild} />
       <GuildPeople />
       <SectionSlope variant="communityField" />
       <WallOfCuriosities />

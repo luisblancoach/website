@@ -5,6 +5,7 @@ import ActiveSpears from "@/components/venture/sections/ActiveSpears";
 import GuildInquiry from "@/components/venture/sections/GuildInquiry";
 import Creed from "@/components/venture/sections/Creed";
 import SectionSlope from "@/components/venture/primitives/SectionSlope";
+import { entryHero } from "@/lib/narrative/entry";
 
 // Phase 1 scaffold: existing practice and inquiry sections only. Tae's client
 // narrative replaces this composition in Phase 3; keep it out of search until then.
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 export default function ClientsPage() {
   return (
     <>
-      <Hero />
+      <Hero content={entryHero} />
       <GuildTicker />
       <ActiveSpears />
       <SectionSlope variant="practiceContact" />

@@ -10,9 +10,8 @@ import { ThemeProvider, useTheme } from "./ThemeProvider";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 import PortalOverlay from "./PortalOverlay";
+import { ReviewFlagsProvider, ReviewPanel } from "../primitives/Review";
 import styles from "../venture.module.css";
-
-type ScrollTarget = "guild" | "spears" | "work" | "contact";
 
 type VentureState = {
   pathname: string;
@@ -21,7 +20,7 @@ type VentureState = {
   inquiryExpanded: boolean;
   setInquiryExpanded: (open: boolean) => void;
   sectionHref: (section: SectionId) => string;
-  followSectionLink: (event: MouseEvent<HTMLAnchorElement>, destination: ScrollTarget) => void;
+  followSectionLink: (event: MouseEvent<HTMLAnchorElement>, destination: SectionId) => void;
   followInquiryLink: (event: MouseEvent<HTMLAnchorElement>) => void;
   openPortal: () => void;
 };
@@ -82,7 +81,7 @@ function Shell({ children }: { children: ReactNode }) {
     };
   }, [portalOpen, isNight, pathname]);
 
-  const scrollToSection = useCallback((destination: ScrollTarget) => {
+  const scrollToSection = useCallback((destination: SectionId) => {
     const target = document.getElementById(destination);
     if (!target) return;
     const reduceMotion = reducedMotion();
@@ -134,7 +133,7 @@ function Shell({ children }: { children: ReactNode }) {
     return () => window.clearTimeout(timer);
   }, [pathname]);
 
-  const followSectionLink = (event: MouseEvent<HTMLAnchorElement>, destination: ScrollTarget) => {
+  const followSectionLink = (event: MouseEvent<HTMLAnchorElement>, destination: SectionId) => {
     event.preventDefault();
     if (!routeHasSection(pathname, destination)) {
       router.push(sectionHref(pathname, destination));
@@ -240,10 +239,13 @@ function Shell({ children }: { children: ReactNode }) {
   );
 }
 
-export default function VentureShell({ children }: { children: ReactNode }) {
+export default function VentureShell({ children, reviewFlags = false }: { children: ReactNode; reviewFlags?: boolean }) {
   return (
     <ThemeProvider>
-      <Shell>{children}</Shell>
+      <ReviewFlagsProvider enabled={reviewFlags}>
+        <Shell>{children}</Shell>
+        <ReviewPanel />
+      </ReviewFlagsProvider>
     </ThemeProvider>
   );
 }

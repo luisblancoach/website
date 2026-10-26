@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import LoopBand from "@/components/LoopBand";
-import { PORTAL_JOIN_URL } from "@/lib/data/constants";
+import type { GuildContent } from "@/lib/narrative/types";
+import { CopyText } from "../primitives/Review";
+import NarrativeAnchor from "../primitives/NarrativeAnchor";
 import { useVenture } from "../shell/VentureShell";
 import styles from "../venture.module.css";
 
-export default function GuildPrologue() {
+export default function GuildPrologue({ content }: { content: GuildContent }) {
   const { arrivalTarget } = useVenture();
   return (
     <section className={`${styles.prologue} ${arrivalTarget === "guild" ? styles.sectionArriving : ""}`} id="guild">
@@ -22,48 +24,44 @@ export default function GuildPrologue() {
         />
       </div>
       <div className={styles.prologueCopy}>
-        <p className={styles.sectionLabel}>[ THE GUILD ]</p>
-        <h2>The network<br /><em>is the engine</em></h2>
+        <p className={styles.sectionLabel}><CopyText copy={content.label} /></p>
+        <h2><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
         <div className={styles.prologueBody}>
           <p>
-            <strong>RaidGuild</strong> is a builder-owned community exploring emerging technology together.{" "}
-            <strong>Designers, engineers, researchers, strategists, and operators</strong> share knowledge, reputation, and infrastructure.
+            <CopyText copy={content.body} />
           </p>
           <details className={styles.guildMore}>
-            <summary>See more <span aria-hidden="true">↗</span></summary>
-            <p>We learn from one another, test ideas, and build lasting relationships. Shared work grows from those connections, from open experiments to independent practices in applied AI and onchain systems.</p>
+            <summary><CopyText copy={content.more.summary} after=" " /><span aria-hidden="true">↗</span></summary>
+            <p><CopyText copy={content.more.text} /></p>
           </details>
         </div>
         <div className={styles.guildBenefits}>
-          <h3>Your Guild kit</h3>
+          <h3><CopyText copy={content.kit.heading} /></h3>
           <dl>
-            <div><dt>Guild email</dt><dd>Your own @raidguild.org address</dd></div>
-            <div><dt>Space to launch</dt><dd>A raidguild.org subdomain for your personal site or Tip of the Spear initiative</dd></div>
-            <div><dt>Shared ownership</dt><dd>Equity in the company</dd></div>
-            <div><dt>AI companion</dt><dd>Your own personal organizational AI assistant</dd></div>
+            {content.kit.items.map((item) => (
+              <div key={item.term.id}><dt><CopyText copy={item.term} /></dt><dd><CopyText copy={item.detail} /></dd></div>
+            ))}
           </dl>
-          <p>To become a member, first complete a cohort.</p>
+          <p><CopyText copy={content.kit.requirement} /></p>
         </div>
         <div className={styles.guildActions}>
-          <a className={`${styles.pill} ${styles.pillFilled}`} href={PORTAL_JOIN_URL} target="_blank" rel="noopener noreferrer">
-            <span>Start with a cohort</span>
-            <i className={styles.pillIcon}><b className={styles.iconLogo} /></i>
-          </a>
-          <a className={`${styles.pill} ${styles.pillOutline}`} href="https://discord.gg/2vx47gT95y" target="_blank" rel="noopener noreferrer">
-            <span>Enter Discord</span>
-            <i className={styles.pillIcon}><b className={styles.iconDiscord} /></i>
-          </a>
+          {content.actions.map((action) => (
+            <NarrativeAnchor key={action.label.id} link={action} className={`${styles.pill} ${action.variant === "filled" ? styles.pillFilled : styles.pillOutline}`}>
+              <span><CopyText copy={action.label} /></span>
+              <i className={styles.pillIcon}><b className={action.icon === "discord" ? styles.iconDiscord : styles.iconLogo} /></i>
+            </NarrativeAnchor>
+          ))}
         </div>
         <div className={styles.guildMoreLinks}>
-          <a className={styles.handbookLink} href="https://handbook.raidguild.org/docs/overview/what-is-raidguild" target="_blank" rel="noopener noreferrer">Read the handbook ↗</a>
-          <a className={styles.handbookLink} href="/chat" target="_blank" rel="noopener noreferrer">Questions? Ask Queen Raida, our AI CTO ↗</a>
+          {content.links.map((link) => (
+            <NarrativeAnchor key={link.label.id} link={link} className={styles.handbookLink}><CopyText copy={link.label} /></NarrativeAnchor>
+          ))}
         </div>
       </div>
-      <LoopBand label="RaidGuild statistics" reverse>
-        <div className={styles.metricItem}><strong>150</strong><span>GLOBAL MEMBERS</span></div>
-        <div className={styles.metricItem}><strong>88+</strong><span>RAIDS SHIPPED ACROSS THE FRONTIER</span></div>
-        <div className={styles.metricItem}><strong>∞</strong><span>QUESTIONS TO EXPLORE</span></div>
-        <div className={styles.metricItem}><strong>2019</strong><span>BUILDING TOGETHER SINCE</span></div>
+      <LoopBand label={content.metricsLabel} reverse>
+        {content.metrics.map((metric) => (
+          <div className={styles.metricItem} key={metric.label.id}><strong><CopyText copy={metric.value} /></strong><span><CopyText copy={metric.label} /></span></div>
+        ))}
       </LoopBand>
     </section>
   );
