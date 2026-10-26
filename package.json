@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --import ./tests/register-typescript.mjs --test tests/agent-readiness.test.mjs tests/prism-chat.test.mjs tests/theme.test.mjs tests/narrative.test.mjs",
+    "test": "node --import ./tests/register-typescript.mjs --test tests/agent-readiness.test.mjs tests/prism-chat.test.mjs tests/theme.test.mjs tests/narrative.test.mjs tests/routes.test.mjs",
     "review:claims": "node --import ./tests/register-typescript.mjs scripts/review-claims.mjs",
     "brand:sync": "node scripts/sync-brand-dist.mjs"
   },

@@ -217,8 +217,11 @@ function Shell({ children }: { children: ReactNode }) {
     <Dialog.Root open={portalOpen} onOpenChange={(open) => { if (!open) dismissPortal(); }}>
     <UnchartedHunt>
     <div className={styles.site} ref={siteRef}>
+    <a className={styles.skipLink} href="#main-content">Skip to content</a>
     <main inert={portalOpen} data-motion-paused={portalOpen} className={portalForming ? styles.siteGlitching : ""}>
       <SiteHeader />
+      {/* Skip-link target: lands after the header and navigation. */}
+      <span id="main-content" tabIndex={-1} className={styles.skipTarget} />
       {children}
       <SiteFooter />
     </main>

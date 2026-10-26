@@ -1354,18 +1354,37 @@
   .creed .creedContent blockquote { font-size: clamp(32px, 8vw, 48px); }
 }
 
-/* Audience switch: navigates between the Clients and Community narratives.
-   It sits at the start of the primary navigation; appearance stays with the
-   celestial theme toggle. */
-.audienceSwitch { align-items: center; border-right: 1px solid rgba(239,233,215,.24); display: flex; gap: 4px; padding-right: clamp(12px, 1.3vw, 20px); }
-.nav .audienceSwitch a { border-radius: 100px; opacity: .72; padding: 4px 10px; transition: background .25s, color .25s, opacity .25s; }
-.nav .audienceSwitch a:hover { opacity: 1; }
-.nav .audienceSwitch a[aria-current="page"] { background: var(--paper); color: var(--ink); opacity: 1; text-shadow: none; }
-:global(html[data-theme="dark"]) .site .nav .audienceSwitch a[aria-current="page"] { background: var(--color-cyan); color: var(--color-navy); }
+/* Audience switch and audience-page header — ported from the October 23
+   iteration (40f3910) and adapted to the shared shell. The pill stays pinned to
+   the top of the viewport and the header grows to sit beneath it. Only the
+   audience routes use this header, so "/" keeps its original composition.
+   Colours follow the active theme, never the audience. */
+.audienceSwitch { background: var(--paper); border: 1px solid var(--color-dark-green); border-radius: 100px; box-shadow: 0 6px 24px rgba(16,45,44,.18); color: var(--color-dark-green); display: flex; left: 50%; padding: 5px; position: fixed; top: 16px; transform: translateX(-50%); z-index: 45; }
+.audienceSwitch a { align-items: center; border-radius: 100px; color: inherit; display: inline-flex; font: 700 14px/1.4 var(--font-mono), monospace; letter-spacing: .02em; min-height: 44px; padding: 10px 22px; text-decoration: none; transition: background .25s, color .25s; white-space: nowrap; }
+.audienceSwitch a:hover { background: rgba(16,45,44,.08); }
+.audienceSwitch a[aria-current="page"] { background: var(--color-dark-green); color: var(--paper); }
+.audienceSwitch a:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
+:global(html[data-theme="dark"]) .site .audienceSwitch { background: var(--color-navy); border-color: rgba(184,224,223,.4); box-shadow: 0 6px 24px rgba(4,8,30,.45); color: var(--color-cream); }
+:global(html[data-theme="dark"]) .site .audienceSwitch a:hover { background: rgba(184,224,223,.1); }
+:global(html[data-theme="dark"]) .site .audienceSwitch a[aria-current="page"] { background: var(--color-cyan); color: var(--color-navy); }
+.site .headerWithSwitch { align-items: flex-end; height: 160px; justify-content: space-between; padding: 0 4vw 24px; }
+.site .headerWithSwitch .nav { margin-left: auto; }
+.skipLink { background: var(--paper); color: var(--ink); font: 700 16px/1.4 var(--font-mono), monospace; left: 16px; padding: 16px; position: fixed; top: -100px; z-index: 100; }
+.skipLink:focus { top: 16px; }
+.skipLink:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
+.skipTarget { display: block; height: 0; outline: none; }
+@media (max-width: 999px) {
+  .site .headerWithSwitch { height: 144px; padding: 0 24px 20px; }
+  .site .headerWithSwitch .menuButton { margin-left: auto; position: relative; }
+  .site .headerWithSwitch .navOpen { padding-top: 160px; }
+  .audienceSwitch a { padding-inline: 16px; }
+}
+@media (max-width: 380px) { .audienceSwitch a { padding-inline: 12px; } }
+/* A closed mobile menu is transparent; keep its links out of the tab order too
+   (October 23 fix). Visibility flips after the fade so the transition remains. */
 @media (max-width: 900px) {
-  .audienceSwitch { border-bottom: 1px solid rgba(239,233,215,.25); border-right: 0; gap: 10px; margin-bottom: 8px; padding: 0 0 24px; width: 100%; }
-  .nav .audienceSwitch a { border: 1px solid rgba(239,233,215,.38); font-family: var(--font-mono), monospace; font-size: 13px; letter-spacing: .14em; padding: 9px 16px; text-transform: uppercase; }
-  .nav .audienceSwitch a[aria-current="page"] { border-color: transparent; }
+  .site .nav { visibility: hidden; transition: opacity .25s, transform .25s, visibility 0s linear .25s; }
+  .site .navOpen { visibility: visible; transition: opacity .25s, transform .25s, visibility 0s; }
 }
 
 /* ── Community narrative ───────────────────────────────────────────────────

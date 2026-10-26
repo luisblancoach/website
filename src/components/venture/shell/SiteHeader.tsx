@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { PORTAL_JOIN_URL } from "@/lib/data/constants";
 import { audienceForPath, type SectionId } from "@/lib/venture-routes";
@@ -38,9 +38,22 @@ export default function SiteHeader() {
   const audience = audienceForPath(pathname);
   const items = navItems[pathname] ?? navItems["/"];
   const joinLabel = audience === "community" ? "Join the DAO ↗" : "Join through Portal ↗";
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Escape closes the mobile menu and returns focus to its toggle.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setMenuOpen(false);
+      menuButtonRef.current?.focus();
+    };
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
+  }, [menuOpen]);
 
   return (
-    <header className={styles.header}>
+    <header className={audience ? `${styles.header} ${styles.headerWithSwitch}` : styles.header}>
       {audience ? (
         <Link className={styles.brand} href="/" aria-label="RaidGuild home" onClick={() => setMenuOpen(false)}>
           <Sigil />
@@ -53,8 +66,9 @@ export default function SiteHeader() {
         </a>
       )}
 
-      <nav className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`} aria-label="Primary navigation">
-        {audience && <AudienceSwitch current={audience} onNavigate={() => setMenuOpen(false)} />}
+      {audience && <AudienceSwitch current={audience} onNavigate={() => setMenuOpen(false)} />}
+
+      <nav id="site-navigation" className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`} aria-label="Primary navigation">
         {items.map((item) => "section" in item ? (
           <a key={item.label} href={sectionHref(item.section)} onClick={(event) => { setMenuOpen(false); followSectionLink(event, item.section); }}>{item.label}</a>
         ) : (
@@ -66,9 +80,11 @@ export default function SiteHeader() {
       <ThemeSwitch />
 
       <button
+        ref={menuButtonRef}
         className={styles.menuButton}
         type="button"
         aria-expanded={menuOpen}
+        aria-controls="site-navigation"
         aria-label="Toggle navigation"
         onClick={() => setMenuOpen((open) => !open)}
       >
