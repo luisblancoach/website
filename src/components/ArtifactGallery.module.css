@@ -12,15 +12,16 @@
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) clamp(300px, 30vw, 460px); align-items: start; }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
-.filters button { font: 13px/1.4 var(--font-mono), monospace; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: 24px; padding: 10px 16px; cursor: pointer; }
-.filters button[aria-pressed="true"] { background: var(--coral); color: var(--paper); border-color: var(--coral); }
+.filters button { font: var(--type-ui, 14px)/1.4 var(--font-mono), monospace; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: 24px; min-height: var(--tap-min, 44px); padding: 10px 16px; cursor: pointer; }
+/* Selected state uses the theme's selected role (deep green / cyan), as the October 23 builder tabs do. */
+.filters button[aria-pressed="true"] { background: var(--surface-selected, var(--coral)); color: var(--on-selected, var(--paper)); border-color: var(--surface-selected, var(--coral)); }
 .visual img.logo, .feature > img.logo { object-fit: contain; padding: 36px; background: var(--gallery-logo-surface); height: 100%; min-height: 0; }
 .feature > img.logo { height: 300px; }
 .previews .visual img.logo { padding: 16px; }
 .previews .visual img.logo.compactLogo { padding: 44px 56px; }
 .feature > img.logo.compactLogo { padding: 100px 80px; }
 .heading { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 28px; }
-.heading > div > p, .guide { font: 12px/1.5 var(--font-mono), monospace; letter-spacing: .08em; }
+.heading > div > p, .guide { font: var(--type-ui, 14px)/1.5 var(--font-mono), monospace; letter-spacing: .06em; }
 .heading > div > p { color: var(--coral); margin-bottom: 12px; }
 .heading h3 { font: 40px/1.1 var(--font-display), sans-serif; text-transform: uppercase; margin: 0; }
 .heading em { color: var(--coral); font-family: var(--font-retalic), sans-serif; font-style: normal; }
@@ -39,7 +40,7 @@
 .caption { background: linear-gradient(transparent, rgba(5,27,28,.93) 42%); color: var(--paper); display: flex; flex-direction: column; justify-content: flex-end; inset: 0; opacity: 0; padding: 32px 12px 12px; pointer-events: none; position: absolute; transition: opacity .18s ease; z-index: 1; }
 .card[data-peek="true"] .caption, .card:focus-within .caption { opacity: 1; }
 .caption strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 15px; line-height: 1.18; overflow-wrap: anywhere; }
-.caption small { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 11px; line-height: 1.2; margin-top: 4px; overflow: hidden; overflow-wrap: anywhere; }
+.caption small { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: var(--type-ui, 14px); line-height: 1.3; margin-top: 4px; overflow: hidden; overflow-wrap: anywhere; }
 .portalCard .caption { opacity: 1; }
 .portalCard .visual img { object-position: center 40%; }
 .detail { background: var(--gallery-detail-surface); border: 1px solid var(--gallery-detail-border); padding: 24px; min-width: 0; position: sticky; top: 100px; max-height: calc(100dvh - 120px); overflow-y: auto; }
@@ -56,7 +57,7 @@
 .feature p { font-size: 16px; line-height: 1.5; }
 .feature a { display: block; color: var(--ink); background: var(--paper); padding: 14px 18px; margin-top: 24px; }
 .feature .portalLaunch { display: block; width: 100%; border: 0; background: var(--coral); color: var(--paper); cursor: pointer; font: 700 14px/1.4 var(--font-mono), monospace; margin-top: 24px; padding: 14px 18px; text-align: left; }
-.feature small { display: block; font-size: 12px; margin-top: 6px; }
+.feature small { display: block; font-size: var(--type-ui, 14px); margin-top: 6px; }
 .previews { padding-top: 0; min-width: 0; }
 .guide, .footnote { padding-inline: 24px; }
 .footnote { font-size: 14px; margin-top: 20px; }
@@ -68,7 +69,7 @@
 :global(html[data-theme="dark"]) .featuredCard { background: #191e4e; }
 @media (max-width: 950px) { .featuredGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .featuredHeading { display: block; } .featuredHeading p { margin-top: 12px; } .featuredGrid { grid-template-columns: 1fr; } .featured { margin-bottom: 48px; } }
-@media (max-width: 700px) { .heading { display: block; } .heading > p { margin-top: 20px; } .feature { grid-template-columns: 1fr; } .guide { font-size: 10px; } .heading h3 { font-size: 32px; } }
+@media (max-width: 700px) { .heading { display: block; } .heading > p { margin-top: 20px; } .feature { grid-template-columns: 1fr; } .guide { font-size: var(--type-ui, 14px); } .heading h3 { font-size: 32px; } }
 @media (max-width: 800px) {
   .layout { grid-template-columns: minmax(0, 1fr); }
   .detail { grid-row: 1; position: static; max-height: none; padding: 20px; scroll-margin-top: 90px; }
@@ -80,7 +81,7 @@
   .visual img.logo { padding: 16px; }
   .previews .visual img.logo.compactLogo { padding: 28px 40px; }
   .caption { padding: 24px 9px 9px; }
-  .caption strong { font-size: 13px; }
-  .caption small { font-size: 10px; }
+  .caption strong { font-size: var(--type-ui, 14px); }
+  .caption small { font-size: var(--type-ui, 14px); }
 }
 @media (prefers-reduced-motion: reduce) { .row, .caption { transition: none; } }

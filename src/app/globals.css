@@ -52,7 +52,7 @@ html {
     --font-size-heading-sm: 1.25rem; /* 20px */
     --font-size-body-lg: 1.25rem; /* 20px */
     --font-size-body-base: 1rem; /* 16px */
-    --font-size-body-sm: 0.75rem; /* 12px */
+    --font-size-body-sm: 0.875rem; /* 14px: minimum for readable interface text */
 
     /* Line Heights */
     --line-height-display-lg: 1.1; /* 110% */

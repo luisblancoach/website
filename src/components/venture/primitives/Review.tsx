@@ -105,3 +105,27 @@ export function ReviewPanel() {
     </aside>
   );
 }
+
+const SURFACE_EXPERIMENT_KEY = "raidguild-surface-experiment";
+
+// Development/preview only: "?surface=deep-navy" tries the #12163B alternate dark
+// surface for this browser session; "?surface=default" turns it off. Inert when
+// review flags are disabled, so production can never enable it.
+export function SurfaceExperiment() {
+  const enabled = useContext(ReviewFlagsContext);
+  const pathname = usePathname();
+  useEffect(() => {
+    if (!enabled) return;
+    const requested = new URLSearchParams(window.location.search).get("surface");
+    try {
+      if (requested === "deep-navy") sessionStorage.setItem(SURFACE_EXPERIMENT_KEY, "deep-navy");
+      if (requested === "default") sessionStorage.removeItem(SURFACE_EXPERIMENT_KEY);
+      const active = sessionStorage.getItem(SURFACE_EXPERIMENT_KEY) === "deep-navy";
+      if (active) document.documentElement.dataset.surfaceExperiment = "deep-navy";
+      else delete document.documentElement.dataset.surfaceExperiment;
+    } catch {
+      // Without storage the experiment simply stays off.
+    }
+  }, [enabled, pathname]);
+  return null;
+}

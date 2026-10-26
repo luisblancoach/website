@@ -10,7 +10,7 @@ import { ThemeProvider, useTheme } from "./ThemeProvider";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 import PortalOverlay from "./PortalOverlay";
-import { ReviewFlagsProvider, ReviewPanel } from "../primitives/Review";
+import { ReviewFlagsProvider, ReviewPanel, SurfaceExperiment } from "../primitives/Review";
 import styles from "../venture.module.css";
 
 type VentureState = {
@@ -248,6 +248,7 @@ export default function VentureShell({ children, reviewFlags = false }: { childr
       <ReviewFlagsProvider enabled={reviewFlags}>
         <Shell>{children}</Shell>
         <ReviewPanel />
+        <SurfaceExperiment />
       </ReviewFlagsProvider>
     </ThemeProvider>
   );
