@@ -13,7 +13,8 @@ export type ReviewReason = "claim" | "wording";
 // "oct23-iteration": copy written in the October 23 visual iteration (40f3910),
 // never published and not in Tae's brief, so it always needs review.
 // "steward-brief": copy the brand steward supplied verbatim (B3.4 brief).
-export type CopySource = "tae-brief" | "steward-brief" | "existing-site" | "handbook" | "portal" | "oct23-iteration" | "draft";
+// "owner-approval": a confirmation from the project owner (asset provenance).
+export type CopySource = "tae-brief" | "steward-brief" | "owner-approval" | "existing-site" | "handbook" | "portal" | "oct23-iteration" | "draft";
 
 export type Copy = {
   id: string;
@@ -27,7 +28,7 @@ export type Copy = {
 
 type CopyInput = Omit<Copy, "id">;
 
-export const approved = (text: string, source: Extract<CopySource, "tae-brief" | "steward-brief" | "existing-site">, sourceUrl?: string): Copy =>
+export const approved = (text: string, source: Extract<CopySource, "tae-brief" | "steward-brief" | "owner-approval" | "existing-site">, sourceUrl?: string): Copy =>
   ({ id: "", text, status: "approved", source, sourceUrl });
 
 export const claim = (text: string, source: CopySource, note: string, sourceUrl?: string): Copy =>

@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-// The Queen Raida artwork stays out of the repository until its rights are
-// confirmed; it renders only where a local copy exists.
+// The Queen Raida artwork renders only if its file is present in the build, so
+// a missing file shows the empty frame rather than a broken image.
 const raidaArtworkAvailable = existsSync(join(process.cwd(), "public", communityQueenRaida.artwork.src));
 
 export default function CommunityPage() {

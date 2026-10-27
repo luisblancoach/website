@@ -8,6 +8,7 @@ import { clientData } from "../src/lib/data/clients.ts";
 import { services } from "../src/lib/data/content.ts";
 import { activeSpears } from "../src/lib/data/venture.ts";
 import { collectCopy, reviewFlagsEnabled } from "../src/lib/narrative/types.ts";
+import { existsSync } from "node:fs";
 
 // Lines that appear verbatim in Tae's approved narrative direction. Nothing else
 // may carry the "tae-brief" source.
@@ -211,12 +212,14 @@ describe("steward-supplied copy", () => {
 });
 
 describe("community additions", () => {
-  test("Queen Raida links to the chat and flags artwork rights", () => {
+  test("Queen Raida links to the chat; its artwork carries the owner's approval", () => {
     const raida = communityNarrative.communityQueenRaida;
     assert.equal(raida.cta.href, "/chat");
     assert.equal(raida.cta.label.text, "Ask our AI CTO", "the October 23 carousel is kept as-is");
-    assert.equal(raida.artwork.rights.status, "needs-review");
-    assert.equal(raida.artwork.rights.reason, "claim");
+    assert.equal(raida.artwork.rights.status, "approved");
+    assert.equal(raida.artwork.rights.source, "owner-approval");
+    assert.equal(raida.artwork.src, "/images/queen-raida/queen-raida-v2.png", "the updated artwork");
+    assert.ok(existsSync(new URL(`../public${raida.artwork.src}`, import.meta.url)), "the artwork ships with the build");
   });
 
   test("Queen Raida keeps the three October 23 panels, with capability statements flagged", () => {

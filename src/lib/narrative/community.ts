@@ -229,8 +229,9 @@ export const communityJoin: JoinContent = defineNarrative("community.join", {
 } satisfies JoinContent);
 
 // Queen Raida: the October 23 carousel, kept as-is (B3.3 decision). The
-// artwork is referenced, not shipped: it stays local-only until provenance is
-// confirmed. Capability statements are October 23 copy and stay claims.
+// artwork is AI-generated for RaidGuild and approved for public use by the
+// project owner (docs/asset-provenance.md). Capability statements are
+// October 23 copy and stay claims.
 const raidaClaim = (text: string) => claim(text, "oct23-iteration", "October 23 copy describing what Queen Raida can do or access. Confirm with the Queen Raida maintainers before publishing.");
 
 export const communityQueenRaida: QueenRaidaContent = defineNarrative("community.queenRaida", {
@@ -259,16 +260,10 @@ export const communityQueenRaida: QueenRaidaContent = defineNarrative("community
   ],
   detailsLabel: oct23("Explore this role"),
   artwork: {
-    // Updated artwork (October 26, 2026). Still local-only: provenance and
-    // public-use rights are unconfirmed.
     src: "/images/queen-raida/queen-raida-v2.png",
     alt: existing("Queen Raida"),
     caption: existing("Queen Raida"),
-    rights: claim(
-      "Artwork provenance and rights unconfirmed",
-      "oct23-iteration",
-      "Updated artwork (queen-raida-v2.png, October 26, 2026), in a Moebius-inspired style; the earlier reference closely resembled a Moebius (Jean Giraud) piece. Keep it local-only until it is confirmed as original or licensed for public use.",
-    ),
+    rights: approved("AI-generated for RaidGuild; approved for public use in this project by the project owner", "owner-approval"),
   },
 } satisfies QueenRaidaContent);
 

@@ -1,5 +1,6 @@
-// Approved transparent illustrations (brand steward, imaginery library; placed
-// in B3.4). Each scene exists as a portrait and a horizontal cut; each scene is
+// Approved transparent illustrations from the imaginery library: AI-generated
+// for RaidGuild and approved for public use in this project by the project
+// owner (docs/asset-provenance.md). Each scene exists as a portrait and a horizontal cut; each scene is
 // used once, in the cut that suits its layout. They are decorative: every
 // placement renders with empty alt text.
 export type Illustration = { src: string; width: number; height: number };
