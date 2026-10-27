@@ -6,6 +6,10 @@
 .heading h2 { font: 400 clamp(36px, 4.5vw, 64px)/1.05 var(--font-display), sans-serif; margin: 0; }
 .heading h2 em { font-family: var(--font-retalic); font-style: normal; color: var(--coral); }
 .heading p, .heading > div { max-width: 38ch; }
+/* Approved illustration in a section heading (builder network on /clients). */
+/* The heading keeps its October 23 line breaks; the illustration takes the space left. */
+.headingArt { align-self: center; flex: 0 1 clamp(160px, 24vw, 360px); height: auto; min-width: 140px; width: clamp(160px, 24vw, 360px); }
+.heading:has(> .headingArt) > h2 { flex: 0 0 auto; }
 .section p, .network p { font: 400 17px/1.6 var(--font-body), sans-serif; }
 .section summary { cursor: pointer; padding-block: 16px; font: 700 14px/1.4 var(--font-mono), monospace; }
 .section details { border-block: 1px solid currentColor; margin: 24px 0; }
@@ -64,6 +68,7 @@
 .resultCount { margin-bottom: 20px; }
 .network :global([role="region"]) { padding-block: 8px 24px; }
 .section :is(button, a, summary):focus-visible, .network :is(button, a):focus-visible, .raidaPanel:focus-visible { outline: 3px solid var(--cta-ring, var(--coral)); outline-offset: 4px; }
-@media (max-width: 700px) { .heading { flex-direction: column; align-items: start; gap: 16px; } .featuredWork { grid-template-columns: 1fr; } .workLogoStage { min-height: 200px; } .tabs { gap: 8px; } .tabs button { padding: 12px; font-size: var(--type-ui, 14px); } .network.network { min-height: 640px; } }
+@media (max-width: 700px) { .headingArt { align-self: center; flex: none; width: min(280px, 80%); }
+  .heading { flex-direction: column; align-items: start; gap: 16px; } .featuredWork { grid-template-columns: 1fr; } .workLogoStage { min-height: 200px; } .tabs { gap: 8px; } .tabs button { padding: 12px; font-size: var(--type-ui, 14px); } .network.network { min-height: 640px; } }
 @media (max-width: 700px) { .raidaLayout { grid-template-columns: 1fr; } .raidaArtwork { min-height: 320px; order: -1; padding: 32px 20px; } }
 @media (prefers-reduced-motion: reduce) { .section *, .network * { scroll-behavior: auto; } }

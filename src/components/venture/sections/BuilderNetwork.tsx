@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useState } from "react";
 import TeamWall from "@/components/TeamWall";
 import { mercenaries } from "@/lib/data/members";
 import { filterMembers, memberCategories, type MemberCategory } from "@/lib/data/memberCategories";
+import type { Illustration } from "@/lib/data/illustrations";
 import type { BuilderNetworkContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
@@ -13,13 +15,13 @@ import moduleStyles from "../audience.module.css";
 
 // October 23 builder network (40f3910): skill tabs with counts over the member
 // wall. Copy varies by audience through `content`.
-export default function BuilderNetwork({ content }: { content: BuilderNetworkContent }) {
+export default function BuilderNetwork({ content, illustration }: { content: BuilderNetworkContent; illustration?: Illustration }) {
   const { portalOpen } = useVenture();
   const [category, setCategory] = useState<MemberCategory>("All builders");
   const tabs = useRef<Array<HTMLButtonElement | null>>([]);
   const filtered = filterMembers(mercenaries, category);
   return <section id="team" className={`${styles.teamNetwork} ${moduleStyles.network}`} aria-labelledby="builders-title">
-    <div className={moduleStyles.heading}><h2 id="builders-title"><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} after="." /></em></h2><div><p><CopyText copy={content.intro} /></p><NarrativeAnchor link={content.link} className={moduleStyles.textLink}><CopyText copy={content.link.label} /></NarrativeAnchor></div></div>
+    <div className={moduleStyles.heading}><h2 id="builders-title"><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} after="." /></em></h2>{illustration && <Image className={moduleStyles.headingArt} src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes="(max-width: 700px) 280px, 380px" aria-hidden="true" />}<div><p><CopyText copy={content.intro} /></p><NarrativeAnchor link={content.link} className={moduleStyles.textLink}><CopyText copy={content.link.label} /></NarrativeAnchor></div></div>
     <div className={moduleStyles.tabs} role="tablist" aria-label="Builder skills" onKeyDown={event => {
       const current = memberCategories.indexOf(category);
       const next = event.key === "ArrowRight" ? (current + 1) % memberCategories.length : event.key === "ArrowLeft" ? (current + memberCategories.length - 1) % memberCategories.length : event.key === "Home" ? 0 : event.key === "End" ? memberCategories.length - 1 : null;

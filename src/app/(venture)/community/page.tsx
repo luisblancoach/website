@@ -16,6 +16,7 @@ import {
 } from "@/lib/narrative/community";
 import { clientsCapabilities } from "@/lib/narrative/clients";
 import { buildersCommunity } from "@/lib/narrative/shared";
+import { foundryPortrait, keeperHorizontal } from "@/lib/data/illustrations";
 
 // The October 23 Join composition (40f3910): guild → Queen Raida → curiosities →
 // stewardship → builders → join → services. Tae's tension, path and activity chapters
@@ -41,10 +42,10 @@ export default function CommunityPage() {
       <GuildPrologue content={communityGuild} metrics={false} />
       <QueenRaidaBanner content={communityQueenRaida} artworkAvailable={raidaArtworkAvailable} />
       <WallOfCuriosities content={communityActivity.collection} />
-      <Stewardship content={communityStewardship} />
+      <Stewardship content={communityStewardship} illustration={keeperHorizontal} />
       <BuilderNetwork content={buildersCommunity} />
       <JoinCTA content={communityJoin} />
-      <Capabilities content={clientsCapabilities} />
+      <Capabilities content={clientsCapabilities} illustration={foundryPortrait} />
       <Creed content={communityCreed} />
     </>
   );

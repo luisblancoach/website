@@ -9,6 +9,7 @@ import GuildInquiry from "@/components/venture/sections/GuildInquiry";
 import Creed from "@/components/venture/sections/Creed";
 import { clientsCapabilities, clientsCreed, clientsHero, clientsInquiry, clientsPreviousWorks } from "@/lib/narrative/clients";
 import { buildersClients, peopleClients } from "@/lib/narrative/shared";
+import { crewHorizontal, foundryPortrait } from "@/lib/data/illustrations";
 
 // The October 23 Hire composition (40f3910): previous works → services →
 // builders → people → inquiry. Unconfirmed claims are flagged in development and
@@ -27,8 +28,8 @@ export default function ClientsPage() {
       <Hero content={clientsHero} grouped />
       <GuildTicker />
       <PreviousWorks content={clientsPreviousWorks} />
-      <Capabilities content={clientsCapabilities} />
-      <BuilderNetwork content={buildersClients} />
+      <Capabilities content={clientsCapabilities} illustration={foundryPortrait} />
+      <BuilderNetwork content={buildersClients} illustration={crewHorizontal} />
       <Stewardship content={peopleClients} titles="professional" />
       <GuildInquiry content={clientsInquiry} />
       <Creed content={clientsCreed} />

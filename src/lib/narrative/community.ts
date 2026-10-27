@@ -259,13 +259,15 @@ export const communityQueenRaida: QueenRaidaContent = defineNarrative("community
   ],
   detailsLabel: oct23("Explore this role"),
   artwork: {
-    src: "/images/queen-raida/queen-raida-reference.png",
+    // Updated artwork (October 26, 2026). Still local-only: provenance and
+    // public-use rights are unconfirmed.
+    src: "/images/queen-raida/queen-raida-v2.png",
     alt: existing("Queen Raida"),
     caption: existing("Queen Raida"),
     rights: claim(
       "Artwork provenance and rights unconfirmed",
       "oct23-iteration",
-      "The file is named queen-raida-reference.png and its style closely resembles Moebius (Jean Giraud). Keep it local-only until it is confirmed as original or licensed.",
+      "Updated artwork (queen-raida-v2.png, October 26, 2026), in a Moebius-inspired style; the earlier reference closely resembled a Moebius (Jean Giraud) piece. Keep it local-only until it is confirmed as original or licensed for public use.",
     ),
   },
 } satisfies QueenRaidaContent);

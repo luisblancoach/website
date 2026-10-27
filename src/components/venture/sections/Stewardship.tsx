@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { mercenaries } from "@/lib/data/members";
 import { stewards } from "@/lib/data/venture";
+import type { Illustration } from "@/lib/data/illustrations";
 import type { Copy, StewardshipContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
@@ -13,7 +14,7 @@ import styles from "../venture.module.css";
 // stewardship role and the responsibilities disclosures.
 const withoutArrow = (copy: Copy): Copy => ({ ...copy, text: copy.text.replace(/\s*↗$/, "") });
 
-export default function Stewardship({ content, titles = "role" }: { content: StewardshipContent; titles?: "role" | "professional" }) {
+export default function Stewardship({ content, titles = "role", illustration }: { content: StewardshipContent; titles?: "role" | "professional"; illustration?: Illustration }) {
   const responsibilities = [content.hats, content.agents].filter((item) => item !== undefined);
   return (
     <section id="stewards" className={styles.keepers}>
@@ -24,6 +25,7 @@ export default function Stewardship({ content, titles = "role" }: { content: Ste
             <h3><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h3>
             <p><CopyText copy={content.intro} /></p>
           </div>
+          {illustration && <Image className={styles.rosterArt} src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes="(max-width: 700px) 280px, 360px" aria-hidden="true" />}
           <div className={styles.rosterAside}>
             <NarrativeAnchor link={content.roster}><CopyText copy={withoutArrow(content.roster.label)} /> <span>↗</span></NarrativeAnchor>
           </div>

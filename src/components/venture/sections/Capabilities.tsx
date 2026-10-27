@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import type { Illustration } from "@/lib/data/illustrations";
 import type { CapabilitiesContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
@@ -11,7 +12,7 @@ import styles from "../venture.module.css";
 // accordion, with the specialist practices behind a disclosure. The section
 // keeps the "spears" id for existing links; "services" and "capabilities" are
 // anchors for the October 23 and narrative navigation.
-export default function Capabilities({ content }: { content: CapabilitiesContent }) {
+export default function Capabilities({ content, illustration }: { content: CapabilitiesContent; illustration?: Illustration }) {
   const { arrivalTarget } = useVenture();
   return (
     <section className={`${styles.practice} ${arrivalTarget === "spears" || arrivalTarget === "capabilities" ? styles.sectionArriving : ""}`} id="spears">
@@ -28,10 +29,13 @@ export default function Capabilities({ content }: { content: CapabilitiesContent
           </NarrativeAnchor>
         </div>
       </div>
-      <div className={styles.capabilities}>
-        {content.services.map((service) => (
-          <details key={service.title.id}><summary><span className={styles.serviceLabel}><i className={styles.serviceMark} aria-hidden="true" /><CopyText copy={service.title} /></span><span aria-hidden="true">+</span></summary><p><CopyText copy={service.body} /></p></details>
-        ))}
+      <div className={illustration ? styles.capabilityRow : undefined}>
+        <div className={styles.capabilities}>
+          {content.services.map((service) => (
+            <details key={service.title.id}><summary><span className={styles.serviceLabel}><i className={styles.serviceMark} aria-hidden="true" /><CopyText copy={service.title} /></span><span aria-hidden="true">+</span></summary><p><CopyText copy={service.body} /></p></details>
+          ))}
+        </div>
+        {illustration && <Image className={styles.capabilityArt} src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes="(max-width: 700px) 220px, 340px" aria-hidden="true" />}
       </div>
       <details className={styles.practiceDisclosure}>
         <summary><CopyText copy={content.practicesLabel} /></summary>
