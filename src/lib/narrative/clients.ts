@@ -100,6 +100,39 @@ const archive = (id: string, company: string, title: string, description: string
   };
 };
 
+// Recovered from the original case studies (the archived raidguild.org page in
+// public/witch, and lib/data/clients.ts): the archive's own factual sentences,
+// without its published metrics, which stay out until they are verified.
+const recovered = (id: string, company: string, title: string, description: string, omitted?: string) => {
+  const record = clientData.find((item) => item.id === id);
+  if (!record) throw new Error(`Not in the project archive: ${id}`);
+  const note = `Original RaidGuild case study (archived raidguild.org; lib/data/clients.ts), restored in B3.4.${omitted ? ` The archive also states ${omitted}; omitted until verified.` : ""} Confirm the scope and permission to feature this client.`;
+  return {
+    id,
+    logo: record.logo,
+    company: claim(company, "existing-site", "Listed as a client project in the original case studies. Confirm permission to feature."),
+    title: claim(title, "existing-site", note),
+    description: claim(description, "existing-site", note),
+    tags: record.tags.map((tag): Copy => existing(tag)),
+    images: [],
+  };
+};
+
+// Supplied by Tae with its Portal article. The article is not publicly
+// reachable yet (404, and not among Portal's public posts), so no copy is
+// written from it and the work stays out of production.
+const LIVEPEER_ARTICLE = "https://portal.raidguild.org/posts/turning-ux-research-into-a-product-roadmap-for-livepeer";
+const livepeerNote = "Case study supplied by Tae. Its Portal article returns 404 and is not among the public posts, so its content could not be checked; add the description from the article once it is public.";
+const livepeer = {
+  id: "livepeer",
+  logo: "/images/logo-Livepeer.svg",
+  company: claim("Livepeer", "portal", livepeerNote, LIVEPEER_ARTICLE),
+  title: claim("Turning UX research into a product roadmap", "portal", livepeerNote, LIVEPEER_ARTICLE),
+  tags: [],
+  images: [],
+  pending: claim("Source article not yet public", "portal", livepeerNote, LIVEPEER_ARTICLE),
+};
+
 export const clientsPreviousWorks: PreviousWorksContent = defineNarrative("clients.previousWorks", {
   title: { lead: oct23("Previous"), em: oct23("works.") },
   intro: oct23("A few starting points from the Guild's project archive."),
@@ -107,6 +140,10 @@ export const clientsPreviousWorks: PreviousWorksContent = defineNarrative("clien
     archive("daohaus", "DAOhaus", "Automated protocol maintenance", "Protocol maintenance, documentation and human-governed AI workflows."),
     archive("brightid", "BrightID", "Social identity systems", "Design and development for social identity and user verification."),
     archive("hypercerts", "Hypercerts", "Tools for public goods funding", "Smart contracts for minting, burning and donating Hypercerts."),
+    recovered("pocket", "Pocket Network", "Wrapped token, bridge and staking dApp", "Created the wrapped version of the $POKT token as well as the Uniswap pool, bridge and staking dApp.", "a 10x token price increase and $7M bridged in 2024"),
+    recovered("ud", "Ultimate Dominion", "Onchain gameplay and interactions", "Designed and built a fully on-chain RPG, integrating smart contract-powered quest systems, player-driven narratives, and decentralized inventory management to create a trustless game world."),
+    recovered("gnosis", "Gnosis", "The Omni-Token Bridge", "Built the Gnosis Omni-Token Bridge to enable secure, user-friendly asset transfers of any ERC-20 between Ethereum and Gnosis Chain.", "over $367M in bridged transfers"),
+    livepeer,
   ],
   detailsLabel: oct23("Explore project details"),
   cta: { label: oct23("Bring us your next project"), section: "project-inquiry" },

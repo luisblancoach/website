@@ -166,20 +166,47 @@ describe("clients narrative", () => {
     }
   });
 
-  test("previous works come only from the existing archive and stay flagged", () => {
+  test("previous works: every archived case study, then Tae's pending Livepeer case", () => {
     const { works } = clientsNarrative.clientsPreviousWorks;
-    assert.deepEqual(works.map((w) => w.id), ["daohaus", "brightid", "hypercerts"]);
+    assert.deepEqual(works.map((w) => w.id), ["daohaus", "brightid", "hypercerts", "pocket", "ud", "gnosis", "livepeer"]);
+    assert.deepEqual(clientData.map((record) => record.id).filter((id) => !works.some((w) => w.id === id)), [], "no archived case is left out");
     for (const work of works) {
-      assert.ok(clientData.some((record) => record.id === work.id && record.logo === work.logo), work.id);
-      for (const field of [work.company, work.title, work.description]) assert.equal(field.reason, "claim", field.id);
+      for (const field of [work.company, work.title, work.description].filter(Boolean)) assert.equal(field.reason, "claim", field.id);
       assert.equal(work.images.length, 0, "no unapproved screenshots");
+      if (work.pending) continue;
+      assert.ok(clientData.some((record) => record.id === work.id && record.logo === work.logo), work.id);
     }
   });
 
+  test("a case without a usable source is pending and carries no written description", () => {
+    const livepeer = clientsNarrative.clientsPreviousWorks.works.find((w) => w.id === "livepeer");
+    assert.equal(livepeer.pending?.reason, "claim");
+    assert.equal(livepeer.description, undefined, "no copy is written until the source article is public");
+    assert.equal(livepeer.logo, "/images/logo-Livepeer.svg", "existing logo asset");
+    assert.match(livepeer.title.sourceUrl, /portal\.raidguild\.org\/posts\/turning-ux-research-into-a-product-roadmap-for-livepeer/);
+  });
+
   test("no outcome metrics are carried into case studies", () => {
+    // Dollar amounts, multipliers and percentages; a "$" ticker such as $POKT is not a metric.
     for (const work of clientsNarrative.clientsPreviousWorks.works) {
-      assert.doesNotMatch(`${work.title.text} ${work.description.text}`, /\$|\d+x|\d+%|million|\bM\b/);
+      assert.doesNotMatch(`${work.title.text} ${work.description?.text ?? ""}`, /\$\d|\d+x\b|\d+%|million|\bM\b/);
     }
+  });
+});
+
+describe("steward-supplied copy", () => {
+  // Only the brand steward's verbatim B3.4 lines may carry the "steward-brief" source.
+  const STEWARD_BRIEF = new Set(["Projects and", "Experiments", "A collection of artifacts, experiments, games and ideas RaidGuild members have brought to life across emerging technology."]);
+  test("steward lines are verbatim and approved", () => {
+    const lines = collectCopy([communityNarrative, clientsNarrative, sharedNarrative]).filter((copy) => copy.source === "steward-brief");
+    assert.equal(lines.length, 3);
+    for (const copy of lines) { assert.ok(STEWARD_BRIEF.has(copy.text), copy.text); assert.equal(copy.status, "approved"); }
+  });
+
+  test("the gallery is renamed Projects and Experiments without moving its anchor", () => {
+    const { collection } = communityNarrative.communityActivity;
+    assert.equal(`${collection.title.lead.text} ${collection.title.em.text}`, "Projects and Experiments");
+    assert.equal(communityNarrative.communityNav.items.find((item) => item.section === "work")?.label.text, "Projects");
   });
 });
 

@@ -12,7 +12,8 @@ export type ReviewStatus = "approved" | "needs-review";
 export type ReviewReason = "claim" | "wording";
 // "oct23-iteration": copy written in the October 23 visual iteration (40f3910),
 // never published and not in Tae's brief, so it always needs review.
-export type CopySource = "tae-brief" | "existing-site" | "handbook" | "portal" | "oct23-iteration" | "draft";
+// "steward-brief": copy the brand steward supplied verbatim (B3.4 brief).
+export type CopySource = "tae-brief" | "steward-brief" | "existing-site" | "handbook" | "portal" | "oct23-iteration" | "draft";
 
 export type Copy = {
   id: string;
@@ -26,7 +27,7 @@ export type Copy = {
 
 type CopyInput = Omit<Copy, "id">;
 
-export const approved = (text: string, source: Extract<CopySource, "tae-brief" | "existing-site">, sourceUrl?: string): Copy =>
+export const approved = (text: string, source: Extract<CopySource, "tae-brief" | "steward-brief" | "existing-site">, sourceUrl?: string): Copy =>
   ({ id: "", text, status: "approved", source, sourceUrl });
 
 export const claim = (text: string, source: CopySource, note: string, sourceUrl?: string): Copy =>
@@ -118,13 +119,15 @@ export type CapabilitiesContent = {
   footnote: { lead: Copy; link: NarrativeLink };
 };
 
-// Case studies come only from the existing project archive (lib/data/clients.ts).
-// No screenshots are approved yet, so `images` stays empty rather than
-// carrying placeholders.
+// Case studies come only from the existing project archive (lib/data/clients.ts)
+// or a confirmed source article. No screenshots are approved yet, so `images`
+// stays empty rather than carrying placeholders. A `pending` work has no
+// usable source yet: it shows only where review flags do (development and
+// preview) and never in production.
 export type PreviousWorksContent = {
   title: Title;
   intro: Copy;
-  works: { id: string; logo: string; company: Copy; title: Copy; description: Copy; tags: Copy[]; images: { src: string; alt: Copy }[] }[];
+  works: { id: string; logo: string; company: Copy; title: Copy; description?: Copy; tags: Copy[]; images: { src: string; alt: Copy }[]; pending?: Copy }[];
   detailsLabel: Copy;
   cta: NarrativeLink;
 };

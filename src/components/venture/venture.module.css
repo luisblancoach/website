@@ -1673,3 +1673,30 @@
   .stewardResponsibilities { gap: 12px; grid-template-columns: 1fr; }
   .site[data-audience] .keepers { padding-block: 48px; }
 }
+
+/* ── B3.4 refinements (audience routes only; "/" is unchanged) ──────────────── */
+/* Active selections use canonical pink in both themes (builder skills, the
+   Projects and Experiments filters, Queen Raida tabs). Same specificity as the
+   dark token block, declared later, so it wins in both themes. */
+:global(html) .site[data-audience] { --surface-selected: var(--color-pink); --on-selected: var(--on-pink); }
+
+/* Ticker: the RaidGuild symbol 50% larger (25px → 37.5px). Negative block
+   margins keep its layout box at the original 25px, so the band keeps its
+   height and baseline; the symbol extends into the band's own padding. */
+.site[data-audience] .tickerWord i { flex: 0 0 auto; height: 37.5px; margin-block: -6.25px; width: 37.5px; }
+/* With reduced motion the ticker wraps into rows; matching inline margins keep
+   the original 25px footprint so it does not gain a row on narrow screens. */
+@media (prefers-reduced-motion: reduce) { .site[data-audience] .tickerWord i { margin-inline: -6.25px; } }
+
+/* Services: Ubuntu labels with a small pink RaidGuild symbol; the headline
+   keeps the display face. */
+.capabilities .serviceLabel { align-items: center; display: inline-flex; font: 500 clamp(20px, 2.2vw, 28px)/1.3 var(--font-body), sans-serif; gap: 16px; letter-spacing: 0; }
+.serviceMark { background: var(--color-pink); flex: 0 0 auto; height: .72em; mask: url('/images/icons/venture/ico-logo.svg') center / contain no-repeat; width: .72em; }
+
+/* Audience switch: the current audience in canonical pink with an ink label
+   (4.66:1) in both themes; pink keeps a 3:1+ edge on cream and navy. */
+.site[data-audience] .audienceSwitch a[aria-current="page"] { background: var(--color-pink); color: var(--on-pink); }
+:global(html[data-theme="dark"]) .site[data-audience] .audienceSwitch a[aria-current="page"] { background: var(--color-pink); color: var(--on-pink); }
+/* A pink focus ring would merge with the pink segment: use the CTA ring
+   (dark green on cream, cream on navy) like every other control. */
+.site[data-audience] .audienceSwitch a:focus-visible { outline-color: var(--cta-ring); }

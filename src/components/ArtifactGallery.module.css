@@ -95,3 +95,12 @@
 .moreButton { background: transparent; border: 1px solid currentColor; border-radius: 100px; color: inherit; cursor: pointer; font: inherit; margin-top: 24px; min-height: var(--tap-min, 44px); padding: 14px 20px; }
 .moreButton:focus-visible { outline: 3px solid var(--cta-ring, var(--coral)); outline-offset: 4px; }
 .section > .filters { margin-bottom: 24px; }
+
+/* B3.4 active filter on the audience routes: canonical pink with an ink label
+   and the 2px ring used by the builder tabs. On the light sky surface pink is
+   2.66:1, so the selected chip takes an ink edge there. */
+:global([data-cta="semantic"]) .filters button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--surface-selected); }
+:global(html:not([data-theme="dark"])) :global([data-cta="semantic"]) .filters button[aria-pressed="true"] { border-color: var(--on-selected); }
+:global([data-cta="semantic"]) .filters button:not([aria-pressed="true"]):hover { border-color: var(--color-pink); }
+:global([data-cta="semantic"]) .filters button:focus-visible { outline: 3px solid var(--cta-ring); outline-offset: 4px; }
+.filters button:disabled { cursor: not-allowed; opacity: .45; }

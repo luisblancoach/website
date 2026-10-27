@@ -13,6 +13,7 @@ import {
 const HB = "https://handbook.raidguild.org/docs/";
 const tae = (text: string) => approved(text, "tae-brief");
 const existing = (text: string) => approved(text, "existing-site");
+const steward = (text: string) => approved(text, "steward-brief");
 
 const joinDestination = () => claim(
   "Interim destination: Portal account sign-up",
@@ -200,10 +201,12 @@ export const communityActivity: ActivityContent = defineNarrative("community.act
   postsHeading: wording("Latest field notes"),
   postsUnavailable: wording("Field notes are temporarily unavailable."),
   allPosts: { label: wording("All field notes on Portal ↗"), href: "https://portal.raidguild.org/posts" },
+  // B3.4: heading and description supplied by the brand steward. The section
+  // keeps its #work / #gallery anchors.
   collection: {
     label: existing("[ EXPLORE ]"),
-    title: { lead: existing("Wall of"), em: existing("curiosities") },
-    intro: oct23("Digital experiences, experiments, games and tools made across the Guild. Open a preview to explore."),
+    title: { lead: steward("Projects and"), em: steward("Experiments") },
+    intro: steward("A collection of artifacts, experiments, games and ideas RaidGuild members have brought to life across emerging technology."),
   },
 } satisfies ActivityContent);
 
@@ -296,7 +299,7 @@ export const communityNav: NavContent = defineNarrative("community.nav", {
   items: [
     { label: wording("Membership", "Phase 2 navigation label; needs editorial approval."), section: "guild" },
     { label: oct23("Queen Raida"), section: "raida" },
-    { label: oct23("Curiosities"), section: "work" },
+    { label: wording("Projects", "Follows the B3.4 rename of the section to Projects and Experiments; needs editorial approval."), section: "work" },
   ],
   cta: { label: tae("Join the DAO"), href: PORTAL_JOIN_URL, destination: joinDestination() },
 } satisfies NavContent);

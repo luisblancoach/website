@@ -30,7 +30,7 @@ export default function Capabilities({ content }: { content: CapabilitiesContent
       </div>
       <div className={styles.capabilities}>
         {content.services.map((service) => (
-          <details key={service.title.id}><summary><CopyText copy={service.title} /><span aria-hidden="true">+</span></summary><p><CopyText copy={service.body} /></p></details>
+          <details key={service.title.id}><summary><span className={styles.serviceLabel}><i className={styles.serviceMark} aria-hidden="true" /><CopyText copy={service.title} /></span><span aria-hidden="true">+</span></summary><p><CopyText copy={service.body} /></p></details>
         ))}
       </div>
       <details className={styles.practiceDisclosure}>

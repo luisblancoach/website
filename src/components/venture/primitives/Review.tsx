@@ -7,6 +7,9 @@ import styles from "../venture.module.css";
 
 const ReviewFlagsContext = createContext(false);
 
+// True in development and preview, where unresolved content may be shown.
+export const useReviewFlags = () => useContext(ReviewFlagsContext);
+
 export function ReviewFlagsProvider({ enabled, children }: { enabled: boolean; children: ReactNode }) {
   return <ReviewFlagsContext.Provider value={enabled}>{children}</ReviewFlagsContext.Provider>;
 }
