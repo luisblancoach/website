@@ -85,3 +85,8 @@
   .caption small { font-size: var(--type-ui, 14px); }
 }
 @media (prefers-reduced-motion: reduce) { .row, .caption { transition: none; } }
+
+/* Semantic CTA states on the audience routes (B3.1); "/" keeps its current button. */
+:global([data-cta="semantic"]) .feature .portalLaunch { background: var(--cta-bg); color: var(--cta-fg); transition: background-color .18s ease, color .18s ease, box-shadow .18s ease; }
+:global([data-cta="semantic"]) .feature .portalLaunch:hover { background: var(--cta-bg-hover); box-shadow: 0 0 0 2px var(--cta-hover-ring); color: var(--cta-fg-hover); }
+:global([data-cta="semantic"]) .feature .portalLaunch:focus-visible { box-shadow: 0 0 0 3px var(--cta-ring-halo); outline: 3px solid var(--cta-ring); outline-offset: 3px; }

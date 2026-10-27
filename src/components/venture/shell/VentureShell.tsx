@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import { UnchartedHunt } from "@/components/UnchartedHunt";
 import { PORTAL_JOIN_URL } from "@/lib/data/constants";
-import { routeHasSection, sectionHref, type SectionId } from "@/lib/venture-routes";
+import { audienceForPath, routeHasSection, sectionHref, type SectionId } from "@/lib/venture-routes";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
@@ -216,7 +216,8 @@ function Shell({ children }: { children: ReactNode }) {
     <VentureContext.Provider value={venture}>
     <Dialog.Root open={portalOpen} onOpenChange={(open) => { if (!open) dismissPortal(); }}>
     <UnchartedHunt>
-    <div className={styles.site} ref={siteRef}>
+    {/* Semantic CTA states apply on the audience routes; "/" keeps its baseline until B8. */}
+    <div className={styles.site} ref={siteRef} data-cta={audienceForPath(pathname) ? "semantic" : undefined}>
     <a className={styles.skipLink} href="#main-content">Skip to content</a>
     <main inert={portalOpen} data-motion-paused={portalOpen} className={portalForming ? styles.siteGlitching : ""}>
       <SiteHeader />

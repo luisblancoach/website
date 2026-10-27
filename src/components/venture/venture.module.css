@@ -35,6 +35,22 @@
   --surface-selected: var(--color-dark-green);
   --on-selected: var(--color-cream);
   --text-meta: var(--color-dark-green);
+
+  /* Semantic CTA states (B3.1). Website-scoped and provisional: #071C1D and
+     #CE1252 await brand-system approval; canonical pink stays #EE3C78.
+     Light: default 4.66:1 (ink on pink), hover/pressed 4.52:1 (cream on #CE1252). */
+  --cta-bg: var(--color-pink);
+  --cta-fg: #071c1d;
+  --cta-bg-hover: #ce1252;
+  --cta-fg-hover: var(--color-cream);
+  --cta-bg-active: #ce1252;
+  --cta-fg-active: var(--color-cream);
+  --cta-hover-ring: transparent;
+  --cta-ring: var(--color-dark-green);
+  --cta-ring-halo: var(--color-cream);
+  --cta-outline-bg: var(--color-cream);
+  --cta-outline-fg: var(--color-dark-green);
+  --on-pink: #071c1d;
   /* Supplied Grinder display cuts; Ubuntu follows the handoff for body copy. */
   --font-display: var(--font-grinder);
   --font-retalic: var(--font-grinder-retalic);
@@ -53,6 +69,13 @@
   --surface-selected: var(--color-cyan);
   --on-selected: var(--color-navy);
   --text-meta: var(--color-cream);
+  /* Dark: #CE1252 loses its edge against navy (2.87:1), so hover keeps the
+     canonical pink and adds a cream ring; pressed uses #CE1252 with the ring. */
+  --cta-bg-hover: var(--color-pink);
+  --cta-fg-hover: #071c1d;
+  --cta-hover-ring: var(--color-cream);
+  --cta-ring: var(--color-cream);
+  --cta-ring-halo: var(--color-navy);
 }
 /* Experimental deeper navy (#12163B) for alternate dark chapters. Only reachable
    through the development/preview switch (?surface=deep-navy); not a brand token. */
@@ -1538,3 +1561,54 @@
 .reviewPanel li[data-reason="claim"] b { color: #ffb27a; }
 .reviewPanel li[data-reason="wording"] b { color: #c4bbff; }
 .reviewPanel li small { color: #c4c4cc; display: block; margin-top: 2px; }
+
+/* ── Semantic CTA system (B3.1) ────────────────────────────────────────────
+   Applies on the audience routes only (data-cta="semantic" on .site), so "/"
+   keeps its current rendering until the entry experience is rebuilt (B8).
+   Focus uses a ring plus an opposite-colour halo so it stays visible on
+   cream, sky, navy, deep green and artwork alike. */
+.site[data-cta="semantic"] .pill { transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+.site[data-cta="semantic"] .pillFilled { background: var(--cta-bg); border-color: var(--cta-bg); color: var(--cta-fg); }
+.site[data-cta="semantic"] .pillFilled .pillIcon { background: var(--color-cream); color: var(--cta-bg); }
+.site[data-cta="semantic"] .pillFilled:hover { background: var(--cta-bg-hover); border-color: var(--cta-bg-hover); box-shadow: 0 0 0 2px var(--cta-hover-ring); color: var(--cta-fg-hover); }
+.site[data-cta="semantic"] .pillFilled:active { background: var(--cta-bg-active); border-color: var(--cta-bg-active); box-shadow: 0 0 0 2px var(--cta-hover-ring), inset 0 2px 6px rgba(7,28,29,.28); color: var(--cta-fg-active); transform: translateY(0); }
+.site[data-cta="semantic"] .pillOutline,
+.site[data-cta="semantic"] .heroPaths .pillOutline { background: var(--cta-outline-bg); border-color: var(--cta-bg); color: var(--cta-outline-fg); }
+.site[data-cta="semantic"] .pillOutline:hover,
+.site[data-cta="semantic"] .heroPaths .pillOutline:hover { background: var(--cta-bg); border-color: var(--cta-bg); box-shadow: 0 0 0 2px var(--cta-hover-ring); color: var(--cta-fg); }
+.site[data-cta="semantic"] .pillOutline:active { background: var(--cta-bg-active); border-color: var(--cta-bg-active); color: var(--cta-fg-active); transform: translateY(0); }
+/* On the sky surface the pink edge measures 2.66:1, so CTAs take an ink edge there. */
+.site[data-cta="semantic"] .fieldNotes .pillFilled,
+.site[data-cta="semantic"] .fieldNotes .pillOutline { border-color: var(--cta-fg); }
+.site[data-cta="semantic"] .pill:focus-visible,
+.site[data-cta="semantic"] .heroPaths .pill:focus-visible { box-shadow: 0 0 0 3px var(--cta-ring-halo); outline: 3px solid var(--cta-ring); outline-offset: 3px; }
+.site[data-cta="semantic"] .pill[aria-disabled="true"],
+.site[data-cta="semantic"] .pill:disabled { cursor: not-allowed; opacity: .45; transform: none; }
+/* Light surfaces that are dark green take a cream focus ring. */
+/* Light surfaces that are dark green: cream focus ring, and a cream hover ring,
+   because #CE1252 against deep green measures only 2.67:1 at the edge. */
+:global(html:not([data-theme="dark"])) .site[data-cta="semantic"] :is(.practice, .pathSection, .joinSection, .contactCopy, .inquiryMore, .footer, .tensionOwned) { --cta-ring: var(--color-cream); --cta-ring-halo: var(--color-dark-green); --cta-hover-ring: var(--color-cream); }
+
+/* Ticker words on the pink band. */
+.site[data-cta="semantic"] .wordBand { color: var(--on-pink); }
+
+/* Inquiry bar. */
+.site[data-cta="semantic"] .contact .inquiryMore > summary,
+.site[data-cta="semantic"] .contact .inquiryMore > summary span { color: var(--cta-fg); }
+.site[data-cta="semantic"] .contact .inquiryMore > summary { background: var(--cta-bg); transition: background-color .18s ease, color .18s ease, box-shadow .18s ease; }
+.site[data-cta="semantic"] .contact .inquiryMore > summary:hover,
+.site[data-cta="semantic"] .contact .inquiryMore > summary:hover span { background: var(--cta-bg-hover); color: var(--cta-fg-hover); }
+.site[data-cta="semantic"] .contact .inquiryMore > summary:hover { box-shadow: 0 0 0 2px var(--cta-hover-ring); }
+.site[data-cta="semantic"] .contact .inquiryMore > summary:focus-visible { background: var(--cta-bg); box-shadow: 0 0 0 3px var(--cta-ring-halo); outline: 3px solid var(--cta-ring); outline-offset: 3px; }
+.site[data-cta="semantic"] .contact .inquiryMore > summary:hover span { background: transparent; }
+
+/* Inquiry form actions (Previous / Next / Submit). */
+.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active) { background: var(--cta-bg) !important; color: var(--cta-fg) !important; transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease !important; }
+.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):hover:not(:disabled) { background: var(--cta-bg-hover) !important; box-shadow: 0 0 0 2px var(--cta-hover-ring); color: var(--cta-fg-hover) !important; }
+.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):active:not(:disabled) { background: var(--cta-bg-active) !important; color: var(--cta-fg-active) !important; transform: translateY(0); }
+.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):focus-visible { box-shadow: 0 0 0 3px var(--color-dark-green); outline: 3px solid var(--color-cream); outline-offset: 3px; }
+.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):disabled { cursor: not-allowed; opacity: .45; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .site[data-cta="semantic"] .pill, .site[data-cta="semantic"] .contact .inquiryMore > summary { transition: none; }
+  .site[data-cta="semantic"] .pill:hover { transform: none; }
+}
