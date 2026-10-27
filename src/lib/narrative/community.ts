@@ -1,7 +1,8 @@
 import { DISCORD_INVITE_URL, PORTAL_JOIN_URL } from "../data/constants";
 import {
-  approved, claim, defineNarrative, wording,
-  type ActivityContent, type Copy, type GuildContent, type HeroContent, type JoinContent, type PathContent, type TensionContent,
+  approved, claim, defineNarrative, oct23, wording,
+  type ActivityContent, type Copy, type CreedContent, type GuildContent, type HeroContent, type JoinContent, type NavContent, type PathContent,
+  type QueenRaidaContent, type StewardshipContent, type TensionContent,
 } from "./types";
 
 // Community narrative (dark by default). Structure and headline lines follow
@@ -198,7 +199,11 @@ export const communityActivity: ActivityContent = defineNarrative("community.act
   postsHeading: wording("Latest field notes"),
   postsUnavailable: wording("Field notes are temporarily unavailable."),
   allPosts: { label: wording("All field notes on Portal ↗"), href: "https://portal.raidguild.org/posts" },
-  collection: { label: existing("[ EXPLORE ]"), title: { lead: existing("Wall of"), em: existing("curiosities") } },
+  collection: {
+    label: existing("[ EXPLORE ]"),
+    title: { lead: existing("Wall of"), em: existing("curiosities") },
+    intro: oct23("Digital experiences, experiments, games and tools made across the Guild. Open a preview to explore."),
+  },
 } satisfies ActivityContent);
 
 export const communityJoin: JoinContent = defineNarrative("community.join", {
@@ -219,4 +224,64 @@ export const communityJoin: JoinContent = defineNarrative("community.join", {
   ],
 } satisfies JoinContent);
 
-export const communityNarrative = { communityHero, communityTension, communityPath, communityGuild, communityActivity, communityJoin };
+// Queen Raida (approved composition: Option A, editorial bleed). The artwork is
+// referenced, not shipped: it stays local-only until provenance is confirmed.
+export const communityQueenRaida: QueenRaidaContent = defineNarrative("community.queenRaida", {
+  label: wording("[ The guild's AI CTO ]", "Role title from existing site copy (\u201cour AI CTO\u201d) set as a label; needs editorial approval."),
+  title: { lead: existing("Queen"), em: existing("Raida") },
+  value: claim(
+    "Ask about the guild, its people and what members are exploring. Answers draw on public guild knowledge.",
+    "oct23-iteration",
+    "October 23 copy said the chat \u201cdraws on public Guild knowledge\u201d. Confirm what Queen Raida can access before publishing.",
+  ),
+  cta: { label: wording("Ask Queen Raida"), href: "/chat" },
+  starters: [wording("What is a raid?"), wording("How do cohorts work?"), wording("Who are the stewards?")],
+  note: wording("Queen Raida is an AI agent. Check important details against the handbook."),
+  artwork: {
+    src: "/images/queen-raida/queen-raida-reference.png",
+    alt: wording("Queen Raida, a monumental mural being painted by a guild traveller"),
+    rights: claim(
+      "Artwork provenance and rights unconfirmed",
+      "oct23-iteration",
+      "The file is named queen-raida-reference.png and its style closely resembles Moebius (Jean Giraud). Keep it local-only until it is confirmed as original or licensed.",
+    ),
+  },
+} satisfies QueenRaidaContent);
+
+// Stewardship keeps the published roster copy and adds the October 23 Hats note.
+export const communityStewardship: StewardshipContent = defineNarrative("community.stewardship", {
+  label: existing("[ CURRENT STEWARDS ]"),
+  title: { lead: existing("Keepers of"), em: existing("the signal") },
+  intro: existing("Stewards help care for the Guild\u2019s shared knowledge, infrastructure, coordination, and public voice."),
+  roster: { label: existing("Explore all members ↗"), href: "https://portal.raidguild.org" },
+  hats: {
+    summary: oct23("Hats & responsibilities"),
+    body: claim(
+      "Explore how the Guild organizes shared responsibilities. Current Hats assignments are not listed here; consult the Guild handbook and Portal for organizational context.",
+      "handbook",
+      "October 23 copy. Roles are Hats created and removed by DAO proposal (handbook, DAO roles). Confirm the wording.",
+      `${HB}dao-operations/dao-roles`,
+    ),
+    link: { label: oct23("Open the Guild handbook ↗"), href: `${HB}overview/what-is-raidguild` },
+  },
+} satisfies StewardshipContent);
+
+export const communityNav: NavContent = defineNarrative("community.nav", {
+  items: [
+    { label: wording("The path", "Phase 2 navigation label; needs editorial approval."), section: "path" },
+    { label: wording("Membership", "Phase 2 navigation label; needs editorial approval."), section: "guild" },
+    { label: wording("Activity", "Phase 2 navigation label; needs editorial approval."), section: "work" },
+    { label: oct23("Queen Raida"), section: "raida" },
+    { label: wording("People", "Phase 2 navigation label; needs editorial approval."), section: "team" },
+  ],
+  cta: { label: tae("Join the DAO"), href: PORTAL_JOIN_URL, destination: joinDestination() },
+} satisfies NavContent);
+
+export const communityCreed: CreedContent = defineNarrative("community.creed", {
+  cta: { label: tae("Join the DAO"), href: PORTAL_JOIN_URL, destination: joinDestination() },
+} satisfies CreedContent);
+
+export const communityNarrative = {
+  communityHero, communityTension, communityPath, communityGuild, communityActivity, communityJoin,
+  communityQueenRaida, communityStewardship, communityNav, communityCreed,
+};

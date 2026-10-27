@@ -10,8 +10,8 @@ export const AUDIENCES = [
 export type AudienceId = (typeof AUDIENCES)[number]["id"];
 
 export type SectionId =
-  | "guild" | "team" | "work" | "gallery" | "uncharted" | "tension" | "path" | "join"
-  | "spears" | "contact" | "project-inquiry";
+  | "guild" | "team" | "work" | "gallery" | "uncharted" | "tension" | "path" | "join" | "raida"
+  | "spears" | "contact" | "project-inquiry" | "capabilities" | "case-studies";
 
 const sectionHome: Record<SectionId, string> = {
   guild: "/community",
@@ -22,7 +22,10 @@ const sectionHome: Record<SectionId, string> = {
   tension: "/community",
   path: "/community",
   join: "/community",
+  raida: "/community",
   spears: "/clients",
+  capabilities: "/clients",
+  "case-studies": "/clients",
   contact: "/clients",
   "project-inquiry": "/clients",
 };

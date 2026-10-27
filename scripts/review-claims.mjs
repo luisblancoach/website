@@ -1,9 +1,11 @@
 // Prints unresolved narrative content as Markdown, for review and PR descriptions.
 // Usage: bun run review:claims
 import { communityNarrative } from "../src/lib/narrative/community.ts";
+import { clientsNarrative } from "../src/lib/narrative/clients.ts";
+import { sharedNarrative } from "../src/lib/narrative/shared.ts";
 import { collectCopy } from "../src/lib/narrative/types.ts";
 
-const pages = { "/community": communityNarrative };
+const pages = { "/clients": clientsNarrative, "/community": communityNarrative, "shared (both audiences)": sharedNarrative };
 const cell = (value = "") => String(value).replace(/\|/g, "\\|").replace(/\n/g, " ");
 
 for (const [route, narrative] of Object.entries(pages)) {

@@ -1,4 +1,4 @@
-import { mercenaries } from "@/lib/data/members";
+import { mercenaries } from "./members";
 
 
 export const activeSpears = [
