@@ -367,7 +367,9 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
   );
 };
 
-export default function HireUs() {
+// `guided` is the October 23 form (40f3910) used by the audience routes: plain
+// step names, a short introduction and the progress indicator.
+export default function HireUs({ guided = false }: { guided?: boolean }) {
   // State management for user feedback
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<
@@ -621,7 +623,7 @@ export default function HireUs() {
   const wizardSteps: WizardStep[] = [
     {
       id: "personal-info",
-      title: "Contact Info",
+      title: guided ? "About you" : "Contact Info",
       // description: "Tell us about yourself",
       component: <PersonalInfoStep form={form} />,
       validation: validatePersonalInfo,
@@ -635,7 +637,7 @@ export default function HireUs() {
     },
     {
       id: "project-description",
-      title: "Project Description",
+      title: guided ? "Your project" : "Project Description",
       // description: "Describe your project requirements",
       component: <ProjectDetailsStep form={form} />,
       validation: validateProjectDetails,
@@ -649,7 +651,7 @@ export default function HireUs() {
     },
     {
       id: "requirements",
-      title: "Requirements & Timeline",
+      title: guided ? "Scope & timing" : "Requirements & Timeline",
       // description: "Specific requirements and timeline details",
       component: <RequirementsStep form={form} />,
       validation: validateRequirements,
@@ -676,6 +678,11 @@ export default function HireUs() {
               touch with you shortly to discuss next steps.
             </p>
           </>
+        ) : guided ? (
+          <div className="mb-8">
+            <h3 className="text-heading-lg font-bold text-moloch-500 mb-3">Tell us about your project</h3>
+            <p className="text-body-base">Three steps: introduce yourself, outline the project, then share your scope and timing. You can go back to review before sending.</p>
+          </div>
         ) : (
           <h3 className="text-heading-lg font-bold text-moloch-500 mb-12">
             Let&apos;s Get Started
@@ -697,7 +704,7 @@ export default function HireUs() {
               className="hire-us-wizard"
               steps={wizardSteps}
               onComplete={handleWizardComplete}
-              showProgress={false}
+              showProgress={guided}
               allowBackNavigation={true}
               showSummary={false}
             />

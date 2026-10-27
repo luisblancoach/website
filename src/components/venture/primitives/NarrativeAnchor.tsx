@@ -5,14 +5,15 @@ import type { NarrativeLink } from "@/lib/narrative/types";
 import { useVenture } from "../shell/VentureShell";
 import { ReviewFlag } from "./Review";
 
-// Section links scroll in place or route to the audience that owns the section.
-// Outbound links open in a new tab, as everywhere else on the site. A flagged
+// Section links scroll in place or route to the audience that owns the section;
+// the project inquiry also opens its form, as in the October 23 build. Outbound
+// links open in a new tab, as everywhere else on the site. A flagged
 // destination outlines the whole link until it is confirmed.
 export default function NarrativeAnchor({ link, className, children }: { link: NarrativeLink; className?: string; children: ReactNode }) {
-  const { sectionHref, followSectionLink } = useVenture();
+  const { sectionHref, followSectionLink, followInquiryLink } = useVenture();
   const section = link.section;
   const anchor = section ? (
-    <a className={className} href={sectionHref(section)} onClick={(event) => followSectionLink(event, section)}>{children}</a>
+    <a className={className} href={sectionHref(section)} onClick={(event) => section === "project-inquiry" ? followInquiryLink(event) : followSectionLink(event, section)}>{children}</a>
   ) : (
     <a className={className} href={link.href} target="_blank" rel="noopener noreferrer">{children}</a>
   );

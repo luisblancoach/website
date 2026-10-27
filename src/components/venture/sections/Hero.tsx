@@ -8,7 +8,9 @@ import NarrativeAnchor from "../primitives/NarrativeAnchor";
 import { useVenture } from "../shell/VentureShell";
 import styles from "../venture.module.css";
 
-export default function Hero({ content }: { content: HeroContent }) {
+// `grouped` is the October 23 composition used by the audience routes: the dek
+// and actions sit under the title in one column. "/" keeps them separate.
+export default function Hero({ content, grouped = false }: { content: HeroContent; grouped?: boolean }) {
   const { portalOpen } = useVenture();
   const heroRef = useRef<HTMLElement>(null);
 
@@ -90,6 +92,25 @@ export default function Hero({ content }: { content: HeroContent }) {
     };
   }, [portalOpen]);
 
+  const supplement = (
+    <div className={styles.heroSupplement}>
+      <p className={styles.heroDek}>
+        <CopyText copy={content.dek} />
+      </p>
+      <div className={styles.heroPaths} aria-label="Ways into RaidGuild">
+        {content.paths.map((path) => (
+          <NarrativeAnchor
+            key={path.label.id}
+            link={path}
+            className={[styles.pill, path.variant === "filled" ? styles.pillFilled : styles.pillOutline, path.primary ? styles.heroPrimaryPath : ""].filter(Boolean).join(" ")}
+          >
+            <span><CopyText copy={path.label} /></span><i className={styles.pillIcon} aria-hidden="true">{path.icon}</i>
+          </NarrativeAnchor>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <section className={styles.hero} id="top" ref={heroRef}>
       <div className={styles.heroStage}>
@@ -130,23 +151,9 @@ export default function Hero({ content }: { content: HeroContent }) {
           <div className={content.title.long ? `${styles.heroTitle} ${styles.heroTitleLong}` : styles.heroTitle}>
             <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} /></em></h1>
           </div>
+          {grouped && supplement}
         </div>
-        <div className={styles.heroSupplement}>
-          <p className={styles.heroDek}>
-            <CopyText copy={content.dek} />
-          </p>
-          <div className={styles.heroPaths} aria-label="Ways into RaidGuild">
-            {content.paths.map((path) => (
-              <NarrativeAnchor
-                key={path.label.id}
-                link={path}
-                className={[styles.pill, path.variant === "filled" ? styles.pillFilled : styles.pillOutline, path.primary ? styles.heroPrimaryPath : ""].filter(Boolean).join(" ")}
-              >
-                <span><CopyText copy={path.label} /></span><i className={styles.pillIcon} aria-hidden="true">{path.icon}</i>
-              </NarrativeAnchor>
-            ))}
-          </div>
-        </div>
+        {!grouped && supplement}
         <div className={styles.heroIndex}>
           <span>TRANSMISSION</span>
           <strong>001</strong>

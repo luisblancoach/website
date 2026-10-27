@@ -32,8 +32,8 @@ const sectionHome: Record<SectionId, string> = {
 
 const routeSections: Record<string, readonly SectionId[]> = {
   "/": ["guild", "team", "work", "gallery", "uncharted", "spears", "contact", "project-inquiry"],
-  "/community": ["tension", "path", "guild", "work", "gallery", "uncharted", "team", "join"],
-  "/clients": ["spears", "contact", "project-inquiry"],
+  "/community": ["guild", "raida", "work", "gallery", "uncharted", "team", "join", "spears", "capabilities"],
+  "/clients": ["case-studies", "spears", "capabilities", "team", "contact", "project-inquiry"],
 };
 
 export function routeHasSection(pathname: string, section: SectionId) {

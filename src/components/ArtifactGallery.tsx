@@ -25,15 +25,24 @@ const fallbackArtifacts: Artifact[] = [
   { id: "desert-walker", title: "Desert Walker", category: "3D vignette", description: "A dieselpunk survey walker in a procedural desert. Orbit the scene and explore its ambient motion." },
 ];
 
-export default function ArtifactGallery({ collaborators = [], showFeatured = true, onOpenPortal }: { collaborators?: GalleryItem[]; showFeatured?: boolean; onOpenPortal?: () => void }) {
+// `compact` is the October 23 collection (40f3910) used by the audience routes:
+// filters above the grid, game and tool filters, and the first eight tiles
+// until "Explore all" is chosen.
+export default function ArtifactGallery({ collaborators = [], showFeatured = true, compact = false, onOpenPortal }: { collaborators?: GalleryItem[]; showFeatured?: boolean; compact?: boolean; onOpenPortal?: () => void }) {
   const [posts, setPosts] = useState<GalleryItem[]>([]);
   const [postsState, setPostsState] = useState<"loading" | "live" | "error">("loading");
   const [modules, setArtifacts] = useState(fallbackArtifacts);
   const [filter, setFilter] = useState("all");
+  const [expanded, setExpanded] = useState(false);
   const experiments = modules.map(item => ({ ...item, kind: "experiment" as const }));
   const collection = [guildPortal, ...Array.from({ length: Math.max(posts.length, collaborators.length, experiments.length) }, (_, index) =>
     [posts[index], experiments[index], collaborators[index]].filter(Boolean)).flat()];
-  const artifacts = collection.filter(item => filter === "all" || item.kind === filter);
+  const isGame = (item: GalleryItem) => /game|arcade/i.test(item.category);
+  const isTool = (item: GalleryItem) => /tool|interface|utility/i.test(item.category);
+  const artifacts = collection.filter(item => filter === "all" || (filter === "game" ? isGame(item) : filter === "tool" ? isTool(item) : item.kind === filter));
+  const filters = compact
+    ? [["all", "Everything"], ["experiment", "Experiences"], ...(collection.some(isGame) ? [["game", "Games"]] : []), ...(collection.some(isTool) ? [["tool", "Tools & interfaces"]] : []), ["post", "Field notes"], ...(collaborators.length ? [["collaborator", "Built with"]] : [])]
+    : [["all", "Everything"], ["post", "Field notes"], ["experiment", "Experiments"], ...(collaborators.length ? [["collaborator", "Built with"]] : [])];
   const [catalogState, setCatalogState] = useState<'loading' | 'live' | 'fallback'>('loading');
   const [selected, setSelected] = useState<string | null>(null);
   const [peek, setPeek] = useState<string | null>(null);
@@ -157,6 +166,10 @@ export default function ArtifactGallery({ collaborators = [], showFeatured = tru
     const itemsInRow = items.slice(row * columns, (row + 1) * columns);
     return <div key={row} data-elastic-row className={styles.row} style={{ gridTemplateColumns: Array.from({ length: columns }, (_, index) => itemsInRow[index]?.id === peek ? "minmax(0, 1.5fr)" : "minmax(0, 1fr)").join(" ") }}>{itemsInRow.map(card)}</div>;
   });
+  const filterButtons = <div className={styles.filters} role={compact ? "group" : undefined} aria-label="Filter the collection">
+    {filters.map(([value, label]) =>
+      <button key={value} type="button" aria-pressed={filter === value} onClick={() => { setSelected(null); previous.current = null; setFilter(value); setExpanded(false); setPeek(null); zones.current = []; }}>{label}</button>)}
+  </div>;
   return <section className={styles.section} aria-labelledby="artifact-heading">
     <h3 id="artifact-heading" className={styles.srOnly}>Explore the frontier collection</h3>
     {showFeatured && <div className={styles.featured} aria-labelledby="featured-discoveries-heading">
@@ -174,6 +187,7 @@ export default function ArtifactGallery({ collaborators = [], showFeatured = tru
         ))}
       </div>
     </div>}
+    {compact && filterButtons}
     <div className={styles.guide}><span>{String(artifacts.length).padStart(2, '0')} / DISCOVERIES</span><span>{active ? "Select a preview to switch" : "Select a tile to unfold"}</span></div>
     {postsState === "error" && <p>Community posts are temporarily unavailable. <a href="https://portal.raidguild.org/posts" target="_blank" rel="noopener noreferrer">Read them on Portal →</a></p>}
     {artifacts.length === 0 && <p>{filter === "post" && postsState === "loading" ? "Loading the latest public posts…" : "No entries in this collection."}</p>}
@@ -187,19 +201,17 @@ export default function ArtifactGallery({ collaborators = [], showFeatured = tru
       pointer.current = { x: event.clientX, y: event.clientY };
       scheduleHover();
     }} onPointerEnter={() => { zones.current = []; }}>
-      {rows(artifacts)}
+      {rows(compact && !expanded ? artifacts.slice(0, 8) : artifacts)}
+      {compact && artifacts.length > 8 && <button className={styles.moreButton} type="button" aria-expanded={expanded} onClick={() => { setExpanded(!expanded); select(null); zones.current = []; }}>{expanded ? "Show fewer discoveries" : `Explore all ${artifacts.length} discoveries`}</button>}
     </div>
     <aside className={styles.detail} id="artifact-detail" aria-label="Discovery details">
-      <div className={styles.filters} aria-label="Filter the collection">
-        {[["all", "Everything"], ["post", "Field notes"], ["experiment", "Experiments"], ...(collaborators.length ? [["collaborator", "Built with"]] : [])].map(([value, label]) =>
-          <button key={value} type="button" aria-pressed={filter === value} onClick={() => { setSelected(null); previous.current = null; setFilter(value); setPeek(null); zones.current = []; }}>{label}</button>)}
-      </div>
+      {!compact && filterButtons}
       {active ? <>
           <button ref={closeButton} className={styles.back} onClick={() => select(null)}>← Back to the collection <span aria-hidden="true">×</span></button>
           <div className={styles.feature}>{preview(active, true)}<div><p>{active.category}</p><h4>{active.title}</h4><p>{active.description}</p>{active.id === guildPortal.id ? <Dialog.Trigger asChild><button className={styles.portalLaunch} type="button" onClick={onOpenPortal}>Open the Portal · Begin the hunt ↗<small>Opens an experience on this page</small></button></Dialog.Trigger> : (active.href || active.kind !== "collaborator") && <a href={active.href || `https://portal-artifacts-production.up.railway.app/${active.id}/`} target="_blank" rel="noopener noreferrer">{active.kind === "collaborator" ? `Visit ${active.title}` : active.kind === "post" ? "Read the post" : "Explore experiment"} ↗<small>Opens in a new tab</small></a>}</div></div>
-      </> : <div className={styles.empty}><span aria-hidden="true">↖</span><h4>Follow your curiosity.</h4><p>{collaborators.length ? "Select a card to explore a field note, a public experiment, or someone we’ve built with." : "Select a card to explore a field note or a public experiment."}</p><p>Choose a category above to narrow the collection.</p></div>}
+      </> : <div className={styles.empty}><span aria-hidden="true">↖</span><h4>Follow your curiosity.</h4><p>{compact ? "Select a card to explore a field note, a digital experience, a game or a tool." : collaborators.length ? "Select a card to explore a field note, a public experiment, or someone we’ve built with." : "Select a card to explore a field note or a public experiment."}</p><p>Choose a category above to narrow the collection.</p></div>}
     </aside>
     </div>
-    <p className={styles.footnote}>{catalogState === 'fallback' ? 'The live experiment catalog is unavailable. Showing selected experiments. ' : collaborators.length ? 'Field notes, public experiments, clients, collaborators, and member-built projects. ' : 'Field notes and public experiments from across the network. '}<a href="https://portal.raidguild.org/modules" target="_blank" rel="noopener noreferrer">Browse Portal modules ↗</a></p>
+    <p className={styles.footnote}>{catalogState === 'fallback' ? 'The live experiment catalog is unavailable. Showing selected experiments. ' : compact ? 'Digital experiences, experiments and tools from the Guild. ' : collaborators.length ? 'Field notes, public experiments, clients, collaborators, and member-built projects. ' : 'Field notes and public experiments from across the network. '}<a href="https://portal.raidguild.org/modules" target="_blank" rel="noopener noreferrer">Browse Portal modules ↗</a></p>
   </section>;
 }

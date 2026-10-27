@@ -16,7 +16,17 @@ describe("audience routes", () => {
   test("section links route to the audience that owns the section", () => {
     assert.equal(sectionHref("/", "guild"), "#guild");
     assert.equal(sectionHref("/clients", "guild"), "/community#guild");
-    assert.equal(sectionHref("/community", "spears"), "/clients#spears");
+    assert.equal(sectionHref("/community", "contact"), "/clients#contact");
+  });
+
+  test("each audience route carries its October 23 chapters", () => {
+    for (const section of ["case-studies", "capabilities", "spears", "team", "project-inquiry"]) assert.equal(sectionHref("/clients", section), `#${section}`, section);
+    // October 23 Join also closes with the services chapter.
+    for (const section of ["guild", "raida", "work", "team", "join", "spears"]) assert.equal(sectionHref("/community", section), `#${section}`, section);
+    // Chapters a route does not carry lead to the route that owns them.
+    assert.equal(sectionHref("/clients", "raida"), "/community#raida");
+    assert.equal(sectionHref("/community", "case-studies"), "/clients#case-studies");
+    assert.equal(sectionHref("/community", "project-inquiry"), "/clients#project-inquiry");
   });
 });
 

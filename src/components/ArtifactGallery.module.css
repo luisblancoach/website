@@ -90,3 +90,8 @@
 :global([data-cta="semantic"]) .feature .portalLaunch { background: var(--cta-bg); color: var(--cta-fg); transition: background-color .18s ease, color .18s ease, box-shadow .18s ease; }
 :global([data-cta="semantic"]) .feature .portalLaunch:hover { background: var(--cta-bg-hover); box-shadow: 0 0 0 2px var(--cta-hover-ring); color: var(--cta-fg-hover); }
 :global([data-cta="semantic"]) .feature .portalLaunch:focus-visible { box-shadow: 0 0 0 3px var(--cta-ring-halo); outline: 3px solid var(--cta-ring); outline-offset: 3px; }
+
+/* October 23 compact collection (B3.3, audience routes). */
+.moreButton { background: transparent; border: 1px solid currentColor; border-radius: 100px; color: inherit; cursor: pointer; font: inherit; margin-top: 24px; min-height: var(--tap-min, 44px); padding: 14px 20px; }
+.moreButton:focus-visible { outline: 3px solid var(--cta-ring, var(--coral)); outline-offset: 4px; }
+.section > .filters { margin-bottom: 24px; }

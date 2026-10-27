@@ -5,6 +5,8 @@ import { clientsNarrative } from "../src/lib/narrative/clients.ts";
 import { sharedNarrative } from "../src/lib/narrative/shared.ts";
 import { entryGuild, entryHero } from "../src/lib/narrative/entry.ts";
 import { clientData } from "../src/lib/data/clients.ts";
+import { services } from "../src/lib/data/content.ts";
+import { activeSpears } from "../src/lib/data/venture.ts";
 import { collectCopy, reviewFlagsEnabled } from "../src/lib/narrative/types.ts";
 
 // Lines that appear verbatim in Tae's approved narrative direction. Nothing else
@@ -150,12 +152,18 @@ describe("clients narrative", () => {
     assert.equal(clientsNav.cta.label.text, "Tell us what you're building");
   });
 
-  test("capabilities use Tae's three pillars over the published services", () => {
-    const { pillars } = clientsNarrative.clientsCapabilities;
+  test("capabilities list the published services in order, grouped by Tae's three pillars", () => {
+    const { services: listed, pillars } = clientsNarrative.clientsCapabilities;
+    assert.deepEqual(listed.map((s) => s.title.text), services.map((s) => s.title), "the October 23 accordion follows the published order");
+    for (const s of listed) assert.equal(s.title.reason, "claim", s.title.id);
     assert.deepEqual(pillars.map((p) => p.title.text), ["Design", "Engineering", "Product thinking"]);
-    const titles = pillars.flatMap((p) => p.services.map((s) => s.title.text));
-    assert.deepEqual([...titles].sort(), ["AI Solutions & Automation", "DAO Consulting & Governance", "Full-Stack Development", "Marketing & Content Strategy", "Product & System Design"]);
-    for (const p of pillars) for (const s of p.services) assert.equal(s.title.status, "needs-review");
+    assert.deepEqual(pillars.flatMap((p) => p.services).sort(), services.map((s) => s.title).sort(), "every service sits under exactly one pillar");
+  });
+
+  test("specialist practices carry their existing artwork", () => {
+    for (const practice of clientsNarrative.clientsCapabilities.practices) {
+      assert.ok(activeSpears.some((spear) => spear.title === practice.title.text && spear.art === practice.image.src), practice.title.id);
+    }
   });
 
   test("previous works come only from the existing archive and stay flagged", () => {
@@ -179,10 +187,15 @@ describe("community additions", () => {
   test("Queen Raida links to the chat and flags artwork rights", () => {
     const raida = communityNarrative.communityQueenRaida;
     assert.equal(raida.cta.href, "/chat");
-    assert.equal(raida.cta.label.text, "Ask Queen Raida");
+    assert.equal(raida.cta.label.text, "Ask our AI CTO", "the October 23 carousel is kept as-is");
     assert.equal(raida.artwork.rights.status, "needs-review");
     assert.equal(raida.artwork.rights.reason, "claim");
-    assert.equal(raida.value.reason, "claim");
+  });
+
+  test("Queen Raida keeps the three October 23 panels, with capability statements flagged", () => {
+    const raida = communityNarrative.communityQueenRaida;
+    assert.deepEqual(raida.panels.map((p) => p.title.text), ["Meet Queen Raida.", "Follow the thread.", "Find your way in."]);
+    for (const panel of raida.panels) assert.equal(panel.copy.reason, "claim", panel.copy.id);
   });
 
   test("the Hats note is a sourced claim", () => {

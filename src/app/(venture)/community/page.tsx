@@ -1,21 +1,26 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { Metadata } from "next";
 import Hero from "@/components/venture/sections/Hero";
 import GuildTicker from "@/components/venture/sections/GuildTicker";
-import Tension from "@/components/venture/sections/Tension";
-import PathSteps from "@/components/venture/sections/PathSteps";
 import GuildPrologue from "@/components/venture/sections/GuildPrologue";
-import CommunityActivity from "@/components/venture/sections/CommunityActivity";
-import GuildPeople from "@/components/venture/sections/GuildPeople";
+import QueenRaidaBanner from "@/components/venture/sections/QueenRaidaBanner";
+import WallOfCuriosities from "@/components/venture/sections/WallOfCuriosities";
+import Stewardship from "@/components/venture/sections/Stewardship";
+import BuilderNetwork from "@/components/venture/sections/BuilderNetwork";
 import JoinCTA from "@/components/venture/sections/JoinCTA";
+import Capabilities from "@/components/venture/sections/Capabilities";
 import Creed from "@/components/venture/sections/Creed";
-import SectionSlope from "@/components/venture/primitives/SectionSlope";
 import {
-  communityActivity, communityGuild, communityHero, communityJoin, communityPath, communityTension,
+  communityActivity, communityCreed, communityGuild, communityHero, communityJoin, communityQueenRaida, communityStewardship,
 } from "@/lib/narrative/community";
+import { clientsCapabilities } from "@/lib/narrative/clients";
+import { buildersCommunity } from "@/lib/narrative/shared";
 
-// Tae's community narrative: hero → tension → path → membership → activity →
-// people → join. Unconfirmed claims are flagged in development and preview;
-// keep the route out of search until they are resolved.
+// The October 23 Join composition (40f3910): guild → Queen Raida → curiosities →
+// stewardship → builders → join → services. Tae's tension, path and activity chapters
+// (Phase 2) return in the editorial batch. Unconfirmed claims are flagged in
+// development and preview; keep the route out of search until they are resolved.
 export const metadata: Metadata = {
   alternates: { canonical: "/community" },
   title: "Community",
@@ -24,23 +29,23 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
+// The Queen Raida artwork stays out of the repository until its rights are
+// confirmed; it renders only where a local copy exists.
+const raidaArtworkAvailable = existsSync(join(process.cwd(), "public", communityQueenRaida.artwork.src));
+
 export default function CommunityPage() {
   return (
     <>
-      <Hero content={communityHero} />
+      <Hero content={communityHero} grouped />
       <GuildTicker />
-      <Tension content={communityTension} />
-      <SectionSlope variant="paperDeep" />
-      <PathSteps id="path" content={communityPath} />
-      <SectionSlope variant="practiceContact" />
-      <GuildPrologue content={communityGuild} />
-      <SectionSlope variant="communityField" />
-      <CommunityActivity content={communityActivity} />
-      <SectionSlope variant="skyPaper" />
-      <GuildPeople />
-      <SectionSlope variant="paperDeep" />
+      <GuildPrologue content={communityGuild} metrics={false} />
+      <QueenRaidaBanner content={communityQueenRaida} artworkAvailable={raidaArtworkAvailable} />
+      <WallOfCuriosities content={communityActivity.collection} />
+      <Stewardship content={communityStewardship} />
+      <BuilderNetwork content={buildersCommunity} />
       <JoinCTA content={communityJoin} />
-      <Creed />
+      <Capabilities content={clientsCapabilities} />
+      <Creed content={communityCreed} />
     </>
   );
 }

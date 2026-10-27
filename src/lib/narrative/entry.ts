@@ -1,5 +1,5 @@
 import { DISCORD_INVITE_URL, PORTAL_JOIN_URL } from "../data/constants";
-import { approved, defineNarrative, type GuildContent, type HeroContent } from "./types";
+import { approved, defineNarrative, type GuildContent, type HeroContent, type InquiryContent } from "./types";
 
 // Copy currently published on "/" (the Venture Beyond entry). Reused verbatim so
 // the entry renders exactly as before; the entry narrative is revisited in Phase 4.
@@ -53,3 +53,12 @@ export const entryGuild: GuildContent = defineNarrative("entry.guild", {
     { value: existing("2019"), label: existing("BUILDING TOGETHER SINCE") },
   ],
 } satisfies GuildContent);
+
+export const entryInquiry: InquiryContent = defineNarrative("entry.inquiry", {
+  label: existing("[ BEGIN A TRANSMISSION ]"),
+  title: { lead: existing("Find your"), em: existing("starting point.") },
+  body: existing("Start with a specialist practice above. If the fit is unclear, send the Guild a short inquiry."),
+  summary: { label: existing("Start a Guild inquiry"), hint: existing("Share a project or question ↓"), hintOpen: existing("Close the inquiry ↑") },
+  coordinates: [existing("RG—INTAKE / 001"), existing("ENCRYPTION: OPEN")],
+  image: { alt: existing("Four Guild characters with maps, tools, and a staff") },
+} satisfies InquiryContent);

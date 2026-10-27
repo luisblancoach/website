@@ -10,7 +10,7 @@ import {
 // action follow Tae's approved direction; layout and supporting copy come from
 // the October 23 iteration (40f3910) and stay flagged until approved. Case
 // studies and services are drawn from the existing data modules, never authored
-// here. Nothing in this file is rendered until the /clients composition (B3.4).
+// here.
 
 const tae = (text: string) => approved(text, "tae-brief");
 const existing = (text: string) => approved(text, "existing-site");
@@ -29,13 +29,15 @@ export const clientsHero: HeroContent = defineNarrative("clients.hero", {
   ],
 } satisfies HeroContent);
 
-// Published services (lib/data/content.ts, raidguild.org). Their placement under
-// Tae's three pillars is a proposal until confirmed.
-const service = (title: string, placementNote?: string) => {
-  const record = services.find((item) => item.title === title);
-  if (!record) throw new Error(`Unknown service: ${title}`);
-  const note = `Published service on raidguild.org (lib/data/content.ts). Confirm it is offered today${placementNote ? `; ${placementNote}` : ""}.`;
-  return { title: claim(record.title, "existing-site", note), body: claim(record.bodyText, "existing-site", note) };
+// Published services (lib/data/content.ts, raidguild.org), in published order.
+const serviceNote = "Published service on raidguild.org (lib/data/content.ts). Confirm it is offered today.";
+const publishedServices = services.map((record) => ({
+  title: claim(record.title, "existing-site", serviceNote),
+  body: claim(record.bodyText, "existing-site", serviceNote),
+}));
+const service = (title: string) => {
+  if (!services.some((item) => item.title === title)) throw new Error(`Unknown service: ${title}`);
+  return title;
 };
 
 const spear = (title: string) => {
@@ -44,6 +46,7 @@ const spear = (title: string) => {
   return {
     tag: existing(record.tag),
     title: existing(record.title),
+    image: { src: record.art, alt: existing(record.artAlt) },
     // Existing copy, but statements about governance or ownership stay flagged.
     body: /governance|ownership/i.test(record.copy)
       ? claim(record.copy, "existing-site", "Existing practice copy that mentions governance or shared ownership. Confirm the wording with the practice.")
@@ -62,19 +65,19 @@ export const clientsCapabilities: CapabilitiesContent = defineNarrative("clients
   label: oct23("[ Services & capabilities ]"),
   title: { lead: oct23("Ideas into"), em: oct23("working systems") },
   intro: existing("The Guild is the center of gravity. These independently led practices are its tips of the spear, turning shared experience into focused offerings with their own teams and direction."),
+  services: publishedServices,
+  // Placement of each service under a pillar is a proposal until confirmed.
   pillars: [
     { title: tae("Design"), body: wording("Making complex technology understandable and usable."), services: [service("Product & System Design")] },
     { title: tae("Engineering"), body: wording("Building the products and systems behind it."), services: [service("Full-Stack Development"), service("AI Solutions & Automation")] },
     {
       title: tae("Product thinking"),
-      body: wording("Deciding what to build, and why."),
-      services: [
-        service("DAO Consulting & Governance", "placement under Product thinking is unconfirmed"),
-        service("Marketing & Content Strategy", "placement under Product thinking is unconfirmed"),
-      ],
+      body: wording("Deciding what to build, and why.", "New narrative copy; needs editorial approval. Placing DAO Consulting and Marketing under this pillar is unconfirmed."),
+      services: [service("DAO Consulting & Governance"), service("Marketing & Content Strategy")],
     },
   ],
   practices: [spear("Applied AI"), spear("Onchain Systems")],
+  practicesLabel: oct23("Explore our specialist practices"),
   inquiry: { label: existing("Open a Guild inquiry"), section: "project-inquiry" },
   footnote: { lead: existing("Not sure which practice fits?"), link: { label: existing("Open the Guild inquiry form →"), section: "project-inquiry" } },
 } satisfies CapabilitiesContent);
@@ -98,7 +101,6 @@ const archive = (id: string, company: string, title: string, description: string
 };
 
 export const clientsPreviousWorks: PreviousWorksContent = defineNarrative("clients.previousWorks", {
-  label: oct23("[ Previous works ]"),
   title: { lead: oct23("Previous"), em: oct23("works.") },
   intro: oct23("A few starting points from the Guild's project archive."),
   works: [
@@ -106,6 +108,7 @@ export const clientsPreviousWorks: PreviousWorksContent = defineNarrative("clien
     archive("brightid", "BrightID", "Social identity systems", "Design and development for social identity and user verification."),
     archive("hypercerts", "Hypercerts", "Tools for public goods funding", "Smart contracts for minting, burning and donating Hypercerts."),
   ],
+  detailsLabel: oct23("Explore project details"),
   cta: { label: oct23("Bring us your next project"), section: "project-inquiry" },
 } satisfies PreviousWorksContent);
 
@@ -113,8 +116,9 @@ export const clientsInquiry: InquiryContent = defineNarrative("clients.inquiry",
   label: existing("[ Begin a transmission ]"),
   title: { lead: tae("Tell us what"), em: tae("you're building") },
   body: oct23("Share your goals, then we'll explore how the Guild can help."),
-  summary: { label: existing("Start a Guild inquiry"), hint: existing("Share a project or question ↓") },
+  summary: { label: existing("Start a Guild inquiry"), hint: existing("Share a project or question ↓"), hintOpen: existing("Close the inquiry ↑") },
   coordinates: [oct23("Your project starts here"), oct23("Contact · Project · Requirements")],
+  image: { alt: existing("Four Guild characters with maps, tools, and a staff") },
 } satisfies InquiryContent);
 
 export const clientsNav: NavContent = defineNarrative("clients.nav", {

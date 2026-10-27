@@ -418,9 +418,9 @@
 .contactFormShell :global(.contact-form-input)::placeholder, .contactFormShell :global(.contact-form-textarea)::placeholder { color: rgba(239,233,215,.42) !important; }
 .contactFormShell :global(.contact-btn-active) { background: var(--coral) !important; border: 0; border-radius: 100px !important; color: var(--paper) !important; font-family: var(--font-mono), monospace !important; font-size: var(--type-ui-strong) !important; height: 50px !important; letter-spacing: .06em !important; padding: 0 24px !important; transition: background .2s, color .2s, transform .2s !important; width: auto !important; }
 .contactFormShell :global(.contact-btn-active):hover { background: var(--paper) !important; color: var(--ink) !important; transform: translateY(-2px); }
-.contactFormShell :global(.hire-us-wizard) > div:first-child { border-bottom: 1px solid rgba(239,233,215,.2); gap: 8px; margin-bottom: 34px; padding-bottom: 24px; }
-.contactFormShell :global(.hire-us-wizard) > div:first-child > div { background: transparent !important; border: 1px solid rgba(239,233,215,.32); border-radius: 100px !important; color: var(--paper) !important; font-family: var(--font-mono), monospace; font-size: var(--type-ui); padding-left: 12px; padding-right: 14px; }
-.contactFormShell :global(.hire-us-wizard) > div:first-child > div > span:first-child { background: var(--coral) !important; color: var(--paper) !important; }
+.contactFormShell :global(.hire-us-wizard) > div:has(> :global(div.pointer-events-none)) { border-bottom: 1px solid rgba(239,233,215,.2); gap: 8px; margin-bottom: 34px; padding-bottom: 24px; }
+.contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none) { background: transparent !important; border: 1px solid rgba(239,233,215,.32); border-radius: 100px !important; color: var(--paper) !important; font-family: var(--font-mono), monospace; font-size: var(--type-ui); padding-left: 12px; padding-right: 14px; }
+.contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none) > span:first-child { background: var(--coral) !important; color: var(--paper) !important; }
 .contactFormShell :global([role="radiogroup"]) { flex-wrap: wrap; }
 .contactFormShell :global(button[role="combobox"]) { background: transparent; border-color: rgba(239,233,215,.38); color: var(--paper); }
 .contactFormShell :global(.contact-multiselect-badge) { background: var(--coral); }
@@ -838,8 +838,8 @@
   .contactProtocol div { border-bottom: 1px solid rgba(16,45,44,.2); padding: 14px 0; }
   .contactFormShell { box-shadow: 10px 10px 0 var(--sky); margin-right: 10px; padding: 28px 20px; }
   .formCoordinates span:last-child { display: none; }
-  .contactFormShell :global(.hire-us-wizard) > div:first-child { align-items: stretch; flex-direction: column; }
-  .contactFormShell :global(.hire-us-wizard) > div:first-child > div { justify-content: flex-start; }
+  .contactFormShell :global(.hire-us-wizard) > div:has(> :global(div.pointer-events-none)) { align-items: stretch; flex-direction: column; }
+  .contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none) { justify-content: flex-start; }
   .footer { grid-template-columns: 1fr; }
   .socials { justify-self: start; }
   .footer small { grid-column: 1; }
@@ -931,13 +931,14 @@
 .fieldNotes { padding-inline: 0; overflow: clip; }
 .contactFormShell { height: auto; min-height: 720px; }
 .contactDruid { object-fit: contain; }
-.contactFormShell :global(.hire-us-wizard) > div:first-child > div { height: auto; min-height: 32px; padding-top: 6px; padding-bottom: 6px; }
-.contactFormShell :global(.hire-us-wizard) > div:first-child > div > span:first-child { flex-shrink: 0; }
-.contactFormShell :global(.hire-us-wizard) > div:first-child > div > span:last-child { display: inline; font-size: var(--type-ui); line-height: 1.3; }
-/* Step numerals and the required-field marker inside the inquiry form. */
-.contactFormShell :global(.hire-us-wizard) > div:first-child > div > span:first-child { font-size: var(--type-ui) !important; height: 20px; width: 20px; }
-.contactFormShell :global(.hire-us-wizard) > div:first-child > div > span:global(.bg-scroll-100):first-child { background: var(--color-cream) !important; color: var(--color-dark-green) !important; }
-.contactFormShell :global(.hire-us-wizard) > div:first-child > div > span:global(.bg-moloch-500):first-child { background: transparent !important; box-shadow: inset 0 0 0 1px currentColor; color: var(--color-cream) !important; }
+.contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none) { height: auto; min-height: 32px; padding-top: 6px; padding-bottom: 6px; }
+.contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none) > span:first-child { flex-shrink: 0; }
+.contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none) > span:last-child { display: inline; font-size: var(--type-ui); line-height: 1.3; }
+/* Step numerals and the required-field marker inside the inquiry form. Rules
+   match the step-indicator row itself: the guided form puts a progress card first. */
+.contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none) > span:first-child { font-size: var(--type-ui) !important; height: 20px; width: 20px; }
+.contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none) > span:global(.bg-scroll-100):first-child { background: var(--color-cream) !important; color: var(--color-dark-green) !important; }
+.contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none) > span:global(.bg-moloch-500):first-child { background: transparent !important; box-shadow: inset 0 0 0 1px currentColor; color: var(--color-cream) !important; }
 .contactFormShell label :global(.text-moloch-500) { color: inherit; }
 .guildBuilders { --artifact-opacity: 1; }
 :global(html[data-theme="dark"]) .site .guildBuilders { filter: none; mix-blend-mode: normal; opacity: 1; }
@@ -1611,4 +1612,64 @@
 @media (prefers-reduced-motion: reduce) {
   .site[data-cta="semantic"] .pill, .site[data-cta="semantic"] .contact .inquiryMore > summary { transition: none; }
   .site[data-cta="semantic"] .pill:hover { transform: none; }
+}
+
+/* ── October 23 composition (B3.3) ─────────────────────────────────────────
+   Ported from 40f3910 (HomeExperience.module.css) and scoped to the audience
+   routes (.site[data-audience]) so "/" keeps its baseline until B8. Only rules
+   that took effect in the October 23 build are carried over; its audience
+   switch, skip link and header geometry were ported in B1. Functional sizes
+   use the B2 tokens. */
+.site[data-audience] .hero, .site[data-audience] .heroStage { min-height: 780px; }
+.site[data-audience] .heroCopy { padding-top: 0; top: 180px; width: min(560px, 80vw); }
+.site[data-audience] .heroSupplement { margin-top: 30px; position: static; transform: none; width: 100%; }
+.site[data-audience] .heroDek { width: 100%; }
+.site[data-audience] .heroPaths { grid-template-columns: 1fr; max-width: 560px; }
+.site[data-audience] section, .anchorTarget { scroll-margin-top: 100px; }
+.anchorTarget { display: block; }
+.site[data-audience] .keepers { height: auto; min-height: 0; padding-block: 64px; }
+.site[data-audience] .practice, .site[data-audience] .fieldNotes, .site[data-audience] .contact { height: auto; min-height: 0; }
+.site[data-audience] .contact > .pill { margin-top: 32px; }
+
+/* Builder network wall (effective October 23 rules, including the 40f3910
+   card-overlap fix: every profile keeps its own grid cell). */
+.site[data-audience] .teamNetwork .teamWall { height: 430px; width: 100%; }
+.site[data-audience] .teamNetwork .memberMarquee { height: 100%; }
+.site[data-audience] .teamNetwork .memberLoop { gap: 20px; }
+.site[data-audience] .teamNetwork .memberRail { --brick-width: clamp(190px, 22vw, 290px); align-items: stretch; gap: 18px; grid-auto-columns: var(--brick-width); grid-auto-flow: column; grid-template-rows: repeat(3, 92px); transform: none; }
+.site[data-audience] .teamNetwork .memberRail > :is(a, div) { box-sizing: border-box; height: 92px; min-width: 0; padding: 14px; transform: none; width: 100%; }
+
+.creedCta { margin: 34px auto 0; }
+/* Join chapter in the contact composition: actions where the form would be. */
+.joinContact > .guildActions { margin-top: 32px; }
+.joinContact > .guildMoreLinks { margin-top: 20px; }
+.practiceDisclosure .practiceCards { margin-top: 32px; }
+.rosterDisclosure > summary, .practiceDisclosure > summary { border-block: 1px solid currentColor; cursor: pointer; font: 700 var(--type-ui-strong)/1.4 var(--font-mono); min-height: var(--tap-min); padding: 20px 0; }
+.stewardResponsibilities { display: grid; gap: 32px; grid-template-columns: 1fr 1fr; margin-top: 32px; }
+.stewardResponsibilities summary { cursor: pointer; font: 700 var(--type-ui-strong)/1.4 var(--font-mono); min-height: var(--tap-min); padding-block: 16px; }
+.stewardResponsibilities p, .collectionIntro { font: 400 17px/1.6 var(--font-body); max-width: 60ch; }
+.stewardResponsibilities a { color: inherit; display: inline-flex; min-height: var(--tap-inline); text-underline-offset: 4px; }
+:global(html[data-theme="dark"]) .site .stewardResponsibilities { color: var(--paper); }
+.capabilities { margin: 32px 0; }
+.capabilities details { border-top: 1px solid currentColor; }
+.capabilities details:last-child { border-bottom: 1px solid currentColor; }
+.capabilities summary { align-items: center; cursor: pointer; display: flex; font: 400 clamp(22px, 2.5vw, 32px)/1.3 var(--font-display); gap: 16px; justify-content: space-between; min-height: var(--tap-min); padding: 24px 0; }
+.capabilities summary:focus-visible { outline: 3px solid var(--cta-ring); outline-offset: 4px; }
+.capabilities p { font: 400 17px/1.6 var(--font-body); max-width: 65ch; padding-bottom: 24px; }
+
+@media (max-width: 999px) {
+  .site[data-audience] .heroCopy { top: 180px; }
+}
+@media (max-width: 700px) {
+  .site[data-audience] .teamNetwork .teamWall { height: auto; min-height: 340px; }
+  .site[data-audience] .teamNetwork .memberRail { gap: 12px; grid-auto-columns: 220px; grid-template-rows: repeat(2, 78px); }
+  .site[data-audience] .teamNetwork .memberRail > :is(a, div) { height: 78px; }
+  .creedCta { margin-top: 24px; }
+}
+@media (max-width: 600px) {
+  .site[data-audience] .heroCopy { top: 170px; width: calc(100% - 48px); }
+  .site[data-audience] .heroSupplement { margin-top: 28px; }
+  .site[data-audience] .hero, .site[data-audience] .heroStage { height: 760px; min-height: 760px; }
+  .stewardResponsibilities { gap: 12px; grid-template-columns: 1fr; }
+  .site[data-audience] .keepers { padding-block: 48px; }
 }

@@ -217,7 +217,7 @@ function Shell({ children }: { children: ReactNode }) {
     <Dialog.Root open={portalOpen} onOpenChange={(open) => { if (!open) dismissPortal(); }}>
     <UnchartedHunt>
     {/* Semantic CTA states apply on the audience routes; "/" keeps its baseline until B8. */}
-    <div className={styles.site} ref={siteRef} data-cta={audienceForPath(pathname) ? "semantic" : undefined}>
+    <div className={styles.site} ref={siteRef} data-audience={audienceForPath(pathname) ?? undefined} data-cta={audienceForPath(pathname) ? "semantic" : undefined}>
     <a className={styles.skipLink} href="#main-content">Skip to content</a>
     <main inert={portalOpen} data-motion-paused={portalOpen} className={portalForming ? styles.siteGlitching : ""}>
       <SiteHeader />

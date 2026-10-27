@@ -44,7 +44,8 @@ export const communityHero: HeroContent = defineNarrative("community.hero", {
   ),
   paths: [
     { label: tae("Join the DAO"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "↗", primary: true },
-    { label: wording("See the path"), section: "path", variant: "outline", icon: "↓" },
+    // October 23 composition: two hero actions. "See the path" returns with the
+    // path chapter in the editorial batch.
     { label: wording("Meet the builders"), section: "team", variant: "outline", icon: "↓" },
   ],
 } satisfies HeroContent);
@@ -224,22 +225,40 @@ export const communityJoin: JoinContent = defineNarrative("community.join", {
   ],
 } satisfies JoinContent);
 
-// Queen Raida (approved composition: Option A, editorial bleed). The artwork is
-// referenced, not shipped: it stays local-only until provenance is confirmed.
+// Queen Raida: the October 23 carousel, kept as-is (B3.3 decision). The
+// artwork is referenced, not shipped: it stays local-only until provenance is
+// confirmed. Capability statements are October 23 copy and stay claims.
+const raidaClaim = (text: string) => claim(text, "oct23-iteration", "October 23 copy describing what Queen Raida can do or access. Confirm with the Queen Raida maintainers before publishing.");
+
 export const communityQueenRaida: QueenRaidaContent = defineNarrative("community.queenRaida", {
-  label: wording("[ The guild's AI CTO ]", "Role title from existing site copy (\u201cour AI CTO\u201d) set as a label; needs editorial approval."),
-  title: { lead: existing("Queen"), em: existing("Raida") },
-  value: claim(
-    "Ask about the guild, its people and what members are exploring. Answers draw on public guild knowledge.",
-    "oct23-iteration",
-    "October 23 copy said the chat \u201cdraws on public Guild knowledge\u201d. Confirm what Queen Raida can access before publishing.",
-  ),
-  cta: { label: wording("Ask Queen Raida"), href: "/chat" },
-  starters: [wording("What is a raid?"), wording("How do cohorts work?"), wording("Who are the stewards?")],
-  note: wording("Queen Raida is an AI agent. Check important details against the handbook."),
+  title: { lead: existing("Queen"), em: oct23("Raida.") },
+  cta: { label: oct23("Ask our AI CTO"), href: "/chat" },
+  intro: oct23("A companion for shared Guild knowledge, exploration and conversation."),
+  panels: [
+    {
+      subtitle: oct23("A companion for Guild knowledge"),
+      title: oct23("Meet Queen Raida."),
+      copy: raidaClaim("Ask RaidGuild\u2019s AI CTO about the Guild, its people and what we\u2019re exploring. The existing chat draws on public Guild knowledge."),
+      detail: oct23("Start with a question about the Guild or its practices. Queen Raida is an AI agent; check important details against the original source."),
+    },
+    {
+      subtitle: oct23("Meeting notes & shared context"),
+      title: oct23("Follow the thread."),
+      copy: raidaClaim("Use Queen Raida as a starting point for questions about shared Guild knowledge. Bring the context of the meeting you want to explore."),
+      detail: raidaClaim("Automatic meeting capture and a searchable meeting-summary archive are not exposed by this website. Chat answers depend on the public knowledge available to the Guild\u2019s AI service."),
+    },
+    {
+      subtitle: oct23("People, practices & possibilities"),
+      title: oct23("Find your way in."),
+      copy: claim("Explore what the Guild is working on, then follow your curiosity into the community. Portal is the place to begin your cohort journey.", "oct23-iteration", "October 23 copy. The Portal join page creates an account and does not mention cohorts; confirm where the cohort journey begins."),
+      detail: claim("Queen Raida can help you explore. Applications and cohort onboarding continue through the existing RaidGuild Portal.", "oct23-iteration", "October 23 copy. Confirm that cohort applications run through Portal."),
+    },
+  ],
+  detailsLabel: oct23("Explore this role"),
   artwork: {
     src: "/images/queen-raida/queen-raida-reference.png",
-    alt: wording("Queen Raida, a monumental mural being painted by a guild traveller"),
+    alt: existing("Queen Raida"),
+    caption: existing("Queen Raida"),
     rights: claim(
       "Artwork provenance and rights unconfirmed",
       "oct23-iteration",
@@ -250,7 +269,7 @@ export const communityQueenRaida: QueenRaidaContent = defineNarrative("community
 
 // Stewardship keeps the published roster copy and adds the October 23 Hats note.
 export const communityStewardship: StewardshipContent = defineNarrative("community.stewardship", {
-  label: existing("[ CURRENT STEWARDS ]"),
+  label: oct23("[ STEWARDSHIP ]"),
   title: { lead: existing("Keepers of"), em: existing("the signal") },
   intro: existing("Stewards help care for the Guild\u2019s shared knowledge, infrastructure, coordination, and public voice."),
   roster: { label: existing("Explore all members ↗"), href: "https://portal.raidguild.org" },
@@ -264,15 +283,20 @@ export const communityStewardship: StewardshipContent = defineNarrative("communi
     ),
     link: { label: oct23("Open the Guild handbook ↗"), href: `${HB}overview/what-is-raidguild` },
   },
+  agents: {
+    summary: oct23("AI agents in the Guild"),
+    body: claim("Meet Queen Raida, the Guild\u2019s AI CTO and a starting point for public Guild knowledge.", "oct23-iteration", "October 23 copy. Confirm how Queen Raida should be described and what it can access."),
+    link: { label: oct23("Ask Queen Raida ↗"), href: "/chat" },
+  },
 } satisfies StewardshipContent);
 
 export const communityNav: NavContent = defineNarrative("community.nav", {
+  // The October 23 navigation: one item per chapter it links to. The path and
+  // activity chapters rejoin the navigation with the editorial batch.
   items: [
-    { label: wording("The path", "Phase 2 navigation label; needs editorial approval."), section: "path" },
     { label: wording("Membership", "Phase 2 navigation label; needs editorial approval."), section: "guild" },
-    { label: wording("Activity", "Phase 2 navigation label; needs editorial approval."), section: "work" },
     { label: oct23("Queen Raida"), section: "raida" },
-    { label: wording("People", "Phase 2 navigation label; needs editorial approval."), section: "team" },
+    { label: oct23("Curiosities"), section: "work" },
   ],
   cta: { label: tae("Join the DAO"), href: PORTAL_JOIN_URL, destination: joinDestination() },
 } satisfies NavContent);

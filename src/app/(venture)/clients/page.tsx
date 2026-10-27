@@ -1,31 +1,37 @@
 import type { Metadata } from "next";
 import Hero from "@/components/venture/sections/Hero";
 import GuildTicker from "@/components/venture/sections/GuildTicker";
-import ActiveSpears from "@/components/venture/sections/ActiveSpears";
+import PreviousWorks from "@/components/venture/sections/PreviousWorks";
+import Capabilities from "@/components/venture/sections/Capabilities";
+import BuilderNetwork from "@/components/venture/sections/BuilderNetwork";
+import Stewardship from "@/components/venture/sections/Stewardship";
 import GuildInquiry from "@/components/venture/sections/GuildInquiry";
 import Creed from "@/components/venture/sections/Creed";
-import SectionSlope from "@/components/venture/primitives/SectionSlope";
-import { entryHero } from "@/lib/narrative/entry";
+import { clientsCapabilities, clientsCreed, clientsHero, clientsInquiry, clientsPreviousWorks } from "@/lib/narrative/clients";
+import { buildersClients, peopleClients } from "@/lib/narrative/shared";
 
-// Phase 1 scaffold: existing practice and inquiry sections only. Tae's client
-// narrative replaces this composition in Phase 3; keep it out of search until then.
+// The October 23 Hire composition (40f3910): previous works → services →
+// builders → people → inquiry. Unconfirmed claims are flagged in development and
+// preview; keep the route out of search until they are resolved.
 export const metadata: Metadata = {
   alternates: { canonical: "/clients" },
   title: "Clients",
   description:
-    "Explore the people, ideas, and independent specialist practices growing from the RaidGuild community.",
+    "Hire RaidGuild, a decentralized collective of designers and engineers. Explore previous work, services, and the builders behind them.",
   robots: { index: false, follow: true },
 };
 
 export default function ClientsPage() {
   return (
     <>
-      <Hero content={entryHero} />
+      <Hero content={clientsHero} grouped />
       <GuildTicker />
-      <ActiveSpears />
-      <SectionSlope variant="practiceContact" />
-      <GuildInquiry />
-      <Creed />
+      <PreviousWorks content={clientsPreviousWorks} />
+      <Capabilities content={clientsCapabilities} />
+      <BuilderNetwork content={buildersClients} />
+      <Stewardship content={peopleClients} titles="professional" />
+      <GuildInquiry content={clientsInquiry} />
+      <Creed content={clientsCreed} />
     </>
   );
 }

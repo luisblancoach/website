@@ -107,8 +107,13 @@ export type CapabilitiesContent = {
   label: Copy;
   title: Title;
   intro: Copy;
-  pillars: { title: Copy; body: Copy; services: { title: Copy; body: Copy }[] }[];
-  practices: { tag: Copy; title: Copy; body: Copy; link: NarrativeLink }[];
+  // Published services in their published order (the October 23 accordion).
+  services: { title: Copy; body: Copy }[];
+  // Tae's pillars group those services by title. Not rendered yet: the
+  // editorial batch decides how they appear on the page.
+  pillars: { title: Copy; body: Copy; services: string[] }[];
+  practices: { tag: Copy; title: Copy; body: Copy; link: NarrativeLink; image: { src: string; alt: Copy } }[];
+  practicesLabel: Copy;
   inquiry: NarrativeLink;
   footnote: { lead: Copy; link: NarrativeLink };
 };
@@ -117,10 +122,10 @@ export type CapabilitiesContent = {
 // No screenshots are approved yet, so `images` stays empty rather than
 // carrying placeholders.
 export type PreviousWorksContent = {
-  label: Copy;
   title: Title;
   intro: Copy;
   works: { id: string; logo: string; company: Copy; title: Copy; description: Copy; tags: Copy[]; images: { src: string; alt: Copy }[] }[];
+  detailsLabel: Copy;
   cta: NarrativeLink;
 };
 
@@ -128,18 +133,19 @@ export type InquiryContent = {
   label: Copy;
   title: Title;
   body: Copy;
-  summary: { label: Copy; hint: Copy };
+  summary: { label: Copy; hint: Copy; hintOpen: Copy };
   coordinates: [Copy, Copy];
+  image: { alt: Copy };
 };
 
+// October 23 Queen Raida carousel (kept as-is in B3.3).
 export type QueenRaidaContent = {
-  label: Copy;
   title: Title;
-  value: Copy;
   cta: NarrativeLink;
-  starters: Copy[];
-  note: Copy;
-  artwork: { src: string; alt: Copy; rights: Copy };
+  intro: Copy;
+  panels: { subtitle: Copy; title: Copy; copy: Copy; detail: Copy }[];
+  detailsLabel: Copy;
+  artwork: { src: string; alt: Copy; caption: Copy; rights: Copy };
 };
 
 export type StewardshipContent = {
@@ -148,6 +154,7 @@ export type StewardshipContent = {
   intro: Copy;
   roster: NarrativeLink;
   hats?: { summary: Copy; body: Copy; link: NarrativeLink };
+  agents?: { summary: Copy; body: Copy; link: NarrativeLink };
 };
 
 export type BuilderNetworkContent = {

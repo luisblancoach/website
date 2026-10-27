@@ -8,7 +8,9 @@ import NarrativeAnchor from "../primitives/NarrativeAnchor";
 import { useVenture } from "../shell/VentureShell";
 import styles from "../venture.module.css";
 
-export default function GuildPrologue({ content }: { content: GuildContent }) {
+// The October 23 composition dropped the statistics band; the audience routes
+// pass `metrics={false}` while "/" keeps it.
+export default function GuildPrologue({ content, metrics = true }: { content: GuildContent; metrics?: boolean }) {
   const { arrivalTarget } = useVenture();
   return (
     <section className={`${styles.prologue} ${arrivalTarget === "guild" ? styles.sectionArriving : ""}`} id="guild">
@@ -58,11 +60,13 @@ export default function GuildPrologue({ content }: { content: GuildContent }) {
           ))}
         </div>
       </div>
-      <LoopBand label={content.metricsLabel} reverse>
-        {content.metrics.map((metric) => (
-          <div className={styles.metricItem} key={metric.label.id}><strong><CopyText copy={metric.value} /></strong><span><CopyText copy={metric.label} /></span></div>
-        ))}
-      </LoopBand>
+      {metrics && (
+        <LoopBand label={content.metricsLabel} reverse>
+          {content.metrics.map((metric) => (
+            <div className={styles.metricItem} key={metric.label.id}><strong><CopyText copy={metric.value} /></strong><span><CopyText copy={metric.label} /></span></div>
+          ))}
+        </LoopBand>
+      )}
     </section>
   );
 }
