@@ -17,6 +17,7 @@ import {
 import { clientsCapabilities } from "@/lib/narrative/clients";
 import { buildersCommunity } from "@/lib/narrative/shared";
 import { foundryPortrait, keeperHorizontal } from "@/lib/data/illustrations";
+import { forAudience } from "@/lib/narrative/public";
 
 // The October 23 Join composition (40f3910): guild → Queen Raida → curiosities →
 // stewardship → builders → join → services. Tae's tension, path and activity chapters
@@ -37,16 +38,16 @@ const raidaArtworkAvailable = existsSync(join(process.cwd(), "public", community
 export default function CommunityPage() {
   return (
     <>
-      <Hero content={communityHero} grouped />
+      <Hero content={forAudience(communityHero)} grouped />
       <GuildTicker />
-      <GuildPrologue content={communityGuild} metrics={false} />
-      <QueenRaidaBanner content={communityQueenRaida} artworkAvailable={raidaArtworkAvailable} />
-      <WallOfCuriosities content={communityActivity.collection} />
-      <Stewardship content={communityStewardship} illustration={keeperHorizontal} />
-      <BuilderNetwork content={buildersCommunity} />
-      <JoinCTA content={communityJoin} />
-      <Capabilities content={clientsCapabilities} illustration={foundryPortrait} />
-      <Creed content={communityCreed} />
+      <GuildPrologue content={forAudience(communityGuild)} metrics={false} />
+      <QueenRaidaBanner content={forAudience(communityQueenRaida)} artworkAvailable={raidaArtworkAvailable} />
+      <WallOfCuriosities content={forAudience(communityActivity.collection)} />
+      <Stewardship content={forAudience(communityStewardship)} illustration={keeperHorizontal} />
+      <BuilderNetwork content={forAudience(buildersCommunity)} />
+      <JoinCTA content={forAudience(communityJoin)} />
+      <Capabilities content={forAudience(clientsCapabilities)} illustration={foundryPortrait} />
+      <Creed content={forAudience(communityCreed)} />
     </>
   );
 }

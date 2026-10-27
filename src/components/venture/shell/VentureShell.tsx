@@ -7,7 +7,7 @@ import { UnchartedHunt } from "@/components/UnchartedHunt";
 import { PORTAL_JOIN_URL } from "@/lib/data/constants";
 import { audienceForPath, routeHasSection, sectionHref, type SectionId } from "@/lib/venture-routes";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
-import SiteHeader from "./SiteHeader";
+import SiteHeader, { type AudienceNav } from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 import PortalOverlay from "./PortalOverlay";
 import { ReviewFlagsProvider, ReviewPanel, SurfaceExperiment } from "../primitives/Review";
@@ -35,7 +35,7 @@ export function useVenture() {
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function Shell({ children }: { children: ReactNode }) {
+function Shell({ children, nav }: { children: ReactNode; nav?: AudienceNav }) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme } = useTheme();
@@ -220,7 +220,7 @@ function Shell({ children }: { children: ReactNode }) {
     <div className={styles.site} ref={siteRef} data-audience={audienceForPath(pathname) ?? undefined} data-cta={audienceForPath(pathname) ? "semantic" : undefined}>
     <a className={styles.skipLink} href="#main-content">Skip to content</a>
     <main inert={portalOpen} data-motion-paused={portalOpen} className={portalForming ? styles.siteGlitching : ""}>
-      <SiteHeader />
+      <SiteHeader nav={nav} />
       {/* Skip-link target: lands after the header and navigation. */}
       <span id="main-content" tabIndex={-1} className={styles.skipTarget} />
       {children}
@@ -243,11 +243,11 @@ function Shell({ children }: { children: ReactNode }) {
   );
 }
 
-export default function VentureShell({ children, reviewFlags = false }: { children: ReactNode; reviewFlags?: boolean }) {
+export default function VentureShell({ children, reviewFlags = false, nav }: { children: ReactNode; reviewFlags?: boolean; nav?: AudienceNav }) {
   return (
     <ThemeProvider>
       <ReviewFlagsProvider enabled={reviewFlags}>
-        <Shell>{children}</Shell>
+        <Shell nav={nav}>{children}</Shell>
         <ReviewPanel />
         <SurfaceExperiment />
       </ReviewFlagsProvider>

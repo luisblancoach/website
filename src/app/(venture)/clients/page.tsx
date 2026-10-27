@@ -10,6 +10,7 @@ import Creed from "@/components/venture/sections/Creed";
 import { clientsCapabilities, clientsCreed, clientsHero, clientsInquiry, clientsPreviousWorks } from "@/lib/narrative/clients";
 import { buildersClients, peopleClients } from "@/lib/narrative/shared";
 import { crewHorizontal, foundryPortrait } from "@/lib/data/illustrations";
+import { forAudience } from "@/lib/narrative/public";
 
 // The October 23 Hire composition (40f3910): previous works → services →
 // builders → people → inquiry. Unconfirmed claims are flagged in development and
@@ -25,14 +26,14 @@ export const metadata: Metadata = {
 export default function ClientsPage() {
   return (
     <>
-      <Hero content={clientsHero} grouped />
+      <Hero content={forAudience(clientsHero)} grouped />
       <GuildTicker />
-      <PreviousWorks content={clientsPreviousWorks} />
-      <Capabilities content={clientsCapabilities} illustration={foundryPortrait} />
-      <BuilderNetwork content={buildersClients} illustration={crewHorizontal} />
-      <Stewardship content={peopleClients} titles="professional" />
-      <GuildInquiry content={clientsInquiry} />
-      <Creed content={clientsCreed} />
+      <PreviousWorks content={forAudience(clientsPreviousWorks)} />
+      <Capabilities content={forAudience(clientsCapabilities)} illustration={foundryPortrait} />
+      <BuilderNetwork content={forAudience(buildersClients)} illustration={crewHorizontal} />
+      <Stewardship content={forAudience(peopleClients)} titles="professional" />
+      <GuildInquiry content={forAudience(clientsInquiry)} />
+      <Creed content={forAudience(clientsCreed)} />
     </>
   );
 }

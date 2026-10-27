@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { PORTAL_JOIN_URL } from "@/lib/data/constants";
 import { audienceForPath, type SectionId } from "@/lib/venture-routes";
-import { clientsNav } from "@/lib/narrative/clients";
-import { communityNav } from "@/lib/narrative/community";
 import type { NavContent } from "@/lib/narrative/types";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
 import { CopyText } from "../primitives/Review";
@@ -18,7 +16,8 @@ import styles from "../venture.module.css";
 type NavItem = { label: string; section: SectionId } | { label: string; inquiry: true };
 
 // Each route links only to sections it carries. The audience routes take their
-// navigation from the narrative (the October 23 items); "/" keeps its own.
+// navigation from the narrative (the October 23 items), passed in from the
+// server so the narrative modules never ship to the browser; "/" keeps its own.
 const navItems: Record<string, NavItem[]> = {
   "/": [
     { label: "Guild", section: "guild" },
@@ -26,13 +25,13 @@ const navItems: Record<string, NavItem[]> = {
     { label: "Practices", section: "spears" },
   ],
 };
-const navContent: Record<string, NavContent> = { "/clients": clientsNav, "/community": communityNav };
+export type AudienceNav = Partial<Record<string, NavContent>>;
 
-export default function SiteHeader() {
+export default function SiteHeader({ nav = {} }: { nav?: AudienceNav }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { pathname, followSectionLink, followInquiryLink, sectionHref } = useVenture();
   const audience = audienceForPath(pathname);
-  const content = navContent[pathname];
+  const content = nav[pathname];
   const items = navItems[pathname] ?? navItems["/"];
   const joinLabel = "Join through Portal ↗";
   const menuButtonRef = useRef<HTMLButtonElement>(null);
