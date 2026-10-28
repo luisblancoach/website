@@ -1,8 +1,8 @@
 # STATUS
 
-Snapshot: 2026-10-28. The Hire the DAO iteration is implemented and validated locally,
-including the marquee interaction refinement, the approved Services sentence and the
-scale corrections. Uncommitted, not deployed, awaiting review.
+Snapshot: 2026-10-28. The Hire the DAO iteration is released as `da9165b` and deployed to the
+independent Vercel review (`dpl_HeuA2CyFgTtiAtvut1MrQB8ECkbR`), verified in production. The
+review is ready for team feedback.
 
 ## Environment
 
@@ -10,18 +10,18 @@ scale corrections. Uncommitted, not deployed, awaiting review.
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
 | Branch | `feat/venture-beyond-integration` (no upstream configured) |
-| HEAD | `2abc26f87740fc09679950e51d67a26d46783f6b` ("docs: establish RaidGuild session continuity protocol"), also at `fork/feat/venture-beyond-integration` |
-| Compared with `origin/main` (`b02d67b`) | 82 ahead, 1 behind |
+| HEAD | The documentation closeout commit "docs: record the Hire the DAO review release", whose parent is the release `da9165b10a9b1347e932809ac4af984fde21f3c8`. Both are pushed to `fork/feat/venture-beyond-integration`. |
+| Compared with `origin/main` (`b02d67b`) | 84 ahead, 1 behind |
 | Other worktrees | `raidguild-venture-beyond` (`feat/tae-content-update`), `raidguild-tae-narrative`, `raidguild-tae-review` |
 
 ## References (keep them separate)
 
 | | Approved visual baseline | Integrated release | Deployed review |
 |---|---|---|---|
-| **What** | October 23 Venture Beyond dual-audience iteration | Integration branch release for review | Independent review deployment of the integrated release |
-| **Commit** | `40f39109cb85` (2026-10-23 16:24 -0300) | `4a771d873e0f` (2026-10-27 01:05 -0300) | `4a771d873e0f` (clean `git archive` of the tag) |
-| **Where** | `~/Projects/raid-guild/website`, branch `design/venture-beyond-iteration` | This worktree | https://raidguild-venture-beyond-review.vercel.app |
-| **Tags** | `checkpoint/oct23-iteration`, `backup/venture-beyond-oct23` | `release/review-4a771d8` (previous candidate `release/review-b4c9e1e`) | none |
+| **What** | October 23 Venture Beyond dual-audience iteration | Hire the DAO iteration (October 27 designs) | Independent review deployment of the integrated release |
+| **Commit** | `40f39109cb85` (2026-10-23 16:24 -0300) | `da9165b10a9b` (2026-10-28). Previous release: `4a771d873e0f` (2026-10-27). | `da9165b10a9b` (clean `git archive` of the commit) |
+| **Where** | `~/Projects/raid-guild/website`, branch `design/venture-beyond-iteration` | This worktree; https://github.com/luisblancoach/website/tree/feat/venture-beyond-integration | https://raidguild-venture-beyond-review.vercel.app |
+| **Tags** | `checkpoint/oct23-iteration`, `backup/venture-beyond-oct23` | None for `da9165b` (not requested). Earlier: `release/review-4a771d8`, `release/review-b4c9e1e`. | none |
 | **In this branch's history** | No; its compositions were ported in separately (B3.x commits) | Yes | Yes (same commit) |
 
 ### Approved visual baseline
@@ -49,25 +49,28 @@ scale corrections. Uncommitted, not deployed, awaiting review.
 
 ### Deployed review
 
-Source: `~/Projects/raidguild-backups/2026-10-27/DEPLOY-vercel-review-4a771d8.md`.
+Source: `~/Projects/raidguild-backups/2026-10-28/DEPLOY-vercel-review-da9165b.md`, which
+follows the procedure in `~/Projects/raidguild-backups/2026-10-27/DEPLOY-vercel-review-4a771d8.md`.
 
 | Item | Value |
 |---|---|
-| Deployed | 2026-10-27, about 04:25 UTC, via Vercel CLI |
+| Deployed | 2026-10-28 04:18 UTC, via Vercel CLI 65.2.0 (`npx` cache; the 4a771d8 deploy used 65.4.0) |
 | Project | `raidguild-venture-beyond-review` (scope `luisblancoachs-projects`) |
-| Environment and ID | Vercel Production, `dpl_2PQiaWtMuRVojKoLXuYgAD4cmgSa` |
-| Build | Next.js 15.5.23 with Bun (`bun install --frozen-lockfile`, `bun run build`), from a clean archive of `release/review-4a771d8` |
-| Variables | `SHOW_REVIEW_FLAGS=false` only; no secrets |
+| Environment and ID | Vercel Production, `dpl_HeuA2CyFgTtiAtvut1MrQB8ECkbR` (https://raidguild-venture-beyond-review-ia727ffql.vercel.app; per-deployment URLs require Vercel login) |
+| Production URL | https://raidguild-venture-beyond-review.vercel.app |
+| Release | `da9165b`, from a clean `git archive` (`~/Projects/raidguild-backups/2026-10-28/deploy-da9165b`). It excludes the uncommitted `packageManager` line, `clients.pdf` and the vertical Queen Raida image. The `.env.local` that `vercel link` wrote (an OIDC token) was deleted before upload. |
+| Build | Next.js 15.5.23 with Bun (`bun install --frozen-lockfile`, `bun run build`) on Vercel; the same archive was built and tested locally first |
+| Variables | `SHOW_REVIEW_FLAGS` only (Production and Preview), value `false`; no secrets |
+| Rollback | Promote `dpl_2PQiaWtMuRVojKoLXuYgAD4cmgSa` (release `4a771d8`, deployed 2026-10-27 04:25 UTC), for example with `vercel promote` or a rollback in the Vercel dashboard |
 | Unavailable by design | Project inquiry form (HTTP 500) and `/chat` (503), because there are no secrets |
 
-- **Availability:** HTTP 200 on `/`, `/clients` and `/community` (2026-10-27 21:28 UTC).
-  `/clients` loaded in the browser on 2026-10-28. These checks show the pages are reachable,
-  not which deployment is active.
-- `raidguild-venture-review` is a separate October 23 deployment. Do not confuse the two.
-- `raidguild.estudioblanco.org` has not been redirected to the new project. On 2026-10-27 it
-  still returned 302 to Railway.
+- `raidguild-venture-review` is a separate October 23 deployment, untouched (last updated
+  2026-10-24).
+- `raidguild.estudioblanco.org` has not been redirected to the new project. On 2026-10-28 04:23
+  UTC it still returned 302 to `raidguild-website-redesign-production.up.railway.app`.
+- Not changed: raidguild.org, Cloudflare, Railway and `origin`.
 
-## Current work: Hire the DAO iteration (uncommitted)
+## Released: Hire the DAO iteration (`da9165b`)
 
 | Area | State |
 |---|---|
@@ -80,7 +83,20 @@ Source: `~/Projects/raidguild-backups/2026-10-27/DEPLOY-vercel-review-4a771d8.md
 | Scale corrections (approved) | Desktop: hero 58/73 px, "OUR CLIENTS" 52 px, project name 49 px, project title 33 px, logo buttons 190×73. Mobile: hero `min(34px, 8.4vw)`/`min(52px, 13.2vw)`, "OUR CLIENTS" 11.3vw, "TRYING TO SHIP?" 8.8vw, project name 44 px, logo buttons 210×81. Measured within about 1% of the design at 1600 px; on mobile, capped where the design text is wider than the screen. |
 | Typography | Unchanged. The refined Grinder WOFF2 files stay. |
 
-### Verification (2026-10-28, local production build)
+### Verification of the published review (2026-10-28, production URL)
+
+- Version identity on `/clients`: release-only content is present ("Hard problems,", "What
+  we've built for", the approved Services sentence, the new asset paths). Superseded content
+  is absent ("Turn complex technology", Ultimate Dominion, the original design sentence,
+  MANY EDGES).
+- `/`, `/clients` and `/community` return HTTP 200 at 1440 and 375 px with no console errors.
+- All 19 new assets return 200; `clients.pdf` returns 404 (not published). All nine external
+  project links respond 200.
+- No review notes, statuses or flags in the production HTML, and none in the static chunks
+  (checked on the local build of the same archive).
+- General suite 75/75 and marquee interaction suite 40/40 pass against the production URL.
+
+### Verification before release (2026-10-28, local production build)
 
 - **Technical:**
   - `bun run test` 64/64.
@@ -144,40 +160,28 @@ the session scratchpad
 
 ## Working tree
 
-- **Iteration files to commit (38):**
-  - 14 modified: `CHANGELOG.md`, `STATUS.md`, `docs/asset-provenance.md`,
-    `docs/venture-integration.md`, `src/app/(venture)/clients/page.tsx`,
-    `src/components/venture/sections/{GuildTicker,Hero,PreviousWorks}.tsx`,
-    `src/components/venture/venture.module.css`, `src/lib/data/illustrations.ts`,
-    `src/lib/narrative/{clients,types}.ts` and `tests/{narrative,public-content}.test.mjs`.
-  - 24 new: `src/components/venture/primitives/LogoMarquee.tsx`,
-    `src/components/venture/sections/Services.tsx`,
-    `src/components/venture/{showcase,services}.module.css`, `src/lib/data/caseStudies.ts`,
-    `public/images/illustrations/ilus_horiz_002.png`, the 9
-    `public/images/casestudies/custom_buttons/button_*.svg` and the 9
-    `public/images/casestudies/snapshots/Snapshot_*.png`.
-  - Re-check with `git status --short` before staging.
-- **User changes, preserved; never stage them with this iteration:**
+- The release `da9165b` contains exactly the 38 approved files. The documentation closeout
+  commit changes only `STATUS.md` and `CHANGELOG.md`.
+- **User changes, preserved and still uncommitted:**
   - `package.json`: the `packageManager: yarn@1.22.22` line.
   - 21 manually deleted legacy images in `public/images/`: `cohort-*` (8),
     `expect-image-*` (4), `hire-image-*` (4) and `home-*` (5).
+    - They are still in the repository and in the deployed archive.
     - Only the unused components `HomeHero`, `CohortHero`, `HireUsSection`,
       `CohortProcessSection` and `CohortValueSection` reference them.
-    - No route imports those components, so the build and the live routes are unaffected.
   - `public/images/queen-raida/queen_raida_reference_vertical.png`: untracked `/community`
     artwork, not used.
 - **Never commit these local files:**
   - `public/images/casestudies/clients.pdf` (reference only)
-  - `public/images/casestudies/.DS_Store`
-  - `public/images/queen-raida/.DS_Store`
+  - `public/images/casestudies/.DS_Store` and `public/images/queen-raida/.DS_Store` (gitignored)
 
 ## Next actions
 
-1. Review the marquee refinement and the scale corrections.
-2. Commit the iteration files only, then deploy to `raidguild-venture-beyond-review` from a
-   clean `git archive`, as for `4a771d8`, and record the new deployment here.
-3. Record the team feedback on the deployed iteration here, with the reference it was given
-   against.
+1. Share https://raidguild-venture-beyond-review.vercel.app/clients with the team.
+2. Record the team feedback on the deployed review here. Note the reference it was given
+   against (deployment `dpl_HeuA2CyFgTtiAtvut1MrQB8ECkbR`, release `da9165b`).
+3. Physical-device checks: trackpad momentum, iOS and Android touch flings, Safari and
+   Firefox, and a screen reader on the marquee.
 
 ## Open questions
 
@@ -198,3 +202,5 @@ the session scratchpad
    work and have not been rechecked.
 7. **`raidguild.estudioblanco.org`:** when and how should it be redirected to
    `raidguild-venture-beyond-review`?
+8. **Release tag:** should `da9165b` get a `release/review-da9165b` tag, like the earlier
+   review releases?

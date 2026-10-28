@@ -6,13 +6,21 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
-- Hire the DAO iteration from the October 27 designs: the `/clients` hero, the shared ticker
-  copy, the nine-project client showcase with a scroll-driven logo marquee, and `/clients`
-  Services with the owner-approved intro sentence. Sizes are calibrated to the 1600 px and
-  393 px design layouts. Implemented and validated locally on 2026-10-28. Not committed and
-  not deployed; pending review. See `STATUS.md`.
-- `2abc26f`: session continuity protocol v1.0 (`AGENTS.md`, `STATUS.md`, `CHANGELOG.md`,
-  `CLAUDE.md`). Committed and pushed to `fork/feat/venture-beyond-integration` on 2026-10-27.
+Nothing yet.
+
+## 2026-10-28 · Review release `da9165b`
+
+- `da9165b`: Hire the DAO iteration from the October 27 designs.
+  - The `/clients` hero ("Hard problems, working products") and the shared ticker copy.
+  - The nine-project client showcase with a scroll-driven logo marquee.
+  - `/clients` Services with the owner-approved intro sentence.
+  - Sizes calibrated to the 1600 px and 393 px design layouts.
+- Deployed to Vercel Production in `raidguild-venture-beyond-review`, deployment
+  `dpl_HeuA2CyFgTtiAtvut1MrQB8ECkbR` (https://raidguild-venture-beyond-review.vercel.app,
+  `SHOW_REVIEW_FLAGS=false`), from a clean `git archive`, and verified in production.
+  Source: `~/Projects/raidguild-backups/2026-10-28/DEPLOY-vercel-review-da9165b.md`.
+- `2abc26f` (2026-10-27): session continuity protocol v1.0 (`AGENTS.md`, `STATUS.md`,
+  `CHANGELOG.md`, `CLAUDE.md`). Committed and pushed to `fork/feat/venture-beyond-integration`.
 
 ## 2026-10-27 · Review release `4a771d8`
 
