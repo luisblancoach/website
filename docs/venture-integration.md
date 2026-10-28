@@ -43,3 +43,33 @@ manifesto-crossfade.mp4 derivative blends the final 0.75 seconds with the openin
 0.75 seconds, then loops to the next forward frame without reversing motion.
 Statistical and portfolio copy from the design remains mockup content requiring
 editorial verification before release. No Grinder files are bundled or required.
+
+October 28, 2026 — Hire the DAO iteration (October 27 desktop and mobile designs),
+confirmed by the project owner:
+- /clients hero: "Hard problems, / working products", both lines in the headline
+  colour, the second line larger. The tan block behind the headline and the grey
+  rectangle in the mobile hero are annotation patches, not built.
+- Guild ticker (/, /clients, /community): Senior devs, Scoped raids and Built by owners
+  replace Many edges, Onchain systems and Open experiments. The strikethroughs in the
+  design are editorial marks.
+- Previous works becomes "What we've built for our clients": nine projects from
+  casestudies/ (lib/data/caseStudies.ts) with their logo buttons, website screenshots
+  and official sites. One marquee on desktop with previous/next controls; two marquees in
+  opposite directions on mobile, sharing one selection. Ultimate Dominion and Gnosis
+  leave the showcase. Daedalus keeps ddls.co. "Read more" opens each project's own site.
+- /clients services: "What are you trying to ship?", the accordion and the foundry
+  illustration as separate regions (portrait cut on desktop, horizontal cut on mobile).
+  The specialist-practice disclosure and the Guild inquiry pill are removed there;
+  /community keeps the October 23 capabilities section unchanged.
+- Typography: the served refined Grinder WOFF2 cuts (912 glyphs) stay. The supplied
+  Grinder OTF package (Grinder-121888642.zip) holds the original 306-glyph cuts, the
+  same as the unused Grinder-*.woff2, and is not used. Its licence terms are unknown.
+- Logo marquee: one position drives each strip (frame loop writing the native scroll
+  offset), so the user can scroll it by trackpad, wheel, touch or drag while it keeps moving.
+  It does not pause on hover; manual input takes over briefly and motion eases back in.
+  Keyboard focus holds it still; reduced motion stops automatic movement only.
+- Services intro: the design's incomplete "Owners - not vendors, to turn …" is replaced by the
+  owner-approved "Owners, not vendors: we turn shared experience into focused offerings with
+  end dates of their own."
+- Scale: the designs are a 1600 px desktop (1.8 image px per CSS px) and a 393 px mobile layout
+  (about 1.62). Display type and logo buttons are sized to those, and to fit the screen on phones.

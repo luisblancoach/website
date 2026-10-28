@@ -1,0 +1,101 @@
+/* October 27 client showcase and its logo marquee. Sizes follow the Hire the
+   DAO designs, which are a 1600px desktop layout (1.8 image px per CSS px) and a
+   393px mobile layout (about 1.62 image px per CSS px). */
+
+.srOnly { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px; }
+
+/* Logo marquee: a horizontal scroller whose position LogoMarquee.tsx drives.
+   The scrollbar is hidden; vertical overscroll still reaches the page. */
+.marquee {
+  --marquee-gap: 12px;
+  cursor: grab;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  padding-block: 10px;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.marquee::-webkit-scrollbar { display: none; }
+.marquee[data-dragging] { cursor: grabbing; }
+.marqueeTrack { display: flex; width: max-content; will-change: transform; }
+.marqueeGroup { display: flex; flex: none; gap: var(--marquee-gap); padding-right: var(--marquee-gap); }
+
+.marqueeButton {
+  background: none;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  display: block;
+  flex: none;
+  height: 73px;
+  padding: 0;
+  transition: box-shadow .2s, transform .2s;
+  width: 190px;
+  -webkit-tap-highlight-color: transparent;
+}
+.marquee[data-dragging] .marqueeButton { cursor: grabbing; }
+.marqueeButton img { border-radius: 12px; display: block; height: 100%; pointer-events: none; user-select: none; width: 100%; }
+.marqueeButton[data-selected] { box-shadow: 0 0 0 3px var(--coral); }
+@media (hover: hover) { .marqueeButton:hover { transform: translateY(-2px); } }
+.marqueeButton:focus-visible { outline: 3px solid var(--cta-ring, var(--coral)); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .marqueeButton { transition: none; } }
+
+/* Showcase */
+.showcase.showcase { padding-bottom: 46px; padding-top: 48px; }
+.showcase .showcaseTitle { color: inherit; font-family: var(--font-display), sans-serif; font-size: 34px; letter-spacing: .01em; line-height: 1.05; margin: 0 auto; max-width: 1144px; text-transform: uppercase; }
+.showcase .showcaseTitle em { color: var(--coral); display: inline-block; font-family: var(--font-display), sans-serif; font-size: 52px; font-style: italic; font-weight: 400; line-height: 1; margin-top: 4px; }
+.showcaseStage { display: flex; flex-direction: column; margin-top: 36px; }
+.marqueePrimary { margin-inline: calc(-1 * clamp(24px, 6vw, 88px)); margin-top: 64px; order: 2; }
+.marqueeSecondary { display: none; }
+
+/* The previous/next controls sit near the page edges, outside the content column. */
+.featured { align-items: center; display: grid; gap: clamp(16px, 2.5vw, 40px); grid-template-columns: 44px minmax(0, 1fr) 44px; margin-inline: calc(40px - clamp(24px, 6vw, 88px)); order: 1; }
+.work { align-items: center; display: grid; gap: clamp(32px, 4vw, 56px); grid-template-columns: minmax(0, 1.36fr) minmax(0, 1fr); }
+.snapshot { aspect-ratio: 1692 / 908; border-radius: 12px; overflow: hidden; }
+.snapshot img { display: block; height: 100%; object-fit: cover; width: 100%; }
+
+.workCopy { min-width: 0; }
+.workCopy h3 { font-family: var(--font-display), sans-serif; font-size: 49px; font-weight: 900; letter-spacing: .02em; line-height: 1; margin: 0; text-transform: uppercase; }
+.showcase .workCopy p { margin: 0; }
+.showcase .workCopy .workTitle { font: 500 33px/1.2 var(--font-body), sans-serif; margin-top: 12px; }
+.showcase .workCopy .workDescription { font: 400 var(--type-body-lg, 18px)/1.4 var(--font-body), sans-serif; margin-top: 10px; max-width: 26em; }
+.readMore { color: var(--coral); display: inline-flex; align-items: center; font: 400 var(--type-body-lg, 18px)/1.4 var(--font-body), sans-serif; min-height: var(--tap-min, 44px); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+:global(html[data-theme="dark"]) .readMore { color: var(--coral); }
+.workCta.workCta { display: flex; margin-top: 18px; }
+
+/* The compact pill used in the October 27 designs. */
+.workCta.workCta, .compactPill.compactPill { gap: 16px; height: 44px; padding: 4px 4px 4px 18px; }
+.workCta.workCta > span, .compactPill.compactPill > span { font-size: 12px; font-style: normal; letter-spacing: .18em; line-height: 16px; }
+.workCta.workCta > i, .compactPill.compactPill > i { height: 34px; width: 34px; }
+.workCta.workCta > i > b, .compactPill.compactPill > i > b { height: 26px; width: 26px; }
+
+.stepButton { align-items: center; background: none; border: 0; color: var(--coral); cursor: pointer; display: flex; height: 44px; justify-content: center; padding: 0; width: 44px; }
+.stepButton svg { border: 1.5px solid currentColor; border-radius: 50%; height: 32px; padding: 5px; transition: background .2s, color .2s; width: 32px; }
+@media (hover: hover) { .stepButton:hover svg { background: var(--coral); color: var(--paper); } }
+
+@media (max-width: 1100px) {
+  .featured { grid-template-columns: 1fr; margin-inline: 0; }
+  .stepButton { display: none; }
+  .work { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+
+@media (max-width: 760px) {
+  .showcase.showcase { padding-bottom: 40px; padding-top: 56px; }
+  .showcase .showcaseTitle { font-size: 20px; text-align: center; }
+  .showcase .showcaseTitle em { font-size: clamp(32px, 11.3vw, 48px); }
+  .showcaseStage { margin-top: 28px; }
+  .marqueePrimary { margin-top: 0; order: 0; }
+  .marqueeSecondary { display: block; margin-inline: calc(-1 * clamp(24px, 6vw, 88px)); margin-top: 32px; order: 2; }
+  .marqueeButton { height: 81px; width: 210px; }
+  .featured { margin-top: 28px; }
+  .work { gap: 24px; grid-template-columns: 1fr; }
+  .workCopy h3 { font-size: 44px; }
+  .showcase .workCopy .workTitle { font: 700 15px/1.4 var(--font-mono), monospace; letter-spacing: .1em; margin-top: 12px; text-transform: uppercase; }
+  .showcase .workCopy .workDescription { margin-top: 8px; }
+  .workCta.workCta { margin-left: auto; margin-top: 16px; width: max-content; }
+}

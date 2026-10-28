@@ -17,17 +17,23 @@ describe("public narrative content", () => {
     assert.doesNotMatch(json, /Confirm the scope and permission|returns 404/);
   });
 
-  test("pending works are dropped; published text and ids are kept", () => {
+  test("published text and ids are kept", () => {
     const works = publicTree.clientsNarrative.clientsPreviousWorks.works;
-    assert.deepEqual(works.map((w) => w.id), ["daohaus", "brightid", "hypercerts", "pocket", "ud", "gnosis"]);
+    assert.deepEqual(works.map((w) => w.id), ["daohaus", "daedalus", "brightid", "livepeer", "hypercerts", "pocket", "problem", "gitcoin", "yieldnest"]);
     assert.equal(works[0].title.id, "clients.previousWorks.works.0.title");
+    assert.equal(works[0].link.href, "https://daohaus.org/");
     assert.equal(publicTree.communityNarrative.communityQueenRaida.artwork.src, "/images/queen-raida/queen-raida-v2.png");
+  });
+
+  test("pending works are dropped in production", () => {
+    const pending = { text: "Source not public", status: "needs-review", source: "portal", reason: "claim", note: "hidden" };
+    const tree = forAudience({ works: [{ id: "shown" }, { id: "hidden", pending }] }, false);
+    assert.deepEqual(tree.works.map((w) => w.id), ["shown"]);
   });
 
   test("review builds keep the full tree", () => {
     const review = forAudience(clientsNarrative, true);
     assert.equal(review, clientsNarrative);
-    assert.ok(review.clientsPreviousWorks.works.some((w) => w.pending));
   });
 
   test("client components never import narrative content modules", () => {

@@ -2,18 +2,19 @@ import type { Metadata } from "next";
 import Hero from "@/components/venture/sections/Hero";
 import GuildTicker from "@/components/venture/sections/GuildTicker";
 import PreviousWorks from "@/components/venture/sections/PreviousWorks";
-import Capabilities from "@/components/venture/sections/Capabilities";
+import Services from "@/components/venture/sections/Services";
 import BuilderNetwork from "@/components/venture/sections/BuilderNetwork";
 import Stewardship from "@/components/venture/sections/Stewardship";
 import GuildInquiry from "@/components/venture/sections/GuildInquiry";
 import Creed from "@/components/venture/sections/Creed";
-import { clientsCapabilities, clientsCreed, clientsHero, clientsInquiry, clientsPreviousWorks } from "@/lib/narrative/clients";
+import { clientsCreed, clientsHero, clientsInquiry, clientsPreviousWorks, clientsServices } from "@/lib/narrative/clients";
 import { buildersClients, peopleClients } from "@/lib/narrative/shared";
-import { crewHorizontal, foundryPortrait } from "@/lib/data/illustrations";
+import { crewHorizontal, foundryHorizontal, foundryPortrait } from "@/lib/data/illustrations";
 import { forAudience } from "@/lib/narrative/public";
 
 // The October 23 Hire composition (40f3910): previous works → services →
-// builders → people → inquiry. Unconfirmed claims are flagged in development and
+// builders → people → inquiry, with the October 27 hero, client showcase and
+// services. Unconfirmed claims are flagged in development and
 // preview; keep the route out of search until they are resolved.
 export const metadata: Metadata = {
   alternates: { canonical: "/clients" },
@@ -29,7 +30,7 @@ export default function ClientsPage() {
       <Hero content={forAudience(clientsHero)} grouped />
       <GuildTicker />
       <PreviousWorks content={forAudience(clientsPreviousWorks)} />
-      <Capabilities content={forAudience(clientsCapabilities)} illustration={foundryPortrait} />
+      <Services content={forAudience(clientsServices)} portrait={foundryPortrait} horizontal={foundryHorizontal} />
       <BuilderNetwork content={forAudience(buildersClients)} illustration={crewHorizontal} />
       <Stewardship content={forAudience(peopleClients)} titles="professional" />
       <GuildInquiry content={forAudience(clientsInquiry)} />

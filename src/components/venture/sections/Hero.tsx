@@ -148,7 +148,7 @@ export default function Hero({ content, grouped = false }: { content: HeroConten
         <div className={styles.heroWash} />
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}><span /><CopyText copy={content.eyebrow} before=" " /></p>
-          <div className={content.title.long ? `${styles.heroTitle} ${styles.heroTitleLong}` : styles.heroTitle}>
+          <div className={[styles.heroTitle, content.title.long ? styles.heroTitleLong : "", content.title.plain ? styles.heroTitlePlain : ""].filter(Boolean).join(" ")}>
             <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} /></em></h1>
           </div>
           {grouped && supplement}

@@ -7,6 +7,7 @@ import { entryGuild, entryHero } from "../src/lib/narrative/entry.ts";
 import { clientData } from "../src/lib/data/clients.ts";
 import { services } from "../src/lib/data/content.ts";
 import { activeSpears } from "../src/lib/data/venture.ts";
+import { caseStudyProjects } from "../src/lib/data/caseStudies.ts";
 import { collectCopy, reviewFlagsEnabled } from "../src/lib/narrative/types.ts";
 import { existsSync } from "node:fs";
 
@@ -20,6 +21,8 @@ const TAE_BRIEF = new Set([
   "Turn complex technology", "into products people can use",
   "Design", "Engineering", "Product thinking",
   "Tell us what you're building", "Tell us what", "you're building", "Explore our work",
+  "Livepeer provides decentralized infrastructure for video and AI processing. RaidGuild helped maintain its Explorer and analyzed the staking and delegation experience to identify usability gaps and guide interface improvements.",
+  "Pocket Network connects applications to blockchain data through a decentralized network. RaidGuild built wrapped POKT infrastructure and gateway setup tools, including a CLI for wallet creation, staking, and delegation, alongside development of the Gateway OS frontend.",
 ]);
 
 // Topics that must never ship unflagged unless they are Tae's own words.
@@ -143,9 +146,11 @@ describe("all narratives", () => {
 });
 
 describe("clients narrative", () => {
-  test("Tae's headline and calls to action are present", () => {
+  test("the October 27 headline and Tae's calls to action are present", () => {
     const { clientsHero, clientsInquiry, clientsCreed, clientsNav } = clientsNarrative;
-    assert.equal(`${clientsHero.title.lead.text} ${clientsHero.title.em.text}`, "Turn complex technology into products people can use");
+    assert.equal(`${clientsHero.title.lead.text} ${clientsHero.title.em.text}`, "Hard problems, working products");
+    assert.equal(clientsHero.title.lead.source, "oct27-design");
+    assert.equal(clientsHero.title.plain, true);
     assert.deepEqual(clientsHero.paths.map((p) => p.label.text), ["Tell us what you're building", "Explore our work"]);
     assert.equal(clientsHero.paths[0].section, "project-inquiry");
     assert.equal(`${clientsInquiry.title.lead.text} ${clientsInquiry.title.em.text}`, "Tell us what you're building");
@@ -167,30 +172,55 @@ describe("clients narrative", () => {
     }
   });
 
-  test("previous works: every archived case study, then Tae's pending Livepeer case", () => {
-    const { works } = clientsNarrative.clientsPreviousWorks;
-    assert.deepEqual(works.map((w) => w.id), ["daohaus", "brightid", "hypercerts", "pocket", "ud", "gnosis", "livepeer"]);
-    assert.deepEqual(clientData.map((record) => record.id).filter((id) => !works.some((w) => w.id === id)), [], "no archived case is left out");
-    for (const work of works) {
-      for (const field of [work.company, work.title, work.description].filter(Boolean)) assert.equal(field.reason, "claim", field.id);
-      assert.equal(work.images.length, 0, "no unapproved screenshots");
-      if (work.pending) continue;
-      assert.ok(clientData.some((record) => record.id === work.id && record.logo === work.logo), work.id);
-    }
+  test("services: the October 27 layout over the published services, in order", () => {
+    const { clientsServices } = clientsNarrative;
+    assert.equal(`${clientsServices.title.lead.text} ${clientsServices.title.em.text}`, "What are you trying to ship?");
+    assert.deepEqual(clientsServices.services.map((s) => s.title.text), services.map((s) => s.title), "the accordion keeps the published order");
+    for (const s of clientsServices.services) assert.equal(s.title.reason, "claim", s.title.id);
+    assert.equal(clientsServices.cta.section, "project-inquiry");
+    assert.equal(clientsServices.intro[1].text, "Owners, not vendors: we turn shared experience into focused offerings with end dates of their own.");
+    assert.equal(clientsServices.intro[1].source, "owner-approval", "the corrected sentence was approved by the owner");
+    assert.equal(clientsNarrative.clientsCapabilities.title.lead.text, "Ideas into", "/community keeps the October 23 capabilities");
   });
 
-  test("a case without a usable source is pending and carries no written description", () => {
-    const livepeer = clientsNarrative.clientsPreviousWorks.works.find((w) => w.id === "livepeer");
-    assert.equal(livepeer.pending?.reason, "claim");
-    assert.equal(livepeer.description, undefined, "no copy is written until the source article is public");
-    assert.equal(livepeer.logo, "/images/logo-Livepeer.svg", "existing logo asset");
-    assert.match(livepeer.title.sourceUrl, /portal\.raidguild\.org\/posts\/turning-ux-research-into-a-product-roadmap-for-livepeer/);
+  test("previous works: the nine supplied projects, each with its button, screenshot and site", () => {
+    const { works } = clientsNarrative.clientsPreviousWorks;
+    assert.deepEqual(works.map((w) => w.id), caseStudyProjects.map((p) => p.id));
+    assert.deepEqual(works.map((w) => w.id), ["daohaus", "daedalus", "brightid", "livepeer", "hypercerts", "pocket", "problem", "gitcoin", "yieldnest"]);
+    for (const work of works) {
+      assert.ok(existsSync(new URL(`../public${work.button}`, import.meta.url)), work.button);
+      assert.ok(existsSync(new URL(`../public${work.snapshot.src}`, import.meta.url)), work.snapshot.src);
+      assert.match(work.link.href, /^https:\/\//, work.id);
+      assert.doesNotMatch(work.link.href, /portal\.raidguild\.org|raidguild\.org/, "Read more opens the project's own site");
+      assert.equal(work.pending, undefined, work.id);
+    }
+    const href = Object.fromEntries(works.map((w) => [w.id, w.link.href]));
+    assert.equal(href.daedalus, "https://ddls.co/");
+    assert.equal(href.livepeer, "https://livepeer.org");
+    assert.equal(href.pocket, "https://pocket.network");
+  });
+
+  test("only sourced projects describe RaidGuild's work", () => {
+    const byId = Object.fromEntries(clientsNarrative.clientsPreviousWorks.works.map((w) => [w.id, w]));
+    for (const id of ["daedalus", "problem", "gitcoin", "yieldnest"]) {
+      assert.equal(byId[id].title, undefined, id);
+      assert.equal(byId[id].description, undefined, id);
+    }
+    for (const id of ["daohaus", "brightid", "hypercerts"]) {
+      assert.ok(clientData.some((record) => record.id === id), id);
+      for (const field of [byId[id].title, byId[id].description]) assert.equal(field.reason, "claim", field.id);
+    }
+    for (const id of ["livepeer", "pocket"]) {
+      assert.equal(byId[id].description.source, "tae-brief", id);
+      assert.equal(byId[id].title, undefined, id);
+    }
+    assert.ok(!byId.ud && !byId.gnosis, "Ultimate Dominion and Gnosis are not in this showcase");
   });
 
   test("no outcome metrics are carried into case studies", () => {
     // Dollar amounts, multipliers and percentages; a "$" ticker such as $POKT is not a metric.
     for (const work of clientsNarrative.clientsPreviousWorks.works) {
-      assert.doesNotMatch(`${work.title.text} ${work.description?.text ?? ""}`, /\$\d|\d+x\b|\d+%|million|\bM\b/);
+      assert.doesNotMatch(`${work.title?.text ?? ""} ${work.description?.text ?? ""}`, /\$\d|\d+x\b|\d+%|million|\bM\b/);
     }
   });
 });

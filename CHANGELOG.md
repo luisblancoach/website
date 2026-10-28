@@ -6,9 +6,13 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
-- Session continuity protocol v1.0: `AGENTS.md`, `STATUS.md`, `CHANGELOG.md`, `CLAUDE.md`.
-  Reviewed and committed on 2026-10-27 (`docs: establish RaidGuild session continuity
-  protocol`). Not pushed.
+- Hire the DAO iteration from the October 27 designs: the `/clients` hero, the shared ticker
+  copy, the nine-project client showcase with a scroll-driven logo marquee, and `/clients`
+  Services with the owner-approved intro sentence. Sizes are calibrated to the 1600 px and
+  393 px design layouts. Implemented and validated locally on 2026-10-28. Not committed and
+  not deployed; pending review. See `STATUS.md`.
+- `2abc26f`: session continuity protocol v1.0 (`AGENTS.md`, `STATUS.md`, `CHANGELOG.md`,
+  `CLAUDE.md`). Committed and pushed to `fork/feat/venture-beyond-integration` on 2026-10-27.
 
 ## 2026-10-27 · Review release `4a771d8`
 

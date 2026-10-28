@@ -1467,6 +1467,16 @@
 .hero .heroTitleLong h1 { font-size: 34px; letter-spacing: -.01em; line-height: .98; }
 @media (min-width: 600px) { .hero .heroTitleLong h1 { font-size: 46px; } }
 @media (min-width: 1000px) { .hero .heroTitleLong h1 { font-size: 58px; line-height: .94; } }
+/* October 27 Hire the DAO headline: both lines in the headline colour, wide
+   enough for "WORKING PRODUCTS" on one line from tablet up. */
+.hero .heroTitlePlain { width: min(900px, calc(100vw - 48px)); }
+.site .hero .heroTitlePlain h1 em { color: inherit; }
+/* Sizes from the 1600px and 393px design layouts; on phones they scale with the
+   viewport so "HARD PROBLEMS," stays on one line. */
+.hero .heroTitlePlain h1 > span { font-size: min(34px, 8.4vw); }
+.hero .heroTitlePlain h1 > em { font-size: min(52px, 13.2vw); }
+@media (min-width: 600px) { .hero .heroTitlePlain h1 > span { font-size: 46px; } .hero .heroTitlePlain h1 > em { font-size: 58px; } }
+@media (min-width: 1000px) { .hero .heroTitlePlain h1 > span { font-size: 58px; } .hero .heroTitlePlain h1 > em { font-size: 73px; } }
 
 .narrativeHeading { margin: 0 0 clamp(32px, 4vw, 56px); max-width: 880px; }
 .narrativeHeading h2 { color: var(--color-navy); font: italic 500 30px/1.06 var(--font-display), sans-serif; margin: 0; }
