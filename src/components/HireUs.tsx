@@ -369,7 +369,7 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
 
 // `guided` is the October 23 form (40f3910) used by the audience routes: plain
 // step names, a short introduction and the progress indicator.
-export default function HireUs({ guided = false }: { guided?: boolean }) {
+export default function HireUs({ guided = false, onExit }: { guided?: boolean; onExit?: () => void }) {
   // State management for user feedback
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<
@@ -680,8 +680,8 @@ export default function HireUs({ guided = false }: { guided?: boolean }) {
           </>
         ) : guided ? (
           <div className="mb-8">
+            {/* The October 23 "Three steps…" line under this heading was removed by the owner (Frame 123); the stepper below states the steps. */}
             <h3 className="text-heading-lg font-bold text-moloch-500 mb-3">Tell us about your project</h3>
-            <p className="text-body-base">Three steps: introduce yourself, outline the project, then share your scope and timing. You can go back to review before sending.</p>
           </div>
         ) : (
           <h3 className="text-heading-lg font-bold text-moloch-500 mb-12">
@@ -707,6 +707,7 @@ export default function HireUs({ guided = false }: { guided?: boolean }) {
               showProgress={guided}
               allowBackNavigation={true}
               showSummary={false}
+              onExit={onExit}
             />
           )}
         </Form>

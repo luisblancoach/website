@@ -87,16 +87,10 @@ export const clientsCapabilities: CapabilitiesContent = defineNarrative("clients
 } satisfies CapabilitiesContent);
 
 // Previous works: the nine projects supplied for the October 27 showcase
-// (lib/data/caseStudies.ts). Only DAOhaus, BrightID and Hypercerts have
-// descriptions in the existing archive, kept as the October 23 summaries and
-// flagged until permission and scope are confirmed. Livepeer and Pocket Network
-// use Tae's supplied copy. The others show their name, logo, screenshot and site
-// only: no description of RaidGuild's work exists for them yet.
-const archiveNote = "From the existing project archive (lib/data/clients.ts) as summarised in the October 23 iteration. Confirm the scope and permission to feature this client.";
-const archived = (title: string, description: string) => ({
-  title: claim(title, "oct23-iteration", archiveNote),
-  description: claim(description, "oct23-iteration", archiveNote),
-});
+// (lib/data/caseStudies.ts). Each description is Tae's supplied copy (Livepeer
+// and Pocket Network on October 27, the others on October 28). It replaces the
+// October 23 archive summaries and their titles; no project carries a title
+// line, and nothing is added to Tae's wording.
 const work = (id: string, details: Pick<ShowcaseWork, "title" | "description"> = {}): ShowcaseWork => {
   const project = caseStudyProjects.find((item) => item.id === id);
   if (!project) throw new Error(`Not a showcase project: ${id}`);
@@ -110,11 +104,15 @@ const work = (id: string, details: Pick<ShowcaseWork, "title" | "description"> =
   };
 };
 const showcaseDetails: Record<string, Pick<ShowcaseWork, "title" | "description">> = {
-  daohaus: archived("Automated protocol maintenance", "Protocol maintenance, documentation and human-governed AI workflows."),
-  brightid: archived("Social identity systems", "Design and development for social identity and user verification."),
-  hypercerts: archived("Tools for public goods funding", "Smart contracts for minting, burning and donating Hypercerts."),
+  daohaus: { description: tae("DAOhaus provides tools for launching DAOs, voting on proposals, and managing shared treasuries. RaidGuild modernized its admin app, simplified its codebase and dependencies, and delivered maintenance documentation, operational runbooks, and AI-assisted development workflows with human review.") },
+  daedalus: { description: tae("Daedalus builds custom software and practical AI systems for businesses. RaidGuild delivered a client quote generator and integrated Coinbase embedded wallets, supporting both its business operations and wallet-enabled product development.") },
+  brightid: { description: tae("BrightID helps applications verify that users are unique people while protecting their privacy. RaidGuild built Aura’s MetaNode graph explorer, including tools for labeling identities and assessing reputation, giving community verifiers more context for identifying trustworthy participants.") },
   livepeer: { description: tae("Livepeer provides decentralized infrastructure for video and AI processing. RaidGuild helped maintain its Explorer and analyzed the staking and delegation experience to identify usability gaps and guide interface improvements.") },
+  hypercerts: { description: tae("Hypercerts creates onchain records of impactful work, helping funders understand and support contributions. RaidGuild contributed application and smart contract development to the infrastructure behind those records.") },
   pocket: { description: tae("Pocket Network connects applications to blockchain data through a decentralized network. RaidGuild built wrapped POKT infrastructure and gateway setup tools, including a CLI for wallet creation, staking, and delegation, alongside development of the Gateway OS frontend.") },
+  problem: { description: tae("RaidGuild contributed development and UX work to Problem Media’s Good Game platform, helping bring the application toward delivery.") },
+  gitcoin: { description: tae("Funding public goods through open-source tools and community coordination. RaidGuild contributed Passport–Snapshot validation work, Moloch-themed creative projects, and development support via our Skunk Squad.") },
+  yieldnest: { description: tae("YieldNest develops liquid restaking products that put staked assets to work across DeFi. RaidGuild contributed smart contract engineering, including refactoring deployment scripts to support new baskets of assets and helping its developers take over the resulting tools.") },
 };
 
 export const clientsPreviousWorks: PreviousWorksContent = defineNarrative("clients.previousWorks", {
@@ -154,7 +152,9 @@ export const clientsNav: NavContent = defineNarrative("clients.nav", {
     { label: oct23("Services"), section: "capabilities" },
     { label: oct23("Builders"), section: "team" },
   ],
-  cta: { label: tae("Tell us what you're building"), section: "project-inquiry" },
+  // The owner shortened the navigation call to action on October 28; the hero,
+  // creed and inquiry keep Tae's "Tell us what you're building".
+  cta: { label: approved("Build with us", "owner-approval"), section: "project-inquiry" },
 } satisfies NavContent);
 
 export const clientsCreed: CreedContent = defineNarrative("clients.creed", {

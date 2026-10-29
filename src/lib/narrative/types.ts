@@ -221,11 +221,13 @@ export function collectCopy(tree: unknown): Copy[] {
   return found;
 }
 
-// Flags show in development and on preview deployments (Vercel previews and the
-// Railway review service). SHOW_REVIEW_FLAGS=true|false overrides detection.
+// Flags show on preview deployments (Vercel previews and the Railway review
+// service). Local development renders what production renders, so design
+// reviews on localhost see no outlines; SHOW_REVIEW_FLAGS=true turns them on
+// there. SHOW_REVIEW_FLAGS=true|false overrides detection everywhere.
 export function reviewFlagsEnabled(env: Record<string, string | undefined> = process.env) {
   if (env.SHOW_REVIEW_FLAGS === "true") return true;
   if (env.SHOW_REVIEW_FLAGS === "false") return false;
-  if (env.NODE_ENV !== "production") return true;
+  if (env.NODE_ENV !== "production") return false;
   return env.VERCEL_ENV === "preview" || Boolean(env.RAILWAY_ENVIRONMENT_NAME);
 }

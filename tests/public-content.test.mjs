@@ -20,7 +20,7 @@ describe("public narrative content", () => {
   test("published text and ids are kept", () => {
     const works = publicTree.clientsNarrative.clientsPreviousWorks.works;
     assert.deepEqual(works.map((w) => w.id), ["daohaus", "daedalus", "brightid", "livepeer", "hypercerts", "pocket", "problem", "gitcoin", "yieldnest"]);
-    assert.equal(works[0].title.id, "clients.previousWorks.works.0.title");
+    assert.equal(works[0].description.id, "clients.previousWorks.works.0.description");
     assert.equal(works[0].link.href, "https://daohaus.org/");
     assert.equal(publicTree.communityNarrative.communityQueenRaida.artwork.src, "/images/queen-raida/queen-raida-v2.png");
   });

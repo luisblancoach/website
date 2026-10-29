@@ -3,7 +3,9 @@
 // project has its custom logo button, a screenshot of its own website, and its
 // official site. Descriptions of RaidGuild's work are not stored here; they
 // live in the narrative layer with their review status (lib/narrative/clients.ts).
-// Links follow clients.pdf, except Daedalus, which keeps the existing ddls.co.
+// Links follow clients.pdf, except Daedalus, which links to https://ddls.co
+// (owner, October 28). The Daedalus button and screenshot were replaced by the
+// owner on October 28.
 export type CaseStudyProject = {
   id: string;
   name: string;
@@ -25,7 +27,7 @@ const project = (id: string, name: string, href: string): CaseStudyProject => ({
 
 export const caseStudyProjects: CaseStudyProject[] = [
   project("daohaus", "DAOhaus", "https://daohaus.org/"),
-  project("daedalus", "Daedalus", "https://ddls.co/"),
+  project("daedalus", "Daedalus", "https://ddls.co"),
   project("brightid", "BrightID", "https://www.brightid.org/"),
   project("livepeer", "Livepeer", "https://livepeer.org"),
   project("hypercerts", "Hypercerts", "https://hypercerts.org/"),

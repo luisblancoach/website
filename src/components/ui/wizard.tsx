@@ -36,6 +36,9 @@ interface WizardProps {
   showProgress?: boolean;
   allowBackNavigation?: boolean;
   showSummary?: boolean;
+  // Shown as "Back" on the first step, to leave the wizard (e.g. close the
+  // surrounding inquiry); later steps keep "Previous".
+  onExit?: () => void;
 }
 
 export function Wizard({
@@ -45,6 +48,7 @@ export function Wizard({
   showProgress = true,
   allowBackNavigation = true,
   showSummary,
+  onExit,
 }: WizardProps) {
   const [currentStep, setCurrentStep] = React.useState(0);
   const [completedSteps, setCompletedSteps] = React.useState<Set<number>>(
@@ -158,6 +162,7 @@ export function Wizard({
         {steps.map((step, index) => (
           <div
             key={step.id}
+            aria-current={index === currentStep ? "step" : undefined}
             className={cn(
               "flex items-center gap-2 h-8 px-5 rounded-md font-medium pointer-events-none",
               index === currentStep
@@ -203,6 +208,12 @@ export function Wizard({
 
       {/* Navigation Buttons */}
       <div className="flex items-center justify-end gap-4">
+        {isFirstStep && onExit && (
+          <Button size={null} onClick={onExit} className="contact-btn-active" data-wizard-exit="">
+            <ChevronLeft className="h-4 w-4" />
+            <span>Back</span>
+          </Button>
+        )}
         {!isFirstStep && (
           <Button
             size={null}

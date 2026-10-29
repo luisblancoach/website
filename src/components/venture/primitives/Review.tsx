@@ -7,7 +7,7 @@ import styles from "../venture.module.css";
 
 const ReviewFlagsContext = createContext(false);
 
-// True in development and preview, where unresolved content may be shown.
+// True on previews and with SHOW_REVIEW_FLAGS=true, where unresolved content may be shown.
 export const useReviewFlags = () => useContext(ReviewFlagsContext);
 
 export function ReviewFlagsProvider({ enabled, children }: { enabled: boolean; children: ReactNode }) {
@@ -26,7 +26,7 @@ function rich(text: string) {
 
 type FlagProps = { id: string; reason: ReviewReason; note?: string; children: ReactNode; block?: boolean };
 
-// Outlines unresolved content in development and preview; renders children
+// Outlines unresolved content in review builds; renders children
 // unchanged everywhere else.
 export function ReviewFlag({ id, reason, note, children, block = false }: FlagProps) {
   const enabled = useContext(ReviewFlagsContext);
@@ -111,7 +111,7 @@ export function ReviewPanel() {
 
 const SURFACE_EXPERIMENT_KEY = "raidguild-surface-experiment";
 
-// Development/preview only: "?surface=deep-navy" tries the #12163B alternate dark
+// Review builds only: "?surface=deep-navy" tries the #12163B alternate dark
 // surface for this browser session; "?surface=default" turns it off. Inert when
 // review flags are disabled, so production can never enable it.
 export function SurfaceExperiment() {

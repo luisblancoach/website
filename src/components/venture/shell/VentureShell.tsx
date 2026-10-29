@@ -157,7 +157,8 @@ function Shell({ children, nav }: { children: ReactNode; nav?: AudienceNav }) {
         behavior: reducedMotion() ? "auto" : "smooth",
         block: "start",
       });
-      inquiry?.focus({ preventScroll: true });
+      // A module that replaces its introduction with the form focuses the form.
+      (inquiry?.querySelector<HTMLElement>("[data-inquiry-form]") ?? inquiry)?.focus({ preventScroll: true });
     }, 80);
   };
 

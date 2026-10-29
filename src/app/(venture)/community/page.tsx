@@ -22,7 +22,7 @@ import { forAudience } from "@/lib/narrative/public";
 // The October 23 Join composition (40f3910): guild → Queen Raida → curiosities →
 // stewardship → builders → join → services. Tae's tension, path and activity chapters
 // (Phase 2) return in the editorial batch. Unconfirmed claims are flagged in
-// development and preview; keep the route out of search until they are resolved.
+// review builds; keep the route out of search until they are resolved.
 export const metadata: Metadata = {
   alternates: { canonical: "/community" },
   title: "Community",

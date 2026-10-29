@@ -53,7 +53,7 @@ identify the projects only, as supplied and unmodified. No licence to the logos 
 | Project | Button (`custom_buttons/`, 228 × 88 SVG, paths only) | Snapshot (`snapshots/`, 1692 × 908 PNG) |
 |---|---|---|
 | DAOhaus | `button_daohaus.svg` `0e64ced09438fcc01e1172be91448d07` | `Snapshot_daohaus.png` `cbc154d991d64bc98e213798e1e4e4fc` |
-| Daedalus | `button_daedalus.svg` `f806ac6564142cc902f93270ddcdc80b` | `Snapshot_daedalus.png` `80c49f726eac2fac099a059da0c6737c` |
+| Daedalus | `button_daedalus.svg` `97089d2bf9348610271b95b182a7ce60` (replaced 2026-10-28; see below) | `Snapshot_daedalus.png` `f62196b86913c9599298905680ef24f8` (replaced 2026-10-28) |
 | BrightID | `button_brightid.svg` `36f28174708b65a5e56167c85e283087` | `Snapshot_brightid.png` `70a25cb9a89c2cfbf72229bc1cada820` |
 | Livepeer | `button_livepeer.svg` `9cfbae60b6e795ee2a13759d296df1cb` | `Snapshot_livepeer.png` `593a8c3936693a49d00b27b56d69acb8` |
 | Hypercerts | `button_hypercerts.svg` `a244cf07d691934850f35e26bd2eb041` | `Snapshot_hypercerts.png` `3a1fff5b023cc4fe9f9879ef9a8a4be5` |
@@ -62,7 +62,16 @@ identify the projects only, as supplied and unmodified. No licence to the logos 
 | Gitcoin | `button_gitcoin.svg` `81e68e92ac6f9a98c4a768abfd5236aa` | `Snapshot_gitcoin.png` `fa3934c8f93c1e2f41a44a7f4c369268` |
 | YieldNest | `button_yieldnest.svg` `66095bf588e8665df946e5bf1764e194` | `Snapshot_yieldnest.png` `50c4bb8d7c25cadffb89429362a91e40` |
 
-MD5 values follow each file name. `clients.pdf` (the source sheet: buttons, bare logos and
+MD5 values follow each file name.
+
+**Daedalus, replaced 2026-10-28.** The owner supplied a new logo button and website screenshot
+and copied them into `public/images/casestudies/` (byte-identical to
+`~/Desktop/RG/casestudies/`). The button is still 228 × 88, but unlike the others it draws the
+logo from an embedded PNG (`data:` URI, self-contained, no external reference). The snapshot is
+still 1692 × 908. Superseded MD5s: button `f806ac6564142cc902f93270ddcdc80b`, snapshot
+`80c49f726eac2fac099a059da0c6737c` (release `da9165b`).
+
+`clients.pdf` (the source sheet: buttons, bare logos and
 links) is a reference document only and is not part of the repository. Placements are
 declared in `src/lib/data/caseStudies.ts`.
 

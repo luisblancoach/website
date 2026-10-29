@@ -73,3 +73,83 @@ confirmed by the project owner:
   end dates of their own."
 - Scale: the designs are a 1600 px desktop (1.8 image px per CSS px) and a 393 px mobile layout
   (about 1.62). Display type and logo buttons are sized to those, and to fit the screen on phones.
+
+October 28, 2026 — team feedback on the deployed review (owner's annotated references
+`~/Downloads/Frame 120.png`, desktop, and `Frame 121.png`, mobile; handwritten notes and
+colour patches are instructions, not artwork):
+- Review outlines: the orange and purple dotted boxes in the references were the
+  narrative review flags, which rendered in every local development server. Flags now
+  render only on preview deployments or with SHOW_REVIEW_FLAGS=true, so localhost shows
+  what production shows (pending entries are dropped there too). Focus outlines are
+  unchanged.
+- Case studies: every project uses Tae's supplied description (October 28 for DAOhaus,
+  Daedalus, BrightID, Hypercerts, Problem, Gitcoin and YieldNest; October 27 for Livepeer
+  and Pocket Network). The October 23 archive titles and summaries are removed with the
+  summaries they belonged to, so no project has a title line. Daedalus links to
+  https://ddls.co, with the owner's new logo button and screenshot.
+- People behind the work (/clients): "The Guild runs on owners, / not employees." in the
+  showcase hierarchy (smaller dark lead, larger coral line), label in coral. The intro is
+  transcribed from the references and flagged for wording until confirmed. On mobile the
+  five steward cards sit in two columns instead of a sideways scroll.
+- Builder network (/clients): larger illustration (up to 450 px), and the member wall in
+  masonry rows: three rows whose cards are as long as each name and title, with no
+  truncation. Rows are balanced by estimated length and cards grow to close the rest; no
+  card is given an artificial size. Three rows on mobile too (previously two).
+- Inquiry (/clients): the panel uses the light-blue brand surface (--color-cyan, #B8E0DF,
+  the references' fill) in the light theme, with dark text; the dark theme keeps its
+  surface. The illustration is enlarged. Wording, the Guild inquiry button and the form
+  are unchanged.
+- Creed (/clients): "build." is coral at every width (it was dark green below 1000 px), and
+  the mobile section is at least 600 px tall.
+- Scope: the people, wall, inquiry and creed refinements apply to /clients only
+  (data-audience="clients" or explicit props); /community and / are unchanged.
+
+October 28, 2026 — interaction fixes after the owner's local review:
+- Builder wall: the seamless-loop copy of the cards is rendered only while one copy is wider
+  than the wall and motion is allowed, so filtered results never show a builder twice; the
+  first copy is the only one in the accessibility tree. Applies to every member wall.
+- Inquiry (/clients): the form opens inside the light-blue "Begin a transmission" module,
+  which grows to hold it; no separate dark form section. The form is unchanged.
+- Navigation (/clients): the call to action reads "Build with us"; other "Tell us what you're
+  building" uses stay.
+- Hero parallax: not restored in that round. The approved October 23 hero (40f3910) has the
+  same motion as this branch; the layered effects are older (August 7–12 painted layers;
+  August 19 – September 25 hover curtain) and were removed before the baseline.
+
+October 28, 2026 — Frame 122 (owner's annotated desktop reference, ~/Desktop/Frame 122.png):
+- Hero (/clients): the owner chose the August 19 – September 25 foreground curtain (4ffb591,
+  removed in 5d8a82d) over the August 7–12 painted layers. Restored with its distances (152 px;
+  clamp(160px, 13vw, 250px) from 1000 px), easing and 0.8 s / 1.4 s timing, and its 2.2 s
+  release; opened by the title hover, keyboard focus in the hero copy and scroll. The waypoints,
+  hover prompt and copy shift are not restored; the video backdrop stays. Phones part by
+  min(64px, 16vw). Reduced motion: still.
+- Previous works: more space between the ticker and the heading and between the heading and
+  the showcase, on the section rhythm.
+- Builder network (/clients): 1–8 filtered results use an editorial grid that fills the wall
+  area (src/components/venture/builderGrid.ts); 9+ keep the moving wall.
+- Inquiry (/clients): the form replaces the introduction inside the light-blue module (two
+  exclusive states); Close and a Back action on step 1 return to the introduction; values kept.
+  The form's hierarchy is restyled (heading, stepper, step pills, fields, buttons) without
+  changing its fields, validation or submission.
+
+October 28, 2026 — Frame 123 (owner's annotated desktop reference, ~/Desktop/Frame 123.png):
+- Builder network heading (/clients) uses the showcase heading scale (34 px lead, 52 px coral
+  italic line); mobile 20 px over clamp(30px, 10.2vw, 48px).
+- The full builder wall on /clients moves at 36 px/s (was 18); /community and / unchanged.
+- Inquiry form (/clients): heading 24 px on one line; the October 23 "Three steps…" line removed;
+  stepper and step pills on scroll-100 (the annotation's "white"); line-based fields with coral
+  focus and moloch-600 error underlines; module about 700 px tall at 1440 (was 985).
+- Not implemented, pending the owner: removing "Explore all members" and the "make gutter" note.
+
+October 28, 2026 — after Frame 123:
+- Builder wall (/clients): while it moves it runs edge to edge across the viewport; "make gutter"
+  means the spacing between cards (owner), which is unchanged. Static lists keep the content grid.
+- Client showcase (/clients): rotates every 3 s through the nine projects with a short crossfade;
+  pauses on hover and keyboard focus, offscreen and in hidden tabs; still with reduced motion;
+  manual selection restarts the interval; only manual changes are announced.
+
+October 28, 2026 — Join the DAO iteration (/community):
+- Main call to action "Join our community" (hero, navigation, creed), same Portal destination.
+- Guild section "About Moloch": owner-supplied copy on Moloch, coordination, the Hats Tree and
+  stewardship; CTAs "Explore the Hats Tree" and "Find your path into the Guild"; links to the DAO
+  Roles handbook page and Hats Protocol. The separate Join section is unchanged.

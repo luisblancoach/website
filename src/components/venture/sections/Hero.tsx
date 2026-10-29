@@ -10,9 +10,74 @@ import styles from "../venture.module.css";
 
 // `grouped` is the October 23 composition used by the audience routes: the dek
 // and actions sit under the title in one column. "/" keeps them separate.
-export default function Hero({ content, grouped = false }: { content: HeroContent; grouped?: boolean }) {
+// `curtain` restores the foreground curtain of 4ffb591 (2026-08-19, removed in
+// 5d8a82d): the two foreground halves part to reveal more of the landscape.
+// Historically hovering or focusing the title (or the hero waypoints) opened it
+// and it closed 2.2 s after the pointer left. Without the waypoints, the title
+// hover and keyboard focus in the hero copy open it fully, and scrolling into
+// the page opens it progressively. Distances and easing are the historical
+// ones (CSS); nothing moves with reduced motion.
+const CURTAIN_REST_MS = 2200;
+// Scroll distance, as a share of the hero height, over which the curtain opens.
+const CURTAIN_REACH = 0.45;
+
+export default function Hero({ content, grouped = false, curtain = false }: { content: HeroContent; grouped?: boolean; curtain?: boolean }) {
   const { portalOpen } = useVenture();
   const heroRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const copyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const title = titleRef.current;
+    const copy = copyRef.current;
+    if (!curtain || !hero || !title || !copy || portalOpen) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const finePointer = window.matchMedia("(pointer: fine)");
+    let revealed = false;
+    let scrolled = 0;
+    let shown = 0;
+    let frame = 0;
+    let timer = 0;
+    const paint = () => {
+      frame = 0;
+      const progress = motion.matches ? 0 : Math.max(scrolled, revealed ? 1 : 0);
+      if (progress === shown) return;
+      // Historical timing: opening 0.8 s, closing 1.4 s.
+      hero.style.setProperty("--neo-curtain-duration", progress > shown ? ".8s" : "1.4s");
+      hero.style.setProperty("--neo-curtain-progress", progress.toFixed(3));
+      shown = progress;
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(paint); };
+    const reveal = () => { window.clearTimeout(timer); revealed = true; schedule(); };
+    const rest = () => { window.clearTimeout(timer); timer = window.setTimeout(() => { revealed = false; schedule(); }, CURTAIN_REST_MS); };
+    const enterTitle = (event: PointerEvent) => { if (event.pointerType === "mouse" && finePointer.matches) reveal(); };
+    const focusIn = (event: FocusEvent) => { if ((event.target as HTMLElement).matches(":focus-visible")) reveal(); };
+    const focusOut = (event: FocusEvent) => { if (!copy.contains(event.relatedTarget as Node | null)) rest(); };
+    const onScroll = () => {
+      const reach = Math.max(hero.offsetHeight * CURTAIN_REACH, 1);
+      scrolled = Math.min(Math.max(window.scrollY - hero.offsetTop, 0), reach) / reach;
+      schedule();
+    };
+    title.addEventListener("pointerenter", enterTitle);
+    title.addEventListener("pointerleave", rest);
+    copy.addEventListener("focusin", focusIn);
+    copy.addEventListener("focusout", focusOut);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    motion.addEventListener("change", schedule);
+    onScroll();
+    return () => {
+      title.removeEventListener("pointerenter", enterTitle);
+      title.removeEventListener("pointerleave", rest);
+      copy.removeEventListener("focusin", focusIn);
+      copy.removeEventListener("focusout", focusOut);
+      window.removeEventListener("scroll", onScroll);
+      motion.removeEventListener("change", schedule);
+      window.clearTimeout(timer);
+      cancelAnimationFrame(frame);
+      hero.style.removeProperty("--neo-curtain-progress");
+    };
+  }, [curtain, portalOpen]);
 
   useEffect(() => {
     const root = heroRef.current;
@@ -112,7 +177,7 @@ export default function Hero({ content, grouped = false }: { content: HeroConten
   );
 
   return (
-    <section className={styles.hero} id="top" ref={heroRef}>
+    <section className={curtain ? `${styles.hero} ${styles.heroCurtain}` : styles.hero} id="top" ref={heroRef}>
       <div className={styles.heroStage}>
         <div className={styles.heroCelestial} aria-hidden="true">
           <span className={styles.moonLarge} />
@@ -146,9 +211,9 @@ export default function Hero({ content, grouped = false }: { content: HeroConten
           </video>
         </div>
         <div className={styles.heroWash} />
-        <div className={styles.heroCopy}>
+        <div className={styles.heroCopy} ref={copyRef}>
           <p className={styles.eyebrow}><span /><CopyText copy={content.eyebrow} before=" " /></p>
-          <div className={[styles.heroTitle, content.title.long ? styles.heroTitleLong : "", content.title.plain ? styles.heroTitlePlain : ""].filter(Boolean).join(" ")}>
+          <div ref={titleRef} className={[styles.heroTitle, content.title.long ? styles.heroTitleLong : "", content.title.plain ? styles.heroTitlePlain : ""].filter(Boolean).join(" ")}>
             <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} /></em></h1>
           </div>
           {grouped && supplement}

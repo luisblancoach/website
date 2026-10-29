@@ -4,10 +4,10 @@ import { communityNarrative } from "../src/lib/narrative/community.ts";
 import { clientsNarrative } from "../src/lib/narrative/clients.ts";
 import { sharedNarrative } from "../src/lib/narrative/shared.ts";
 import { entryGuild, entryHero } from "../src/lib/narrative/entry.ts";
-import { clientData } from "../src/lib/data/clients.ts";
 import { services } from "../src/lib/data/content.ts";
 import { activeSpears } from "../src/lib/data/venture.ts";
 import { caseStudyProjects } from "../src/lib/data/caseStudies.ts";
+import { PORTAL_JOIN_URL } from "../src/lib/data/constants.ts";
 import { collectCopy, reviewFlagsEnabled } from "../src/lib/narrative/types.ts";
 import { existsSync } from "node:fs";
 
@@ -23,6 +23,14 @@ const TAE_BRIEF = new Set([
   "Tell us what you're building", "Tell us what", "you're building", "Explore our work",
   "Livepeer provides decentralized infrastructure for video and AI processing. RaidGuild helped maintain its Explorer and analyzed the staking and delegation experience to identify usability gaps and guide interface improvements.",
   "Pocket Network connects applications to blockchain data through a decentralized network. RaidGuild built wrapped POKT infrastructure and gateway setup tools, including a CLI for wallet creation, staking, and delegation, alongside development of the Gateway OS frontend.",
+  // Case-study copy supplied on October 28.
+  "YieldNest develops liquid restaking products that put staked assets to work across DeFi. RaidGuild contributed smart contract engineering, including refactoring deployment scripts to support new baskets of assets and helping its developers take over the resulting tools.",
+  "Hypercerts creates onchain records of impactful work, helping funders understand and support contributions. RaidGuild contributed application and smart contract development to the infrastructure behind those records.",
+  "DAOhaus provides tools for launching DAOs, voting on proposals, and managing shared treasuries. RaidGuild modernized its admin app, simplified its codebase and dependencies, and delivered maintenance documentation, operational runbooks, and AI-assisted development workflows with human review.",
+  "BrightID helps applications verify that users are unique people while protecting their privacy. RaidGuild built Aura’s MetaNode graph explorer, including tools for labeling identities and assessing reputation, giving community verifiers more context for identifying trustworthy participants.",
+  "Daedalus builds custom software and practical AI systems for businesses. RaidGuild delivered a client quote generator and integrated Coinbase embedded wallets, supporting both its business operations and wallet-enabled product development.",
+  "RaidGuild contributed development and UX work to Problem Media’s Good Game platform, helping bring the application toward delivery.",
+  "Funding public goods through open-source tools and community coordination. RaidGuild contributed Passport–Snapshot validation work, Moloch-themed creative projects, and development support via our Skunk Squad.",
 ]);
 
 // Topics that must never ship unflagged unless they are Tae's own words.
@@ -50,7 +58,8 @@ describe("community narrative", () => {
     assert.equal(`${communityHero.title.lead.text} ${communityHero.title.em.text}`, "The guild for serious Web3 builders");
     assert.equal(`${communityTension.title.lead.text} ${communityTension.title.em.text}`, "Freelance work versus real ownership");
     assert.deepEqual(communityPath.steps.map((step) => step.title.text), ["Enter a cohort", "Take a raid", "Earn ownership"]);
-    assert.equal(communityJoin.actions[0].label.text, "Join the DAO");
+      assert.equal(communityHero.paths[0].label.text, "Join our community");
+      assert.equal(communityJoin.actions[0].label.text, "Join the DAO");
   });
 
   test("ownership, governance and membership statements stay flagged", () => {
@@ -64,14 +73,14 @@ describe("community narrative", () => {
   test("every unresolved item explains what to confirm, and sourced claims cite their source", () => {
     for (const copy of community.filter((item) => item.status === "needs-review")) {
       assert.ok(copy.note && copy.note.length > 20, `${copy.id} needs a review note`);
-      if (copy.source === "handbook") assert.match(copy.sourceUrl ?? "", /^https:\/\/handbook\.raidguild\.org\/docs\//, `${copy.id} needs a handbook URL`);
+      if (copy.source === "handbook") assert.match(copy.sourceUrl ?? "", /^https:\/\/(?:handbook\.raidguild\.org\/docs|rg-handbook-nextra\.vercel\.app)\//, `${copy.id} needs a handbook URL`);
       if (copy.source === "portal") assert.match(copy.sourceUrl ?? "", /^https:\/\/portal\.raidguild\.org\//, `${copy.id} needs a Portal URL`);
     }
   });
 
-  test("every Join the DAO link records its interim destination as a claim", () => {
-    const { communityHero, communityGuild, communityJoin } = communityNarrative;
-    const joins = [...communityHero.paths, ...communityGuild.actions, ...communityJoin.actions].filter((link) => link.label.text === "Join the DAO");
+  test("every community CTA records its intended destination", () => {
+    const { communityHero, communityNav, communityCreed } = communityNarrative;
+    const joins = [communityHero.paths[0], communityNav.cta, communityCreed.cta];
     assert.equal(joins.length, 3);
     for (const link of joins) {
       assert.equal(link.href, "https://portal.raidguild.org/join");
@@ -92,8 +101,9 @@ describe("entry copy", () => {
 });
 
 describe("review flag visibility", () => {
-  test("shows locally and on previews, hides in production", () => {
-    assert.equal(reviewFlagsEnabled({ NODE_ENV: "development" }), true);
+  test("shows on previews, hides locally and in production", () => {
+    assert.equal(reviewFlagsEnabled({ NODE_ENV: "development" }), false);
+    assert.equal(reviewFlagsEnabled({ NODE_ENV: "development", SHOW_REVIEW_FLAGS: "true" }), true);
     assert.equal(reviewFlagsEnabled({ NODE_ENV: "production" }), false);
     assert.equal(reviewFlagsEnabled({ NODE_ENV: "production", VERCEL_ENV: "production" }), false);
     assert.equal(reviewFlagsEnabled({ NODE_ENV: "production", VERCEL_ENV: "preview" }), true);
@@ -140,7 +150,7 @@ describe("all narratives", () => {
     const links = [];
     const walk = (node) => { if (node && typeof node === "object") { if (node.href === "https://portal.raidguild.org/join" && node.label) links.push(node); Object.values(node).forEach(walk); } };
     walk(communityNarrative);
-    assert.ok(links.length >= 5);
+    assert.ok(links.length >= 4);
     for (const link of links) assert.equal(link.destination?.status, "needs-review", link.label.id);
   });
 });
@@ -155,7 +165,9 @@ describe("clients narrative", () => {
     assert.equal(clientsHero.paths[0].section, "project-inquiry");
     assert.equal(`${clientsInquiry.title.lead.text} ${clientsInquiry.title.em.text}`, "Tell us what you're building");
     assert.equal(clientsCreed.cta.label.text, "Tell us what you're building");
-    assert.equal(clientsNav.cta.label.text, "Tell us what you're building");
+    assert.equal(clientsNav.cta.label.text, "Build with us", "the navigation CTA was shortened by the owner");
+    assert.equal(clientsNav.cta.label.source, "owner-approval");
+    assert.equal(clientsNav.cta.section, "project-inquiry", "the navigation CTA still opens the inquiry");
   });
 
   test("capabilities list the published services in order, grouped by Tae's three pillars", () => {
@@ -195,25 +207,22 @@ describe("clients narrative", () => {
       assert.equal(work.pending, undefined, work.id);
     }
     const href = Object.fromEntries(works.map((w) => [w.id, w.link.href]));
-    assert.equal(href.daedalus, "https://ddls.co/");
+    assert.equal(href.daedalus, "https://ddls.co");
     assert.equal(href.livepeer, "https://livepeer.org");
     assert.equal(href.pocket, "https://pocket.network");
   });
 
-  test("only sourced projects describe RaidGuild's work", () => {
+  test("every project describes RaidGuild's work in Tae's supplied copy", () => {
     const byId = Object.fromEntries(clientsNarrative.clientsPreviousWorks.works.map((w) => [w.id, w]));
-    for (const id of ["daedalus", "problem", "gitcoin", "yieldnest"]) {
-      assert.equal(byId[id].title, undefined, id);
-      assert.equal(byId[id].description, undefined, id);
+    for (const work of clientsNarrative.clientsPreviousWorks.works) {
+      assert.equal(work.description.source, "tae-brief", work.id);
+      assert.equal(work.description.status, "approved", work.id);
+      assert.equal(work.title, undefined, `${work.id}: the archive titles were replaced with the descriptions`);
     }
-    for (const id of ["daohaus", "brightid", "hypercerts"]) {
-      assert.ok(clientData.some((record) => record.id === id), id);
-      for (const field of [byId[id].title, byId[id].description]) assert.equal(field.reason, "claim", field.id);
-    }
-    for (const id of ["livepeer", "pocket"]) {
-      assert.equal(byId[id].description.source, "tae-brief", id);
-      assert.equal(byId[id].title, undefined, id);
-    }
+    assert.match(byId.daedalus.description.text, /^Daedalus builds custom software and practical AI systems for businesses\./);
+    assert.match(byId.brightid.description.text, /Aura’s MetaNode graph explorer/);
+    assert.match(byId.gitcoin.description.text, /^Funding public goods .* Skunk Squad\.$/);
+    assert.equal(byId.daedalus.name.text, "Daedalus");
     assert.ok(!byId.ud && !byId.gnosis, "Ultimate Dominion and Gnosis are not in this showcase");
   });
 
@@ -222,6 +231,37 @@ describe("clients narrative", () => {
     for (const work of clientsNarrative.clientsPreviousWorks.works) {
       assert.doesNotMatch(`${work.title?.text ?? ""} ${work.description?.text ?? ""}`, /\$\d|\d+x\b|\d+%|million|\bM\b/);
     }
+  });
+});
+
+describe("Join the DAO iteration (/community)", () => {
+  test("the main call to action reads Join our community and keeps its destination", () => {
+    const { communityHero, communityNav, communityCreed } = communityNarrative;
+    const primary = communityHero.paths.find((path) => path.primary);
+    assert.equal(primary.label.text, "Join our community");
+    assert.equal(primary.href, PORTAL_JOIN_URL);
+    assert.equal(communityNav.cta.label.text, "Join our community");
+    assert.equal(communityNav.cta.href, PORTAL_JOIN_URL);
+    assert.equal(communityCreed.cta.label.text, "Join our community");
+  });
+
+  test("the Guild section is About Moloch with the Hats Tree and stewardship copy", () => {
+    const guild = communityNarrative.communityGuild;
+    assert.equal(`${guild.title.lead.text} ${guild.title.em.text}`, "About Moloch");
+    assert.match(guild.body.text, /^In RaidGuild lore, Moloch represents coordination failure/);
+    assert.equal(guild.more.summary.text, "RaidGuild's Hats Tree");
+    assert.match(guild.more.text.text, /powered by Hats Protocol/);
+    assert.equal(guild.kit.heading.text, "Stewardship");
+    assert.match(guild.kit.items[0].detail.text, /^Stewards are members who take responsibility/);
+    assert.deepEqual(guild.actions.map((action) => action.label.text), ["Explore the Hats Tree", "Find your path into the Guild"]);
+    assert.deepEqual(guild.actions.map((action) => action.variant), ["filled", "outline"]);
+    assert.ok(guild.actions.every((action) => /^https:\/\//.test(action.href)));
+  });
+
+  test("the Guild section links to the DAO Roles handbook page and Hats Protocol", () => {
+    const hrefs = communityNarrative.communityGuild.links.map((link) => link.href);
+    assert.ok(hrefs.some((href) => /dao-operations\/dao-roles$/.test(href)), "DAO Roles handbook");
+    assert.ok(hrefs.some((href) => /Hats-Protocol\/hats-protocol$/.test(href)), "Hats Protocol");
   });
 });
 

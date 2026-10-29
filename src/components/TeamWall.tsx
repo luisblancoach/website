@@ -1,12 +1,48 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import type { Mercenary } from "@/lib/data/members";
+import { masonryRows } from "@/lib/data/memberCategories";
+import { builderGridSlots } from "./venture/builderGrid";
 import styles from "./venture/venture.module.css";
 
-export default function TeamWall({ members, suspended = false }: { members: Mercenary[]; suspended?: boolean }) {
+// Short filtered lists on /clients: an editorial grid that fills the wall's
+// area (builderGrid.ts). Each member is one card, in data order.
+function BuilderGrid({ members }: { members: Mercenary[] }) {
+  const slots = builderGridSlots(members.length);
+  if (!slots) return null;
+  const area = ([c1, c2, r1, r2]: number[]) => `${r1} / ${c1} / ${r2} / ${c2}`;
+  return (
+    <div className={styles.teamWall}>
+      <div className={styles.memberGridFrame} role="region" aria-label="Guild members">
+        <div className={styles.memberGrid} data-count={members.length}>
+          {members.map((member, index) => {
+            const slot = slots[index];
+            const style = { "--wide-area": area(slot.wide), "--narrow-area": area(slot.narrow), "--chars": member.name.length } as CSSProperties;
+            const content = <><Image src={member.imagePath} alt="" width={160} height={160} draggable={false} /><span><strong title={member.name}>{member.name}</strong><small>{member.title}</small></span></>;
+            return member.link
+              ? <a key={member.name} className={styles.memberTile} style={style} data-wide={slot.wideShape} data-narrow={slot.narrowShape} href={member.link} target="_blank" rel="noopener noreferrer">{content}<i aria-hidden="true">↗</i></a>
+              : <div key={member.name} className={styles.memberTile} style={style} data-wide={slot.wideShape} data-narrow={slot.narrowShape}>{content}</div>;
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// The first copy is the list of results: each member appears in it once, and it
+// is the only copy in the accessibility tree and the tab order. A second,
+// aria-hidden copy exists only to make the moving wall seamless, so it is
+// rendered only while one copy is wider than the wall (then no member can be
+// on screen twice) and motion is allowed. Short filtered lists sit still.
+// `speed` is the automatic movement in CSS px per second (18 by default).
+// `bleed` lets the moving wall run edge to edge across its section (/clients);
+// whether it moves is then judged against the section's full width, so the
+// layout cannot flip between the two widths.
+export default function TeamWall({ members, suspended = false, masonry = false, speed = 18, bleed = false }: { members: Mercenary[]; suspended?: boolean; masonry?: boolean; speed?: number; bleed?: boolean }) {
   const viewport = useRef<HTMLDivElement>(null);
+  const [loops, setLoops] = useState(false);
   const hover = useRef(false);
   const focused = useRef(false);
   const drag = useRef<{ x: number; scroll: number; moved: boolean } | null>(null);
@@ -15,7 +51,25 @@ export default function TeamWall({ members, suspended = false }: { members: Merc
 
   useEffect(() => {
     const element = viewport.current;
-    if (!element || suspended) return;
+    const results = element?.firstElementChild?.firstElementChild as HTMLElement | null;
+    if (!element || !results) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const frame = bleed ? element.closest("section") : null;
+    const check = () => setLoops(!motion.matches && results.getBoundingClientRect().width > (frame?.clientWidth ?? element.clientWidth) + 1);
+    const sizes = new ResizeObserver(check);
+    sizes.observe(element);
+    sizes.observe(results);
+    if (frame) sizes.observe(frame);
+    motion.addEventListener("change", check);
+    check();
+    return () => { sizes.disconnect(); motion.removeEventListener("change", check); };
+  }, [members, masonry, bleed]);
+
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    if (!loops) { element.scrollLeft = 0; return; }
+    if (suspended) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let visible = false;
     let frame = 0;
@@ -45,7 +99,7 @@ export default function TeamWall({ members, suspended = false }: { members: Merc
       previous = now;
       if (visible && !document.hidden && !motion.matches && !hover.current && !focused.current && !drag.current && now > resumeAt.current) {
         if (distance > 0) {
-          position = (position + elapsed * .018) % distance;
+          position = (position + elapsed * speed / 1000) % distance;
           element.scrollLeft = position;
         }
       } else {
@@ -62,10 +116,12 @@ export default function TeamWall({ members, suspended = false }: { members: Merc
       document.removeEventListener("visibilitychange", sync);
       motion.removeEventListener("change", sync);
     };
-  }, [suspended]);
+  }, [suspended, loops, speed]);
+
+  if (masonry && builderGridSlots(members.length)) return <BuilderGrid members={members} />;
 
   return (
-    <div className={styles.teamWall}>
+    <div className={styles.teamWall} data-bleed={bleed && loops ? "" : undefined}>
       <div
         ref={viewport}
         className={styles.memberMarquee}
@@ -100,16 +156,21 @@ export default function TeamWall({ members, suspended = false }: { members: Merc
         onClickCapture={(event) => { if (suppressClick.current) { event.preventDefault(); suppressClick.current = false; } }}
       >
         <div className={styles.memberLoop}>
-          {[0, 1].map((copy) => (
-            <div className={styles.memberRail} key={copy} aria-hidden={copy === 1 ? true : undefined}>
-              {members.map((member) => {
-                const content = <><Image src={member.imagePath} alt="" width={58} height={58} draggable={false} /><span><strong title={member.name}>{member.name}</strong><small title={member.title}>{member.title}</small></span></>;
-                return member.link
-                  ? <a href={member.link} target="_blank" rel="noopener noreferrer" key={member.name} tabIndex={copy === 1 ? -1 : undefined}>{content}<i>↗</i></a>
-                  : <div key={member.name}>{content}</div>;
-              })}
-            </div>
-          ))}
+          {(loops ? [0, 1] : [0]).map((copy) => {
+            const cards = (list: Mercenary[]) => list.map((member) => {
+              const content = <><Image src={member.imagePath} alt="" width={58} height={58} draggable={false} /><span><strong title={member.name}>{member.name}</strong><small title={member.title}>{member.title}</small></span></>;
+              return member.link
+                ? <a href={member.link} target="_blank" rel="noopener noreferrer" key={member.name} tabIndex={copy === 1 ? -1 : undefined}>{content}<i>↗</i></a>
+                : <div key={member.name}>{content}</div>;
+            });
+            return masonry ? (
+              <div className={styles.memberMasonry} key={copy} aria-hidden={copy === 1 ? true : undefined} data-static={loops ? undefined : ""}>
+                {masonryRows(members).map((row, index) => <div className={styles.memberRail} key={index}>{cards(row)}</div>)}
+              </div>
+            ) : (
+              <div className={styles.memberRail} key={copy} aria-hidden={copy === 1 ? true : undefined}>{cards(members)}</div>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -14,8 +14,13 @@ import styles from "../venture.module.css";
 import moduleStyles from "../audience.module.css";
 
 // October 23 builder network (40f3910): skill tabs with counts over the member
-// wall. Copy varies by audience through `content`.
-export default function BuilderNetwork({ content, illustration }: { content: BuilderNetworkContent; illustration?: Illustration }) {
+// wall. Copy varies by audience through `content`; /clients lays the wall out
+// as masonry rows (October 28 feedback).
+// The /clients wall moves twice as fast as the default 18 px/s (Frame 123) and,
+// while it moves, runs edge to edge across the viewport.
+const WALL_SPEED_CLIENTS = 36;
+
+export default function BuilderNetwork({ content, illustration, masonry = false }: { content: BuilderNetworkContent; illustration?: Illustration; masonry?: boolean }) {
   const { portalOpen } = useVenture();
   const [category, setCategory] = useState<MemberCategory>("All builders");
   const tabs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -28,6 +33,6 @@ export default function BuilderNetwork({ content, illustration }: { content: Bui
       if (next === null) return;
       event.preventDefault(); setCategory(memberCategories[next]); tabs.current[next]?.focus();
     }}>{memberCategories.map((item, index) => <button ref={el => { tabs.current[index] = el; }} type="button" role="tab" id={`builders-tab-${index}`} aria-controls="builder-profiles" aria-selected={category === item} tabIndex={category === item ? 0 : -1} key={item} onClick={() => setCategory(item)}>{item} <span>{filterMembers(mercenaries, item).length}</span></button>)}</div>
-    <div id="builder-profiles" role="tabpanel" aria-labelledby={`builders-tab-${memberCategories.indexOf(category)}`}><p className={moduleStyles.resultCount} aria-live="polite">{filtered.length} profiles · {category}</p><TeamWall key={category} members={filtered} suspended={portalOpen} /></div>
+    <div id="builder-profiles" role="tabpanel" aria-labelledby={`builders-tab-${memberCategories.indexOf(category)}`}><p className={moduleStyles.resultCount} aria-live="polite">{filtered.length} profiles · {category}</p><TeamWall key={category} members={filtered} suspended={portalOpen} masonry={masonry} speed={masonry ? WALL_SPEED_CLIENTS : undefined} bleed={masonry} /></div>
   </section>;
 }

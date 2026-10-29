@@ -14,7 +14,7 @@ import { forAudience } from "@/lib/narrative/public";
 
 // The October 23 Hire composition (40f3910): previous works → services →
 // builders → people → inquiry, with the October 27 hero, client showcase and
-// services. Unconfirmed claims are flagged in development and
+// services. Unconfirmed claims are flagged in review builds and
 // preview; keep the route out of search until they are resolved.
 export const metadata: Metadata = {
   alternates: { canonical: "/clients" },
@@ -27,13 +27,13 @@ export const metadata: Metadata = {
 export default function ClientsPage() {
   return (
     <>
-      <Hero content={forAudience(clientsHero)} grouped />
+      <Hero content={forAudience(clientsHero)} grouped curtain />
       <GuildTicker />
-      <PreviousWorks content={forAudience(clientsPreviousWorks)} />
+      <PreviousWorks content={forAudience(clientsPreviousWorks)} rotate />
       <Services content={forAudience(clientsServices)} portrait={foundryPortrait} horizontal={foundryHorizontal} />
-      <BuilderNetwork content={forAudience(buildersClients)} illustration={crewHorizontal} />
+      <BuilderNetwork content={forAudience(buildersClients)} illustration={crewHorizontal} masonry />
       <Stewardship content={forAudience(peopleClients)} titles="professional" />
-      <GuildInquiry content={forAudience(clientsInquiry)} />
+      <GuildInquiry content={forAudience(clientsInquiry)} surface="cyan" />
       <Creed content={forAudience(clientsCreed)} />
     </>
   );
