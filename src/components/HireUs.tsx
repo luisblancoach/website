@@ -132,15 +132,20 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
                     defaultValue={dropdownField.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="!rounded-l-none w-32">
+                      <SelectTrigger className="!rounded-l-none w-36 contact-channel-trigger" aria-label="Channel">
                         <SelectValue placeholder="Discord" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="contact-channel-menu">
                       {CONTACT_CHANNEL_OPTIONS.map((o) => {
+                        // October 30: each channel shows its mark (Discord,
+                        // a paper plane for Telegram); the label names it.
                         return (
                           <SelectItem key={o.value} value={o.value}>
-                            {o.label}
+                            <span className="contact-channel">
+                              <span className="contact-channel-icon" data-channel={o.value} aria-hidden="true" />
+                              {o.label}
+                            </span>
                           </SelectItem>
                         );
                       })}
@@ -679,10 +684,10 @@ export default function HireUs({ guided = false, onExit }: { guided?: boolean; o
             </p>
           </>
         ) : guided ? (
-          <div className="mb-8">
-            {/* The October 23 "Three steps…" line under this heading was removed by the owner (Frame 123); the stepper below states the steps. */}
-            <h3 className="text-heading-lg font-bold text-moloch-500 mb-3">Tell us about your project</h3>
-          </div>
+          // October 30: no heading of its own. The module's title ("Tell us
+          // what you're building") introduces the form and the stepper names
+          // the step (the "Three steps…" line was removed earlier, Frame 123).
+          null
         ) : (
           <h3 className="text-heading-lg font-bold text-moloch-500 mb-12">
             Let&apos;s Get Started

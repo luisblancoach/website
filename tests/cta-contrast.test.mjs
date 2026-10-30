@@ -25,65 +25,91 @@ const lum = (hex) => {
 const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
 
 const light = (name) => token(name);
-const darkTok = (name) => token(name, dark) ?? token(name);
 const surfaces = { cream: "#efe9d7", navy: "#191e4e", raised: "#252a61", deep: "#102d2c" };
 
-describe("semantic CTA tokens", () => {
-  test("canonical pink is unchanged", () => {
+describe("shared CTA system (October 30): one behaviour in both themes", () => {
+  const surfacesAll = { ...surfaces, sky: "#b8e0df", coral: "#ee3c78", deepNavy: "#12163b" };
+
+  test("the dark theme redefines only the primary label and edge, the secondary surfaces and the hover shadow", () => {
+    const names = [...dark.matchAll(/--(cta-[a-z-]+)\s*:/g)].map(([, name]) => name).sort();
+    assert.deepEqual(names, ["cta-border", "cta-fg", "cta-hover-shadow", "cta-secondary-active-bg", "cta-secondary-bg", "cta-secondary-edge", "cta-secondary-fg", "cta-secondary-hover-bg"]);
+  });
+
+  test("dark primary: the selected tab's treatment, a deep navy label (4.5:1+) and one cream edge on coral", () => {
+    const fg = token("cta-fg", dark), edge = token("cta-border", dark);
+    assert.equal(fg, "#12163b");
+    assert.equal(edge, palette["color-cream"]);
+    assert.ok(contrast(fg, light("cta-bg")) >= 4.5, "navy label on coral");
+    assert.ok(contrast(edge, surfaces.navy) >= 3, "cream edge on navy");
+  });
+
+  test("primary: canonical pink inside a deep navy edge", () => {
     assert.equal(light("cta-bg"), "#ee3c78");
-  });
-
-  test("label text meets 4.5:1 in every state (16px labels)", () => {
-    assert.ok(contrast(light("cta-fg"), light("cta-bg")) >= 4.5, "light default");
-    assert.ok(contrast(light("cta-fg-hover"), light("cta-bg-hover")) >= 4.5, "light hover");
-    assert.ok(contrast(light("cta-fg-active"), light("cta-bg-active")) >= 4.5, "light pressed");
-    assert.ok(contrast(darkTok("cta-fg-hover"), darkTok("cta-bg-hover")) >= 4.5, "dark hover");
-    assert.ok(contrast(darkTok("cta-fg-active"), darkTok("cta-bg-active")) >= 4.5, "dark pressed");
+    assert.equal(light("cta-border"), "#12163b");
+    assert.ok(contrast(light("cta-border"), light("cta-bg")) >= 3, "the navy edge reads against the coral fill");
+    assert.ok(contrast(light("cta-fg"), light("cta-bg")) >= 4.5, "rest: ink on pink");
     assert.ok(contrast(light("on-pink"), light("cta-bg")) >= 4.5, "text on the pink band");
+    assert.ok(contrast("#fafafa", "#ee3c78") < 4.5, "why the label is dark: white fails on canonical pink");
   });
 
-  test("both themes rest on canonical pink; hover and pressed are distinct darker states", () => {
-    for (const tok of [light, darkTok]) {
-      assert.equal(tok("cta-bg"), "#ee3c78", "default is the canonical pink");
-      assert.notEqual(tok("cta-bg-hover"), tok("cta-bg"), "hover differs from rest");
-      assert.notEqual(tok("cta-bg-active"), tok("cta-bg-hover"), "pressed differs from hover");
-      assert.ok(contrast(tok("cta-fg"), tok("cta-bg")) >= 4.5, "default label");
+  test("hover and pressed keep the button itself: no colour switch, no white label", () => {
+    for (const gone of ["cta-hover-bg", "cta-hover-fg", "cta-active-bg", "cta-active-fg"]) assert.equal(token(gone), null, `--${gone} is gone`);
+    assert.match(css, /\.pill:not\(\[aria-disabled="true"\]\):hover \{ box-shadow: var\(--cta-hover-shadow\); transform: translateY\(-1px\); \}/);
+    assert.match(css, /\.pillOutline:not\(\[aria-disabled="true"\]\):hover \{ background: var\(--cta-secondary-hover-bg\); \}/);
+    assert.match(css, /\.pill:not\(\[aria-disabled="true"\]\):active \{ box-shadow: var\(--cta-active-inset\); transform: none; \}/);
+  });
+
+  test("why the primary does not darken: a darker coral drops the dark labels under 4.5:1", () => {
+    assert.ok(contrast("#12163b", "#e8366f") < 4.5);
+    assert.ok(contrast("#071c1d", "#e8366f") < 4.5);
+  });
+
+  test("secondary hover and pressed surfaces keep their labels well above 4.5:1", () => {
+    assert.ok(contrast(light("cta-secondary-fg"), light("cta-secondary-hover-bg")) >= 4.5);
+    assert.ok(contrast(light("cta-secondary-fg"), light("cta-secondary-active-bg")) >= 4.5);
+    assert.ok(contrast(token("cta-secondary-fg", dark), token("cta-secondary-hover-bg", dark)) >= 4.5);
+    assert.ok(contrast(token("cta-secondary-fg", dark), token("cta-secondary-active-bg", dark)) >= 4.5);
+  });
+
+  test("icon disc: a white glyph on deep navy, the disc set apart from the coral fill", () => {
+    assert.equal(light("cta-icon-bg"), "#12163b");
+    assert.ok(contrast(light("cta-icon-fg"), light("cta-icon-bg")) >= 4.5);
+    assert.ok(contrast(light("cta-icon-bg"), light("cta-bg")) >= 3);
+  });
+
+  test("secondary: an opaque surface with a contrasting edge and label in both themes", () => {
+    const pairs = [
+      ["light", light("cta-secondary-bg"), light("cta-secondary-fg"), light("cta-secondary-edge")],
+      ["dark", token("cta-secondary-bg", dark), token("cta-secondary-fg", dark), token("cta-secondary-edge", dark)],
+    ];
+    for (const [theme, bg, fg, edge] of pairs) {
+      assert.match(bg, /^#[0-9a-f]{6}$/i, `${theme}: opaque surface`);
+      assert.ok(contrast(fg, bg) >= 4.5, `${theme}: label`);
+      assert.ok(contrast(edge, bg) >= 3, `${theme}: edge`);
     }
-    assert.ok(contrast("#fafafa", "#ee3c78") < 4.5, "white on canonical pink would fail, hence the ink label");
+    assert.match(css, /\.pillOutline \{ background: var\(--cta-secondary-bg\); border-color: var\(--cta-secondary-edge\); box-shadow: none; color: var\(--cta-secondary-fg\); \}/);
   });
 
-  test("dark theme: outline buttons and the pink edge on navy", () => {
-    assert.ok(contrast(darkTok("cta-edge"), surfaces.navy) >= 3, "pink edge on navy");
-    assert.ok(contrast(darkTok("cta-outline-fg"), surfaces.navy) >= 4.5, "outline label on navy");
-    assert.ok(contrast(darkTok("cta-outline-border"), surfaces.navy) >= 3, "outline edge on navy");
+  test("the navy edge keeps 3:1 on the light surfaces it sits on (cream, light blue, coral)", () => {
+    for (const name of ["cream", "sky", "coral"]) assert.ok(contrast(light("cta-border"), surfacesAll[name]) >= 3, `navy edge on ${name}`);
+    assert.doesNotMatch(css, /--cta-border: var\(--color-dark-green\)/, "no dark-green edge exception any more");
   });
 
-  test("dark-green #102D2C alone would fail on pink, which is why it is not the label colour", () => {
-    assert.ok(contrast("#102d2c", "#ee3c78") < 4.5);
-    assert.notEqual(light("cta-fg"), "#102d2c");
-  });
-
-  test("buttons keep a 3:1 boundary against the surfaces they sit on", () => {
-    for (const [name, surface] of Object.entries({ cream: surfaces.cream, navy: surfaces.navy, raised: surfaces.raised, deep: surfaces.deep })) {
-      assert.ok(contrast(light("cta-bg"), surface) >= 3, `default pink on ${name}`);
+  test("the two-tone focus ring contrasts on every surface (one of its two colours reaches 3:1)", () => {
+    const ring = light("cta-focus-ring"), halo = light("cta-focus-halo");
+    for (const [name, surface] of Object.entries(surfacesAll)) {
+      assert.ok(Math.max(contrast(ring, surface), contrast(halo, surface)) >= 3, `focus on ${name}`);
     }
-    // Where the darker hover pink loses its edge, a cream ring is drawn instead.
-    assert.ok(contrast(light("cta-bg-hover"), surfaces.cream) >= 3, "light hover on cream");
-    assert.ok(contrast(light("cta-bg-hover"), surfaces.deep) < 3, "hover pink on deep green needs the ring");
-    assert.equal(darkTok("cta-hover-ring"), "#efe9d7");
-    for (const surface of [surfaces.navy, surfaces.raised, surfaces.deep]) assert.ok(contrast(darkTok("cta-hover-ring"), surface) >= 3);
+    assert.ok(contrast(ring, halo) >= 3, "ring and halo stay distinct from each other");
   });
 
-  test("focus rings contrast with their surfaces in both themes", () => {
-    assert.ok(contrast(light("cta-ring"), surfaces.cream) >= 3, "light ring on cream");
-    assert.ok(contrast(light("cta-ring"), "#b8e0df") >= 3, "light ring on sky");
-    assert.ok(contrast(darkTok("cta-ring"), surfaces.navy) >= 3, "dark ring on navy");
-    assert.ok(contrast(darkTok("cta-ring"), surfaces.raised) >= 3, "dark ring on raised navy");
-    assert.ok(/--cta-ring: var\(--color-cream\);[^}]*--cta-hover-ring: var\(--color-cream\)/.test(css), "deep-green light surfaces switch to cream rings");
+  test("disabled is dimmed but not invisible", () => {
+    const op = Number(light("cta-disabled-opacity"));
+    assert.ok(op >= 0.4 && op <= 0.6, String(op));
   });
 });
 
-describe("October 29 coral scenes (/community)", () => {
+describe("coral scene: Moloch (both themes)", () => {
   const feature = readFileSync(new URL("../src/components/venture/feature.module.css", import.meta.url), "utf8");
   const coral = palette["color-pink"];
   const onCoral = (feature.match(/--on-coral:\s*(#[0-9a-f]{6})/i) || [])[1];
@@ -96,8 +122,10 @@ describe("October 29 coral scenes (/community)", () => {
     assert.ok(contrast(palette["color-indigo"], coral) < 3, "indigo #303675 is below 3:1 on coral");
   });
 
-  test("Moloch CTA: white on deep navy, and the pill keeps a 3:1 edge on coral", () => {
-    assert.ok(contrast(palette["color-white"], onCoral) >= 4.5);
-    assert.ok(contrast(onCoral, coral) >= 3);
+  test("filled buttons on coral rest on deep navy with a white label and a navy edge", () => {
+    assert.match(feature, /\.moloch \{ --cta-bg: var\(--on-coral\); --cta-fg: var\(--color-white, #fafafa\); --cta-border: var\(--on-coral\); \}/);
+    assert.doesNotMatch(css, /\.creed \{ --cta-bg: #12163b/, "the creed CTA is a coral primary again in both themes");
+    assert.ok(contrast(palette["color-white"], onCoral) >= 4.5, "white on deep navy");
+    assert.ok(contrast(onCoral, coral) >= 3, "navy edge on coral");
   });
 });

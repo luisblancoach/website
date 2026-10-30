@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { HeroContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
+import PillIcon, { pathGlyph } from "../primitives/PillIcon";
 import { useVenture } from "../shell/VentureShell";
 import styles from "../venture.module.css";
 
@@ -172,7 +173,7 @@ export default function Hero({ content, grouped = false, curtain = false, still 
             link={path}
             className={[styles.pill, path.variant === "filled" ? styles.pillFilled : styles.pillOutline, path.primary ? styles.heroPrimaryPath : ""].filter(Boolean).join(" ")}
           >
-            <span><CopyText copy={path.label} /></span><i className={styles.pillIcon} aria-hidden="true">{path.icon}</i>
+            <span><CopyText copy={path.label} /></span><PillIcon glyph={pathGlyph(path.icon, path)} />
           </NarrativeAnchor>
         ))}
       </div>
@@ -216,8 +217,12 @@ export default function Hero({ content, grouped = false, curtain = false, still 
         <div className={styles.heroWash} />
         <div className={styles.heroCopy} ref={copyRef}>
           <p className={styles.eyebrow}><span /><CopyText copy={content.eyebrow} before=" " /></p>
-          <div ref={titleRef} className={[styles.heroTitle, content.title.long ? styles.heroTitleLong : "", content.title.plain ? styles.heroTitlePlain : ""].filter(Boolean).join(" ")}>
-            <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} /></em></h1>
+          <div ref={titleRef} className={[styles.heroTitle, content.title.long ? styles.heroTitleLong : "", content.title.plain ? styles.heroTitlePlain : "", content.title.finale ? styles.heroTitleStacked : ""].filter(Boolean).join(" ")}>
+            {content.title.finale ? (
+              <h1><span><CopyText copy={content.title.lead} /></span><br /><span><CopyText copy={content.title.em} /></span><br /><em><CopyText copy={content.title.finale} /></em></h1>
+            ) : (
+              <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} /></em></h1>
+            )}
           </div>
           {grouped && supplement}
         </div>

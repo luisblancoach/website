@@ -8,6 +8,7 @@ import { entryInquiry } from "@/lib/narrative/entry";
 import type { InquiryContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
 import { useVenture } from "../shell/VentureShell";
+import { ContactGallerySlot, ContactScene, ProfessionGallery } from "./ContactScene";
 import styles from "../venture.module.css";
 
 // With `content`, the audience routes' inquiry and the October 23 guided form;
@@ -15,11 +16,19 @@ import styles from "../venture.module.css";
 // the light-blue brand surface in the light theme (/clients, October 28) and
 // makes the module show one state at a time: the introduction, or the form in
 // its place (Frame 122). The form stays mounted while closed, so entered values
-// survive closing and reopening.
+// survive closing and reopening. October 30: on the audience routes the Venture
+// Beyond scene and the profession gallery replace the single illustration, as
+// on the /community Join module (ContactScene); "/" keeps the illustration.
+// October 30 (late night): on the audience routes the form is the conversion,
+// so it is open from the start, below the introduction in the same panel: no
+// trigger, no close link, and it grows downward. The hunt's signal clue moved
+// to the footer (SiteFooter) to keep the form free of distractions; "/" keeps
+// its trigger and clue.
 export default function GuildInquiry({ content, surface }: { content?: InquiryContent; surface?: "cyan" }) {
   const copy = content ?? entryInquiry;
   const { arrivalTarget, inquiryExpanded, setInquiryExpanded } = useVenture();
   const replaces = surface === "cyan";
+  const open = Boolean(content);
   const summaryRef = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const wasExpanded = useRef(inquiryExpanded);
@@ -27,7 +36,7 @@ export default function GuildInquiry({ content, surface }: { content?: InquiryCo
   // The introduction and its button disappear when the form opens, so focus
   // moves to the form, and back to the button when it closes.
   useEffect(() => {
-    if (!replaces || wasExpanded.current === inquiryExpanded) return;
+    if (open || !replaces || wasExpanded.current === inquiryExpanded) return;
     wasExpanded.current = inquiryExpanded;
     const frame = requestAnimationFrame(() => {
       if (inquiryExpanded) {
@@ -40,36 +49,49 @@ export default function GuildInquiry({ content, surface }: { content?: InquiryCo
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [inquiryExpanded, replaces]);
+  }, [inquiryExpanded, open, replaces]);
 
   // The module opens through state, not the native toggle, so the
   // introduction and the form change in the same frame.
   const close = () => setInquiryExpanded(false);
 
   return (
-    <section className={`${styles.contact} ${surface === "cyan" ? styles.contactCyan : ""} ${inquiryExpanded ? styles.contactExpanded : ""} ${arrivalTarget === "contact" ? styles.sectionArriving : ""}`} id="contact">
+    <section className={`${styles.contact} ${surface === "cyan" ? styles.contactCyan : ""} ${!open && inquiryExpanded ? styles.contactExpanded : ""} ${arrivalTarget === "contact" ? styles.sectionArriving : ""}`} id="contact">
+      {content && <ContactScene><ProfessionGallery /></ContactScene>}
       <div className={styles.contactIntro}>
-        <Image className={styles.contactDruid} src="/images/neo/contact-druid-transparent.png" alt={copy.image.alt.text} width={768} height={1024} sizes="(max-width: 600px) 70vw, 420px" />
+        {content
+          ? <ContactGallerySlot />
+          : <Image className={styles.contactDruid} src="/images/neo/contact-druid-transparent.png" alt={copy.image.alt.text} width={768} height={1024} sizes="(max-width: 600px) 70vw, 420px" />}
         <div className={styles.contactCopy}>
           <p className={styles.sectionLabel}><CopyText copy={copy.label} /></p>
           <h2 className={styles.contactHeadline}><CopyText copy={copy.title.lead} after=" " /><em><CopyText copy={copy.title.em} /></em></h2>
           <p className={styles.contactDek}><CopyText copy={copy.body} /></p>
-          <div className={styles.contactClue}><HuntPixel artifact="signal" /><HuntMarker artifact="signal" label="A signal near the inquiry" /></div>
+          {!content && <div className={styles.contactClue}><HuntPixel artifact="signal" /><HuntMarker artifact="signal" label="A signal near the inquiry" /></div>}
         </div>
       </div>
-      <details className={styles.inquiryMore} id="project-inquiry" tabIndex={-1} open={inquiryExpanded} onToggle={(event) => setInquiryExpanded(event.currentTarget.open)}>
-        <summary ref={summaryRef} onClick={replaces ? (event) => { event.preventDefault(); setInquiryExpanded(!inquiryExpanded); } : undefined}><CopyText copy={copy.summary.label} after=" " /><span><CopyText copy={inquiryExpanded ? copy.summary.hintOpen : copy.summary.hint} /></span></summary>
-        <div className={styles.contactFormShell} ref={formRef} tabIndex={replaces ? -1 : undefined} role={replaces ? "group" : undefined} aria-label={replaces ? copy.summary.label.text : undefined} data-inquiry-form={replaces ? "" : undefined}>
-          {replaces ? (
-            <div className={styles.inquiryFormBar}>
-              <button type="button" className={styles.inquiryClose} onClick={close}><CopyText copy={copy.summary.hintOpen} /></button>
-            </div>
-          ) : (
-            <div className={styles.formCoordinates}><span><CopyText copy={copy.coordinates[0]} /></span><span><CopyText copy={copy.coordinates[1]} /></span></div>
-          )}
-          <HireUs guided={Boolean(content)} onExit={replaces ? close : undefined} />
+      {open ? (
+        // Audience routes: always open, so a plain container (a <details>
+        // without its summary would draw the browser's own "Details" toggle).
+        <div className={styles.inquiryMore} id="project-inquiry" tabIndex={-1}>
+          <div className={styles.contactFormShell} ref={formRef} role="group" aria-label={copy.summary.label.text} data-inquiry-form="">
+            <HireUs guided />
+          </div>
         </div>
-      </details>
+      ) : (
+        <details className={styles.inquiryMore} id="project-inquiry" tabIndex={-1} open={inquiryExpanded} onToggle={(event) => setInquiryExpanded(event.currentTarget.open)}>
+          <summary ref={summaryRef} onClick={replaces ? (event) => { event.preventDefault(); setInquiryExpanded(!inquiryExpanded); } : undefined}><CopyText copy={copy.summary.label} after=" " /><span><CopyText copy={inquiryExpanded ? copy.summary.hintOpen : copy.summary.hint} /></span></summary>
+          <div className={styles.contactFormShell} ref={formRef} tabIndex={replaces ? -1 : undefined} role={replaces ? "group" : undefined} aria-label={replaces ? copy.summary.label.text : undefined} data-inquiry-form={replaces ? "" : undefined}>
+            {replaces ? (
+              <div className={styles.inquiryFormBar}>
+                <button type="button" className={styles.inquiryClose} onClick={close}><CopyText copy={copy.summary.hintOpen} /></button>
+              </div>
+            ) : (
+              <div className={styles.formCoordinates}><span><CopyText copy={copy.coordinates[0]} /></span><span><CopyText copy={copy.coordinates[1]} /></span></div>
+            )}
+            <HireUs guided={Boolean(content)} onExit={replaces ? close : undefined} />
+          </div>
+        </details>
+      )}
     </section>
   );
 }

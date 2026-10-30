@@ -37,7 +37,7 @@ const welcome = String.raw`
  raidguild.reset()                Start again
 
  No downloads, wallets, or pasted scripts required.
- Prefer to explore visually? Open The Portal in the gallery, then find a signal near the Guild inquiry and the ✧ mark beneath the Creed.
+ Prefer to explore visually? Open The Portal in the gallery, then find the ✧ signal and the ✧ mark further down the page.
  Meet the Guild: https://portal.raidguild.org
 `;
 
@@ -57,8 +57,8 @@ export function UnchartedHunt({ children }: { children: ReactNode }) {
     if (!keys.includes(key) || typeof answer !== "string") return 'Try raidguild.clue("portal"), "signal", or "walker".';
     if (answer.trim().toLowerCase() !== artifacts[key].answer) return "Not quite. Follow the clue and try again.";
     if (!foundRef.current.includes(key)) save([...foundRef.current, key]);
-    if (key === "portal") return "Discovered: The Portal. Find a signal near the Guild inquiry next.";
-    if (key === "signal") return "Discovered: The Signal. Look for the final mark beneath the Creed.";
+    if (key === "portal") return "Discovered: The Portal. Find the ✧ signal further down the page next.";
+    if (key === "signal") return "Discovered: The Signal. Look for the final ✧ mark near the end of the page.";
     return `Discovered: ${artifacts[key].name}. ${artifacts[key].url}`;
   }
   useEffect(() => {
@@ -72,7 +72,7 @@ export function UnchartedHunt({ children }: { children: ReactNode }) {
       }
     } catch { /* Ignore invalid or unavailable storage. */ }
     const api = {
-      help: () => 'Open The Portal in the gallery and follow the rabbit. Next, find a signal near the Guild inquiry and a ✧ mark beneath the Creed. Glowing pixels offer extra hints. Commands: clue(key), hint(key), solve(key, answer), progress(), reset(). Keys: portal, signal, walker.',
+      help: () => 'Open The Portal in the gallery and follow the rabbit. Next, find the ✧ signal and the ✧ mark further down the page. Glowing pixels offer extra hints. Commands: clue(key), hint(key), solve(key, answer), progress(), reset(). Keys: portal, signal, walker.',
       clue: (key: string) => { const normalized = normalizeKey(key); return normalized ? artifacts[normalized].clue : "Choose portal, signal, or walker."; },
       hint: (key: string) => { const normalized = normalizeKey(key); return normalized ? hints[normalized] : "Choose portal, signal, or walker."; },
       solve: (key: string, answer: string) => { const normalized = normalizeKey(key); return normalized ? solve(normalized, answer) : 'Try raidguild.clue("portal"), "signal", or "walker".'; },
@@ -115,7 +115,7 @@ export function HuntMarker({ artifact, label, rabbit = false }: { artifact: Key;
       {!unlocked ? <form onSubmit={event => { event.preventDefault(); setMessage(hunt.solve(artifact, answer)); }}>
         <label>Your answer<input value={answer} onChange={event => setAnswer(event.target.value)} autoComplete="off" /></label>
         <button type="submit">Try the signal</button>
-      </form> : artifact === "portal" ? <p>First clue found. Find a signal near the Guild inquiry for the next clue.</p> : artifact === "signal" ? <p>Second clue found. Look for the final mark beneath the Creed.</p> : <a href={artifacts[artifact].url} target="_blank" rel="noopener noreferrer">Explore {artifacts[artifact].name} ↗</a>}
+      </form> : artifact === "portal" ? <p>First clue found. A ✧ signal waits further down the page.</p> : artifact === "signal" ? <p>Second clue found. The final ✧ mark lies near the end of the page.</p> : <a href={artifacts[artifact].url} target="_blank" rel="noopener noreferrer">Explore {artifacts[artifact].name} ↗</a>}
       <p role="status">{unlocked ? `Artifact discovered. ${hunt.found.length}/3 found.` : message}</p>
       <small>{artifact === "walker" ? "The linked experiment opens in another tab. Visiting is optional." : "The trail stays on this page."} Progress stays on this device.</small>
       {hunt.found.length === 3 && <p>The uncharted path is yours. <a href="https://portal.raidguild.org/modules?view=arcade" target="_blank" rel="noopener noreferrer">Discover the arcade ↗</a> Games may require Portal membership.</p>}

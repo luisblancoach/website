@@ -10,6 +10,8 @@ export type Illustration = { src: string; width: number; height: number };
 export const foundryPortrait: Illustration = { src: "/images/illustrations/Ilus_03.png", width: 1536, height: 2048 };
 export const foundryHorizontal: Illustration = { src: "/images/illustrations/ilus_horiz_002.png", width: 1024, height: 768 };
 // A mixed crew repairing a vessel together: the builder network's range of skills.
+// The builder network is shared, so it carries this scene on both audience
+// routes (October 30); it still appears once per page.
 export const crewHorizontal: Illustration = { src: "/images/illustrations/ilus_horiz_003.png", width: 1024, height: 768 };
 // A builder keeping the antenna, servers and tools running: "Keepers of the signal".
 export const keeperHorizontal: Illustration = { src: "/images/illustrations/ilus_horiz_001.png", width: 1024, height: 768 };
@@ -26,3 +28,35 @@ const entity = (name: string, file: string): EntityArtwork => ({
 });
 export const queenRaidaArtwork = entity("queen-raida", "queen");
 export const molochArtwork = entity("moloch", "moloch");
+
+// Final contact module, both audience routes (October 30, afternoon): the owner's
+// Venture Beyond scene behind the module and a rotating gallery of transparent
+// profession groups in front of it (docs/asset-provenance.md). One scene per
+// theme (dark added the same afternoon); the horizontal cut is the desktop
+// scene, the vertical cut the phone scene. Only the current theme's scene is
+// rendered visible, so only it downloads.
+export type ContactScene = { horizontal: Illustration; vertical: Illustration };
+export const contactScenes: Partial<Record<"light" | "dark", ContactScene>> = {
+  light: {
+    horizontal: { src: "/images/neo/join-horizontal-light.png", width: 2880, height: 1260 },
+    vertical: { src: "/images/neo/join-vertical-light.png", width: 1536, height: 2304 },
+  },
+  dark: {
+    horizontal: { src: "/images/neo/join-horizontal-dark.png", width: 2880, height: 1260 },
+    vertical: { src: "/images/neo/join-vertical-dark.png", width: 1536, height: 2304 },
+  },
+};
+
+// The profession groups, 768 × 1024 transparent PNGs, in rotation order. The
+// gallery opens on "Druid 2", the group the module showed before (the same file
+// as neo/contact-druid-transparent.png). Names label the active scene.
+export type Profession = Illustration & { name: string };
+const profession = (file: string, name: string): Profession => ({ src: `/images/professions/${encodeURIComponent(file)}.png`, width: 768, height: 1024, name });
+export const professions: Profession[] = [
+  profession("Druid 2", "Druids"),
+  profession("Archers", "Archers"),
+  profession("Angry Dwarves", "Angry dwarves"),
+  profession("Hunters", "Hunters"),
+  profession("Paladins", "Paladins"),
+  profession("Druid", "Druid and companions"),
+];

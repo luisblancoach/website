@@ -30,6 +30,18 @@
   --tap-min: 44px;
   --tap-inline: 24px;
 
+  /* Page container (October 30, Frames 132/133): one content column for every
+     section on both audience routes. 78% of the viewport between 1240 and
+     1500 px, which lands on the owner's guides (174 px gutters at about
+     1590 px, 210 px at 1920) and leaves 100 px at 1440; narrower screens keep
+     a responsive gutter (24 px on phones). --page-inline is the side padding
+     that centres that column in a full-width section. The builder plane may
+     run wider, up to --page-wide. */
+  --page-gutter: clamp(24px, 5.5vw, 96px);
+  --page-max: clamp(1240px, 78vw, 1500px);
+  --page-wide: 1760px;
+  --page-inline: max(var(--page-gutter), (100% - var(--page-max)) / 2);
+
   /* Semantic surfaces. Theme chooses the colour; audience never does. */
   --surface-base: var(--color-cream);
   --surface-alt: var(--color-cyan);
@@ -38,21 +50,49 @@
   --on-selected: var(--color-cream);
   --text-meta: var(--color-dark-green);
 
-  /* Semantic CTA states (B3.1). Website-scoped and provisional: #071C1D and
-     #CE1252 await brand-system approval; canonical pink stays #EE3C78.
-     Light: default 4.66:1 (ink on pink), hover 4.52:1 (cream on #CE1252),
-     pressed 6.3:1 (cream on #A80E44), so rest, hover and pressed all differ. */
+  /* Shared CTA system (October 30). One set of tokens for both themes: the
+     dark block below does not redefine any of them, so Light and Dark share
+     every state. #071C1D and #CE1252 are website-scoped (brand approval
+     pending); canonical pink stays #EE3C78.
+     Rest: ink on canonical pink (4.66:1). Hover: white on deep coral (5.2:1;
+     cream would sit at the edge, 4.52:1). Pressed: white on #A80E44. The pink edge
+     stays in every state (3:1+ on cream, deep green and navy).
+     Outline buttons take the surface's own text colour (currentColor) for
+     their border and label, so they read on every surface without a theme
+     override. Focus: a cream halo inside a dark-green ring, so one of the two
+     always contrasts, whatever the surface. */
+  /* October 30 (evening): every CTA is contained by a dark edge (RaidGuild deep
+     navy #12163B). Primary: coral with that one edge (no inner rim, owner, October 30
+     late night) and a navy icon disc with a white glyph; label ink (4.66:1). The
+     secondary surface is opaque: cream with navy edge and label (light), navy
+     with cream edge and label (dark, the only CTA tokens the dark block sets),
+     with the same navy icon disc. */
   --cta-bg: var(--color-pink);
   --cta-fg: #071c1d;
-  --cta-bg-hover: #ce1252;
-  --cta-fg-hover: var(--color-cream);
-  --cta-bg-active: #a80e44;
-  --cta-fg-active: var(--color-cream);
-  --cta-hover-ring: transparent;
-  --cta-ring: var(--color-dark-green);
-  --cta-ring-halo: var(--color-cream);
-  --cta-outline-bg: var(--color-cream);
-  --cta-outline-fg: var(--color-dark-green);
+  --cta-border: #12163b;
+  --cta-border-width: 2px;
+  --cta-icon-bg: #12163b;
+  --cta-icon-fg: var(--color-white);
+  --cta-secondary-bg: var(--color-cream);
+  --cta-secondary-fg: #12163b;
+  --cta-secondary-edge: #12163b;
+  /* Hover and pressed (October 30, hover pass): the button stays itself. Label,
+     edge and icon keep their rest colours; only the surface reacts. Primary:
+     the same coral (any darker coral drops the dark labels under 4.5:1), a
+     1 px lift with a soft shadow, the sword nudging 2 px the way it points;
+     pressed sinks (no lift, inset shadow). Secondary: a slightly deeper bone
+     (light) or lighter navy (dark) surface. Chips: a faint tint of their own
+     text colour. */
+  --cta-hover-shadow: 0 3px 10px rgba(7,28,29,.2);
+  --cta-secondary-hover-bg: #e6dfc9;
+  --cta-secondary-active-bg: #ded5bc;
+  --cta-chip-hover-bg: color-mix(in srgb, currentColor 9%, transparent);
+  --cta-chip-active-bg: color-mix(in srgb, currentColor 16%, transparent);
+  --cta-active-inset: inset 0 2px 6px rgba(7,28,29,.28);
+  --cta-outline-fg: currentColor;
+  --cta-focus-ring: var(--color-dark-green);
+  --cta-focus-halo: var(--color-cream);
+  --cta-disabled-opacity: .5;
   --on-pink: #071c1d;
   /* Supplied Grinder display cuts; Ubuntu follows the handoff for body copy. */
   --font-display: var(--font-grinder);
@@ -66,33 +106,29 @@
 }
 
 :global(html[data-theme="dark"]) .site {
+  /* Dark primary (owner, October 30, composition pass 2): the selected
+     Hire/Join tab's treatment: coral fill, deep navy label (#12163B, 4.6:1),
+     one cream edge, the navy icon disc with a light glyph. The tab and the
+     theme switch use the same tokens. */
+  --cta-fg: #12163b;
+  --cta-border: var(--color-cream);
+  --cta-secondary-bg: var(--color-navy);
+  --cta-secondary-hover-bg: #20265c;
+  --cta-secondary-active-bg: #262d69;
+  --cta-hover-shadow: 0 3px 12px rgba(0,0,0,.38);
+  --cta-secondary-fg: var(--color-cream);
+  --cta-secondary-edge: var(--color-cream);
   --surface-base: var(--color-navy);
   --surface-alt: var(--color-navy);
   --surface-convert: var(--color-navy-raised);
   --surface-selected: var(--color-cyan);
   --on-selected: var(--color-navy);
   --text-meta: var(--color-cream);
-  /* Dark (October 29, final): the light system. Filled buttons rest on the
-     canonical pink #EE3C78 with the ink label (4.66:1; white on canonical pink
-     is only 3.8:1); hover darkens to #CE1252 with a white label (5.3:1) and a
-     cream ring; pressed is #A80E44 (7.2:1). Pink keeps a 4.2:1 edge on navy.
-     Outline buttons are transparent with a cream edge and white label. */
-  --cta-bg: var(--color-pink);
-  --cta-fg: #071c1d;
-  --cta-edge: var(--color-pink);
-  --cta-bg-hover: #ce1252;
-  --cta-bg-active: #a80e44;
-  --cta-fg-hover: var(--color-white);
-  --cta-fg-active: var(--color-white);
-  --cta-hover-ring: var(--color-cream);
-  --cta-outline-bg: transparent;
-  --cta-outline-fg: var(--color-white);
-  --cta-outline-border: var(--color-cream);
+  /* CTA tokens are not redefined here: buttons behave the same in both
+     themes (see the shared CTA system in .site). */
   /* Community scenes (October 29): the deepest navy, after the earlier
      experimental alternate surface. */
   --surface-deep: #12163b;
-  --cta-ring: var(--color-cream);
-  --cta-ring-halo: var(--color-navy);
 }
 /* Experimental deeper navy (#12163B) for alternate dark chapters. Only reachable
    through the development/preview switch (?surface=deep-navy); not a brand token. */
@@ -127,10 +163,18 @@
 
 .brand { align-items: center; color: inherit; display: inline-flex; font-size: 12px; font-weight: 700; letter-spacing: .11em; line-height: .9; text-decoration: none; }
 /* Glifos nativos exportados de Figma, pintados con currentColor via mask. */
-.iconLogo, .iconDiscord, .iconPortal { background: currentColor; display: block; }
+.iconLogo, .iconDiscord, .iconPortal, .iconHandbook, .iconSwordRight, .iconSwordLeft, .iconSwordDown, .iconSwordDownRight, .iconSwordUpRight { background: currentColor; display: block; }
 .iconLogo { -webkit-mask: url("/images/icons/venture/ico-logo.svg") center / contain no-repeat; mask: url("/images/icons/venture/ico-logo.svg") center / contain no-repeat; }
-.iconDiscord { -webkit-mask: url("/images/icons/venture/ico-discord.svg") center / contain no-repeat; mask: url("/images/icons/venture/ico-discord.svg") center / contain no-repeat; }
-.iconPortal { -webkit-mask: url("/images/icons/venture/ico-portal.svg") center / contain no-repeat; mask: url("/images/icons/venture/ico-portal.svg") center / contain no-repeat; }
+/* October 30 (evening): the owner's icon set in public/images/icons/. The
+   arrows are RaidGuild swords whose blade points the way (PillIcon.tsx). */
+.iconDiscord { -webkit-mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; }
+.iconPortal { -webkit-mask: url("/images/icons/ico_portal.svg") center / contain no-repeat; mask: url("/images/icons/ico_portal.svg") center / contain no-repeat; }
+.iconHandbook { -webkit-mask: url("/images/icons/ico_handbook.svg") center / contain no-repeat; mask: url("/images/icons/ico_handbook.svg") center / contain no-repeat; }
+.iconSwordRight { -webkit-mask: url("/images/icons/arrow-right-flat.svg") center / contain no-repeat; mask: url("/images/icons/arrow-right-flat.svg") center / contain no-repeat; }
+.iconSwordLeft { -webkit-mask: url("/images/icons/arrow-left-flat.svg") center / contain no-repeat; mask: url("/images/icons/arrow-left-flat.svg") center / contain no-repeat; }
+.iconSwordDown { -webkit-mask: url("/images/icons/arrow-down.svg") center / contain no-repeat; mask: url("/images/icons/arrow-down.svg") center / contain no-repeat; }
+.iconSwordDownRight { -webkit-mask: url("/images/icons/arrow-right-down.svg") center / contain no-repeat; mask: url("/images/icons/arrow-right-down.svg") center / contain no-repeat; }
+.iconSwordUpRight { -webkit-mask: url("/images/icons/arrow-right-up.svg") center / contain no-repeat; mask: url("/images/icons/arrow-right-up.svg") center / contain no-repeat; }
 
 /* Componente button de Figma (19:4977 y variantes): alto 56, radio 100,
    padding 8/8/8/24, gap 24, contenedor de icono 40 y glifo 32. */
@@ -139,6 +183,10 @@
 .pill > span { font-family: var(--font-mono), monospace; font-size: 16px; font-style: italic; font-weight: 700; letter-spacing: 2px; line-height: 24px; text-transform: uppercase; white-space: nowrap; }
 .pillIcon { align-items: center; border: 2px solid transparent; border-radius: 100px; display: flex; flex: 0 0 auto; height: 40px; justify-content: center; width: 40px; }
 .pillIcon > b { height: 32px; width: 32px; }
+/* The sword arrows and destination marks sit a size below the logo, which
+   carries its own padding. */
+.pillIcon > b:not([data-glyph="logo"]):is([data-glyph]) { height: 24px; width: 24px; }
+.pillIcon > b:is([data-glyph="→"], [data-glyph="←"], [data-glyph="↓"], [data-glyph="↘"], [data-glyph="↗"]) { height: 28px; width: 28px; }
 .pillFilled { background: var(--coral); border-color: var(--coral); color: var(--paper); }
 .pillFilled .pillIcon { background: var(--paper); color: var(--coral); }
 .pillOutline { background: var(--paper); border-color: var(--coral); color: var(--coral); }
@@ -1596,55 +1644,82 @@
 .reviewPanel li[data-reason="wording"] b { color: #c4bbff; }
 .reviewPanel li small { color: #c4c4cc; display: block; margin-top: 2px; }
 
-/* ── Semantic CTA system (B3.1) ────────────────────────────────────────────
-   Applies on the audience routes only (data-cta="semantic" on .site), so "/"
-   keeps its current rendering until the entry experience is rebuilt (B8).
-   Focus uses a ring plus an opposite-colour halo so it stays visible on
-   cream, sky, navy, deep green and artwork alike. */
-.site[data-cta="semantic"] .pill { transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
-.site[data-cta="semantic"] .pillFilled { background: var(--cta-bg); border-color: var(--cta-edge, var(--cta-bg)); color: var(--cta-fg); }
-.site[data-cta="semantic"] .pillFilled .pillIcon { background: var(--color-cream); color: var(--cta-bg); }
-.site[data-cta="semantic"] .pillFilled:hover { background: var(--cta-bg-hover); border-color: var(--cta-bg-hover); box-shadow: 0 0 0 2px var(--cta-hover-ring); color: var(--cta-fg-hover); }
-.site[data-cta="semantic"] .pillFilled:active { background: var(--cta-bg-active); border-color: var(--cta-bg-active); box-shadow: 0 0 0 2px var(--cta-hover-ring), inset 0 2px 6px rgba(7,28,29,.28); color: var(--cta-fg-active); transform: translateY(0); }
-.site[data-cta="semantic"] .pillOutline,
-.site[data-cta="semantic"] .heroPaths .pillOutline { background: var(--cta-outline-bg); border-color: var(--cta-outline-border, var(--cta-bg)); color: var(--cta-outline-fg); }
-.site[data-cta="semantic"] .pillOutline:hover,
-.site[data-cta="semantic"] .heroPaths .pillOutline:hover { background: var(--cta-bg); border-color: var(--cta-bg); box-shadow: 0 0 0 2px var(--cta-hover-ring); color: var(--cta-fg); }
-.site[data-cta="semantic"] .pillOutline:active { background: var(--cta-bg-active); border-color: var(--cta-bg-active); color: var(--cta-fg-active); transform: translateY(0); }
-/* On the sky surface the pink edge measures 2.66:1, so CTAs take an ink edge there. */
-.site[data-cta="semantic"] .fieldNotes .pillFilled,
-.site[data-cta="semantic"] .fieldNotes .pillOutline { border-color: var(--cta-fg); }
-.site[data-cta="semantic"] .pill:focus-visible,
-.site[data-cta="semantic"] .heroPaths .pill:focus-visible { box-shadow: 0 0 0 3px var(--cta-ring-halo); outline: 3px solid var(--cta-ring); outline-offset: 3px; }
-.site[data-cta="semantic"] .pill[aria-disabled="true"],
-.site[data-cta="semantic"] .pill:disabled { cursor: not-allowed; opacity: .45; transform: none; }
-/* Light surfaces that are dark green take a cream focus ring. */
-/* Light surfaces that are dark green: cream focus ring, and a cream hover ring,
-   because #CE1252 against deep green measures only 2.67:1 at the edge. */
-:global(html:not([data-theme="dark"])) .site[data-cta="semantic"] :is(.practice, .pathSection, .joinSection, .contactCopy, .inquiryMore, .footer, .tensionOwned) { --cta-ring: var(--color-cream); --cta-ring-halo: var(--color-dark-green); --cta-hover-ring: var(--color-cream); }
+/* ── Shared CTA system (October 30) ─────────────────────────────────────────
+   One behaviour for every button on the audience routes (data-cta="semantic"
+   on .site), identical in Light and Dark; "/" keeps its own rendering until
+   the entry experience is rebuilt (B8). Tokens are in .site.
+   Rest      primary (filled): coral, one navy edge, ink label,
+             navy icon disc with a white glyph. Secondary (outline): opaque
+             cream (light) or navy (dark) with a contrasting edge and label and
+             the same icon disc, so it never disappears into artwork.
+   Hover     the button stays itself (October 30, hover pass): label, edge and
+             icon keep their colours; primary lifts 1 px with a soft shadow and
+             its sword nudges 2 px; secondary deepens its surface slightly.
+             Only on devices that hover, so a tap never leaves it hovered.
+   Pressed   no lift, an inset shadow; secondary a step deeper again.
+   Focus     a 3 px cream halo at the edge and a 3 px dark-green ring outside.
+   Disabled  half opacity, not-allowed cursor, no hover or lift.
+   The chips, toggles, icon buttons and text links follow at the end of this
+   file and in the section modules. */
+.site[data-cta="semantic"] .pill { border-width: var(--cta-border-width); transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+.site[data-cta="semantic"] .pillFilled { background: var(--cta-bg); border-color: var(--cta-border); box-shadow: none; color: var(--cta-fg); }
+.site[data-cta="semantic"] .pillOutline { background: var(--cta-secondary-bg); border-color: var(--cta-secondary-edge); box-shadow: none; color: var(--cta-secondary-fg); }
+.site[data-cta="semantic"] :is(.pillFilled, .pillOutline) .pillIcon { background: var(--cta-icon-bg); border-color: var(--cta-icon-bg); color: var(--cta-icon-fg); }
+.site[data-cta="semantic"] .pillOutline .pillIcon { border-color: var(--cta-secondary-edge); }
+/* The base .pill lifts on any :hover, which sticks after a tap on touch screens. */
+.site[data-cta="semantic"] .pill:hover { transform: none; }
+@media (hover: hover) {
+  .site[data-cta="semantic"] .pill:not([aria-disabled="true"]):hover { box-shadow: var(--cta-hover-shadow); transform: translateY(-1px); }
+  .site[data-cta="semantic"] .pillOutline:not([aria-disabled="true"]):hover { background: var(--cta-secondary-hover-bg); }
+}
+/* The sword moves 2 px the way it points (not with reduced motion). */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .site[data-cta="semantic"] .pill:not([aria-disabled="true"]):hover .pillIcon > b[data-glyph="→"] { transform: translateX(2px); }
+  .site[data-cta="semantic"] .pill:not([aria-disabled="true"]):hover .pillIcon > b[data-glyph="←"] { transform: translateX(-2px); }
+  .site[data-cta="semantic"] .pill:not([aria-disabled="true"]):hover .pillIcon > b[data-glyph="↓"] { transform: translateY(2px); }
+  .site[data-cta="semantic"] .pill:not([aria-disabled="true"]):hover .pillIcon > b[data-glyph="↘"] { transform: translate(2px, 2px); }
+  .site[data-cta="semantic"] .pill:not([aria-disabled="true"]):hover .pillIcon > b[data-glyph="↗"] { transform: translate(2px, -2px); }
+}
+.site[data-cta="semantic"] .pillIcon > b { transition: transform .18s ease; }
+.site[data-cta="semantic"] .pill:not([aria-disabled="true"]):active { box-shadow: var(--cta-active-inset); transform: none; }
+.site[data-cta="semantic"] .pillOutline:not([aria-disabled="true"]):active { background: var(--cta-secondary-active-bg); }
+.site[data-cta="semantic"] .pill:focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo); outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+.site[data-cta="semantic"] .pill:not([aria-disabled="true"]):focus-visible:active { box-shadow: 0 0 0 3px var(--cta-focus-halo), var(--cta-active-inset); }
+.site[data-cta="semantic"] .pill:is(:disabled, [aria-disabled="true"]) { cursor: not-allowed; opacity: var(--cta-disabled-opacity); transform: none; }
+
+/* Contrast exception, by surface (the surface differs, not the behaviour):
+   the Moloch scene (feature.module.css) is coral, so a filled button there
+   rests on deep navy #12163B with a white label (16:1). October 30 (evening):
+   the navy edge on every CTA replaces the light-blue panels' dark-green edge,
+   and the dark creed's navy button is coral again like every primary. */
 
 /* Ticker words on the pink band. */
 .site[data-cta="semantic"] .wordBand { color: var(--on-pink); }
 
-/* Inquiry bar. */
+/* Inquiry bar ("Start a Guild inquiry"): a filled CTA that opens the form. A
+   wide two-line bar, so it keeps its 16 px radius instead of the pill's. */
 .site[data-cta="semantic"] .contact .inquiryMore > summary,
-.site[data-cta="semantic"] .contact .inquiryMore > summary span { color: var(--cta-fg); }
-.site[data-cta="semantic"] .contact .inquiryMore > summary { background: var(--cta-bg); transition: background-color .18s ease, color .18s ease, box-shadow .18s ease; }
-.site[data-cta="semantic"] .contact .inquiryMore > summary:hover,
-.site[data-cta="semantic"] .contact .inquiryMore > summary:hover span { background: var(--cta-bg-hover); color: var(--cta-fg-hover); }
-.site[data-cta="semantic"] .contact .inquiryMore > summary:hover { box-shadow: 0 0 0 2px var(--cta-hover-ring); }
-.site[data-cta="semantic"] .contact .inquiryMore > summary:focus-visible { background: var(--cta-bg); box-shadow: 0 0 0 3px var(--cta-ring-halo); outline: 3px solid var(--cta-ring); outline-offset: 3px; }
-.site[data-cta="semantic"] .contact .inquiryMore > summary:hover span { background: transparent; }
+.site[data-cta="semantic"] .contact .inquiryMore > summary span { background: transparent; color: var(--cta-fg); }
+.site[data-cta="semantic"] .contact .inquiryMore > summary { background: var(--cta-bg); border: var(--cta-border-width) solid var(--cta-border); box-shadow: none; transition: background-color .18s ease, color .18s ease, box-shadow .18s ease; }
+@media (hover: hover) {
+  .site[data-cta="semantic"] .contact .inquiryMore > summary:hover { box-shadow: var(--cta-hover-shadow); }
+}
+.site[data-cta="semantic"] .contact .inquiryMore > summary:active { box-shadow: var(--cta-active-inset); }
 
-/* Inquiry form actions (Previous / Next / Submit). */
-.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active) { background: var(--cta-bg) !important; color: var(--cta-fg) !important; transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease !important; }
-.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):hover:not(:disabled) { background: var(--cta-bg-hover) !important; box-shadow: 0 0 0 2px var(--cta-hover-ring); color: var(--cta-fg-hover) !important; }
-.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):active:not(:disabled) { background: var(--cta-bg-active) !important; color: var(--cta-fg-active) !important; transform: translateY(0); }
-.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):focus-visible { box-shadow: 0 0 0 3px var(--color-dark-green); outline: 3px solid var(--color-cream); outline-offset: 3px; }
-.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):disabled { cursor: not-allowed; opacity: .45; transform: none; }
+/* Inquiry form actions: Next and Complete filled, Back and Previous outline
+   (later, with the form layout); the compact pill's radius, height and type. */
+.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active) { background: var(--cta-bg) !important; border: var(--cta-border-width) solid var(--cta-border) !important; border-radius: 100px !important; box-shadow: none !important; color: var(--cta-fg) !important; font: 700 12px/16px var(--font-mono), monospace !important; letter-spacing: .18em; min-height: 44px; text-transform: uppercase; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease !important; }
+@media (hover: hover) {
+  .site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):hover:not(:disabled) { box-shadow: var(--cta-hover-shadow) !important; transform: translateY(-1px); }
+}
+.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):active:not(:disabled) { box-shadow: var(--cta-active-inset) !important; transform: none; }
+.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo) !important; outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+.site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):disabled { cursor: not-allowed; opacity: var(--cta-disabled-opacity) !important; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .site[data-cta="semantic"] .pill, .site[data-cta="semantic"] .contact .inquiryMore > summary { transition: none; }
-  .site[data-cta="semantic"] .pill:hover { transform: none; }
+  .site[data-cta="semantic"] :is(.pill, .contact .inquiryMore > summary, .contactFormShell :global(.contact-btn-active)) { transition: none !important; }
+  .site[data-cta="semantic"] .pill:not([aria-disabled="true"]):hover,
+  .site[data-cta="semantic"] .pill:not([aria-disabled="true"]):hover .pillIcon > b,
+  .site[data-cta="semantic"] .contactFormShell :global(.contact-btn-active):hover:not(:disabled) { transform: none; }
 }
 
 /* ── October 23 composition (B3.3) ─────────────────────────────────────────
@@ -1685,7 +1760,7 @@
 .capabilities details { border-top: 1px solid currentColor; }
 .capabilities details:last-child { border-bottom: 1px solid currentColor; }
 .capabilities summary { align-items: center; cursor: pointer; display: flex; font: 400 clamp(22px, 2.5vw, 32px)/1.3 var(--font-display); gap: 16px; justify-content: space-between; min-height: var(--tap-min); padding: 24px 0; }
-.capabilities summary:focus-visible { outline: 3px solid var(--cta-ring); outline-offset: 4px; }
+.capabilities summary:focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo); outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
 .capabilities p { font: 400 17px/1.6 var(--font-body); max-width: 65ch; padding-bottom: 24px; }
 
 @media (max-width: 999px) {
@@ -1728,9 +1803,7 @@
    (4.66:1) in both themes; pink keeps a 3:1+ edge on cream and navy. */
 .site[data-audience] .audienceSwitch a[aria-current="page"] { background: var(--color-pink); color: var(--on-pink); }
 :global(html[data-theme="dark"]) .site[data-audience] .audienceSwitch a[aria-current="page"] { background: var(--color-pink); color: var(--on-pink); }
-/* A pink focus ring would merge with the pink segment: use the CTA ring
-   (dark green on cream, cream on navy) like every other control. */
-.site[data-audience] .audienceSwitch a:focus-visible { outline-color: var(--cta-ring); }
+/* Hover, pressed and focus follow the shared CTA system (end of this file). */
 
 /* ── Pre-review refinements (audience routes) ───────────────────────────────── */
 /* Join the DAO: the illustration about 30% larger on one side (native aspect,
@@ -1808,7 +1881,7 @@
 /* Inquiry on the light-blue brand surface (#B8E0DF, the references' fill) in
    the light theme; the dark theme keeps its surface. The Guild inquiry button
    keeps its colours; text, focus rings and the hunt clue turn dark green. */
-:global(html:not([data-theme="dark"])) .site .contactCyan :is(.contactCopy, .inquiryMore) { --cta-ring: var(--color-dark-green); --cta-ring-halo: var(--color-cyan); background: var(--color-cyan); color: var(--color-dark-green); }
+:global(html:not([data-theme="dark"])) .site .contactCyan :is(.contactCopy, .inquiryMore) { background: var(--color-cyan); color: var(--color-dark-green); }
 :global(html:not([data-theme="dark"])) .site .contactCyan .contactCopy :is(.sectionLabel, h2.contactHeadline, .contactDek) { color: var(--color-dark-green); }
 :global(html:not([data-theme="dark"])) .site .contactCyan .contactClue,
 :global(html:not([data-theme="dark"])) .site .contactCyan .contactClue > details > summary { color: var(--color-dark-green); }
@@ -1886,21 +1959,49 @@
 }
 @media (prefers-reduced-motion: reduce) { .heroCurtain .heroForeground { transition: none; } }
 
-/* Builder network, lists that fit without moving: the moving wall's
-   composition, still. Cards keep their natural width (never stretched) and are
-   centred with auto margins (a wider list is never cut off on the left). Up to
-   8 results (data-tier 1-2, 3-4, 5-8) fill the plane's width and wrap, centred,
-   so phones stack them instead of scrolling; from 760 px the second of two
-   courses is staggered like brick. 9+ keeps its three courses. */
+/* Builder network, 1–8 results (October 28, Frame 122; restored October 30
+   after the owner's recording of the earlier behaviour): an editorial grid
+   that fills the wall's area. builderGrid.ts gives each card its cell for wide
+   containers (12 × 3) and narrow ones (two columns) and a shape: feature
+   (large avatar beside the name), tall (avatar above), wide and compact
+   (avatar beside). Names scale with the card width and their own length, so
+   they fit without clipping; roles wrap. Rows are content-sized, so the
+   module's height follows the cards. A 9+ list that fits on screen without
+   moving fills the width. */
 .site[data-audience] .teamNetwork .memberLoop:has(> .memberMasonry[data-static]) { min-width: 100%; }
-.site[data-audience] .teamNetwork .memberMasonry[data-static] { align-items: flex-start; flex: 0 0 auto; margin-inline: auto; }
-.site[data-audience] .teamNetwork .memberMasonry[data-static] > .memberRail > :is(a, div) { flex: 0 0 auto; }
-.site[data-audience] .teamNetwork .memberLoop:has(> .memberMasonry:not([data-tier="9+"])) { width: 100%; }
-.site[data-audience] .teamNetwork .memberMasonry:not([data-tier="9+"]) { align-items: center; width: 100%; }
-.site[data-audience] .teamNetwork .memberMasonry:not([data-tier="9+"]) > .memberRail { flex-wrap: wrap; justify-content: center; max-width: 100%; }
-@media (min-width: 760px) {
-  .site[data-audience] .teamNetwork .memberMasonry[data-tier="5-8"] > .memberRail:nth-child(2) { margin-left: clamp(56px, 8vw, 144px); }
+.site[data-audience] .teamNetwork .memberMasonry[data-static] { flex: 1 0 auto; min-width: 100%; }
+.memberGridFrame { container: builders / inline-size; padding: 8px 0 24px; }
+.memberGrid { display: grid; gap: 12px; grid-auto-rows: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.memberTile { --avatar: 56px; --name-max: 26px; --offset: calc(52px + var(--avatar)); align-items: center; border-radius: 16px; box-shadow: inset 0 0 0 2px var(--coral), inset 0 0 16px rgba(16,45,44,.08); box-sizing: border-box; color: inherit; container-type: inline-size; display: flex; gap: 16px; grid-area: var(--narrow-area); min-width: 0; padding: 18px; position: relative; text-decoration: none; transition: background .2s, color .2s; }
+.memberTile img { background: var(--sky); border-radius: 50%; flex: 0 0 auto; height: var(--avatar); object-fit: cover; width: var(--avatar); }
+.memberTile span { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.memberTile strong { color: var(--coral); font-family: var(--font-display), sans-serif; font-size: clamp(14px, calc((100cqi - var(--offset)) / (var(--chars) * .76)), var(--name-max)); font-style: italic; font-weight: 500; line-height: 1.05; overflow-wrap: anywhere; text-transform: uppercase; }
+.memberTile small { color: var(--color-dark-green); font: 700 13px/1.3 var(--font-mono), monospace; letter-spacing: .08em; text-transform: uppercase; }
+.memberTile i { font-size: 14px; font-style: normal; position: absolute; right: 14px; top: 12px; }
+.memberTile:is(:hover, :focus-visible) { background: var(--color-cyan); }
+.memberTile:focus-visible { outline: 3px solid var(--coral); outline-offset: -4px; }
+.memberTile[data-narrow="feature"] { --avatar: clamp(80px, 26cqi, 120px); --name-max: 40px; --offset: calc(56px + var(--avatar)); min-height: 156px; }
+.memberTile[data-narrow="tall"] { --avatar: 64px; --name-max: 28px; --offset: 36px; align-items: flex-start; flex-direction: column; justify-content: space-between; min-height: 176px; }
+.memberTile[data-narrow="wide"] { --avatar: 60px; --name-max: 30px; min-height: 96px; }
+@container builders (min-width: 720px) {
+  .memberGrid { gap: 18px; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(104px, auto)); }
+  .memberTile { grid-area: var(--wide-area); }
+  .memberTile[data-wide="feature"] { --avatar: clamp(120px, 18cqi, 200px); --name-max: 64px; --offset: calc(72px + var(--avatar)); align-items: center; flex-direction: row; gap: 28px; justify-content: flex-start; min-height: 0; padding: 28px; }
+  .memberTile[data-wide="feature"] small { font-size: 15px; }
+  .memberTile[data-wide="tall"] { --avatar: clamp(88px, 24cqi, 140px); --name-max: 44px; --offset: 48px; align-items: flex-start; flex-direction: column; justify-content: space-between; min-height: 0; padding: 24px; }
+  .memberTile[data-wide="wide"] { --avatar: clamp(64px, 12cqi, 96px); --name-max: 42px; --offset: calc(68px + var(--avatar)); align-items: center; flex-direction: row; gap: 20px; justify-content: flex-start; min-height: 0; padding: 22px; }
+  .memberTile[data-wide="compact"] { --avatar: 56px; --name-max: 26px; --offset: calc(52px + var(--avatar)); align-items: center; flex-direction: row; justify-content: flex-start; min-height: 0; }
 }
+:global(html[data-theme="dark"]) .site .memberTile { box-shadow: inset 0 0 0 2px rgba(239,233,215,.32), inset 0 0 18px rgba(0,0,0,.18); }
+:global(html[data-theme="dark"]) .site .memberTile small { color: var(--paper); }
+:global(html[data-theme="dark"]) .site .memberTile:is(:hover, :focus-visible) { background: #303675; box-shadow: inset 0 0 0 2px var(--coral), inset 0 0 18px rgba(0,0,0,.18); }
+:global(html[data-theme="dark"]) .site .memberTile img { background: var(--color-cyan); filter: saturate(.58) brightness(.82) contrast(1.08); }
+@media (prefers-reduced-motion: reduce) { .memberTile { transition: none; } }
+/* On the coral plane the tiles are opaque, like the wall's cards. */
+.site[data-audience] .teamNetwork .memberTile { background: var(--paper); }
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork .memberTile { background: var(--color-navy); }
+.site[data-audience] .teamNetwork .memberTile:is(:hover, :focus-visible) { background: var(--color-cyan); }
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork .memberTile:is(:hover, :focus-visible) { background: #303675; }
 
 /* Inquiry form on the light-blue module (Frame 122, refined for Frame 123):
    it reads as the introduction panel transformed, not an application inside
@@ -1911,7 +2012,7 @@
 .inquiryFormBar { align-items: center; border-bottom: 1px solid rgba(16,45,44,.22); display: flex; justify-content: flex-end; margin-bottom: 18px; padding-bottom: 2px; }
 .inquiryClose { background: none; border: 0; color: inherit; cursor: pointer; font: 700 var(--type-ui)/1.4 var(--font-mono), monospace; letter-spacing: var(--tracking-caps); min-height: var(--tap-min, 44px); padding: 0; text-decoration: underline; text-transform: uppercase; text-underline-offset: 5px; }
 .inquiryClose:hover { text-decoration-thickness: 2px; }
-.inquiryClose:focus-visible, .contactFormShell[data-inquiry-form]:focus-visible { outline: 3px solid var(--cta-ring, var(--coral)); outline-offset: 4px; }
+.inquiryClose:focus-visible, .contactFormShell[data-inquiry-form]:focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo, #efe9d7); outline: 3px solid var(--cta-focus-ring, #102d2c); outline-offset: 3px; }
 .contactFormShell[data-inquiry-form]:focus:not(:focus-visible) { outline: none; }
 .site .contactCyan.contactExpanded .inquiryMore { padding: clamp(20px, 2.6vw, 40px) clamp(28px, 3.4vw, 52px) clamp(28px, 3.4vw, 48px); }
 .site .contactCyan .contactFormShell :global(.mb-8):has(> :global(.text-heading-lg)) { margin-bottom: 18px; }
@@ -1950,8 +2051,12 @@
 .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) { justify-content: space-between; padding-top: 4px; }
 .site .contactCyan .contactFormShell :global(.hire-us-wizard) :global(.contact-btn-active) { height: 44px !important; padding: 0 20px !important; }
 .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):last-child { margin-left: auto; }
-.site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child) { background: transparent !important; box-shadow: inset 0 0 0 2px currentColor !important; color: inherit !important; }
-.site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child):hover { background: rgba(16,45,44,.08) !important; }
+.site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child) { background: var(--cta-secondary-bg) !important; border-color: var(--cta-secondary-edge) !important; box-shadow: none !important; color: var(--cta-secondary-fg) !important; }
+/* Back / Previous are outline CTAs: the shared hover and pressed states. */
+@media (hover: hover) {
+  .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child):hover:not(:disabled) { background: var(--cta-secondary-hover-bg) !important; }
+}
+.site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child):active:not(:disabled) { background: var(--cta-secondary-active-bg) !important; }
 /* Dark theme: the same structure on its own surface. */
 :global(html[data-theme="dark"]) .site .contactCyan .inquiryFormBar { border-color: rgba(239,233,215,.22); }
 :global(html[data-theme="dark"]) .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:first-child { background: rgba(239,233,215,.1); color: var(--color-cream); }
@@ -1962,7 +2067,6 @@
 :global(html[data-theme="dark"]) .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div > :global(div.pointer-events-none)[aria-current="step"] > span:first-child { background: var(--color-navy, #191e4e) !important; color: var(--color-cream) !important; }
 :global(html[data-theme="dark"]) .site .contactCyan .contactFormShell :is(:global(.contact-form-input), :global(.contact-form-textarea), :global(button[role="combobox"])) { border-bottom-color: rgba(239,233,215,.5) !important; }
 :global(html[data-theme="dark"]) .site .contactCyan .contactFormShell :is(:global(.contact-form-input), :global(.contact-form-textarea))::placeholder { color: rgba(239,233,215,.62) !important; }
-:global(html[data-theme="dark"]) .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child):hover { background: rgba(239,233,215,.08) !important; }
 
 /* Builder wall, /clients: while it moves it runs edge to edge (the section
    clips it, so the page never scrolls sideways). Cards enter and leave through
@@ -1980,18 +2084,25 @@
 :global(html[data-theme="dark"]) .site[data-audience="community"] :global(#join) { background: var(--color-navy); }
 :global(html[data-theme="dark"]) .site[data-audience="community"] :global(#spears) { background: var(--color-navy-raised); }
 
-/* Builder wall, both audience routes (October 29): every category runs on one
-   continuous Moloch coral plane (the site's coral, #EE3C78) across the full
-   width, in both themes, tilted 1 degree with its courses and cards, so the
-   whole wall leans together; at 1 degree the names stay easy to scan. The
-   plane's height follows the courses, so a short category never sits in a
-   large empty container. Cards are opaque (cream in light, navy in dark) so
-   names and roles keep their usual contrast. The plane is wider than the
-   screen so its tilted ends never show a gap; the section clips it. Still
-   lists get side padding that keeps cards inside the screen. */
-.site[data-audience] .teamNetwork { overflow-x: clip; }
-.site[data-audience] .teamNetwork .teamWall:has(.memberMasonry) { background: var(--coral); box-sizing: border-box; height: auto; margin-inline: calc(50% - 50vw - 32px); max-width: none; padding-block: 28px; transform: rotate(-1deg); width: calc(100vw + 64px); }
-.site[data-audience] .teamNetwork .teamWall:has(.memberMasonry) .memberMarquee { -webkit-mask-image: none; height: auto; mask-image: none; padding: 0 calc(32px + var(--composition-gutter, 24px)); }
+/* Builder wall, both audience routes: every category sits on one flat coral
+   plane (the site's coral, #EE3C78) across the full width, in both themes.
+   October 30: the plane is no longer tilted (the 1 degree tilt of October 29
+   leant the cards with it and made the slack around short lists read as
+   uneven). Its height is the content's: the grid (1–8 results) or the three
+   courses (9+) plus 28 px above and below; no fixed wall height. Inside it,
+   the grid and a still wall keep the section's content width; a moving wall
+   runs edge to edge. Cards are opaque (cream in light, navy in dark). */
+/* October 30 (later): the plane is capped at --page-wide (1760 px) and
+   centred, so on large monitors it reads as a contained band; its corners
+   round only once it is narrower than the screen (the clamp is 0 below
+   1760 px). The grid keeps the page column inside it. */
+.site[data-audience] .teamNetwork { --builder-plane: min(100vw, var(--page-wide)); overflow-x: clip; }
+.site[data-audience] .teamNetwork .teamWall:is(:has(.memberMasonry), :has(.memberGridFrame)) { background: var(--coral); border-radius: clamp(0px, (100vw - var(--page-wide)) * 999, 28px); box-sizing: border-box; height: auto; margin-inline: calc(50% - var(--builder-plane) / 2); max-width: none; min-height: 0; overflow: clip; padding-block: 28px; width: var(--builder-plane); }
+.site[data-audience] .teamNetwork .teamWall:has(.memberGridFrame) { padding-inline: calc(var(--builder-plane) / 2 - 50%); }
+.site[data-audience] .teamNetwork .teamWall:has(.memberGridFrame) .memberGridFrame { padding: 0; }
+/* A still wall starts on the page column: the column's offset in the viewport
+   less the plane's. */
+.site[data-audience] .teamNetwork .teamWall:has(.memberMasonry) .memberMarquee { -webkit-mask-image: none; height: auto; mask-image: none; padding: 0 calc(max(var(--page-gutter), (100vw - var(--page-max)) / 2) - (100vw - var(--builder-plane)) / 2); }
 .site[data-audience] .teamNetwork .teamWall[data-bleed]:has(.memberMasonry) .memberMarquee { padding-inline: 0; }
 .site[data-audience] .teamNetwork .memberMasonry :where(.memberRail > a, .memberRail > div) { background: var(--paper); }
 :global(html[data-theme="dark"]) .site[data-audience] .teamNetwork .memberMasonry :where(.memberRail > a, .memberRail > div) { background: var(--color-navy); }
@@ -2035,7 +2146,7 @@
 .kitToggle { align-items: center; background: transparent; border: 2px solid var(--coral); border-radius: 100px; color: var(--coral); cursor: pointer; display: inline-flex; font: italic 700 var(--type-ui, 14px)/1.2 var(--font-mono), monospace; gap: 12px; letter-spacing: .06em; margin-top: 24px; min-height: 44px; padding: 10px 20px; text-transform: uppercase; transition: background-color .2s ease, color .2s ease; }
 .kitToggle span { font-style: normal; }
 .kitToggle:hover, .kitToggle[aria-expanded="true"] { background: var(--coral); color: var(--on-pink, #071c1d); }
-.kitToggle:focus-visible, .kitClose:focus-visible { outline: 3px solid var(--cta-ring, var(--color-dark-green)); outline-offset: 3px; }
+.kitToggle:focus-visible, .kitClose:focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo, #efe9d7); outline: 3px solid var(--cta-focus-ring, #102d2c); outline-offset: 3px; }
 .kitPanel { min-width: 0; }
 .kitInner.guildBenefits { background: var(--paper); border: 2px solid var(--coral); border-radius: 24px; margin: 0; max-width: none; padding: clamp(22px, 2.4vw, 32px); }
 :global(html[data-theme="dark"]) .site .kitInner.guildBenefits { background: var(--color-navy-raised); }
@@ -2064,11 +2175,11 @@
   .prologue[data-kit], .prologue[data-kit] .kitPanel, .kitToggle { transition: none !important; }
 }
 
-/* Creed (both audience routes, October 29, final pass): "build." reads as the
-   preselected word: a coral highlight with RaidGuild deep navy type (#12163B,
-   4.6:1, large text), the same in both themes. It is a text highlight, not a
-   control: no border, shadow or pressed depth. */
-.site[data-audience] .creed .creedContent blockquote em { background: var(--coral); border-radius: .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; color: #12163b; padding: 0 .16em .04em; text-shadow: none; }
+/* Creed (both audience routes): "BUILD." is the preselected word, a coral
+   rectangle behind it (a text highlight, square corners, no border or depth)
+   with the line's cream type, the same in both themes. October 30 (evening):
+   cream type replaces the deep navy of October 29. */
+.site[data-audience] .creed .creedContent blockquote em { background: var(--coral); border-radius: 0; box-decoration-break: clone; -webkit-box-decoration-break: clone; color: var(--color-cream); padding: 0 .14em .04em; text-shadow: none; }
 
 /* Panels on the light-blue module, both routes: the Join panel's rounded coral
    stroke (October 29) now frames the Hire inquiry panel too; the inquiry
@@ -2120,4 +2231,642 @@
   .site[data-audience] .collectionHeading h2 em,
   .site[data-audience] .prologue h2 em,
   .site[data-audience] .contact h2.contactHeadline em { font-size: clamp(30px, 10.2vw, 40px); }
+}
+
+/* ── Shared CTA system: chips, toggles, icon buttons, links (October 30) ────
+   The same tokens and states as the pills (see "Shared CTA system" above),
+   for the controls defined in this file; the section modules apply them to
+   their own (builder filters, Explore filters, showcase arrows, Hats links).
+   Declared last so it wins over the earlier iterations.
+   Chips and toggles: transparent with a border in the surface's text colour;
+   selected or open = the filled CTA (canonical pink, ink label). */
+.site[data-cta="semantic"] .kitToggle { background: transparent; border: var(--cta-border-width) solid currentColor; color: inherit; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.site[data-cta="semantic"] .kitToggle[aria-expanded="true"] { background: var(--cta-bg); border-color: var(--cta-border); color: var(--cta-fg); }
+.site[data-cta="semantic"] .kitClose { border-width: var(--cta-border-width); transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.site[data-cta="semantic"] :is(.audienceSwitch a, .themeSwitch button) { border: var(--cta-border-width) solid transparent; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.site[data-cta="semantic"] :is(.audienceSwitch a[aria-current="page"], .themeSwitch button[aria-pressed="true"]) { background: var(--cta-bg); border-color: var(--cta-border); color: var(--cta-fg); }
+.site[data-cta="semantic"] .celestialToggle { border-width: var(--cta-border-width); transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+/* The base rules change these on any :hover, which sticks after a tap, and
+   differ by theme; touch screens get no hover, devices that hover the shared one. */
+@media (hover: none) {
+  .site[data-cta="semantic"] :is(.kitToggle, .kitClose):hover:not([aria-expanded="true"]) { background: transparent; border-color: currentColor; color: inherit; }
+  .site[data-cta="semantic"] :is(.audienceSwitch a:not([aria-current="page"]), .themeSwitch button:not([aria-pressed="true"])):hover { background: transparent; }
+  /* The light theme toggle's base hover surface; the dark one already wins over it. */
+  :global(html:not([data-theme="dark"])) .site[data-cta="semantic"] .celestialToggle:hover { background: rgba(5,34,34,.52); border-color: rgba(239,233,215,.24); }
+}
+@media (hover: hover) {
+  .site[data-cta="semantic"] :is(.kitToggle:not([aria-expanded="true"]), .kitClose, .audienceSwitch a:not([aria-current="page"]), .themeSwitch button:not([aria-pressed="true"])):hover { background: var(--cta-chip-hover-bg); }
+}
+.site[data-cta="semantic"] :is(.kitToggle:not([aria-expanded="true"]), .kitClose, .audienceSwitch a:not([aria-current="page"]), .themeSwitch button:not([aria-pressed="true"])):active { background: var(--cta-chip-active-bg); box-shadow: var(--cta-active-inset); }
+.site[data-cta="semantic"] :is(.kitToggle[aria-expanded="true"], .themeToggle):active { box-shadow: var(--cta-active-inset); }
+
+/* Text links with arrows: the surface's text colour (pink text is under
+   4.5:1 on cream, navy and light blue at these sizes) with an underline that
+   thickens on hover. */
+.site[data-cta="semantic"] :is(.handbookLink, .inquiryClose) { color: inherit; text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+@media (hover: hover) {
+  .site[data-cta="semantic"] :is(.handbookLink, .inquiryClose, .guildMore > summary):hover { text-decoration-thickness: 2px; }
+}
+
+/* One focus ring for every other control: the same geometry as the pills, the
+   same colours in both themes. Cards inside the moving builder wall and the
+   Explore cards keep their inset rings, because their containers clip. */
+.site[data-cta="semantic"] :is(.audienceSwitch a, .themeSwitch button, .themeToggle, .celestialToggle, .menuButton, .nav a, .brand, .socials a, .skipLink, .kitToggle, .kitClose, .inquiryClose, .handbookLink, .rosterAside a, .guildMore > summary, .practiceDisclosure > summary, .rosterDisclosure > summary, .stewardResponsibilities :is(summary, a), .capabilities summary, .stewardCard, .contact .inquiryMore > summary):focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo); outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+.site[data-cta="semantic"] :is(.kitToggle, .kitClose, .celestialToggle, .audienceSwitch a, .themeSwitch button, .themeToggle, .contact .inquiryMore > summary):focus-visible:active { box-shadow: 0 0 0 3px var(--cta-focus-halo), var(--cta-active-inset); }
+@media (prefers-reduced-motion: reduce) {
+  .site[data-cta="semantic"] :is(.kitToggle, .kitClose, .celestialToggle, .audienceSwitch a, .themeSwitch button, .themeToggle, .themeToggle i) { transition: none; }
+}
+
+/* ── Persistent top bar, audience routes (October 30) ─────────────────────
+   The sword logo, the audience switch and the theme switch stay pinned as one
+   row on the page container's gutters; the section navigation scrolls away
+   with the header. All three share the audience switch's pill: paper (light)
+   or navy (dark) with a hairline edge and soft shadow, a coral selected
+   segment, transparent unselected segments, 44 px targets. The bar itself
+   lets clicks through between its pills. */
+.site[data-audience] .topBar { align-items: center; display: grid; gap: 8px; grid-template-columns: 1fr auto 1fr; left: 0; padding-inline: var(--page-inline); pointer-events: none; position: fixed; right: 0; top: 16px; z-index: 45; }
+.site[data-audience] .topBar > * { pointer-events: auto; }
+.site[data-audience] .topBar .audienceSwitch { grid-column: 2; left: auto; position: static; transform: none; }
+.site[data-audience] .topBar .brand { grid-column: 1; justify-self: start; }
+.site[data-audience] .topBar :is(.themeSwitch, .themeToggle) { grid-column: 3; grid-row: 1; justify-self: end; }
+.site[data-audience] :is(.topBar .brand, .themeSwitch, .themeToggle) { background: var(--paper); border: 1px solid var(--color-dark-green); border-radius: 100px; box-shadow: 0 6px 24px rgba(16,45,44,.18); color: var(--color-dark-green); }
+:global(html[data-theme="dark"]) .site[data-audience] :is(.topBar .brand, .themeSwitch, .themeToggle) { background: var(--color-navy); border-color: rgba(184,224,223,.4); box-shadow: 0 6px 24px rgba(4,8,30,.45); color: var(--color-cream); }
+.site[data-audience] .topBar .brand { font-size: 12px; gap: 10px; letter-spacing: .11em; line-height: .95; min-height: 56px; padding: 5px 20px 5px 5px; white-space: nowrap; }
+.site[data-audience] .topBar .sigil { border: 0; height: 44px; margin: 0; width: 44px; }
+.site[data-audience] .topBar .swordMark { height: 26px; width: 28px; }
+.themeSwitch { display: flex; padding: 5px; }
+.themeSwitch button { align-items: center; background: transparent; border-radius: 100px; color: inherit; cursor: pointer; display: inline-flex; font: 700 14px/1.4 var(--font-mono), monospace; gap: 8px; letter-spacing: .02em; min-height: 44px; padding: 10px 18px; }
+.iconSun, .iconMoon { background: currentColor; display: block; flex: 0 0 auto; height: 16px; width: 16px; }
+.iconSun { -webkit-mask: url("/images/icons/ico_sun.svg") center / contain no-repeat; mask: url("/images/icons/ico_sun.svg") center / contain no-repeat; }
+.iconMoon { -webkit-mask: url("/images/icons/ico_dark.svg") center / contain no-repeat; mask: url("/images/icons/ico_dark.svg") center / contain no-repeat; }
+.themeToggle { display: none; }
+/* The header row under the bar holds only the section navigation (and the
+   menu button on phones), on the same gutters. */
+.site .headerWithSwitch { padding-inline: var(--page-inline); }
+@media (max-width: 999px) { .site .headerWithSwitch { padding-inline: var(--page-gutter); } }
+/* Phones: the logo becomes a 52 px disc and the theme control one switch whose
+   coral disc marks the current theme; the audience labels tighten so the row
+   fits at 375 px. */
+@media (max-width: 699px) {
+  .site[data-audience] .topBar { gap: 6px; padding-inline: 8px; top: 10px; }
+  .site[data-audience] .topBar .brand { min-height: 52px; padding: 3px; }
+  .site[data-audience] .topBar .brand > span:not(.sigil) { display: none; }
+  .site[data-audience] .topBar .sigil { height: 44px; width: 44px; }
+  .site[data-audience] .topBar .audienceSwitch { padding: 3px; }
+  .site[data-audience] .topBar .audienceSwitch a { font-size: 12px; letter-spacing: 0; padding-inline: 11px; }
+  .themeSwitch { display: none; }
+  .themeToggle { align-items: center; cursor: pointer; display: inline-flex; gap: 0; height: 52px; padding: 3px; position: relative; }
+  .themeToggle::before { background: var(--cta-bg); border: var(--cta-border-width) solid var(--cta-border); border-radius: 50%; content: ""; height: 44px; left: 3px; position: absolute; top: 3px; transition: transform .25s ease; width: 44px; }
+  .themeToggle[aria-checked="true"]::before { transform: translateX(28px); }
+  .themeToggle i { box-sizing: content-box; height: 16px; -webkit-mask-clip: content-box; mask-clip: content-box; -webkit-mask-origin: content-box; mask-origin: content-box; padding: 14px 6px; position: relative; width: 16px; }
+  .themeToggle i:first-child { padding-left: 14px; }
+  .themeToggle i:last-child { padding-right: 14px; }
+  .themeToggle[aria-checked="false"] i:first-child, .themeToggle[aria-checked="true"] i:last-child { color: var(--cta-fg); }
+}
+@media (max-width: 699px) and (prefers-reduced-motion: reduce) { .themeToggle::before { transition: none; } }
+
+/* ── Page container, both audience routes (October 30) ─────────────────────
+   The modules that already shared the October 23 composition gutter (Guild,
+   Explore, Join, inquiry, People, creed, footer) now take the page column;
+   the rest set --page-inline in their own stylesheets. The hero keeps its own
+   copy position: the curtain artwork fills the outer gutter there. */
+@media (min-width: 1000px) {
+  .site[data-audience] { --composition-gutter: var(--page-inline); }
+}
+.site[data-audience] :is(.fieldNotes, .teamNetwork) { padding-inline: var(--page-inline); }
+
+/* Join the DAO hero title (October 30): "FIND YOUR PEOPLE. / BUILD SOMETHING"
+   on one reading level, then "TOGETHER." about twice as large, in the
+   headline's cream (evening: no longer pink); the h1 reads as two sentences.
+   The block stays inside the copy column (about 580 px wide on desktop), so it
+   no longer runs across the characters in the artwork. Phones: every line
+   fits the 24 px gutters ("FIND YOUR PEOPLE." is about 11.3 em wide,
+   "TOGETHER." about 6.2 em); the first two lines stay near 30 px (29 px at
+   375). Desktop: 88 px keeps "TOGETHER." inside the copy column. */
+.site[data-audience] .hero .heroTitleStacked { width: max-content; }
+.site[data-audience] .hero .heroTitleStacked h1 { font-size: min(32px, calc((100vw - 48px) / 11.4)); letter-spacing: -.005em; line-height: 1; }
+.site[data-audience] .hero .heroTitleStacked h1 > span { font-size: inherit; white-space: nowrap; }
+.site[data-audience] .hero .heroTitleStacked h1 > em { color: inherit; display: inline-block; font-size: min(56px, calc((100vw - 48px) / 6.3)); line-height: .95; margin-top: .08em; white-space: nowrap; }
+@media (min-width: 600px) {
+  .site[data-audience] .hero .heroTitleStacked h1 { font-size: 40px; }
+  .site[data-audience] .hero .heroTitleStacked h1 > em { font-size: 80px; }
+}
+@media (min-width: 1000px) {
+  .site[data-audience] .hero .heroTitleStacked h1 { font-size: 46px; }
+  .site[data-audience] .hero .heroTitleStacked h1 > em { font-size: 88px; }
+}
+
+/* Two-level headings (October 30): the first line has one weight on every
+   section of both routes. Explore and the Join/inquiry panels were the two
+   left at 400 beside the 900 of the others; their second lines keep their
+   own faces. */
+.site[data-audience] :is(.collectionHeading h2, .contact h2.contactHeadline) { font-weight: 900; }
+.site[data-audience] .contact:not(.joinContact) h2.contactHeadline em { font-weight: 500; }
+
+/* ── Final contact module: scene and profession gallery (October 30, afternoon)
+   Both audience routes (/clients inquiry, /community Join; ContactScene.tsx).
+   Scene: behind everything in the module (an isolated stack, z-index -1), at
+   the top, as wide as the page's wide maximum (1760 px) and at most its own
+   aspect tall, cropped from the bottom when the module is shorter. It fades to
+   transparent over its lower 42% (vertical, to the module's surface) and, once
+   capped, over 120 px at each side (horizontal), so no edge shows; text and
+   form sit on the opaque panel, so their contrast is unchanged. One picture per
+   theme (light: the day cuts, dark: the night cuts); only the current theme's
+   is displayed, and a hidden lazy image never downloads. */
+.site[data-audience] .contact:has(.contactScene) { isolation: isolate; }
+/* Pinned scene (October 30, final pass): the layer covers the whole section
+   (the page's wide maximum across, the section's height down) and clips
+   sideways without becoming a scroll container (overflow: clip), so its
+   stage can stick to the viewport. The stage is one viewport tall (or the
+   section's height, if shorter) and covers it with the art, so no bare navy
+   or cream shows behind the form while it scrolls. */
+.contactScene {
+  --scene-w: min(100vw, var(--page-wide));
+  --scene-edge: clamp(0px, (100vw - var(--page-wide)) * 999, 120px);
+  bottom: 0;
+  left: 50%;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--scene-edge), #000 calc(100% - var(--scene-edge)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--scene-edge), #000 calc(100% - var(--scene-edge)), transparent);
+  overflow: clip;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: var(--scene-w);
+  z-index: -1;
+}
+/* October 30 (composition pass 2): the stage is the artwork's own box (its
+   width and native ratio, 2880 × 1260 or 1536 × 2304), so the art is never
+   rescaled or recropped by the viewport, and the gallery is placed in the
+   art's coordinates, where the owner's mockups put the group: it stands on the
+   same ground at every width. A viewport shorter than the art simply sees the
+   stage's bottom below the fold (cropped from the bottom). The art fades out
+   from 72% of its height, so its lower part dissolves into the module's
+   surface; the figures' feet sit in that fade, as in the mockups. */
+.contactScene { --art-h: calc(var(--scene-w) * .4375); }
+.contactSceneStage { height: var(--art-h); overflow: clip; position: sticky; top: 0; }
+/* Ground alignment (October 30, wall pass): the art moves up under the
+   figures (they stay put): 9% of its height on desktop, so the hovercraft sits
+   behind their legs and their feet land on the paving in front of it; 4% on
+   phones, where they already stand on the path. The band this frees at the
+   stage's foot is inside the fade. */
+.contactSceneStage > picture { --scene-shift: -9%; transform: translateY(var(--scene-shift)); }
+@media (max-width: 600px) { .contactSceneStage > picture { --scene-shift: -4%; } }
+.contactSceneStage > picture { display: block; height: 100%; -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%); mask-image: linear-gradient(to bottom, #000 72%, transparent 100%); width: 100%; }
+.contactScene picture img { display: block; height: 100%; object-fit: cover; object-position: center top; width: 100%; }
+:global(html[data-theme="dark"]) .contactScene picture[data-scene-theme="light"],
+:global(html:not([data-theme="dark"])) .contactScene picture[data-scene-theme="dark"] { display: none; }
+/* The sections' own overflow: hidden would make them the sticky stage's
+   scroll container; clip keeps the clipping without that. */
+.site[data-audience] .contact:has(.contactScene) { overflow: clip; }
+/* The gallery on the stage, in art coordinates (October 30, composition pass
+   2, from the owner's join-horizontal and join-vertical mockups): desktop, the
+   group stands from 10% to 90% of the art's height, centred at 33.5% of its
+   width (the mockup's 18–49%); phones (vertical cut), from 44% to 99%, centred
+   (the mockup's 16–86%). The group's PNG is contained and bottom-aligned in
+   that box, so its feet rest on the same ground line at every width. Between
+   601 and 999 px the panel starts at about 44% of the width, so the group
+   moves left (3–43%). The invisible slot in the module's grid keeps the room
+   above the form on phones (the art's height less the top padding and a 40 px
+   overlap into the fade). */
+.contactSceneStage .professionGallery.professionGallery { height: 80%; left: 14%; margin: 0; pointer-events: auto; position: absolute; top: 10%; transform: none; width: 39%; z-index: 2; }
+.site[data-audience] .contact .contactGallerySlot.contactGallerySlot { height: 0; margin: 0; max-height: none; min-height: 0; visibility: hidden; }
+@media (min-width: 601px) and (max-width: 999px) {
+  .contactSceneStage .professionGallery.professionGallery { left: 3%; width: 40%; }
+}
+@media (max-width: 600px) {
+  .contactScene { --art-h: calc(var(--scene-w) * 1.5); }
+  .contactSceneStage .professionGallery.professionGallery { height: 55%; left: 12%; top: 44%; width: 76%; }
+  .site[data-audience] .contact .contactGallerySlot.contactGallerySlot { height: calc(min(100vw, var(--page-wide)) * 1.5 - var(--section-space) - 40px); }
+}
+
+/* Light theme separation (October 30): the night scene sets the navy panel
+   apart on its own; the day scene and the light-blue panel are both pale. The
+   scene stays as it is; a faint cream veil (inside the scene layer, so no
+   layout change) quiets the foliage behind the panel on desktop, and the panel
+   gets a soft elevation shadow that falls below it (its two halves on /clients
+   share it without a seam). The text is still on the opaque panel. */
+@media (min-width: 761px) {
+  :global(html:not([data-theme="dark"])) .contactSceneStage::after { background: radial-gradient(ellipse 34% 62% at 73% 46%, rgba(239,233,215,.5), rgba(239,233,215,0) 100%); content: ""; inset: 0; position: absolute; }
+}
+:global(html:not([data-theme="dark"])) .site[data-audience] .contact:has(.contactScene) :is(.contactCopy, .inquiryMore) { box-shadow: 0 22px 44px -22px rgba(16,45,44,.38); }
+
+/* Gallery: it takes the illustration's place and box (.contactDruid); the
+   groups are stacked. Each fades out over its lowest 14%, so the feet and
+   crates settle into the scene instead of ending on a line.
+   pointer-events: the illustration's class turns them off; the gallery needs
+   hover to pause.
+   Transmission (October 30, evening; ContactScene.tsx sets data-leaving and
+   data-entering for 1.3 s): the outgoing group flickers out in 0.55 s with a
+   2–3 px cyan/pink channel split; the incoming one resolves over 1.2 s through
+   scanlines (a second mask layer, intersected with the foot fade, so they sit
+   on the figure only) with a brief flicker and the split settling to zero.
+   Opacity, filter and mask only: no movement, no layout shift. */
+.professionGallery.professionGallery { box-sizing: border-box; display: flex; flex-direction: column; pointer-events: auto; position: relative; }
+.professionStage { flex: 1 1 auto; min-height: 0; position: relative; width: 100%; }
+.professionStage img { --foot-fade: linear-gradient(to bottom, #000 90%, transparent 100%); height: 100%; inset: 0; -webkit-mask-image: var(--foot-fade); mask-image: var(--foot-fade); object-fit: contain; object-position: center bottom; opacity: 0; position: absolute; width: 100%; }
+.professionStage img[data-active] { opacity: 1; }
+.professionStage img[data-leaving] { animation: holoOut .55s linear both; }
+.professionStage img[data-entering] {
+  animation: holoIn 1.2s cubic-bezier(.3,0,.2,1) .15s both, holoScan 1.2s linear .15s both;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  -webkit-mask-image: var(--foot-fade), repeating-linear-gradient(to bottom, #000 0 2px, rgba(0,0,0,var(--holo-scan)) 2px 4px);
+  mask-image: var(--foot-fade), repeating-linear-gradient(to bottom, #000 0 2px, rgba(0,0,0,var(--holo-scan)) 2px 4px);
+}
+/* The scanlines' gaps go from 45% to fully solid by the end, so the lines
+   dissolve instead of switching off. */
+@property --holo-scan { syntax: "<number>"; inherits: false; initial-value: 1; }
+@keyframes holoOut {
+  0% { filter: none; opacity: 1; }
+  18% { filter: drop-shadow(-3px 0 0 rgba(109,230,223,.55)) drop-shadow(3px 0 0 rgba(238,60,120,.55)); opacity: .55; }
+  30% { opacity: .9; }
+  48% { filter: drop-shadow(-2px 0 0 rgba(109,230,223,.5)) drop-shadow(2px 0 0 rgba(238,60,120,.5)) brightness(1.15); opacity: .35; }
+  100% { filter: none; opacity: 0; }
+}
+@keyframes holoIn {
+  0% { --holo-scan: .45; filter: drop-shadow(-3px 0 0 rgba(109,230,223,.6)) drop-shadow(3px 0 0 rgba(238,60,120,.6)) brightness(1.2); opacity: 0; }
+  22% { opacity: .55; }
+  32% { opacity: .3; }
+  55% { --holo-scan: .55; filter: drop-shadow(-1px 0 0 rgba(109,230,223,.45)) drop-shadow(1px 0 0 rgba(238,60,120,.45)) brightness(1.08); opacity: .9; }
+  100% { --holo-scan: 1; filter: none; opacity: 1; }
+}
+@keyframes holoScan { from { -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; } to { -webkit-mask-position: 0 0, 0 24px; mask-position: 0 0, 0 24px; } }
+@media (prefers-reduced-motion: reduce) { .professionStage img[data-leaving], .professionStage img[data-entering] { animation: none; } }
+/* Phones: a little landscape above the group (the mockup's sky), about 56 px
+   at 393. */
+/* (Phones' room above the group: now the stage position, see "The gallery on the stage".) */
+.srOnly { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px; }
+
+/* Persistent logo (October 30, late night): the approved treatment of the
+   bar, restored: the same pill as the audience and theme switches (paper in
+   light, navy in dark, hairline edge, soft shadow) with the sword and name in
+   the pill's ink. One size larger than the first version: a 48 px sword disc
+   (was 44) and a 32 px sword (was 28) inside the bar's 56 px height; 52 px
+   disc on phones with a 30 px sword. */
+.site[data-audience] .topBar .brand { font-size: 13px; padding: 3px 22px 3px 3px; }
+.site[data-audience] .topBar .sigil { height: 48px; width: 48px; }
+.site[data-audience] .topBar .swordMark { height: 30px; width: 32px; }
+@media (max-width: 699px) {
+  .site[data-audience] .topBar .brand { padding: 1px; }
+  .site[data-audience] .topBar .sigil { height: 48px; width: 48px; }
+  .site[data-audience] .topBar .swordMark { height: 28px; width: 30px; }
+}
+
+/* ── Section rhythm, both audience routes (October 30, late night) ─────────
+   Every content module gets the same breathing room above and below
+   (--section-space: 72 px on phones, about 115 px at 1440, 128 px max), so
+   neighbours no longer merge (the Guild section had none below it, straight
+   into the Queen Raida art). The two immersive features keep their artwork
+   flush with their top edge and take the space below their copy. On desktop
+   each module is at least a viewport tall (capped at 960 px) and its content
+   is anchored to the top, so the top edge stays put while content (the Guild
+   kit, the form) expands downward. The hero, ticker, creed and footer keep
+   their own sizes. */
+.site[data-audience] { --section-space: clamp(72px, 8vw, 128px); }
+.site[data-audience] main > :is(:global(#case-studies), :global(#spears), :global(#team), :global(#stewards), :global(#contact), :global(#guild), :global(#work), :global(#hats), :global(#join)) { padding-block: var(--section-space); }
+.site[data-audience] main > :is(:global(#raida), :global(#moloch)) { padding-bottom: 0; }
+@media (min-width: 1000px) {
+  .site[data-audience] main > :is(:global(#case-studies), :global(#spears), :global(#team), :global(#stewards), :global(#contact), :global(#guild), :global(#raida), :global(#moloch), :global(#work), :global(#hats), :global(#join)) { align-content: start; box-sizing: border-box; min-height: min(100svh, 960px); }
+}
+
+/* Hunt clues in the footer (audience routes, October 30, late night): a quiet
+   row above the copyright, their notes opening upward. */
+.footerClues { align-items: center; display: flex; flex-wrap: wrap; gap: 8px 28px; grid-column: 1 / -1; opacity: .85; }
+.footerClues .unchartedWalker { margin: 0; }
+.footerClues .unchartedWalker details[open] > div { left: 0; transform: none; width: min(320px, calc(100vw - 48px)); }
+
+/* Inquiry heading (October 30, final pass): "YOU'RE BUILDING" stays on one
+   line. It measures 10.1 em in the display face; it takes 46 px where the
+   copy column allows and scales down with the column (container units)
+   instead of wrapping (about 29 px on a 393 px phone). "TELL US WHAT" keeps
+   its size above it. */
+.site[data-audience] .contact:not(.joinContact) .contactCopy { container-type: inline-size; }
+.site[data-audience] .contact:not(.joinContact) h2.contactHeadline em { font-size: min(46px, 100cqi / 10.3); white-space: nowrap; }
+
+/* Builder cards (October 30, wall pass): the count line above the wall is for
+   screen readers only (BuilderNetwork). Every linked card carries the
+   up-right sword in its top-right corner, in the name's coral. The selected
+   card (pointer over it, or keyboard focus) inverts the hierarchy on a white
+   card: deep navy name (16.7:1) and deep coral profession (#CE1252, 5.25:1;
+   canonical pink is 3.6:1 on white, too low for 13–14 px text), the same in
+   both themes. */
+.site[data-audience] .teamNetwork :is(.memberRail > a, .memberTile) { position: relative; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) > i { color: var(--coral); display: block; height: 16px; margin: 0; position: absolute; right: 10px; top: 10px; width: 16px; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) > i > b { height: 100%; width: 100%; }
+.site[data-audience] .teamNetwork .memberRail > :is(a, div) > span { padding-right: 14px; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible),
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) { background: #fafafa; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) strong,
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) strong { color: #12163b; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) small,
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) small { color: #ce1252; opacity: 1; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) > i { color: #ce1252; }
+
+/* Contact panels (October 30, form pass): the RaidGuild bone (cream) panel in
+   the light theme, on both routes (was light blue, then white-cream); white
+   is kept for the input surfaces only. The dark theme keeps its navy panel,
+   its fields a faint raised surface. The secondary "Enter Discord" stays the
+   bone pill with its navy edge, as "Explore our work". */
+:global(html:not([data-theme="dark"])) .site .contactCyan :is(.contactCopy, .inquiryMore) { background: var(--color-cream); }
+.site .contactCyan .contactFormShell :is(:global(.contact-form-input), :global(.contact-form-textarea), :global(button[role="combobox"])) { background: #fff !important; border-radius: 8px 8px 0 0 !important; padding-left: 12px !important; }
+:global(html[data-theme="dark"]) .site .contactCyan .contactFormShell :is(:global(.contact-form-input), :global(.contact-form-textarea), :global(button[role="combobox"])) { background: rgba(239,233,215,.07) !important; }
+/* The username field and the channel picker read as one field. */
+.site .contactCyan .contactFormShell :global(.contact-channel-trigger) { border-left: 1px solid rgba(16,45,44,.16) !important; border-radius: 0 8px 0 0 !important; }
+.site .contactCyan .contactFormShell :global(.contact-form-input.\!rounded-r-none) { border-radius: 8px 0 0 0 !important; }
+:global(html[data-theme="dark"]) .site .contactCyan .contactFormShell :global(.contact-channel-trigger) { border-left-color: rgba(239,233,215,.2) !important; }
+
+/* Stepper (October 30, form pass; wizard.tsx): the full width of the form, one
+   column per step: a 20 px numbered circle and the title over a 4 px bar
+   segment. Current: coral circle with an ink number, the title at full
+   strength. Others: a bone circle, no outline, quieter title. Segments up to
+   the current step fill coral, so the bar is the progress. */
+.site .contactFormShell :global(.wizard-stepper) ol { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.site .contactFormShell :global(.wizard-stepper) li { align-items: center; color: rgba(16,45,44,.62); display: flex; font: 600 13px/1.25 var(--font-body), sans-serif; gap: 8px; min-width: 0; padding-bottom: 12px; position: relative; }
+.site .contactFormShell :global(.wizard-stepper) li::after { background: rgba(16,45,44,.14); border-radius: 4px; bottom: 0; content: ""; height: 4px; left: 0; position: absolute; right: 0; }
+.site .contactFormShell :global(.wizard-stepper) li:is([data-state="done"], [data-state="current"])::after { background: var(--coral); }
+.site .contactFormShell :global(.wizard-step-dot) { align-items: center; background: rgba(16,45,44,.1); border-radius: 50%; display: inline-flex; flex: 0 0 auto; font: 700 11px/1 var(--font-body), sans-serif; height: 20px; justify-content: center; width: 20px; }
+.site .contactFormShell :global(.wizard-stepper) li[aria-current="step"] { color: var(--color-dark-green); font-weight: 700; }
+.site .contactFormShell :global(.wizard-stepper) li[aria-current="step"] :global(.wizard-step-dot) { background: var(--coral); color: #071c1d; }
+:global(html[data-theme="dark"]) .site .contactFormShell :global(.wizard-stepper) li { color: rgba(239,233,215,.62); }
+:global(html[data-theme="dark"]) .site .contactFormShell :global(.wizard-stepper) li::after { background: rgba(239,233,215,.18); }
+:global(html[data-theme="dark"]) .site .contactFormShell :global(.wizard-stepper) li:is([data-state="done"], [data-state="current"])::after { background: var(--coral); }
+:global(html[data-theme="dark"]) .site .contactFormShell :global(.wizard-step-dot) { background: rgba(239,233,215,.12); }
+:global(html[data-theme="dark"]) .site .contactFormShell :global(.wizard-stepper) li[aria-current="step"] { color: var(--color-cream); }
+:global(html[data-theme="dark"]) .site .contactFormShell :global(.wizard-stepper) li[aria-current="step"] :global(.wizard-step-dot) { background: var(--coral); color: #12163b; }
+@media (max-width: 600px) { .site .contactFormShell :global(.wizard-stepper) li { font-size: 12px; gap: 6px; } }
+
+/* Global logos (October 30, form pass): the sword in the persistent top-bar
+   logo and the footer logo is coral (3.1:1 on the bone pill, 3.7:1 on navy:
+   above the 3:1 needed for a graphic); pill, ring and name are unchanged. */
+.site[data-audience] :is(.topBar, .footer) .swordMark { background: var(--coral); }
+
+/* Guild CTAs (October 30, CTA order pass; GuildPrologue): "Your Guild kit" is
+   the secondary pill (its sword points right, left while the kit is open),
+   "Join the DAO" the primary, side by side; "Enter Discord" is a quiet text
+   link with the Discord mark, first in the links row. */
+.iconLink { align-items: center; display: inline-flex; gap: 8px; }
+.iconLink > b { flex: 0 0 auto; height: 18px; width: 18px; }
+
+/* Builder cards, one component (October 30, normalization pass). Every builder
+   block (moving wall, category grids, both routes, both themes, every width)
+   is the same card: an <a> (TeamWall), 14 px radius, a 2 px edge, 14 px
+   padding with room for the mark, a 56 px round avatar on the left, the name
+   (display italic, 24 px: large text) over the profession (mono 12 px caps),
+   both left-aligned and vertically centred, and the RaidGuild crossed-swords
+   mark 24 px in the top-right corner (32 px when selected). Grid tiles keep
+   their grid areas; only their inner layout is normalised.
+   Light: light cyan #DFF2F1, deep coral name (#CE1252, 4.7:1), dark green
+   profession (12.6:1); selected (hover or keyboard focus): same surface, 3 px
+   navy edge, navy name (15:1), deep coral profession, navy mark.
+   Dark (owner's exact card navy, #303674): light coral name and mark
+   (#FF7AA6, 4.5:1; canonical coral is 2.9:1 there), cream profession (9.1:1);
+   selected: same surface, 3 px cream edge, cream name (a navy name cannot
+   read on navy), lighter coral profession (#FF95B8, 5.4:1), cream mark. Focus adds the shared ring outside the card's edge. */
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) {
+  --card-bg: #dff2f1; --card-sel-bg: #dff2f1; --card-edge: rgba(18,22,59,.18); --card-name: #ce1252; --card-role: #102d2c; --card-mark: #ce1252;
+  --card-sel-edge: #12163b; --card-sel-name: #12163b; --card-sel-role: #ce1252; --card-sel-mark: #12163b;
+  align-items: center; background: var(--card-bg); border: 0; border-radius: 14px; box-shadow: inset 0 0 0 2px var(--card-edge); box-sizing: border-box; color: var(--card-role); display: flex; flex-direction: row; gap: 14px; justify-content: flex-start; min-height: 84px; position: relative; text-decoration: none; transform: none; transition: box-shadow .18s ease;
+}
+/* Box, surface and edge, with a doubled class to outrank the October 29 wall
+   card rules (one of which the dev build loads twice); the right padding keeps
+   names clear of the mark. */
+.site[data-audience] .teamNetwork.teamNetwork :is(.memberRail > a, a.memberTile),
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork.teamNetwork :is(.memberRail > a, a.memberTile) { background: var(--card-bg); box-shadow: inset 0 0 0 2px var(--card-edge); height: auto; padding: 14px 46px 14px 14px; }
+.site[data-audience] .teamNetwork.teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible),
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork.teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) { background: var(--card-sel-bg); box-shadow: inset 0 0 0 3px var(--card-sel-edge); }
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) {
+  --card-bg: #191e4e; --card-sel-bg: #303674; --card-edge: rgba(239,233,215,.3); --card-name: #ee3c78; --card-role: #efe9d7; --card-mark: #ee3c78;
+  --card-sel-edge: #efe9d7; --card-sel-name: #efe9d7; --card-sel-role: #ff95b8; --card-sel-mark: #efe9d7;
+}
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible),
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) { background: var(--card-bg); box-shadow: inset 0 0 0 3px var(--card-sel-edge); color: var(--card-role); transform: none; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) img,
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) img { border-radius: 50%; filter: none; flex: 0 0 auto; height: 56px; object-fit: cover; width: 56px; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) > span { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 0; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) strong,
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) strong { color: var(--card-name); font: italic 500 24px/1.1 var(--font-display), sans-serif; letter-spacing: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) small,
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) small { color: var(--card-role); font: 700 12px/1.3 var(--font-mono), monospace; letter-spacing: .08em; margin: 0; opacity: 1; text-transform: uppercase; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) strong,
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) strong { color: var(--card-sel-name); }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) small,
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) small { color: var(--card-sel-role); }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) > i { color: var(--card-mark); display: block; font-size: 0; height: 24px; margin: 0; position: absolute; right: 12px; top: 12px; transition: height .18s ease, width .18s ease, color .18s ease; width: 24px; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) > i > b { display: block; height: 100%; width: 100%; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):is(:hover, :focus-visible) > i { color: var(--card-sel-mark); height: 32px; right: 8px; top: 8px; width: 32px; }
+.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):focus-visible { outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+:global(html[data-theme="dark"]) .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile):focus-visible { outline-color: var(--color-cream); }
+@media (prefers-reduced-motion: reduce) { .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile), .site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) > i { transition: none; } }
+
+/* Builders breathing room (October 30, CTA order pass): more space above and
+   below the module, and 40 px between the category selector and the coral
+   plane (48 px on desktop). */
+.site[data-audience] main > :global(#team) { padding-block: calc(var(--section-space) + 24px); }
+.site[data-audience] .teamNetwork [role="tabpanel"] { margin-top: 40px; }
+@media (min-width: 1000px) { .site[data-audience] .teamNetwork [role="tabpanel"] { margin-top: 48px; } }
+/* Narrow grid tiles (phones' two-column category grids): a tile under 260 px
+   stacks the avatar above the text, and the name shrinks just enough to stay
+   whole (--chars is set per tile) instead of truncating; at most 24 px, as
+   everywhere. Wall cards size to their content and never need it. */
+.site[data-audience] .teamNetwork a.memberTile { container: builderCard / inline-size; }
+@container builderCard (max-width: 259px) {
+  .site[data-audience] .teamNetwork.teamNetwork a.memberTile > span { width: 100%; }
+}
+@container builderCard (max-width: 259px) {
+  :global(html) .site[data-audience] .teamNetwork.teamNetwork.teamNetwork a.memberTile strong { font-size: min(24px, (100cqi - 28px) / (var(--chars, 8) * 1.02)); overflow: visible; text-overflow: clip; }
+}
+.site[data-audience] .teamNetwork.teamNetwork a.memberTile:is([data-narrow]) { min-width: 0; }
+@media (max-width: 719px) {
+  .site[data-audience] .teamNetwork.teamNetwork a.memberTile,
+  :global(html[data-theme="dark"]) .site[data-audience] .teamNetwork.teamNetwork a.memberTile { align-items: flex-start; flex-direction: column; gap: 10px; justify-content: flex-end; padding: 14px; }
+}
+
+/* ── Builders wall: fixed height and adaptive tiles (October 30, wall-frame
+   pass). The coral plane has one content height for every tab, so switching
+   categories never moves the next module: --wall-h is 360 px where the grid
+   is 12 columns (page column ≥ 720 px, viewport ≥ 809 px) and 552 px below.
+   The moving wall's three courses each take a third of it; the editorial
+   grids stretch their rows to fill it. Inside a grid tile the card adapts to
+   the tile's size (size container): compact tiles keep the row card; tall
+   tiles stack a larger avatar over the name; large tiles (wide and tall) set
+   a big avatar beside a bigger name; the mark grows with the tile. The name
+   shrinks only when it would otherwise not fit whole. */
+.site[data-audience] .teamNetwork { --wall-h: 360px; --wall-gap: 18px; }
+@media (max-width: 808px) { .site[data-audience] .teamNetwork { --wall-h: 552px; --wall-gap: 12px; } }
+.site[data-audience] .teamNetwork .teamWall:is(:has(.memberMasonry), :has(.memberGridFrame)) { height: calc(var(--wall-h) + 56px); }
+.site[data-audience] .teamNetwork.teamNetwork .memberMasonry > .memberRail > a { height: calc((var(--wall-h) - 2 * var(--wall-gap)) / 3); }
+.site[data-audience] .teamNetwork .memberGridFrame { height: var(--wall-h); }
+.site[data-audience] .teamNetwork .memberGrid { grid-auto-rows: 1fr; height: 100%; }
+@container builders (min-width: 720px) { .site[data-audience] .teamNetwork .memberGrid { grid-template-rows: repeat(3, 1fr); } }
+/* Desktop wall cards (108 px tall): a 64 px avatar. Phone wall cards (176 px
+   tall): the vertical card, an 80 px avatar over the name. */
+.site[data-audience] .teamNetwork.teamNetwork .memberMasonry > .memberRail > a img { height: 64px; width: 64px; }
+@media (max-width: 808px) {
+  .site[data-audience] .teamNetwork.teamNetwork .memberMasonry > .memberRail > a { align-items: flex-start; flex-direction: column; gap: 10px; justify-content: flex-end; min-width: 168px; padding: 14px 18px 14px 14px; }
+  .site[data-audience] .teamNetwork.teamNetwork .memberMasonry > .memberRail > a img { height: 80px; width: 80px; }
+}
+/* Grid tiles: the tile is the size container and keeps the card's surface,
+   edge, states and mark; its body (TeamWall) lays out the avatar and text by
+   the tile's size: compact (default) = the row card; tall (150 px+) = a
+   larger avatar over the name; large (520 × 220 px+) = a big avatar beside a
+   bigger name; narrow (under 260 px, phones) = stacked, the name fitted. The
+   name only shrinks when it would otherwise not fit whole. */
+:global(html) .site[data-audience] .teamNetwork.teamNetwork.teamNetwork a.memberTile { container: builderCard / size; display: block; height: 100%; min-height: 0; padding: 0; }
+.site[data-audience] .teamNetwork .memberTile > .memberTileBody { align-items: center; box-sizing: border-box; display: flex; flex-direction: row; gap: 14px; height: 100%; justify-content: flex-start; padding: 14px 46px 14px 14px; width: 100%; }
+:global(html) .site[data-audience] .teamNetwork.teamNetwork.teamNetwork a.memberTile strong { font-size: min(24px, (100cqi - 130px) / (var(--chars, 8) * 1.02)); overflow: visible; text-overflow: clip; }
+@container builderCard (min-height: 150px) {
+  .site[data-audience] .teamNetwork .memberTile > .memberTileBody { align-items: flex-start; flex-direction: column; gap: 12px; justify-content: flex-end; padding: 18px; }
+  .site[data-audience] .teamNetwork.teamNetwork.teamNetwork a.memberTile img { height: clamp(48px, 45cqh - 24px, 132px); width: clamp(48px, 45cqh - 24px, 132px); }
+  :global(html) .site[data-audience] .teamNetwork.teamNetwork.teamNetwork.teamNetwork a.memberTile strong { font-size: min(36px, (100cqi - 36px) / (var(--chars, 8) * 1.02)); }
+  .site[data-audience] .teamNetwork.teamNetwork.teamNetwork a.memberTile > i { height: 32px; right: 14px; top: 14px; width: 32px; }
+  .site[data-audience] .teamNetwork.teamNetwork.teamNetwork a.memberTile:is(:hover, :focus-visible) > i { height: 40px; right: 10px; top: 10px; width: 40px; }
+}
+@container builderCard (min-width: 520px) and (min-height: 220px) {
+  .site[data-audience] .teamNetwork .memberTile > .memberTileBody { align-items: center; flex-direction: row; gap: 28px; justify-content: flex-start; padding: 28px 64px 28px 28px; }
+  .site[data-audience] .teamNetwork.teamNetwork.teamNetwork.teamNetwork a.memberTile img { height: clamp(96px, 60cqh, 180px); width: clamp(96px, 60cqh, 180px); }
+  :global(html) .site[data-audience] .teamNetwork.teamNetwork.teamNetwork.teamNetwork.teamNetwork a.memberTile strong { font-size: min(52px, (100cqi - 92px - clamp(96px, 60cqh, 180px) - 28px) / (var(--chars, 8) * 1.02)); }
+  .site[data-audience] .teamNetwork.teamNetwork.teamNetwork a.memberTile small { font-size: 14px; }
+}
+@container builderCard (max-width: 259px) {
+  .site[data-audience] .teamNetwork .memberTile > .memberTileBody { align-items: flex-start; flex-direction: column; gap: 8px; justify-content: flex-end; padding: 10px; }
+  .site[data-audience] .teamNetwork.teamNetwork.teamNetwork.teamNetwork a.memberTile img { height: clamp(40px, 40cqh - 20px, 72px); width: clamp(40px, 40cqh - 20px, 72px); }
+  :global(html) .site[data-audience] .teamNetwork.teamNetwork.teamNetwork.teamNetwork.teamNetwork a.memberTile strong { font-size: min(24px, (100cqi - 20px) / (var(--chars, 8) * 1.02)); }
+}
+
+/* Builders → People / Hats (October 30, wall-frame pass): one connected
+   sequence: the joint between the Builders module and the module after it
+   (People behind the work on /clients, the Hats Tree on /community) is half
+   the usual section space on each side. */
+.site[data-audience] main > :global(#team) { padding-bottom: calc(var(--section-space) * .5); }
+.site[data-audience] main > :global(#team) + :is(:global(#stewards), :global(#hats)) { padding-top: calc(var(--section-space) * .5); }
+
+/* Shared selection language (October 30, wall-frame pass): Builders, People
+   (steward cards) and Hats role cards react alike. Hover and keyboard focus
+   select: the surface stays, the edge thickens to 3 px in the selection
+   colour (navy in light builder cards, cream on the dark green / navy
+   surfaces of People and Hats), nothing lifts, scales or swaps background,
+   and keyboard focus adds the ring outside. Hats keep aria-pressed (click,
+   focus, Escape) with this same look; siblings are no longer dimmed. */
+.site[data-audience] .keepers .stewardCard { transition: box-shadow .18s ease; }
+.site[data-audience] .keepers .stewardCard:is(:hover, :focus-visible) { background-color: transparent; box-shadow: inset 0 0 0 3px currentColor; color: inherit; transform: none; }
+:global(html[data-theme="dark"]) .site[data-audience] .keepers .stewardCard:is(:hover, :focus-visible) { background-color: rgba(185,224,223,.055); box-shadow: inset 0 0 0 3px currentColor; color: inherit; transform: none; }
+.site[data-cta="semantic"] .keepers a.stewardCard:focus-visible,
+:global(html[data-theme="dark"]) .site[data-cta="semantic"] .keepers a.stewardCard:focus-visible { box-shadow: inset 0 0 0 3px currentColor; outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+:global(html[data-theme="dark"]) .site[data-cta="semantic"] .keepers a.stewardCard:focus-visible { outline-color: var(--color-cream); }
+/* The courses' gaps follow --wall-gap at every width, so three courses always
+   fit the plane exactly. Row-layout grid tiles (compact) fit the name beside
+   the avatar the same way the stacked ones do. */
+.site[data-audience] .teamNetwork.teamNetwork .memberMasonry,
+.site[data-audience] .teamNetwork.teamNetwork .memberMasonry > .memberRail { gap: var(--wall-gap); }
+:global(html) .site[data-audience] .teamNetwork.teamNetwork a.memberTile strong { font-size: min(24px, (100cqi - 130px) / (var(--chars, 8) * 1.02)); overflow: visible; text-overflow: clip; }
+.site[data-audience] .teamNetwork .memberTileBody > span { display: flex; flex-direction: column; gap: 4px; min-width: 0; text-align: left; }
+
+/* Secondary CTAs inside panels (October 30, panel-secondary pass): in the
+   Guild module, the Join panel and the inquiry form (Back / Previous), the
+   secondary is transparent: the panel's own surface shows through the pill
+   and its icon disc, and only the edge, label and glyph carry it (navy on the
+   bone panel, cream on the navy one). Hover and pressed tint the surface with
+   the label colour (9% / 16%), as the chips; label, edge and glyph never
+   change. Secondaries over artwork (the heroes, Moloch) keep the opaque fill. */
+.site[data-cta="semantic"] :is(.prologue, .contact) .pillOutline { background: transparent; }
+.site[data-cta="semantic"] :is(.prologue, .contact) .pillOutline .pillIcon { background: transparent; border-color: var(--cta-secondary-edge); color: var(--cta-secondary-fg); }
+@media (hover: hover) { .site[data-cta="semantic"] :is(.prologue, .contact) .pillOutline:not([aria-disabled="true"]):hover { background: var(--cta-chip-hover-bg); } }
+.site[data-cta="semantic"] :is(.prologue, .contact) .pillOutline:not([aria-disabled="true"]):active { background: var(--cta-chip-active-bg); }
+.site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child) { background: transparent !important; }
+@media (hover: hover) { .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child):hover:not(:disabled) { background: var(--cta-chip-hover-bg) !important; } }
+.site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child):active:not(:disabled) { background: var(--cta-chip-active-bg) !important; }
+
+/* Join title (October 30, panel-secondary pass): the hero's rhythm. "YOUR
+   FIRST STEP" in the Retalic cut at 30 px (the quiet level), "INTO THE
+   GUILD." in the display italic, coral, as large as the column allows on one
+   line (9.6 em wide; up to 52 px: about 47 px at 1440, 30 px at 393). */
+.site[data-audience] .joinContact .contactCopy { container-type: inline-size; }
+.site[data-audience] .joinContact h2.contactHeadline { font-family: var(--font-retalic), var(--font-display), sans-serif; font-size: 30px; font-style: normal; font-weight: 500; letter-spacing: .01em; }
+.site[data-audience] .joinContact h2.contactHeadline em { font-family: var(--font-display), sans-serif; font-size: min(52px, 100cqi / 9.8); font-style: italic; font-weight: 400; line-height: 1; margin-top: 6px; white-space: nowrap; }
+@media (max-width: 760px) { .site[data-audience] .joinContact h2.contactHeadline { font-size: 20px; } }
+
+/* Inquiry intro (October 30, metadata pass): the form has no heading of its
+   own now; the description sits on one line where the column allows 15 px+
+   (it is 30.6 em long: 16 px from 490 px, about 15.2 px at 1440) and wraps at
+   16 px on narrower columns. The stepper takes the heading's place with more
+   presence: 28 px circles, 15 px titles, a 6 px bar, room above and below. */
+@container (min-width: 460px) {
+  .site[data-audience] .contact:not(.joinContact) .contactCopy .contactDek { font-size: min(16px, 100cqi / 30.8); max-width: none; white-space: nowrap; }
+}
+.site .contactFormShell :global(.wizard-stepper) { margin: 8px 0 28px; }
+.site .contactFormShell :global(.wizard-stepper) ol { gap: 12px; }
+.site .contactFormShell :global(.wizard-stepper) li { font-size: 15px; gap: 10px; padding-bottom: 16px; }
+.site .contactFormShell :global(.wizard-stepper) li::after { border-radius: 6px; height: 6px; }
+.site .contactFormShell :global(.wizard-step-dot) { font-size: 13px; height: 28px; width: 28px; }
+@media (max-width: 600px) { .site .contactFormShell :global(.wizard-stepper) li { font-size: 13px; gap: 6px; } .site .contactFormShell :global(.wizard-step-dot) { height: 24px; width: 24px; } }
+
+/* Builders colours and rhythm (October 30, metadata pass). Dark cards rest on
+   #191E4E (owner) and turn #303674 on hover, focus and selection; the name and
+   mark are canonical coral again (4.2:1 on #191E4E, 24 px+), the selected
+   profession #FF95B8 (5.4:1 on #303674). One vertical rhythm on the plane:
+   the padding above, between and below the three courses (and around grid
+   rows) is the same --wall-gap (24 px desktop, 16 px phones); the content
+   height is unchanged, so the wall's height still never moves. 64 px (48 px
+   phones) between the category selector and the plane. */
+.site[data-audience] .teamNetwork { --wall-gap: 24px; }
+@media (max-width: 808px) { .site[data-audience] .teamNetwork { --wall-gap: 16px; } }
+.site[data-audience] .teamNetwork .teamWall:is(:has(.memberMasonry), :has(.memberGridFrame)) { height: calc(var(--wall-h) + 2 * var(--wall-gap)); padding-block: var(--wall-gap); }
+.site[data-audience] .teamNetwork .memberGrid { gap: var(--wall-gap); }
+.site[data-audience] .teamNetwork [role="tabpanel"] { margin-top: 48px; }
+@media (min-width: 1000px) { .site[data-audience] .teamNetwork [role="tabpanel"] { margin-top: 64px; } }
+
+/* Large and tall tiles centre their content (October 30, metadata pass): the
+   avatar and name sit in the middle of the tile, not pushed to its foot. */
+@container builderCard (min-height: 150px) {
+  .site[data-audience] .teamNetwork .memberTile > .memberTileBody { align-items: center; justify-content: center; text-align: center; }
+  .site[data-audience] .teamNetwork .memberTile > .memberTileBody > span { align-items: center; text-align: center; }
+}
+@container builderCard (min-width: 520px) and (min-height: 220px) {
+  .site[data-audience] .teamNetwork .memberTile > .memberTileBody { justify-content: center; text-align: left; }
+  .site[data-audience] .teamNetwork .memberTile > .memberTileBody > span { align-items: flex-start; text-align: left; }
+}
+@container builderCard (max-width: 259px) {
+  .site[data-audience] .teamNetwork .memberTile > .memberTileBody { align-items: center; justify-content: center; }
+  .site[data-audience] .teamNetwork .memberTile > .memberTileBody > span { align-items: center; text-align: center; }
+}
+@media (max-width: 808px) {
+  .site[data-audience] .teamNetwork.teamNetwork .memberMasonry > .memberRail > a { align-items: center; justify-content: center; padding: 14px 18px; }
+  .site[data-audience] .teamNetwork.teamNetwork .memberMasonry > .memberRail > a > span { align-items: center; text-align: center; }
+}
+
+/* People behind the work (/clients steward cards, October 30, metadata pass):
+   the builder card family. Same surface, 2 px edge, 14 px radius, display
+   italic name in the name colour, mono caps role and project, the crossed-
+   swords mark (24 px, 32 px selected) in the top-right corner, a clean round
+   photo (no inner ring, no filter), the same hover / focus / selected (3 px
+   edge; dark surface #303674). Every card is a link (Stewardship). */
+.site[data-audience] .keepers .stewardCard { --card-bg: #dff2f1; --card-sel-bg: #dff2f1; --card-edge: rgba(18,22,59,.18); --card-name: #ce1252; --card-role: #102d2c; --card-mark: #ce1252; --card-sel-edge: #12163b; --card-sel-name: #12163b; --card-sel-role: #ce1252; --card-sel-mark: #12163b; }
+:global(html[data-theme="dark"]) .site[data-audience] .keepers .stewardCard { --card-bg: #191e4e; --card-sel-bg: #303674; --card-edge: rgba(239,233,215,.3); --card-name: #ee3c78; --card-role: #efe9d7; --card-mark: #ee3c78; --card-sel-edge: #efe9d7; --card-sel-name: #efe9d7; --card-sel-role: #ff95b8; --card-sel-mark: #efe9d7; }
+:global(html) .site[data-audience] .keepers.keepers .stewardCard { background: var(--card-bg); border: 0; border-radius: 14px; box-shadow: inset 0 0 0 2px var(--card-edge); color: var(--card-role); position: relative; text-align: center; transform: none; }
+:global(html) .site[data-audience] .keepers.keepers .stewardCard:is(:hover, :focus-visible) { background: var(--card-sel-bg); box-shadow: inset 0 0 0 3px var(--card-sel-edge); color: var(--card-role); transform: none; }
+:global(html) .site[data-audience] .keepers.keepers .stewardCard h4 { color: var(--card-name); font: italic 500 24px/1.1 var(--font-display), sans-serif; }
+:global(html) .site[data-audience] .keepers.keepers .stewardCard:is(:hover, :focus-visible) h4 { color: var(--card-sel-name); }
+:global(html) .site[data-audience] .keepers.keepers .stewardCard > :is(p, small) { color: var(--card-role); font: 700 12px/1.3 var(--font-mono), monospace; letter-spacing: .08em; opacity: 1; text-transform: uppercase; }
+:global(html) .site[data-audience] .keepers.keepers .stewardCard:is(:hover, :focus-visible) > p { color: var(--card-sel-role); }
+.site[data-audience] .keepers .stewardTop { color: var(--card-role); font: 700 12px/1 var(--font-mono), monospace; letter-spacing: .08em; }
+.site[data-audience] .keepers .stewardTop > i { color: var(--card-mark); display: block; height: 24px; position: absolute; right: 12px; top: 12px; transition: height .18s ease, width .18s ease; width: 24px; }
+.site[data-audience] .keepers .stewardTop > i > b { display: block; height: 100%; width: 100%; }
+.site[data-audience] .keepers .stewardCard:is(:hover, :focus-visible) .stewardTop > i { color: var(--card-sel-mark); height: 32px; right: 8px; top: 8px; width: 32px; }
+:global(html) .site[data-audience] .keepers .stewardPortrait { background: transparent; }
+:global(html) .site[data-audience] .keepers .stewardPortrait::after { content: none; }
+:global(html) .site[data-audience] .keepers .stewardPortrait img { filter: none; }
+@media (prefers-reduced-motion: reduce) { .site[data-audience] .keepers .stewardTop > i { transition: none; } }
+
+/* Guild CTA row (October 30, release pass): "Join the DAO" first on the left,
+   "Your Guild kit" anchored to the row's right edge (margin-left: auto); the
+   row spans the copy column. Phones stack them in that order, left-aligned.
+   The kit pill's link-free styles, icon and states are unchanged. */
+.site[data-audience] .prologue .guildActions { flex-wrap: nowrap; width: 100%; }
+.site[data-audience] .prologue .guildActions > .kitPill { margin-left: auto; }
+@media (max-width: 760px) {
+  .site[data-audience] .prologue .guildActions { align-items: flex-start; flex-direction: column; }
+  .site[data-audience] .prologue .guildActions > .kitPill { margin-left: 0; }
 }

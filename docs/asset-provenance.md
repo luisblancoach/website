@@ -29,7 +29,7 @@ remain approved and unused; they stay unmodified in the source library (`~/Deskt
 | `Ilus_03.png` (1536 × 2048) | Foundry turning raw material into output | `2083c2a91de9d11c72d7c1e7202c8296` | `public/images/illustrations/Ilus_03.png`: Services & Capabilities, both routes (desktop on `/clients`) |
 | `ilus_horiz_001.png` (1024 × 768) | Builder keeping a signal tower and servers | `e6cf33d9b10968eeb5469c501965d15a` | `public/images/illustrations/ilus_horiz_001.png`: Stewardship heading, `/community` |
 | `ilus_horiz_002.png` (1024 × 768) | Foundry turning raw material into output | `945d53551e8a68c98bfa4414b012a100` | `public/images/illustrations/ilus_horiz_002.png`: Services, `/clients` mobile (from 2026-10-28) |
-| `ilus_horiz_003.png` (1024 × 768) | Crew repairing a vessel | `a4876a7ce5a74c6487ed7b2dff0b9251` | `public/images/illustrations/ilus_horiz_003.png`: Builder Network heading, `/clients` |
+| `ilus_horiz_003.png` (1024 × 768) | Crew repairing a vessel | `a4876a7ce5a74c6487ed7b2dff0b9251` | `public/images/illustrations/ilus_horiz_003.png`: Builder Network heading, `/clients`, and from 2026-10-30 `/community` (same shared module) |
 
 **Exception, approved 2026-10-28:** the foundry scene is used in both cuts. The October 27
 Hire the DAO designs place the portrait cut (`Ilus_03.png`) beside the `/clients` Services
@@ -105,3 +105,72 @@ full width, at most 88svh tall (`object-fit: cover`) above 700 px and whole on p
 illustrations carry their own painted backgrounds and fill their tiles. Each entity file is 5.2–6.0 MB;
 next/image serves resized WebP. Rights and provenance of the new files were not stated with them: confirm
 they are approved for public use (the earlier Queen Raida approval covered `queen-raida-v2.png`).
+
+## Moloch title mark (2026-10-30)
+
+| Path | Size | Format | Used for | MD5 |
+|---|---|---|---|---|
+| `public/images/swords.svg` | 224 × 212 viewBox | SVG, two fills (cream `#EFE9D7`, navy `#191E4E`) | After "Moloch" in the About Moloch title, `/community`, about one cap height | `e311325daa5cfcf97f6bb9b2f454b9dd` |
+
+Supplied by the owner on 2026-10-30 (untracked in the worktree at 10:41; the brief names it
+`public/images/sword.svg`, the file on disk is `swords.svg` and is used as is). It replaces the
+`venture/hats/raidguild.png` crop in the Moloch title; that PNG remains the Hats Tree parent. Not yet
+committed: it must be committed with the code that references it.
+
+## Final contact module: Venture Beyond scene and professions (2026-10-30, afternoon)
+
+Supplied by the owner on 2026-10-30 (all untracked in the worktree; they must be committed with the code
+that references them). Declared in `src/lib/data/illustrations.ts` (`contactScenes`, `professions`); used by
+`sections/ContactScene.tsx` in the /clients inquiry and the /community Join module. Decorative scene (empty
+alt); each profession group's alt names it while it is shown.
+
+| Path | Pixels | Used for | MD5 |
+|---|---|---|---|
+| `public/images/neo/join-horizontal-light.png` | 2880 × 1260 | scene, light theme, above 760 px | `d2f2f97a191d2df572746adf1b654466` |
+| `public/images/neo/join-vertical-light.png` | 1536 × 2304 | scene, light theme, phones | `19f29b6f4cbd7f835dec9702fa47fa04` |
+| `public/images/neo/join-horizontal-dark.png` | 2880 × 1260 | scene, dark theme, above 760 px (added 12:41) | `09cab0e543003a7600ed6a5467d5fddf` |
+| `public/images/neo/join-vertical-dark.png` | 1536 × 2304 | scene, dark theme, phones (added 12:41) | `99895bbd0d5ad03a8af54a6bcad7004f` |
+| `public/images/professions/Druid 2.png` | 768 × 1024 | gallery 1 ("Druids"; identical to `neo/contact-druid-transparent.png`) | `8b9b3626f8a50d37cc96bddf4c1e54f1` |
+| `public/images/professions/Archers.png` | 768 × 1024 | gallery 2 | `2f9bf778ef9b3d385aa97aa6b0409c20` |
+| `public/images/professions/Angry Dwarves.png` | 768 × 1024 | gallery 3 | `ccc10d13c4a960c73479fe4ee5a30353` |
+| `public/images/professions/Hunters.png` | 768 × 1024 | gallery 4 | `7e5fa84ded2f5d72b481137c33c8c82d` |
+| `public/images/professions/Paladins.png` | 768 × 1024 | gallery 5 | `6a033f86616b259cb3c4165fc9da18e7` |
+| `public/images/professions/Druid.png` | 768 × 1024 | gallery 6 ("Druid and companions") | `ef16593d97817ee0825bdddb7babdbda` |
+
+`neo/contact-druid-transparent.png` remains in use on "/".
+
+### Website favicon (2026-10-30)
+
+`public/images/icons/favicon-moloch.png` (36 × 36, pink crossed swords, `95a9acd2ade461454408b7a4d30ec6a1`)
+is the site favicon. `src/app/favicon.ico` (the App Router file convention; the only icon the app links)
+was rebuilt from it: 16 and 32 px (downscaled with `sips`) and the original 36 px, as PNG entries
+(`71ccc3d097a69eb1aa40c29c3bf52816`; the previous ICO, `df056522198b69e07aa7f6fc9733d620`, is in git).
+Not changed: `src/app/favicon.svg`, `favicon-96x96.png`, `apple-touch-icon.png` and `site.webmanifest`,
+which no page links (not App Router file names), and a 36 px source is too small for a 180 px touch icon.
+
+## CTA icon set (2026-10-30, night)
+
+Supplied by the owner in `public/images/icons/` (untracked; commit with the code): sword arrows
+`arrow-right-flat.svg`, `arrow-left-flat.svg`, `arrow-down.svg`, `arrow-up.svg`, `arrow-right-up.svg`,
+`arrow-right-up-1.svg` (drawn pointing up-left), `arrow-right-down.svg`, `arrow-rleft-down.svg` (file name
+as supplied; drawn pointing down-left), and `ico_discord.svg`, `ico_portal.svg`, `ico_handbook.svg`,
+`ico_sun.svg`, `ico_dark.svg`. Used as CSS masks (shape only, painted in the control's colour), so their own
+fills do not matter. In use: right, left, down and up-right swords; Discord, Portal, handbook; sun and dark
+(theme switch). Not yet used: `arrow-up`, `arrow-right-up-1`, `arrow-right-down`, `arrow-rleft-down`. The
+older `icons/venture/ico-*.svg` remain for the RaidGuild logo glyph (`ico-logo.svg`) and the sigil.
+
+## Telegram mark (2026-10-30, form pass)
+
+`public/images/icons/ico_telegram.svg` (24 × 24, one path, `5c782430c862569955ecb5374904c756`): a simple paper plane drawn for this
+project (not a third-party logo file), used as a mask for the Telegram option of the inquiry form's
+"Prefer another way to connect?" picker. The Discord option uses the owner's `ico_discord.svg`.
+
+## Social images (2026-10-30, metadata pass)
+
+Derivatives of the owner's rectangle artwork, made with sharp (1200 × 630, cover crop, attention position,
+WebP q82); the originals are untouched.
+
+| Path | From | Size | MD5 |
+|---|---|---|---|
+| `public/images/venture/og/clients-queen-raida.webp` | `entities/queen-raida/queen-rectangle.png` | 150 KB | `aec1bcc26c65d4e2e2f2ba6b0550979c` |
+| `public/images/venture/og/community-moloch.webp` | `entities/moloch/moloch-rectangle.png` | 111 KB | `59a2f85487e6895efb07d679af84b93e` |

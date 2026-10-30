@@ -730,3 +730,22 @@ html {
 .cohort-btn-learn:hover {
     @apply bg-scroll-100 text-moloch-800;
 }
+
+/* Contact channel picker (October 30): the "Prefer another way to connect?"
+   menu of the inquiry form. Radix renders it outside the page, so it is styled
+   here. Bone panel with a navy edge (navy with a cream edge in the dark
+   theme), 44 px options in Ubuntu (the venture pages' body face; the menu sits
+   outside them) with their channel mark, the highlighted option one
+   bone step deeper, the chosen one marked with a coral check. */
+.contact-channel { align-items: center; display: inline-flex; gap: 8px; }
+.contact-channel-icon { background: currentColor; display: inline-block; flex: 0 0 auto; height: 18px; width: 18px; }
+.contact-channel-icon[data-channel="DISCORD"] { -webkit-mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; }
+.contact-channel-icon[data-channel="TELEGRAM"] { -webkit-mask: url("/images/icons/ico_telegram.svg") center / contain no-repeat; mask: url("/images/icons/ico_telegram.svg") center / contain no-repeat; }
+.contact-channel-menu { background: #efe9d7; border: 2px solid #12163b; border-radius: 14px; box-shadow: 0 12px 28px rgba(7, 28, 29, .22); color: #102d2c; min-width: 10rem; padding: 4px; }
+.contact-channel-menu [role="option"] { border-radius: 10px; cursor: pointer; font: 600 15px/1.2 var(--font-ubuntu), sans-serif; min-height: 44px; padding-left: 36px; padding-right: 14px; }
+.contact-channel-menu [role="option"][data-highlighted] { background: #e6dfc9; color: #102d2c; outline: none; }
+.contact-channel-menu [role="option"] svg { color: #ce1252; }
+html[data-theme="dark"] .contact-channel-menu { background: #191e4e; border-color: #efe9d7; box-shadow: 0 12px 28px rgba(0, 0, 0, .45); color: #efe9d7; }
+html[data-theme="dark"] .contact-channel-menu [role="option"][data-highlighted] { background: #262d69; color: #efe9d7; }
+html[data-theme="dark"] .contact-channel-menu [role="option"] svg { color: #ee3c78; }
+@media (prefers-reduced-motion: reduce) { .contact-channel-menu { animation: none !important; } }

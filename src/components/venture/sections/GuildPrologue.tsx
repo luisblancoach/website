@@ -6,6 +6,7 @@ import LoopBand from "@/components/LoopBand";
 import type { GuildContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
+import PillIcon from "../primitives/PillIcon";
 import { useVenture } from "../shell/VentureShell";
 import styles from "../venture.module.css";
 
@@ -64,25 +65,37 @@ export default function GuildPrologue({ content, metrics = true, kitExpander = f
             <p><CopyText copy={content.more.text} /></p>
           </details>
         </div>
-        {kitExpander ? (
-          <button ref={toggle} type="button" className={styles.kitToggle} aria-expanded={kitOpen} aria-controls="guild-kit" onClick={() => setKitOpen((open) => !open)}>
-            <CopyText copy={content.kit.heading} /><span aria-hidden="true">{kitOpen ? "←" : "→"}</span>
-          </button>
-        ) : (
+        {/* Audience routes (kitExpander, October 30): one CTA row, "Join the
+            DAO" (primary) first on the left and "Your Guild kit" (secondary)
+            anchored to the row's right edge (stacked in that order on phones); the
+            outline actions (Enter Discord) become a quiet link with their mark,
+            first in the text links. "/" keeps its kit list and two pills. */}
+        {!kitExpander && (
           <div className={styles.guildBenefits}>
             <h3><CopyText copy={content.kit.heading} /></h3>
             {kitList}
           </div>
         )}
         <div className={styles.guildActions}>
-          {content.actions.map((action) => (
+          {content.actions.filter((action) => !kitExpander || action.variant === "filled").map((action) => (
             <NarrativeAnchor key={action.label.id} link={action} className={`${styles.pill} ${action.variant === "filled" ? styles.pillFilled : styles.pillOutline}`}>
               <span><CopyText copy={action.label} /></span>
-              <i className={styles.pillIcon} aria-hidden="true">{action.icon === "→" ? "→" : <b className={action.icon === "discord" ? styles.iconDiscord : styles.iconLogo} />}</i>
+              <PillIcon glyph={action.icon} />
             </NarrativeAnchor>
           ))}
+          {kitExpander && (
+            <button ref={toggle} type="button" className={`${styles.pill} ${styles.pillOutline} ${styles.kitPill}`} aria-expanded={kitOpen} aria-controls="guild-kit" onClick={() => setKitOpen((open) => !open)}>
+              <span><CopyText copy={content.kit.heading} /></span>
+              <PillIcon glyph={kitOpen ? "←" : "→"} />
+            </button>
+          )}
         </div>
         <div className={styles.guildMoreLinks}>
+          {kitExpander && content.actions.filter((action) => action.variant !== "filled").map((action) => (
+            <NarrativeAnchor key={action.label.id} link={action} className={`${styles.handbookLink} ${styles.iconLink}`}>
+              <b className={action.icon === "discord" ? styles.iconDiscord : styles.iconLogo} aria-hidden="true" /><CopyText copy={action.label} />
+            </NarrativeAnchor>
+          ))}
           {content.links.map((link) => (
             <NarrativeAnchor key={link.label.id} link={link} className={styles.handbookLink}><CopyText copy={link.label} /></NarrativeAnchor>
           ))}

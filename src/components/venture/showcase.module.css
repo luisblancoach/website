@@ -42,7 +42,7 @@
 .marqueeButton img { border-radius: 12px; display: block; height: 100%; pointer-events: none; user-select: none; width: 100%; }
 .marqueeButton[data-selected] { box-shadow: 0 0 0 3px var(--coral); }
 @media (hover: hover) { .marqueeButton:hover { transform: translateY(-2px); } }
-.marqueeButton:focus-visible { outline: 3px solid var(--cta-ring, var(--coral)); outline-offset: 4px; }
+.marqueeButton:focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo, #efe9d7); outline: 3px solid var(--cta-focus-ring, #102d2c); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .marqueeButton { transition: none; } }
 
 /* Showcase. October 28 (Frame 122): more room between the ticker and the
@@ -111,4 +111,35 @@
   .showcase .workCopy .workTitle { font: 700 15px/1.4 var(--font-mono), monospace; letter-spacing: .1em; margin-top: 12px; text-transform: uppercase; }
   .showcase .workCopy .workDescription { margin-top: 8px; }
   .workCta.workCta { margin-left: auto; margin-top: 16px; width: max-content; }
+}
+
+/* Shared CTA system (October 30; tokens and states in venture.module.css).
+   Previous/next are icon buttons: a circle in the surface's text colour, the
+   shared hover (deep coral, white arrow), pressed and focus states. The site
+   link is a text link in the surface's text colour (pink text is under 4.5:1
+   on cream and navy at 18 px), its underline thickening on hover. */
+:global([data-cta="semantic"]) .stepButton { border-radius: 50%; color: inherit; }
+:global([data-cta="semantic"]) .stepButton svg { border-color: currentColor; border-width: var(--cta-border-width); transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+@media (hover: hover) { :global([data-cta="semantic"]) .stepButton:hover svg { background: var(--cta-chip-hover-bg); } }
+:global([data-cta="semantic"]) .stepButton:active svg { background: var(--cta-chip-active-bg); box-shadow: var(--cta-active-inset); }
+:global([data-cta="semantic"]) :is(.stepButton, .readMore):focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo, #efe9d7); outline: 3px solid var(--cta-focus-ring, #102d2c); outline-offset: 3px; }
+:global([data-cta="semantic"]) .readMore.readMore { color: inherit; }
+@media (hover: hover) { :global([data-cta="semantic"]) .readMore:hover { text-decoration-thickness: 2px; } }
+@media (prefers-reduced-motion: reduce) { :global([data-cta="semantic"]) .stepButton svg { transition: none; } }
+
+/* Page container (October 30): the title on the shared content column; the
+   stage keeps its arrows just outside it, on the gutter. */
+:global([data-audience]) .showcase .showcaseTitle { max-width: none; }
+
+/* "Discuss your project" (October 30, final pass): the showcase's conversion,
+   so a full primary pill instead of the compact one: 56 px tall, 14 px label,
+   the 40 px icon disc, more room above. Phones: 52 px and 13 px, never wider
+   than the column. */
+.showcase .workCta.workCta { gap: 22px; height: 56px; margin-top: 28px; max-width: 100%; padding: 8px 8px 8px 26px; }
+.showcase .workCta.workCta > span { font-size: 14px; font-weight: 700; letter-spacing: .14em; line-height: 20px; }
+.showcase .workCta.workCta > i { height: 40px; width: 40px; }
+.showcase .workCta.workCta > i > b { height: 30px; width: 30px; }
+@media (max-width: 760px) {
+  .showcase .workCta.workCta { gap: 16px; height: 52px; padding: 6px 6px 6px 20px; }
+  .showcase .workCta.workCta > span { font-size: 13px; letter-spacing: .12em; }
 }

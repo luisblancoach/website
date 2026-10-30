@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { mercenaries } from "@/lib/data/members";
 import { stewards } from "@/lib/data/venture";
+import { PORTAL_MEMBERS_URL } from "@/lib/data/constants";
 import type { Illustration } from "@/lib/data/illustrations";
 import type { Copy, StewardshipContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
@@ -38,7 +39,7 @@ export default function Stewardship({ content, titles = "role", illustration }: 
               <>
                 <div className={styles.stewardTop}>
                   <span>ST—{String(index + 1).padStart(2, "0")}</span>
-                  <i>{steward.href ? "↗" : "·"}</i>
+                  <i aria-hidden="true"><b className={styles.iconLogo} /></i>
                 </div>
                 <div className={styles.stewardPortrait}>
                   <Image src={steward.image} alt="" fill sizes="180px" />
@@ -49,11 +50,9 @@ export default function Stewardship({ content, titles = "role", illustration }: 
               </>
             );
 
-            return steward.href ? (
-              <a className={styles.stewardCard} href={steward.href} target="_blank" rel="noopener noreferrer" key={steward.name}>{card}</a>
-            ) : (
-              <div className={styles.stewardCard} key={steward.name}>{card}</div>
-            );
+            // Every card is a link (October 30), as the builder cards: the
+            // steward's own page when known, else the Guild directory on Portal.
+            return <a className={styles.stewardCard} href={steward.href ?? PORTAL_MEMBERS_URL} aria-label={steward.href ? `${steward.name}, ${title} (opens in a new tab)` : `${steward.name}, ${title}: find them in the Guild directory on Portal (opens in a new tab)`} target="_blank" rel="noopener noreferrer" key={steward.name}>{card}</a>;
           })}
         </div>
 

@@ -33,6 +33,6 @@ export default function BuilderNetwork({ content, illustration, masonry = false 
       if (next === null) return;
       event.preventDefault(); setCategory(memberCategories[next]); tabs.current[next]?.focus();
     }}>{memberCategories.map((item, index) => <button ref={el => { tabs.current[index] = el; }} type="button" role="tab" id={`builders-tab-${index}`} aria-controls="builder-profiles" aria-selected={category === item} tabIndex={category === item ? 0 : -1} key={item} onClick={() => setCategory(item)}>{item} <span>{filterMembers(mercenaries, item).length}</span></button>)}</div>
-    <div id="builder-profiles" role="tabpanel" aria-labelledby={`builders-tab-${memberCategories.indexOf(category)}`}><p className={moduleStyles.resultCount} aria-live="polite">{filtered.length} profiles · {category}</p><TeamWall key={category} members={filtered} suspended={portalOpen} masonry={masonry} speed={masonry ? WALL_SPEED : undefined} bleed={masonry} /></div>
+    <div id="builder-profiles" role="tabpanel" aria-labelledby={`builders-tab-${memberCategories.indexOf(category)}`}><p className={styles.srOnly} aria-live="polite">{filtered.length} profiles · {category}</p><TeamWall key={category} members={filtered} suspended={portalOpen} masonry={masonry} speed={masonry ? WALL_SPEED : undefined} bleed={masonry} /></div>
   </section>;
 }

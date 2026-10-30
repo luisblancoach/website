@@ -86,21 +86,33 @@
 }
 @media (prefers-reduced-motion: reduce) { .row, .caption { transition: none; } }
 
-/* Semantic CTA states on the audience routes (B3.1); "/" keeps its current button. */
-:global([data-cta="semantic"]) .feature .portalLaunch { background: var(--cta-bg); color: var(--cta-fg); transition: background-color .18s ease, color .18s ease, box-shadow .18s ease; }
-:global([data-cta="semantic"]) .feature .portalLaunch:hover { background: var(--cta-bg-hover); box-shadow: 0 0 0 2px var(--cta-hover-ring); color: var(--cta-fg-hover); }
-:global([data-cta="semantic"]) .feature .portalLaunch:focus-visible { box-shadow: 0 0 0 3px var(--cta-ring-halo); outline: 3px solid var(--cta-ring); outline-offset: 3px; }
-
 /* October 23 compact collection (B3.3, audience routes). */
 .moreButton { background: transparent; border: 1px solid currentColor; border-radius: 100px; color: inherit; cursor: pointer; font: inherit; margin-top: 24px; min-height: var(--tap-min, 44px); padding: 14px 20px; }
-.moreButton:focus-visible { outline: 3px solid var(--cta-ring, var(--coral)); outline-offset: 4px; }
 .section > .filters { margin-bottom: 24px; }
 
-/* B3.4 active filter on the audience routes: canonical pink with an ink label
-   and the 2px ring used by the builder tabs. On the light sky surface pink is
-   2.66:1, so the selected chip takes an ink edge there. */
-:global([data-cta="semantic"]) .filters button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--surface-selected); }
-:global(html:not([data-theme="dark"])) :global([data-cta="semantic"]) .filters button[aria-pressed="true"] { border-color: var(--on-selected); }
-:global([data-cta="semantic"]) .filters button:not([aria-pressed="true"]):hover { border-color: var(--color-pink); }
-:global([data-cta="semantic"]) .filters button:focus-visible { outline: 3px solid var(--cta-ring); outline-offset: 4px; }
 .filters button:disabled { cursor: not-allowed; opacity: .45; }
+
+/* Shared CTA system on the audience routes (October 30; tokens and states in
+   venture.module.css), the same in both themes:
+   - filters are chips: transparent, a border in the surface's text colour; the
+     selected one is the filled CTA (canonical pink, ink label);
+   - "Explore all … discoveries" is an outline CTA;
+   - the detail view's actions are filled CTAs; "Back to the collection" is a
+     text link;
+   - hover is deep coral with a white label, pressed #A80E44, one focus ring.
+   On the light-blue band the edge is dark green (contrast exception, set on
+   .fieldNotes in venture.module.css). */
+:global([data-cta="semantic"]) :is(.filters button, .moreButton) { border: var(--cta-border-width) solid currentColor; border-radius: 100px; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+:global([data-cta="semantic"]) .filters button[aria-pressed="true"] { background: var(--cta-bg); border-color: var(--cta-border); box-shadow: none; color: var(--cta-fg); }
+:global([data-cta="semantic"]) .feature :is(a, .portalLaunch) { background: var(--cta-bg); border: var(--cta-border-width) solid var(--cta-border); border-radius: 28px; color: var(--cta-fg); padding: 14px 24px; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+@media (hover: hover) {
+  :global([data-cta="semantic"]) :is(.filters button:not([aria-pressed="true"]), .moreButton):not(:disabled):hover { background: var(--cta-chip-hover-bg); }
+  :global([data-cta="semantic"]) :is(.feature a, .feature .portalLaunch):hover { box-shadow: var(--cta-hover-shadow); }
+  :global([data-cta="semantic"]) .back:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+}
+:global([data-cta="semantic"]) :is(.filters button:not([aria-pressed="true"]), .moreButton):not(:disabled):active { background: var(--cta-chip-active-bg); box-shadow: var(--cta-active-inset); }
+:global([data-cta="semantic"]) :is(.feature a, .feature .portalLaunch):active { box-shadow: var(--cta-active-inset); }
+:global([data-cta="semantic"]) :is(.filters button, .moreButton, .feature a, .feature .portalLaunch, .back):focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo); outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+:global([data-cta="semantic"]) :is(.filters button, .moreButton):disabled { cursor: not-allowed; opacity: var(--cta-disabled-opacity); }
+:global([data-cta="semantic"]) .back { min-height: var(--tap-min, 44px); align-items: center; }
+@media (prefers-reduced-motion: reduce) { :global([data-cta="semantic"]) :is(.filters button, .moreButton, .feature a, .feature .portalLaunch) { transition: none; } }

@@ -121,7 +121,7 @@ export default function PortalOverlay({ open, forming, closing, container, onClo
       {!forming && (
         <div className={styles.portalMessage}>
           <h2>THE HUNT <em>STARTS HERE.</em></h2>
-          <p className={styles.portalHuntIntro}>Follow the rabbit for the first clue. Then find a signal near the Guild inquiry and a mark beneath the Creed.</p>
+          <p className={styles.portalHuntIntro}>Follow the rabbit for the first clue. Then find the ✧ signal and the ✧ mark further down the page.</p>
         </div>
       )}
       {!forming && <div className={styles.unchartedPortal}><HuntPixel artifact="portal" /><HuntMarker artifact="portal" label="Follow the rabbit" rabbit /></div>}

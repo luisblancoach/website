@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ProgressBar } from "@/components/ui/progress";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -56,7 +55,6 @@ export function Wizard({
   );
   const [isValidating, setIsValidating] = React.useState(false);
 
-  const progress = ((currentStep + 1) / steps.length) * 100;
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;
   // const canProceed = completedSteps.has(currentStep);
@@ -137,61 +135,66 @@ export function Wizard({
 
   return (
     <div className={cn("space-y-6", className)}>
-      {/* Progress Header */}
-      {showProgress && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="font-display">
-                  Step {currentStep + 1} of {steps.length}
-                </CardTitle>
-                <CardDescription>{steps[currentStep].title}</CardDescription>
-              </div>
-              <Badge variant="outline" className="font-mono">
-                {Math.round(progress)}%
-              </Badge>
-            </div>
-            <ProgressBar value={progress} className="h-2" />
-          </CardHeader>
-        </Card>
-      )}
-
-      {/* Step Progress Indicators */}
-      <div className="flex items-center gap-4">
-        {steps.map((step, index) => (
-          <div
-            key={step.id}
-            aria-current={index === currentStep ? "step" : undefined}
-            className={cn(
-              "flex items-center gap-2 h-8 px-5 rounded-md font-medium pointer-events-none",
-              index === currentStep
-                ? "bg-moloch-500 text-scroll-100"
-                : "bg-moloch-800 text-scroll-100"
-            )}
-          >
-            <span
+      {/* Guided form (October 30): one full-width stepper. Each step is a
+          small numbered circle and its title, over a bar segment; the
+          segments fill as the steps are reached, so the progress bar is the
+          three steps themselves. It is a <nav>, not a div, so the older
+          progress card and pill styles do not apply to it. The steps are not
+          controls (Next and Previous move between them); the current one is
+          marked with aria-current. */}
+      {showProgress ? (
+        <nav className="wizard-stepper" aria-label={`Form progress: step ${currentStep + 1} of ${steps.length}`}>
+          <ol style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
+            {steps.map((step, index) => (
+              <li
+                key={step.id}
+                aria-current={index === currentStep ? "step" : undefined}
+                data-state={index < currentStep ? "done" : index === currentStep ? "current" : "next"}
+              >
+                <span className="wizard-step-dot" aria-hidden="true">{index + 1}</span>
+                <span className="wizard-step-title">{step.title}</span>
+                {index < currentStep && <span className="sr-only"> (completed)</span>}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      ) : (
+        <div className="flex items-center gap-4">
+          {steps.map((step, index) => (
+            <div
+              key={step.id}
+              aria-current={index === currentStep ? "step" : undefined}
               className={cn(
-                "w-4 h-4 rounded-sm flex items-center justify-center text-[12px] font-body font-bold leading-none",
+                "flex items-center gap-2 h-8 px-5 rounded-md font-medium pointer-events-none",
                 index === currentStep
-                  ? "bg-scroll-100 text-moloch-500"
-                  : "bg-moloch-500 text-moloch-800"
+                  ? "bg-moloch-500 text-scroll-100"
+                  : "bg-moloch-800 text-scroll-100"
               )}
             >
-              {index + 1}
-            </span>
-            <span className="hidden sm:inline text-body-md font-body">
-              {step.title}
-            </span>
-          </div>
-        ))}
-      </div>
+              <span
+                className={cn(
+                  "w-4 h-4 rounded-sm flex items-center justify-center text-[12px] font-body font-bold leading-none",
+                  index === currentStep
+                    ? "bg-scroll-100 text-moloch-500"
+                    : "bg-moloch-500 text-moloch-800"
+                )}
+              >
+                {index + 1}
+              </span>
+              <span className="hidden sm:inline text-body-md font-body">
+                {step.title}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* <Separator /> */}
 
       {/* Current Step Content */}
       <div>
-        <div className="text-heading-md mb-7">{steps[currentStep].title}</div>
+        {/* The guided form's stepper already names the step (October 30). */}
+        {!showProgress && <div className="text-heading-md mb-7">{steps[currentStep].title}</div>}
         {steps[currentStep].description && (
           <CardDescription>{steps[currentStep].description}</CardDescription>
         )}

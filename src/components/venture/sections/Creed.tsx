@@ -4,6 +4,7 @@ import { HuntMarker, HuntPixel } from "@/components/UnchartedHunt";
 import type { CreedContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
+import PillIcon, { pathGlyph } from "../primitives/PillIcon";
 import styles from "../venture.module.css";
 
 // The audience routes add the October 23 call to action under the creed. Its
@@ -28,11 +29,13 @@ export default function Creed({ content }: { content?: CreedContent }) {
         <blockquote>The future is not something to predict. It is something to <em>build.</em></blockquote>
         {content && (
           <NarrativeAnchor link={content.cta} className={`${styles.pill} ${styles.pillFilled} ${styles.creedCta}`}>
-            <span><CopyText copy={content.cta.label} /></span><i className={styles.pillIcon} aria-hidden="true">{content.cta.section ? "↓" : "→"}</i>
+            <span><CopyText copy={content.cta.label} /></span><PillIcon glyph={pathGlyph(content.cta.section ? "↓" : "→", content.cta)} />
           </NarrativeAnchor>
         )}
       </div>
-      <div className={styles.unchartedWalker}><HuntPixel artifact="walker" /><HuntMarker artifact="walker" label="A mark left by the walker" /></div>
+      {/* Audience routes (October 30, late night): the walker's mark moved to the
+          footer, so nothing competes with the creed's call to action. */}
+      {!content && <div className={styles.unchartedWalker}><HuntPixel artifact="walker" /><HuntMarker artifact="walker" label="A mark left by the walker" /></div>}
     </section>
   );
 }

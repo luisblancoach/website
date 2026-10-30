@@ -57,7 +57,9 @@ export type NarrativeLink = {
 export type HeroContent = {
   eyebrow: Copy;
   // `plain` sets the second line in the headline colour instead of the accent.
-  title: { lead: Copy; em: Copy; long?: boolean; plain?: boolean };
+  // `finale` (October 30) adds a third, much larger accent line; `lead` and
+  // `em` then share one reading level above it.
+  title: { lead: Copy; em: Copy; finale?: Copy; long?: boolean; plain?: boolean };
   dek: Copy;
   paths: (NarrativeLink & { variant: "filled" | "outline"; icon: "↓" | "↗" | "→"; primary?: boolean })[];
 };
@@ -75,7 +77,7 @@ export type GuildContent = {
 };
 
 type Title = { lead: Copy; em: Copy };
-type Action = NarrativeLink & { variant: "filled" | "outline"; icon: "logo" | "discord" | "→" };
+type Action = NarrativeLink & { variant: "filled" | "outline"; icon: "logo" | "discord" | "portal" | "→" };
 
 export type TensionContent = {
   label: Copy;
@@ -185,7 +187,8 @@ export type ImmersiveContent = {
   // An image after the second title line (About Moloch: the RaidGuild logo).
   titleMark?: { src: string; width: number; height: number; alt: Copy };
   body: Copy;
-  cta: NarrativeLink & { variant: "filled" | "outline" };
+  // The pill's icon (October 30): the RaidGuild logo unless the destination has its own mark.
+  cta: NarrativeLink & { variant: "filled" | "outline"; icon?: "logo" | "handbook" };
   artwork: { alt: Copy };
 };
 

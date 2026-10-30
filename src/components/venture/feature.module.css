@@ -16,11 +16,11 @@
 .label { color: var(--coral); font: 700 var(--type-accent-label, 19px)/1.35 var(--font-mono), monospace; grid-column: 1 / -1; letter-spacing: .12em; margin: 0 0 18px; text-transform: uppercase; }
 .feature .title { color: inherit; font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 900; grid-column: 1; letter-spacing: .01em; line-height: 1.05; margin: 0; text-transform: uppercase; }
 .feature .title em { color: var(--coral); display: inline-block; font-family: var(--font-display), sans-serif; font-size: 52px; font-style: italic; font-weight: 400; line-height: 1; margin-top: 4px; }
-/* The logo after "Moloch +": the supplied RaidGuild mark. Its square is the
-   scene's coral, so only the crossed swords show; they fill about half the
-   square, so the image is 1.9em with negative margins, and the swords stand
-   about one cap height tall on the line. */
-.titleMark { display: inline-block; height: 1.9em; margin: -.5em -.4em -.5em -.35em; vertical-align: -.48em; width: 1.9em; }
+/* The mark after "Moloch" (October 30): the owner's crossed swords
+   (swords.svg, cream blades with a navy edge), drawn edge to edge in its box,
+   so it stands one cap height plus a little on the Moloch line, sitting on
+   its baseline. */
+.titleMark { display: inline-block; height: .92em; margin-left: .22em; vertical-align: -.1em; width: auto; }
 .body { font: 400 var(--type-body-lg, 18px)/1.5 var(--font-body), sans-serif; grid-column: 2; margin: 0; max-width: 36em; }
 .cta { grid-column: 2; justify-self: start; margin-top: 32px; }
 
@@ -30,15 +30,15 @@
 
 /* Moloch: the site's coral (#EE3C78, the glow of the Moloch artwork) in both
    themes, with RaidGuild deep navy text (#12163B, 4.6:1; navy #191E4E is 4.2:1
-   and indigo 2.9:1, too low for body copy). The CTA is a deep navy pill with a
-   white label (16:1) that turns cream on hover; focus rings are navy on cream. */
+   and indigo 2.9:1, too low for body copy).
+   CTA contrast exception (the coral scene, both themes): a pink button would
+   vanish into the surface, so filled buttons rest on deep navy with a white
+   label (16:1) and every button keeps a navy edge. The outline CTA here is
+   transparent with a navy border and label, like every outline CTA; hover,
+   pressed and focus are the shared ones (venture.module.css). */
 .moloch { --on-coral: #12163b; background: var(--coral); color: var(--on-coral); }
 .moloch .label, .moloch .title em { color: var(--on-coral); }
-.moloch {
-  --cta-bg: var(--color-cream); --cta-fg: var(--on-coral); --cta-bg-active: var(--color-cream); --cta-fg-active: var(--on-coral);
-  --cta-outline-bg: var(--on-coral); --cta-outline-fg: var(--color-white, #fafafa); --cta-outline-border: var(--on-coral);
-  --cta-hover-ring: var(--on-coral); --cta-ring: var(--on-coral); --cta-ring-halo: var(--color-cream);
-}
+.moloch { --cta-bg: var(--on-coral); --cta-fg: var(--color-white, #fafafa); --cta-border: var(--on-coral); }
 
 @media (max-width: 760px) {
   .copy { display: block; padding: 24px 24px 56px; }
@@ -52,3 +52,19 @@
   .image { max-height: 72svh; }
 }
 @media (prefers-reduced-motion: reduce) { .feature { transition: none; } }
+
+/* Page container (October 30): the copy sits on the shared content column
+   (--page-inline, venture.module.css) instead of its own 1144 px box. */
+:global([data-audience]) .copy { max-width: none; padding-inline: var(--page-inline); }
+
+/* Moloch title (October 30, wall pass): "TOGETHER WE SLAY" in cream (3.1:1 on
+   coral, large display text), "MOLOCH" about 40% larger than the other second
+   lines (73 px, the hero headline's scale; phones up to 56 px), so the scene's
+   title carries the weight of Queen Raida's beside it. The sword mark scales
+   with it. */
+.moloch .title { color: var(--color-cream, #efe9d7); }
+/* The mark stays on the MOLOCH line. With the mark the line measures about
+   6.6 em, so phones size it to the column (about 51 px at
+   393, 49 px at 375). */
+.moloch .title em { font-size: 73px; line-height: .95; margin-top: 6px; white-space: nowrap; }
+@media (max-width: 760px) { .moloch .title em { font-size: min(56px, (100vw - 48px) / 6.7); } }

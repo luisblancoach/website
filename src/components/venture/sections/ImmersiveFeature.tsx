@@ -5,6 +5,7 @@ import type { EntityArtwork } from "@/lib/data/illustrations";
 import type { ImmersiveContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
+import PillIcon from "../primitives/PillIcon";
 import venture from "../venture.module.css";
 import styles from "../feature.module.css";
 
@@ -39,7 +40,7 @@ export default function ImmersiveFeature({ id, content, artwork, tone }: { id: s
         <p className={styles.body}><CopyText copy={content.body} /></p>
         <NarrativeAnchor link={content.cta} className={`${venture.pill} ${filled ? venture.pillFilled : venture.pillOutline} ${styles.cta}`}>
           <span><CopyText copy={content.cta.label} /></span>
-          <i className={venture.pillIcon} aria-hidden="true"><b className={venture.iconLogo} /></i>
+          <PillIcon glyph={content.cta.icon ?? "logo"} />
         </NarrativeAnchor>
       </div>
     </section>

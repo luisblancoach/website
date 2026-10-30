@@ -58,7 +58,7 @@ describe("community narrative", () => {
 
   test("the headline lines from the brief are present and approved", () => {
     const { communityHero, communityTension, communityPath, communityJoin } = communityNarrative;
-    assert.equal(`${communityHero.title.lead.text} ${communityHero.title.em.text}`, "Find your people. Build something together.");
+    assert.equal([communityHero.title.lead, communityHero.title.em, communityHero.title.finale].map((copy) => copy.text).join(" "), "Find your people. Build something together.");
     assert.equal(communityHero.eyebrow.text, "[ THE GUILD ]");
     assert.equal(`${communityTension.title.lead.text} ${communityTension.title.em.text}`, "Freelance work versus real ownership");
     assert.deepEqual(communityPath.steps.map((step) => step.title.text), ["Enter a cohort", "Take a raid", "Earn ownership"]);
@@ -261,10 +261,10 @@ describe("Join the DAO iteration (/community)", () => {
     assert.equal(guild.kit.items.length, 4);
   });
 
-  test("Moloch is its own feature: October 29 title with the logo, October 28 body verbatim", () => {
+  test("Moloch is its own feature: October 30 title with the sword mark, October 28 body verbatim", () => {
     const moloch = communityNarrative.communityMoloch;
-    assert.equal(`${moloch.title.lead.text} ${moloch.title.em.text}`, "Together we slay Moloch +");
-    assert.equal(moloch.titleMark.src, "/images/venture/hats/raidguild.png", "the supplied RaidGuild logo, not text");
+    assert.equal(`${moloch.title.lead.text} ${moloch.title.em.text}`, "Together we slay Moloch");
+    assert.equal(moloch.titleMark.src, "/images/swords.svg", "the supplied sword mark, not text");
     assert.equal(moloch.titleMark.alt.text, "RaidGuild");
     assert.match(moloch.body.text, /^In RaidGuild lore, Moloch represents coordination failure/);
     assert.equal(moloch.cta.label.text, "Find your path into the Guild");

@@ -39,7 +39,9 @@ const unverifiedMetric = (text: string): Copy => claim(
 const owner = (text: string) => approved(text, "owner-approval");
 export const communityHero: HeroContent = defineNarrative("community.hero", {
   eyebrow: owner("[ THE GUILD ]"),
-  title: { lead: owner("Find your people."), em: owner("Build something together."), long: true },
+  // October 30: two sentences, "Find your people." / "Build something together.",
+  // set on three lines with "together." much larger (the headline colour).
+  title: { lead: owner("Find your people."), em: owner("Build something"), finale: owner("together.") },
   dek: owner("RaidGuild is a **builder owned community** working across onchain systems, applied AI, and open source software. Meet fellow builders, explore their experiments, and find a place to contribute."),
   paths: [
     { label: owner("Explore the community"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "→", primary: true },
@@ -214,7 +216,7 @@ export const communityJoin: JoinContent = defineNarrative("community.join", {
   title: { lead: owner("Your first step"), em: owner("into the Guild.") },
   body: owner("Create a Portal profile to explore sessions, projects, and posts. Meet the community on Discord, and read the membership guide when you’re ready to learn how joining the DAO works."),
   actions: [
-    { label: owner("Create your Portal profile"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "→" },
+    { label: owner("Create your Portal profile"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "portal" },
     { label: existing("Enter Discord"), href: DISCORD_INVITE_URL, variant: "outline", icon: "discord" },
   ],
   links: [
@@ -294,18 +296,19 @@ export const communityRaidaFeature: ImmersiveContent = defineNarrative("communit
   artwork: { alt: existing("Queen Raida") },
 } satisfies ImmersiveContent);
 
-// The October 28 "About Moloch" body, verbatim; the October 29 title.
+// The October 28 "About Moloch" body, verbatim; the October 30 title: no "+",
+// and the owner's crossed-swords mark (public/images/swords.svg) after "Moloch".
 export const communityMoloch: ImmersiveContent = defineNarrative("community.moloch", {
   label: existing("[ THE GUILD ]"),
-  title: { lead: owner("Together we slay"), em: owner("Moloch +") },
-  titleMark: { src: "/images/venture/hats/raidguild.png", width: 800, height: 800, alt: existing("RaidGuild") },
+  title: { lead: owner("Together we slay"), em: owner("Moloch") },
+  titleMark: { src: "/images/swords.svg", width: 224, height: 212, alt: existing("RaidGuild") },
   body: claim(
     "In RaidGuild lore, Moloch represents coordination failure: when individual incentives lead to outcomes nobody wants. Building together is our response—through shared ownership, useful tools, and systems that make cooperation easier.",
     "handbook",
     "Owner-supplied Join the DAO copy. Confirm the lore framing and current ownership language before publishing.",
     "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
   ),
-  cta: { label: approved("Find your path into the Guild", "owner-approval"), href: `${HB}membership/join-the-guild`, variant: "outline" },
+  cta: { label: approved("Find your path into the Guild", "owner-approval"), href: `${HB}membership/join-the-guild`, variant: "outline", icon: "handbook" },
   artwork: { alt: existing("Moloch") },
 } satisfies ImmersiveContent);
 

@@ -50,19 +50,24 @@ export default function SiteHeader({ nav = {} }: { nav?: AudienceNav }) {
 
   return (
     <header className={audience ? `${styles.header} ${styles.headerWithSwitch}` : styles.header}>
+      {/* Audience routes (October 30): the sword logo, the audience switch and
+          the theme switch stay pinned to the top of the viewport as one bar;
+          the section navigation scrolls away with the header. */}
       {audience ? (
-        <Link className={styles.brand} href="/" aria-label="RaidGuild home" onClick={() => setMenuOpen(false)}>
-          <Sigil />
-          <span>RAID<br />GUILD</span>
-        </Link>
+        <div className={styles.topBar}>
+          <Link className={styles.brand} href="/" aria-label="RaidGuild home" onClick={() => setMenuOpen(false)}>
+            <Sigil />
+            <span>RAID<br />GUILD</span>
+          </Link>
+          <AudienceSwitch current={audience} onNavigate={() => setMenuOpen(false)} />
+          <ThemeSwitch segmented />
+        </div>
       ) : (
         <a className={styles.brand} href="#top" aria-label="RaidGuild home">
           <Sigil />
           <span>RAID<br />GUILD</span>
         </a>
       )}
-
-      {audience && <AudienceSwitch current={audience} onNavigate={() => setMenuOpen(false)} />}
 
       {content ? (
         <nav id="site-navigation" className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`} aria-label="Primary navigation" onClick={(event) => { if ((event.target as HTMLElement).closest("a")) setMenuOpen(false); }}>
@@ -82,7 +87,7 @@ export default function SiteHeader({ nav = {} }: { nav?: AudienceNav }) {
       </nav>
       )}
 
-      <ThemeSwitch />
+      {!audience && <ThemeSwitch />}
 
       <button
         ref={menuButtonRef}

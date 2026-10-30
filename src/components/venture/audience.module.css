@@ -68,7 +68,7 @@
 .network .heading { color: inherit; }
 .resultCount { margin-bottom: 20px; }
 .network :global([role="region"]) { padding-block: 8px 24px; }
-.section :is(button, a, summary):focus-visible, .network :is(button, a):focus-visible, .raidaPanel:focus-visible { outline: 3px solid var(--cta-ring, var(--coral)); outline-offset: 4px; }
+.section :is(button, a, summary):focus-visible, .network :is(button, a):focus-visible, .raidaPanel:focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo, #efe9d7); outline: 3px solid var(--cta-focus-ring, #102d2c); outline-offset: 3px; }
 @media (max-width: 700px) { .headingArt { align-self: center; flex: none; width: min(340px, 92%); }
   .heading { flex-direction: column; align-items: start; gap: 16px; } .featuredWork { grid-template-columns: 1fr; } .workLogoStage { min-height: 200px; } .tabs { gap: 8px; } .tabs button { padding: 12px; font-size: var(--type-ui, 14px); } .network.network { min-height: 640px; } }
 @media (max-width: 700px) { .raidaLayout { grid-template-columns: 1fr; } .raidaArtwork { min-height: 320px; order: -1; padding: 32px 20px; } }
@@ -82,3 +82,26 @@
   /* "Of builders." is a letter longer than "Our clients", so it caps lower. */
   :global([data-audience]) .network .heading h2 em { font-size: clamp(30px, 10.2vw, 40px); }
 }
+
+/* Shared CTA system (October 30; tokens and states in venture.module.css).
+   Builder filters are chips: transparent with a border in the surface's text
+   colour; the selected one is the filled CTA (canonical pink, ink label);
+   hover, pressed, focus and disabled are the shared states, in both themes. */
+:global([data-cta="semantic"]) .tabs button { border-width: var(--cta-border-width); transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+:global([data-cta="semantic"]) .tabs button[aria-selected="true"] { background: var(--cta-bg); border-color: var(--cta-border); box-shadow: none; color: var(--cta-fg); }
+:global([data-cta="semantic"]) .tabs button:not([aria-selected="true"]):hover { border-color: currentColor; }
+@media (hover: hover) {
+  :global([data-cta="semantic"]) .tabs button:not([aria-selected="true"]):not(:disabled):hover { background: var(--cta-chip-hover-bg); }
+}
+:global([data-cta="semantic"]) .tabs button:not([aria-selected="true"]):not(:disabled):active { background: var(--cta-chip-active-bg); box-shadow: var(--cta-active-inset); }
+:global([data-cta="semantic"]) .tabs button:disabled { opacity: var(--cta-disabled-opacity); }
+:global([data-cta="semantic"]) :is(.tabs button, .textLink):focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo); outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+/* Text links with arrows: the surface's text colour, an underline that thickens on hover. */
+:global([data-cta="semantic"]) .textLink { text-decoration-line: underline; text-decoration-thickness: 1px; }
+@media (hover: hover) { :global([data-cta="semantic"]) .textLink:hover { text-decoration-thickness: 2px; } }
+@media (prefers-reduced-motion: reduce) { :global([data-cta="semantic"]) .tabs button { transition: none; } }
+
+/* Page container (October 30): the showcase and the builder network sit on the
+   shared content column (--page-inline, venture.module.css). The builder plane
+   runs wider on its own (venture.module.css, "Builder plane"). */
+:global([data-audience]) :is(.section, .network.network) { padding-inline: var(--page-inline); }

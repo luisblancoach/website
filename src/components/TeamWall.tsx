@@ -1,10 +1,48 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import type { Mercenary } from "@/lib/data/members";
 import { masonryRows } from "@/lib/data/memberCategories";
+import { builderGridSlots } from "./venture/builderGrid";
+import { PORTAL_MEMBERS_URL } from "@/lib/data/constants";
 import styles from "./venture/venture.module.css";
+
+// Every builder card is a link (October 30, normalization pass): to the
+// builder's own page when the data has one, otherwise to the Guild's member
+// directory on Portal, named as such for assistive technology, so no card
+// looks interactive without being one. Profile links for those members are an
+// open question.
+function cardLink(member: Mercenary) {
+  return member.link
+    ? { href: member.link, "aria-label": `${member.name}, ${member.title} (opens in a new tab)` }
+    : { href: PORTAL_MEMBERS_URL, "aria-label": `${member.name}, ${member.title}: find them in the Guild directory on Portal (opens in a new tab)` };
+}
+
+// Short filtered lists (1–8 results, October 28, restored October 30): an
+// editorial grid that fills the wall's area (builderGrid.ts). Each member is
+// one card, in data order. It sits still on the flat coral plane.
+function BuilderGrid({ members }: { members: Mercenary[] }) {
+  const slots = builderGridSlots(members.length);
+  if (!slots) return null;
+  const area = ([c1, c2, r1, r2]: number[]) => `${r1} / ${c1} / ${r2} / ${c2}`;
+  return (
+    <div className={styles.teamWall}>
+      <div className={styles.memberGridFrame} role="region" aria-label="Guild members">
+        <div className={styles.memberGrid} data-count={members.length}>
+          {members.map((member, index) => {
+            const slot = slots[index];
+            const style = { "--wide-area": area(slot.wide), "--narrow-area": area(slot.narrow), "--chars": member.name.length } as CSSProperties;
+            // The body carries the layout: the tile is the size container
+            // its layout adapts to, and a container cannot query itself.
+            const content = <div className={styles.memberTileBody}><Image src={member.imagePath} alt="" width={160} height={160} draggable={false} /><span><strong title={member.name}>{member.name}</strong><small>{member.title}</small></span></div>;
+            return <a key={member.name} className={styles.memberTile} style={style} data-wide={slot.wideShape} data-narrow={slot.narrowShape} {...cardLink(member)} target="_blank" rel="noopener noreferrer">{content}<i aria-hidden="true"><b className={styles.iconLogo} /></i></a>;
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // The first copy is the list of results: each member appears in it once, and it
 // is the only copy in the accessibility tree and the tab order. A second,
@@ -12,9 +50,15 @@ import styles from "./venture/venture.module.css";
 // rendered only while one copy is wider than the wall (then no member can be
 // on screen twice) and motion is allowed. Short filtered lists sit still.
 // `speed` is the automatic movement in CSS px per second (18 by default).
+// October 30: a mouse over the wall slows it to 30% instead of stopping it;
+// keyboard focus, a drag or a wheel still hold it, so nothing moves under a
+// card being read or reached. Every linked card carries the RaidGuild
+// crossed-swords mark in its top-right corner; the link name is the card text.
 // `bleed` lets the moving wall run edge to edge across its section (/clients);
 // whether it moves is then judged against the section's full width, so the
 // layout cannot flip between the two widths.
+const HOVER_RATE = 0.3;
+
 export default function TeamWall({ members, suspended = false, masonry = false, speed = 18, bleed = false }: { members: Mercenary[]; suspended?: boolean; masonry?: boolean; speed?: number; bleed?: boolean }) {
   const viewport = useRef<HTMLDivElement>(null);
   const [loops, setLoops] = useState(false);
@@ -72,9 +116,9 @@ export default function TeamWall({ members, suspended = false, masonry = false, 
     const tick = (now: number) => {
       const elapsed = previous ? Math.min(now - previous, 50) : 0;
       previous = now;
-      if (visible && !document.hidden && !motion.matches && !hover.current && !focused.current && !drag.current && now > resumeAt.current) {
+      if (visible && !document.hidden && !motion.matches && !focused.current && !drag.current && now > resumeAt.current) {
         if (distance > 0) {
-          position = (position + elapsed * speed / 1000) % distance;
+          position = (position + elapsed * speed * (hover.current ? HOVER_RATE : 1) / 1000) % distance;
           element.scrollLeft = position;
         }
       } else {
@@ -93,14 +137,10 @@ export default function TeamWall({ members, suspended = false, masonry = false, 
     };
   }, [suspended, loops, speed]);
 
-  // Every category uses the same masonry cards on the same coral plane
-  // (October 29). The layout follows the number of results: 1–2 and 3–4 in
-  // one course, 5–8 in two staggered courses, 9+ in three (the moving wall when
-  // wider than the screen). Lists up to 8 wrap within the plane on narrow
-  // screens instead of moving, so they never sit in an empty container.
-  const count = members.length;
-  const tier = count <= 2 ? "1-2" : count <= 4 ? "3-4" : count <= 8 ? "5-8" : "9+";
-  const rows = count <= 4 ? 1 : count <= 8 ? 2 : 3;
+  // Up to 8 results use the editorial grid; 9+ keep the three-course masonry
+  // wall, which moves when it is wider than the screen.
+  if (masonry && builderGridSlots(members.length)) return <BuilderGrid members={members} />;
+
   return (
     <div className={styles.teamWall} data-bleed={bleed && loops ? "" : undefined}>
       <div
@@ -140,13 +180,11 @@ export default function TeamWall({ members, suspended = false, masonry = false, 
           {(loops ? [0, 1] : [0]).map((copy) => {
             const cards = (list: Mercenary[]) => list.map((member) => {
               const content = <><Image src={member.imagePath} alt="" width={58} height={58} draggable={false} /><span><strong title={member.name}>{member.name}</strong><small title={member.title}>{member.title}</small></span></>;
-              return member.link
-                ? <a href={member.link} target="_blank" rel="noopener noreferrer" key={member.name} tabIndex={copy === 1 ? -1 : undefined}>{content}<i>↗</i></a>
-                : <div key={member.name}>{content}</div>;
+              return <a key={member.name} {...cardLink(member)} target="_blank" rel="noopener noreferrer" tabIndex={copy === 1 ? -1 : undefined}>{content}<i aria-hidden="true"><b className={styles.iconLogo} /></i></a>;
             });
             return masonry ? (
-              <div className={styles.memberMasonry} key={copy} aria-hidden={copy === 1 ? true : undefined} data-static={loops ? undefined : ""} data-tier={tier}>
-                {masonryRows(members, rows).map((row, index) => <div className={styles.memberRail} key={index}>{cards(row)}</div>)}
+              <div className={styles.memberMasonry} key={copy} aria-hidden={copy === 1 ? true : undefined} data-static={loops ? undefined : ""}>
+                {masonryRows(members).map((row, index) => <div className={styles.memberRail} key={index}>{cards(row)}</div>)}
               </div>
             ) : (
               <div className={styles.memberRail} key={copy} aria-hidden={copy === 1 ? true : undefined}>{cards(members)}</div>

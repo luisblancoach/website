@@ -1,13 +1,28 @@
 # STATUS
 
-Snapshot: 2026-10-29, night (-0300). **Iteration 04** (Moloch title, Explore copy, builder layouts by
+Snapshot: 2026-10-30, afternoon (-0300). **Uncommitted on top of `10e1fbf`: the shared CTA system, the
+numbered landing-page inventory, the builder module restored to the October 28 editorial grid on a flat
+coral plane, the afternoon pass (page container, persistent top bar, Join hero title, Moloch title
+with the sword mark, Hats and heading refinements), the final contact module's scene and profession
+gallery, the night refinements (foam removed, creed, hero, random gallery, Hire SEO), the CTA icon and pill
+system, and the final pass (logo restored, single outline, open form, clues in the footer, section
+rhythm)** (sections "October 30" below). Nothing committed, pushed or deployed; the owner
+reviews first.
+
+Previous snapshot, 2026-10-29, night (-0300). **Iteration 04** (Moloch title, Explore copy, builder layouts by
 result count, Hats/Projects swap, CTA states) is committed on `feat/venture-beyond-integration` on top of
 iteration 03 (`6ecb1c7`) and pushed to `fork/feat/venture-beyond-integration`. The fork has no Vercel Git
-integration (no deployments or commit statuses on any commit), so the push creates no preview, and this
-iteration was **not deployed** (owner: "do not deploy yet").
+integration (no deployments or commit statuses on any commit), so the push created no preview; it was
+then deployed manually as a preview (below).
+
+**Preview of iteration 04 (latest):** `10e1fbf` deployed manually as a Vercel Preview (owner-approved):
+`dpl_Hz6aoUMyBBgvCfBHk7sgq2JNNNW3`, https://raidguild-venture-beyond-review-g42gy6tbd.vercel.app (Vercel
+login; no alias), clean `git archive`, `--build-env SHOW_REVIEW_FLAGS=false` for that deployment only.
+`/clients` and `/community` 200 via `vercel curl`; Moloch title, Explore copy, order, builder tiers and CTA
+tokens verified. Record: `~/Projects/raidguild-backups/2026-10-29/DEPLOY-vercel-review-10e1fbf.md`.
 
 Deployments: Production review still release `2bf270d` (`dpl_HqkPYA55qh5V9QHFQpUxwWZ1xjko`,
-https://raidguild-venture-beyond-review.vercel.app). Preview of iteration 03 `6ecb1c7`:
+https://raidguild-venture-beyond-review.vercel.app). Earlier preview of iteration 03 `6ecb1c7`:
 `dpl_9RDNQZ5VNvT9hcjDtC5ANj5ho3G8`, https://raidguild-venture-beyond-review-72zh7hv5h.vercel.app (Vercel
 login; deployed 2026-10-29 22:18 with `--build-env SHOW_REVIEW_FLAGS=false`, project env unchanged; record
 `~/Projects/raidguild-backups/2026-10-29/DEPLOY-vercel-review-6ecb1c7.md`).
@@ -15,10 +30,14 @@ login; deployed 2026-10-29 22:18 with `--build-env SHOW_REVIEW_FLAGS=false`, pro
 Left uncommitted on purpose (the owner's): `package.json` (`packageManager`), the 21 deleted legacy images,
 `public/images/casestudies/clients.pdf`, `.DS_Store` files.
 
-**Local server:** http://localhost:3017 is running (`bun run dev --port 3017`, restarted at the end of this
-session); `/clients` and `/community` return 200.
+**Local server:** http://localhost:3017 is running (`bun run dev --port 3017`, restarted 2026-10-30
+afternoon because it kept serving a stale narrative module); `/clients` and `/community` return 200.
 
-**Next priority:** owner review of iteration 04 locally; a preview or production deploy needs approval.
+**Next priority:** release of the October 30 work (all uncommitted, sections below): commit, push and
+Vercel publish once approved; the owner's new files it references must be committed with it
+(`public/images/swords.svg`, `public/images/neo/join-*-{light,dark}.png`, `public/images/professions/`,
+`public/images/icons/favicon-moloch.png`, the new `public/images/icons/*.svg` incl. `ico_telegram.svg`). Section reordering uses the numbered inventory below, in a later
+iteration. Promoting iteration 04 to production still needs approval.
 
 ## Environment
 
@@ -26,10 +45,10 @@ session); `/clients` and `/community` return 200.
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
 | Branch | `feat/venture-beyond-integration` (no upstream configured) |
-| HEAD | The release `2bf270dc02806ed19a4420fd93e8c04fd130a344` "feat(venture): October 28 Hire the DAO and Join the DAO refinements", parent `f842d87`. Pushed to `fork/feat/venture-beyond-integration`. |
-| Compared with `origin/main` (`b02d67b`) | 85 ahead, 1 behind |
+| HEAD | `10e1fbf3cf2e7715794d89ac5301de61d9d3817d` "feat(venture): Moloch title, builder layouts and CTA states" (iteration 04), parent `6ecb1c7`. Pushed to `fork/feat/venture-beyond-integration`; preview-deployed. |
+| Compared with `origin/main` (`b02d67b`) | 88 ahead, 1 behind |
 | Other worktrees | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
-| Local server | http://localhost:3017 (`bun run dev --port 3017`, restarted 2026-10-29); `/`, `/clients`, `/community` 200, serving the `2bf270d` application code |
+| Local server | http://localhost:3017 (`bun run dev --port 3017`, restarted 2026-10-30); `/clients`, `/community` 200, serving `10e1fbf` plus the uncommitted CTA system |
 
 ## References (keep them separate)
 
@@ -86,6 +105,719 @@ follows the procedure in `DEPLOY-vercel-review-da9165b.md` (same folder).
 - `raidguild.estudioblanco.org` has not been redirected to the new project. On 2026-10-28 04:23
   UTC it still returned 302 to `raidguild-website-redesign-production.up.railway.app`.
 - Not changed: raidguild.org, Cloudflare, Railway and `origin`.
+
+## October 30 (release pass): Guild CTA order; release candidate (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("release pass"). Files: `sections/GuildPrologue.tsx`,
+`venture.module.css` (Guild CTA row).
+
+Validation (dev server, final focused run before release):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 85/85; `bun run lint` 0 errors (1 old
+  warning, `ThemeAnchor` in `HeaderJoin.tsx`).
+- `gorder.mjs` (/community at 1440, 1100, 900 light/dark; 393, 375): Join the DAO left, Your Guild kit flush
+  right (0 px from the row's right edge) on one row; stacked Join → Kit on phones; links unchanged; no
+  overflow, no errors. `kit.mjs`: kit opens, Escape / close button close it, focus returns, reduced motion.
+- Regression: builders audit 480 cards / 0 failures (dark rest #191E4E, selected #303674); wall height stable
+  at all 12 route/width combinations; route titles and WebP share images served (150 / 111 KB, 200); form:
+  no own heading, one-line description at 1920/1440, stepper, no duplicate step heading, picker and
+  validation; Builders/People/Hats selection family and 115 px joint; scenes pinned (10 cases); form grows
+  downward; wall slows on hover; both routes × 1440/393 × light/dark without overflow, broken images,
+  failed requests, console errors or layout shift.
+- Not run: the full CTA browser suite (`scratchpad/pw/cta.mjs`): its expectations describe the earlier
+  system (pink edges, transparent outline pills, white hover labels) and would fail on deliberate changes;
+  it needs rewriting before it can serve as a gate. Not verified: Safari/Firefox, physical devices,
+  production build (`bun run build` not run in the worktree while dev runs).
+
+Release notes for the commit: include the untracked files the code references (see "Working tree" below);
+leave the owner's `package.json` change, the 21 deleted legacy images, `public/images/casestudies/clients.pdf`
+and `.DS_Store` files out unless told otherwise.
+
+## October 30 (metadata pass): share images, form intro, card colours, one card family (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("metadata pass"); images in `docs/asset-provenance.md`.
+Files: `src/app/(venture)/{clients,community}/page.tsx`, new `public/images/venture/og/*.webp`,
+`src/components/HireUs.tsx`, `sections/Stewardship.tsx`, `venture.module.css`.
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 85/85; lint 0 errors (old warning).
+- Metadata (served HTML): each route has one title, description, og:title/description/url/image (+ width,
+  height, type, alt) and twitter card/title/description/image; /clients → clients-queen-raida.webp,
+  /community → community-moloch.webp; both 200 `image/webp` (150 / 111 KB); "/" unchanged.
+- `audit-builders.mjs`: 480 cards, 0 failures; dark rest rgb(25, 30, 78) = #191E4E on all 240 dark cards,
+  dark hover/focus rgb(48, 54, 116) = #303674. `stable.mjs`: stable at all 12 route/width combinations, no
+  card outside the plane, no name truncated or under 13 px.
+- `sel.mjs`: steward cards light hover/focus = cyan + 3 px navy edge; dark = #303674 + 3 px cream edge;
+  focus ring; Builders → next 115 px on both routes.
+- `dek2.mjs`: no form heading; description one line at 1920 (16 px) and 1440 (15.1 px), two lines at 1100
+  and 393 (16 px).
+- `final.mjs`, `wall.mjs`, `comp.mjs`, `grow.mjs`, `dd.mjs`, `sec2.mjs`: no overflow, broken images,
+  errors or layout shift; wall slows on hover; scenes pinned; form grows downward; picker, stepper,
+  validation, transparent secondaries and Join title unchanged.
+- Screenshots `scratchpad/pw/now/fam.png`, `wd.png`, `inq-l.png`.
+
+Open questions (new):
+62. Social previews use WebP (as asked). Some platforms (notably LinkedIn) have rendered WebP og:images
+    unreliably; a JPEG fallback of the same crop is a one-line change if needed.
+63. The /community title, description and share title are drafted copy; confirm or replace.
+
+## October 30 (panel-secondary pass): transparent in-panel secondaries, Join title rhythm (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("panel-secondary pass"). File: `venture.module.css`.
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 85/85; lint 0 errors (old warning).
+- `sec2.mjs` ("Your Guild kit", "Enter Discord" at 1440 and 393 × light/dark; form Previous): background and
+  icon disc transparent on the panel (bone #EFE9D7 / navy #191E4E and #252A61); label, edge and glyph the
+  same at rest, hover, pressed and focus (navy light, cream dark); hover/pressed a 9% / 16% tint; focus
+  ring; disabled .5. Join title one line: 47 px (1440), 30 px (393), Retalic 30 / 20 px lead.
+- `audit-builders.mjs`: 480 cards, 0 failures; dark surface rgb(48, 54, 116) = #303674 on all 240 dark
+  instances. `stable.mjs`: stable at all 12 route/width combinations. `final.mjs`, `comp.mjs`, `grow.mjs`,
+  `guild.mjs`, `aboutyou.mjs`: no overflow, broken images, errors or layout shift; scenes pinned; form grows
+  downward; Guild order unchanged; no duplicate step heading.
+- Screenshots `scratchpad/pw/now/jtv.png` (title variants), `jt-both.png`, `jt-mob.png`.
+
+## October 30 (wall-frame pass): #303674 cards, fixed wall height, adaptive tiles, shared selection (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("wall-frame pass"). Files: `src/components/TeamWall.tsx`
+(`memberTileBody`), `src/components/ui/wizard.tsx` (step heading), `venture.module.css`,
+`hats.module.css`.
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 85/85; lint 0 errors (old warning).
+- `audit-builders.mjs`: 480 card instances (both routes × light/dark × 1440/393 × six tabs), 0 failures:
+  every card a link with label; mark ≥ 24 px within 16 px of the top-right corner; avatar loaded; no
+  truncated name, none under 13 px; contrast name ≥ 3, profession ≥ 4.5, mark ≥ 3; dark surface exactly
+  rgb(48, 54, 116); one surface, edge, radius and colour set per theme; hover/focus marks 32–40 px.
+- `stable.mjs` (both routes at 1440, 1100, 900, 768, 393, 375 × six tabs): module height and the next
+  module's offset identical across tabs at every width; no card outside the plane; no truncation.
+- `sel.mjs`: steward and Hats cards: hover/focus/selected = 3 px edge, surface unchanged, no transform, no
+  dimming; focus ring; Escape clears; Builders→next gap 115 px on both routes.
+- `aboutyou.mjs`: no duplicate step heading; stepper "About you"; first label 14 px under the stepper.
+- `final.mjs`, `wall.mjs`, `comp.mjs`, `grow.mjs`, `dd.mjs`, `guild.mjs`: no overflow, broken images,
+  errors or layout shift; wall 36 → 11 px/s on hover; scene pinned; form grows downward; picker, stepper,
+  validation and Guild CTA order unchanged.
+- Screenshots `scratchpad/pw/now/wd.png`, `wm.png`, `selh.png`, `ay-1440.png`.
+
+## October 30 (normalization pass): one builder card component (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("normalization pass"). Files: `src/components/TeamWall.tsx`
+(every card a link, `cardLink`), `src/lib/data/constants.ts` (`PORTAL_MEMBERS_URL`), `venture.module.css`
+(card component block).
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 85/85; lint 0 errors (old warning).
+- Builders audit `scratchpad/pw/audit-builders.mjs`: /clients and /community × light/dark × 1440/393 ×
+  all six tabs (All builders, Frontend, Smart Contracts, UX/UI, Fullstack, Coordination): 480 card
+  instances, 0 failures. Every card: a focusable `<a>` with href, aria-label and new tab; crossed-swords
+  mark at 24 px; avatar loaded; name ≥ 3:1, profession ≥ 4.5:1, mark ≥ 3:1 on its surface; name clear of
+  the mark; no overflow, no console errors. Hover and keyboard focus (two cards per tab): mark 32 px,
+  contrast held, focus ring present. Properties identical across all cards of a theme, except the
+  deliberate phone grid variant (stacked layout, 14 px padding, name fitted), which is the same in both
+  themes.
+- `wall.mjs`: 36 → 11 → 36 px/s (hover slows, never stops); count line screen-reader only.
+- `final.mjs`, `comp.mjs` (10 cases), `grow.mjs`: no overflow, broken images, errors or layout shift; scene
+  pinned; form grows downward with a fixed top.
+- Screenshots: `scratchpad/pw/now/nn.png` (wall light/dark), `gs.png` (grids with a selected tile),
+  `gs-m.png` (phone grid).
+
+Open question: 61. Profile URLs for Aperion, Bitbeckers, Elco, Georgeh, Jip, Takekek, Ven and Vid (their
+cards link to the Portal directory meanwhile).
+
+## October 30 (CTA order pass): Guild CTA hierarchy, one builder-card surface (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("CTA order pass"). Files: `sections/GuildPrologue.tsx`,
+`primitives/PillIcon.tsx` ("←"), `src/components/TeamWall.tsx` (card mark), `venture.module.css`.
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 85/85; lint 0 errors (old warning).
+- `guild.mjs` (/community 1440 and 393 × light/dark): order = Your Guild kit (secondary, 56 px), Join the DAO
+  (primary, 56 px), Enter Discord (link with Discord mark, 44 px), Read the handbook, Questions? Ask Queen
+  Raida. `kit.mjs`: kit opens, Escape and the close button close it, focus returns to the kit pill, reduced
+  motion respected, no overflow.
+- `cards.mjs` (/clients 1440 light, /community 1440 dark, /clients 393 dark, /community 393 light × all six
+  categories): one background, one name colour, one profession colour, one radius, one edge per view; every
+  linked card's mark is the crossed swords at 24 px, 10 px from the top-right corner; selected (keyboard
+  focus) = same surface, navy name, #CE1252 profession, 32 px navy mark, 3 px navy edge; selector-to-plane
+  gap 48 px desktop / 40 px phones; no overflow, no errors.
+- `wall.mjs`: still 36 → 11 → 36 px/s with hover; count line screen-reader only.
+- `final.mjs`, `grow.mjs`, `comp.mjs` (10 cases), `dd.mjs`: no overflow, broken images, errors or layout
+  shift; form top fixed while it grows; scene pinned with figures in place (scene and gallery positions
+  unchanged in this pass); picker, stepper and validation as before.
+- Screenshots `scratchpad/pw/now/gt.png`, `g-393d.png`.
+
+## October 30 (form pass): channel picker, bone panel, stepper, coral logo sword (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("form pass"). Files: `src/components/HireUs.tsx`,
+`src/components/ui/wizard.tsx`, `src/app/globals.css` (picker menu), `venture.module.css` (panel, fields,
+stepper, logo), new `public/images/icons/ico_telegram.svg` (provenance recorded).
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 85/85; lint 0 errors (old warning).
+- `dd.mjs` (/clients 1440 and 393 × light/dark): empty Next marks 3 fields invalid and stays on step 1; the
+  picker opens by keyboard, menu bone/navy edge (light) or navy/cream edge (dark), 2 options at 44 px with
+  their marks; stepper states current/next → done/current → done/done/current; no percentage left; no
+  overflow, errors or failed requests. `dd2.mjs`: Telegram chosen by mouse (paper-plane mark in the trigger),
+  Discord chosen back by keyboard (Enter, ArrowUp, Enter).
+- `dl.mjs`: "Enter Discord" = "Explore our work" in both themes; logo swords coral on bone and navy.
+- `final.mjs`, `grow.mjs`, `comp.mjs` (10 cases), `wall.mjs`: no overflow, broken images, errors or layout
+  shift; form top fixed while it grows; scene pinned; wall slows on hover; corner swords present.
+- Screenshots: `scratchpad/pw/now/form1.png`, `ddstep.png`, `disc.png`, `logo2.png`.
+
+## October 30 (wall pass): Builders wall, Moloch title, white panel, ground alignment (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("wall pass"). Files: `src/components/TeamWall.tsx`,
+`sections/BuilderNetwork.tsx`, `venture.module.css` (cards, panel, scene shift), `feature.module.css`
+(Moloch title).
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 85/85; lint 0 errors (old warning).
+- `wall.mjs`: wall speed 36–37 px/s, 11 px/s while hovered, 36 after leaving (/clients light, /community
+  dark at 1440); every linked card's icon is the up-right sword at 10/10 px from the top-right corner (wall
+  and a 4-card category grid), no text arrows; selected card (keyboard focus) white / navy name / #CE1252
+  profession in both themes; count line present only as screen-reader text.
+- `mol.mjs`: Moloch lead cream; MOLOCH 73 px vs Raida's 52 px at 1440, about 51 px at 393 and 49 px at 375;
+  mark on the same line; no overflow.
+- `ground.mjs` before/after (Hire and Join × Light and Dark at 1440; 393 Hire light, Join dark): screenshots
+  `scratchpad/pw/now/gb-d.png` → `ga-d.png`, `gb-m.png` → `ga-m.png`.
+- `comp.mjs`, `grow.mjs`, `final.mjs`: scene pinned and gallery fixed in all samples; form grows downward;
+  both routes × 1440/393 × light/dark without overflow, broken images, failed requests, errors or layout
+  shift.
+
+Open question 60 (dark-phone builder names) is resolved by the shared cyan card surface (CTA order pass).
+
+## October 30 (hover pass): calm hover and pressed states (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("hover pass"). Files: `venture.module.css` (tokens, pills,
+form buttons, chips, reduced motion), `audience.module.css` (builder filters), `ArtifactGallery.module.css`
+(Explore filters, detail actions), `showcase.module.css` (arrows), `tests/cta-contrast.test.mjs`.
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 85/85; lint 0 errors.
+- `hover.mjs` (13 controls × light/dark at 1440: hero primary/secondary, Ask our AI CTO, Moloch, Guild kit,
+  Guild secondary, builder filter, Join primary, Discuss your project, creed, form Next, Hire/Join and
+  Day/Night options): label, edge, glyph colour, width, height, radius, weight and tracking identical at
+  rest, hover and pressed; labels never turn white; primary fill constant, secondary bone/navy one step
+  deeper, chips tinted; focus ring present. The builder filter's focus check was not applicable (unselected
+  filters are not Tab stops; the row uses arrow keys).
+- `states.mjs` sheet `scratchpad/pw/now/states-sheet5.png`.
+- `rm.mjs`: reduced motion: no lift, no sword nudge, no transition; touch (393): a tap leaves no hover.
+- `final.mjs` (both routes × 1440/393 × light/dark): no overflow, broken images, failed requests, console
+  errors or layout shift.
+
+## October 30 (composition pass 2): figures on the art's ground, Dark primary = selected tab (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("composition pass 2"). Files: `venture.module.css` (stage,
+gallery coordinates, dark tokens), `sections/ContactScene.tsx` (vertical cut ≤ 600 px),
+`tests/cta-contrast.test.mjs`.
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 84/84; lint 0 errors.
+- `comp.mjs` (10 cases incl. form steps 1–3, 1920/1440/900/393/375, both routes, both themes): stage pinned
+  at 0 with the art's height (630 at 1440, 770 at 1920, 394 at 900, 590 at 393); gallery box constant
+  relative to the stage in every scroll sample; phones: panel starts at the figures' feet (550 vs 583 on
+  /community 393); one-line heading; no overflow, no errors. Screenshots `scratchpad/pw/now/compd2.png`,
+  `compm2.png`, compared with the owner's join-horizontal / join-vertical mockups.
+- `states.mjs` (10 CTAs × 2 themes incl. Ask our AI CTO): dark primaries rest coral / navy label / cream edge
+  / navy disc; all states; sheet `scratchpad/pw/now/states-sheet4.png`; tab bar `now/tabs-dark.png`.
+- `final.mjs`, `grow.mjs`, `wheel.mjs`: no overflow, broken images, failed requests, errors or layout shift;
+  form grows downward with a fixed top; wheel scrolls through and past the section.
+- Open question 58 (cream label contrast) is resolved by the navy label.
+
+## October 30 (composition pass): pinned scene + gallery, Dark primary, sword variation, showcase CTA (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("composition pass"). Files: `sections/ContactScene.tsx`
+(children on the stage, `ContactGallerySlot`), `sections/{GuildInquiry,JoinCTA,Hero,Creed}.tsx`,
+`primitives/PillIcon.tsx` (`↘`, `pathGlyph`), `venture.module.css`, `showcase.module.css`,
+`tests/cta-contrast.test.mjs`.
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 84/84; lint 0 errors.
+- `comp.mjs` (10 cases: /clients 1440 light step 1, 1440 dark step 3, 900 light step 2, 1920 dark, 393
+  light/dark; /community 1440 light/dark, 393 dark, 375 light), sampled at 0/35/70/100% of the section: the
+  stage stays at 0, the gallery keeps the same box relative to the stage in every sample (1440: 100,198 /
+  584×612; 393: 24,96 / 345×426), only the form moves; correct scene per theme/viewport; viewport covered
+  while pinned; heading one line (45/37/29 px); no overflow, no errors.
+- `states.mjs` (9 CTAs × 2 themes incl. "Discuss your project"): rest/hover/pressed/focus/disabled; dark
+  primary rest cream label + cream edge; sheet `scratchpad/pw/now/states-sheet3.png`.
+- `final.mjs` (both routes × 1440/393 × light/dark): no overflow, broken images, failed requests, console
+  errors, layout shift; no rim, no clues near the form, footer clues present, correct scenes.
+- `grow.mjs`: form open, step 2 keeps the top fixed (1440, 393).
+- Not run: full CTA browser suite (expectations predate this system). Not verified: Safari/Firefox, devices.
+
+Open questions (new):
+58. Dark primary labels: cream on coral is 3.1:1 (below AA 4.5:1). Keep (owner's choice) or use ink labels?
+59. The swords' curved crossguard is the strongest shape at 24–28 px; the right/diagonal swords read
+    correctly zoomed, but confirm at real size.
+
+## October 30 (final pass, later): pinned contact scene, one-line inquiry heading (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("final pass, later"). Files: `sections/ContactScene.tsx`
+(stage wrapper), `sections/GuildInquiry.tsx` (stray class), `venture.module.css` (scene block, sticky
+gallery, heading).
+
+- Scene pinned (sticky stage, one viewport tall) behind the inquiry form and the Join panel; released at the
+  section's end; no nested scroll. Desktop gallery pinned with it. Heading "YOU'RE BUILDING" on one line.
+
+Validation (dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 83/83; lint 0 errors.
+- `pin.mjs`, scrolling 0–100% of the section and past it: /clients 1440 light step 1 and dark step 3, 1100
+  light step 2, 393 dark step 1 and light step 3; /community 1440 dark and 393 light. Stage stays at 0
+  (full viewport height) while the form moves up (about 230 px on desktop, about 760 px on phones), then
+  leaves with the section; desktop gallery holds at the section padding; heading one line (45 / 36 / 29 px);
+  no overflow, no errors. Join at 1440×900 has no travel (it fits the viewport).
+- `kb.mjs`, `wheel.mjs`: gallery held while typing; PageDown and the wheel scroll through and past the
+  section to the page end without stalls.
+- `final.mjs` (both routes × 1440/393 × light/dark): no overflow, broken images, failed requests, console
+  errors or layout shift; correct scenes.
+- Screenshots mid-scroll: `scratchpad/pw/now/pin-desk.png`, `pin-mob.png`.
+- Not verified: Safari/Firefox (sticky inside `overflow: clip` needs Safari 16+), devices.
+
+Open question: 57. The Join heading "INTO THE GUILD." still wraps on phones; apply the same one-line rule?
+
+## October 30 (final pass): logo restored, single outline, form open, clues moved, rhythm (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("October 30, 2026 (final pass)").
+
+- **Logo:** late-night coral/navy logo reverted; the approved bar pill restored, one size larger
+  (`venture.module.css`, "Persistent logo").
+- **CTAs:** inner rim removed everywhere; one navy outline per CTA.
+- **Inquiry:** open by default on /clients (audience routes), no trigger or close link, grows downward
+  (`sections/GuildInquiry.tsx`).
+- **Clues:** signal and walker moved to the footer on the audience routes (`shell/SiteFooter.tsx`,
+  `sections/Creed.tsx`); hunt directions made location-neutral (`UnchartedHunt.tsx`, `PortalOverlay.tsx`).
+- **Rhythm:** `--section-space` on every content module; desktop modules at least a viewport tall.
+- Already in place and re-verified, unchanged: Builders flat/no particles/Oct 28 layouts, hero copy and cream
+  TOGETHER, creed BUILD. highlight, randomized gallery with transmission, theme/viewport scenes, Hire SEO,
+  sword/destination icons, page container gutters.
+
+Validation (dev server, 2026-10-30, final pass):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 83/83; lint 0 errors (old warning).
+- `final.mjs`, /clients and /community × 1440/393 × light/dark: no overflow, broken images, failed
+  requests, console errors, layout shift (0); no inner rim on any pill; no clue in the inquiry, Join or creed;
+  4 clue controls in the footer; correct scene per theme/viewport; no foam, no dots, no text arrows.
+- `grow.mjs`: form open on load, no trigger/close/Back controls; Next to step 2 keeps the section and form
+  top unchanged (1440 and 393); no errors.
+- `secs.mjs`: content modules 115/115 px padding at 1440, 72/72 at 393; desktop modules ≥ 900 px at 900 high.
+- `states.mjs`: 16 CTA captures (8 CTAs × 2 themes) with rest/hover/pressed/focus/disabled; sheet
+  `scratchpad/pw/now/states-sheet2.png`.
+- `logo.mjs`: logo at 1440/393/375 × light/dark: contained pill, "RaidGuild home", href "/", focus ring
+  shown; bar fits at 375.
+- Not run: the full CTA browser suite (its expectations predate the navy edge and opaque secondaries).
+  Not verified: Safari/Firefox, devices; favicon tab not re-checked this pass.
+
+## October 30 (late night): CTA icons, primary/secondary pills, creed highlight, logo (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("October 30, 2026 (late night)"); icons:
+`docs/asset-provenance.md`.
+
+- **Icons:** `src/components/venture/primitives/PillIcon.tsx` (new). Sword right / down / up-right by action;
+  Discord, Portal (Join's "Create your Portal profile"), handbook (Moloch CTA), RaidGuild logo (Raida,
+  showcase, Services). Guild kit toggle: right/left swords. Theme switch: new sun/dark icons. Types:
+  `Action.icon` gains "portal", `ImmersiveContent.cta.icon` ("logo" | "handbook").
+- **Primary:** coral, navy edge, inner rim, ink label, navy disc + white glyph. **Secondary:** opaque cream
+  (light) / navy (dark), contrasting edge and label, navy disc + white glyph. One set of hover, pressed,
+  focus, disabled for both.
+- **Creed:** "BUILD." on a coral rectangle with cream type.
+- **Logo:** larger and contained: navy pill + white sword (light), coral pill + navy sword (dark).
+- Files: `primitives/PillIcon.tsx`, `sections/{Hero,GuildPrologue,JoinCTA,ImmersiveFeature,Creed}.tsx`,
+  `src/lib/narrative/{types,community}.ts`, `venture.module.css`, `tests/cta-contrast.test.mjs` (rewritten for
+  the new system), docs.
+
+Validation (dev server, 2026-10-30 late night):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 83/83.
+- CTA states (`scratchpad/pw/states.mjs`, 1440, ×2 crops in `scratchpad/pw/st/`, sheet
+  `scratchpad/pw/now/states-sheet.png`): hero primary/secondary on both routes, Moloch secondary, Join
+  primary/secondary, creed primary, light and dark. Rest as specified; hover #CE1252 + white; pressed
+  #A80E44 + white; focus 3 px dark-green ring + cream halo; disabled .5, not-allowed, no lift; all 56 px;
+  glyphs as mapped. Secondaries stay opaque over the hero artwork in both themes.
+- Health (`final.mjs`, both routes × 1440/393 × light/dark): no overflow, broken images, failed requests,
+  console errors or layout shift; correct scene per theme/viewport; no foam, no dots; no text arrows left in
+  any pill icon; creed highlight coral with cream type. Top bar fits at 375 (logo 8–66, switch 77–281,
+  theme 287–367). "/" renders without errors.
+- Favicon: still linked on every route as `/favicon.ico?favicon.141b0878.ico`; the tab itself was not
+  re-checked visually.
+- Not run: the full CTA browser suite (its expectations still describe the transparent outline and pink
+  edge; it needs updating before it can pass). Not verified: Safari/Firefox, devices.
+
+Open questions (new):
+55. The sword arrows' curved crossguard can read as an arrowhead at small sizes (the right sword can look
+    like "←"). They follow the supplied files; confirm, or supply a variant with a clearer tip.
+56. `public/images/icons/arrow-rleft-down.svg` is spelled as supplied (not `arrow-left-down.svg`).
+
+## October 30 (night): Ideas heading, no foam, creed, hero, random gallery, Hire SEO (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("October 30, 2026 (night)").
+
+1. **Ideas into Working Systems**: second line on one line on both routes (`services.module.css`): 52 px at
+   1440 in a 600 px column, about 40 px at 1100, 30 px on phones (container units).
+2. **Builder foam removed** (CSS block and `BuilderNetwork.tsx` wrapper); no particles anywhere.
+3. **Creed**: "build." cream, weight 400, no highlight, both themes.
+4. **Join hero**: "Find your people." / "Build something together." on three lines, "TOGETHER." large and
+   cream; 88 px desktop (ends at 717 px at 1440, inside the copy column); phones within the gutters.
+5. **Gallery**: shuffled order without repeats; about 1.3 s hologram transmission (channel split, flicker,
+   figure-masked scanlines); pauses, reduced motion and the hidden status unchanged; no dots.
+6. **Hire SEO**: title, Open Graph/Twitter title and description from the brief; share image and site name
+   restated; og:url /clients; noindex kept. /community untouched.
+
+Files: `src/components/venture/{services.module.css,venture.module.css}`,
+`sections/{BuilderNetwork,ContactScene}.tsx`, `src/lib/narrative/community.ts`, `tests/narrative.test.mjs`,
+`src/app/(venture)/clients/page.tsx`, docs.
+
+Validation (dev server, 2026-10-30 night):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 82/82.
+- `scratchpad/pw/final.mjs`, /clients and /community × 1440/393 × light/dark (8 runs, full-page scroll): no
+  overflow, no broken images, no failed requests, no console errors, layout-shift score 0; scene loaded =
+  horizontal-light, horizontal-dark, vertical-light, vertical-dark as expected and nothing else; no foam
+  element; no dots; creed "build." rgb(239,233,215) at 400 on a transparent background.
+- Gallery (`holo.mjs`): transmission frames captured at 1440 light/dark and 393 light/dark; the gallery box
+  never changed size; after each change the image is back to the plain foot fade with no filter; three visits
+  gave three different orders (0135241, 0321542, 0135423), no immediate repeats.
+- Heading and title extents measured (`em.mjs`, `title.mjs`); metadata checked in the served HTML (no
+  duplicate og tags; og:image 200).
+- Not run: the full CTA suite (not requested). Not verified: Safari/Firefox, devices, social-card previews.
+
+## October 30 (evening): contact module refinement, dark scenes and favicon (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("October 30, 2026 (evening)"); assets:
+`docs/asset-provenance.md`.
+
+- **Scenes by theme and viewport:** light/desktop `join-horizontal-light.png`, light/phone
+  `join-vertical-light.png`, dark/desktop `join-horizontal-dark.png`, dark/phone `join-vertical-dark.png`
+  (`contactScenes` in `src/lib/data/illustrations.ts`). No light art behind Dark.
+- **Animation:** 9 s per group, staggered opacity crossfade (out 1.6 s; in 2.4 s after 0.4 s), no slide or
+  scale; pauses on hover anywhere in the module, focus in the module, off screen, hidden tab; reduced
+  motion: still.
+- **Pagination:** dots removed; screen-reader-only status.
+- **Light:** scene unchanged; faint cream veil behind the panel (desktop) and a soft panel shadow.
+- **Phones:** about 56 px of landscape above the group at 393.
+- **Favicon:** `src/app/favicon.ico` rebuilt from `public/images/icons/favicon-moloch.png` (16/32/36 px).
+- Files: `sections/ContactScene.tsx`, `venture.module.css` (contact block), `src/lib/data/illustrations.ts`,
+  `src/app/favicon.ico`, docs. Form, validation, submission, copy, CTAs, route differences unchanged.
+
+Validation (dev server, 2026-10-30 evening):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 82/82.
+- Scene requests (Playwright, `scratchpad/pw/scene.mjs`): /clients and /community at 1440 light load only
+  horizontal-light; at 393 dark only vertical-dark; Night → Day at 1440 adds horizontal-light only after the
+  switch; 1440 light → 393 → Night → 1440 loads vertical-light, vertical-dark, horizontal-dark in turn, each
+  only when shown. No failed requests, broken images, console errors or overflow.
+- Gallery (`gallery2.mjs`, `gallery3.mjs`), /clients and /community at 1440 light and 393 dark: first change
+  between 8 and 10 s; transitions as specified; held on hover over the panel, on focus in the module, in a
+  hidden tab and off screen; no visible dots; status text present; reduced motion: no change in 11 s, 0 s
+  transition. Gallery starts 101–112 px into the module (desktop) and 105 px (phones, with the new room).
+- Screenshots: 1440 light and 393 dark on both routes, 393 light on /community: no overflow, no errors.
+- Favicon: every route links `/favicon.ico?favicon.141b0878.ico` (`sizes="36x36"`, new hash, so caches
+  refresh); served bytes match the new ICO; in Chrome after a hard refresh (Cmd+Shift+R, via the browser
+  extension) the page links the new URL, which returns the new 3-image ICO. The tab strip itself could not
+  be captured: **visual tab icon not verified by the agent**.
+- Not run: the full CTA browser suite (not requested). Not verified: Safari/Firefox, devices.
+
+Open questions (new):
+54. The unlinked legacy icon files in `src/app` (`favicon.svg`, `favicon-96x96.png`, `apple-touch-icon.png`,
+    `site.webmanifest` named "MyWebSite") are pre-existing; an Apple touch icon needs a larger source.
+
+## October 30 (late afternoon): final contact module scene and profession gallery (uncommitted)
+
+Brief: the owner's contact-module brief and mockups (`~/Desktop/Screenshot 2026-10-30 at 11.50.20 AM.png`
+to `11.57.25 AM.png`). Decision record: `docs/venture-integration.md`; assets: `docs/asset-provenance.md`.
+
+- **Assets integrated:** `neo/join-horizontal-light.png`, `neo/join-vertical-light.png`, the six
+  `professions/*.png`. Not placed: `icons/favicon-moloch.png` (question 52).
+- **Shared:** `sections/ContactScene.tsx` (`ContactScene`, `ProfessionGallery`) in `JoinCTA.tsx` and
+  `GuildInquiry.tsx` (audience routes only). Data: `contactScenes`, `professions` in
+  `src/lib/data/illustrations.ts`. Styles: end of `venture.module.css`.
+- **Backgrounds:** horizontal cut above 760 px, vertical on phones; capped at 1760 px; cropped from the
+  bottom. **Gradient:** scene foot fades over 42%, sides over 120 px when capped; groups fade over their
+  lowest 14%; masks only, no added height, panel opaque.
+- **Light / Dark:** light scenes in Light; Dark keeps the navy surface (no dimmed light art) until
+  `join-horizontal-dark.png` / `join-vertical-dark.png` are added as `contactScenes.dark`.
+- **Gallery:** opens on "Druid 2" (the former illustration), 7 s per group, 1.2 s crossfade; waits on
+  hover, focus in the module, off screen, hidden tab; stops after a dot is chosen; one-tab-stop dots with
+  arrows, 44 × 44 px; reduced motion: still, instant change.
+
+Validation (dev server, 2026-10-30):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 82/82; `bun run lint` 0 errors (old warning).
+- Playwright probe (`scratchpad/pw/gallery.mjs`), /community 1440 light and /clients 393 dark: rotation after
+  7 s; held on hover, on focus in the module and with the tab hidden; dots 1 tab stop, 44 × 44, ArrowRight
+  selects and announces; autoplay stops after a choice; alt names the group; no broken images, no failed
+  requests, no overflow; the inquiry form still opens with focus moved (4 fields). Light loads only the
+  horizontal scene at 1440; Dark loads no scene. Reduced motion: no rotation, no transition.
+- Screenshots at 1440, 1920 and 393 in light and dark on both routes: no console errors, no overflow; the
+  scene is contained at 1760 px at 1920. (One probe error came from the probe's own init script, not the site.)
+- The probe found and the fix covers one defect: the gallery inherited `pointer-events: none` from the
+  illustration class (hover pause and dot clicks did not work).
+- Not run: the full CTA browser suite (not requested for this pass). Not verified: Safari/Firefox, devices.
+
+Open questions (resolved in the evening pass): 52, the icon is now the site favicon; 53, phones now have
+about 56 px of landscape above the group.
+
+## October 30 (afternoon): page container, persistent bar, Join hero, Moloch, builder foam (uncommitted)
+
+Brief: the owner's October 30 afternoon brief (16 items), Frames 132/133 (`~/Downloads/Frame 132.png`,
+`Frame 133.png`) and the top-bar sketch (`~/Desktop/Screenshot 2026-10-30 at 10.58.21 AM.png`). The
+`frontend-design` skill was not loaded in this session; existing tokens and components were used. Section
+order unchanged on both routes.
+
+What changed (decision record: `docs/venture-integration.md`, "October 30, 2026 (afternoon)"):
+
+1. **Page container.** `--page-max: clamp(1240px, 78vw, 1500px)`, `--page-gutter: clamp(24px, 5.5vw,
+   96px)`, `--page-inline` centres the column. Every section's first content line now starts at the same
+   x on both routes: 211 px at 1920, 100 at 1440, 61 at 1100, 24 at 393 (measured; before: 88–476 at 1920,
+   80–234 at 1440). The frames are about 1590 px captures scaled to 1920; the formula reproduces the
+   owner's guides there (175 px). The hero copy keeps its own position (curtain art in the gutter).
+2. **Persistent top bar** (both routes): sword logo → `/`, audience switch, Day/Night switch (two buttons
+   in the audience switch's pill, coral when selected), pinned at 16 px on the page gutters; section nav
+   scrolls with the header. Phones: logo disc and one theme switch (`role="switch"`), fitting at 375 px
+   (logo 8–60, switch 77–281, theme 287–367). `ThemeSwitch` gained `segmented`; "/" keeps the celestial
+   toggle.
+3. **Shared CTA system**: unchanged from the morning pass; the new theme controls use the same chip
+   states and focus ring.
+4. **Join hero title**: "FIND YOUR PEOPLE / BUILD SOMETHING" (46 px desktop, about 30 px phones) and
+   "TOGETHER" (94 px desktop, 56 px max phones) in pink; within the copy column (173–729 at 1440), no longer
+   across the characters. `HeroContent.title.finale` (optional) added; /clients unchanged.
+5. **Moloch**: "TOGETHER WE SLAY / MOLOCH" + `public/images/swords.svg` inline (owner's file; the brief says
+   `sword.svg`), no "+". Art direction and bottom crop were already shared with Queen Raida.
+6. Order unchanged. 7. **Guild Kit** verified, not changed. 8. **Raida/Moloch** copy now on the page
+   column; image logic unchanged (shared component).
+9. **Hats**: click outside the role cards clears the selection; "Stewards." 21 px / 800 with a 4 px coral
+   rule. Layout, tree, cards and typography already matched the brief.
+10. **Builders**: plane capped at 1760 px (`--page-wide`), centred, corners round only when capped; grid and
+    still wall on the page column; coral foam (blurred forms and bubbles) behind the plane edges; the crew
+    illustration added to /community. Angle stays deferred (flat).
+11–12. Explore and Join copy already matched the brief (verified, unchanged). 13. Creed "build." already
+    coral with navy text in both themes (verified). 14. Heading first lines are weight 900 on every
+    section (Explore and the Join/inquiry panels were 400).
+
+Files: `src/components/venture/shell/{SiteHeader,ThemeSwitch}.tsx`, `sections/{Hero,HatsTree,
+BuilderNetwork}.tsx`, `src/components/venture/{venture,audience,feature,hats,services,showcase}.module.css`,
+`src/lib/narrative/{types,community}.ts`, `src/lib/data/illustrations.ts` (comment),
+`src/app/(venture)/community/page.tsx`, `tests/narrative.test.mjs`, `docs/venture-integration.md`,
+`docs/asset-provenance.md`, `STATUS.md`. Uses the owner's untracked `public/images/swords.svg`.
+
+Validation (2026-10-30 afternoon, dev server):
+- `bunx tsc --noEmit --incremental false` passes; `bun run test` 82/82; `bun run lint` 0 errors (old
+  `ThemeAnchor` warning).
+- Focused checks at 1440 and 393, light and dark, per change (Playwright, system Chrome): top bar
+  positions and theme switching (both controls, `aria-pressed`/`aria-checked`), bar pinned after scroll,
+  two-tone focus ring and Tab order (skip, logo, Hire, Join, Day, Night, nav), phone menu open/Escape;
+  section edges at 1920/1440/1100/393; hero title line extents at 375–1920; Guild Kit open/Escape/close and
+  focus return (also reduced motion); builder plane fit in every category (54 states incl. 1920: plane =
+  content + 28 px, cards on the column, no overflow; 24 reduced-motion states: still wall, scrollable
+  strip, same fit).
+- Full CTA suite once at the end (`scratchpad/pw/cta.mjs`, run 4): **1084/1084** at 1600, 1440, 393 and 375
+  px, both routes, both themes (no overflow, no broken images, no console errors, 44 px targets, pill
+  geometry, hover/pressed/focus/disabled, identical across themes, reduced motion). Its theme-control rows
+  now probe the Day/Night switch (desktop).
+- Comparison matrix produced: `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/4717b022-d4f9-4cde-9670-71d41c82afce/scratchpad/pw/cta-matrix-1440.png`
+  (39 rows, Light/Dark × rest/hover/focus/pressed; HTML beside it as `matrix.html`).
+- The dev server was restarted once: it kept serving a stale `community.ts` (old Moloch title) after edits.
+- Not verified: parity with `40f3910` (not compared; these are new owner directions), Safari/Firefox,
+  physical devices, screen readers, production build.
+
+Open questions (new):
+47. `public/images/swords.svg` is the owner's untracked file and is now referenced: commit it with this
+    work (or rename to `sword.svg` as the brief says, then update `community.ts`).
+48. Hero copy stays off the page column at 1440 (173 px vs 100 px) because of the curtain art; confirm.
+49. "Find your path into the Guild" wraps to two lines at 393 (pre-existing).
+50. Footer and /clients inquiry have content reaching the right edge at 393 (−49 px / 4 px, clipped,
+    no page overflow; pre-existing, not changed).
+51. Explore and Guild keep the Retalic face on their second heading line; the other sections use the italic
+    display face. Unify if wanted.
+
+## October 30 (later): builder module restored to the earlier behaviour (uncommitted)
+
+Brief: the owner's recording `~/Desktop/Oct-30-2026 10-04-59.mp4` (16 s): the current light builder module
+next to the earlier behaviour (dark), asking to restore the earlier one. Decisions in
+`docs/venture-integration.md` (October 30, builders).
+
+**Diagnosis.** The earlier behaviour is the October 28 editorial grid (`2bf270d`): 1–8 results render
+`BuilderGrid` (`builderGrid.ts`, a 12 × 3 template per count, card shape by slot: feature, tall, wide,
+compact; two columns below a 720 px container); 9+ render the flat three-course wall, moving when wider
+than the screen. `a8ff16c` (iteration 02) deleted `builderGrid.ts` and the grid path, so every count became
+masonry cards in centred, wrapping courses (iteration 04 tiers 1 / 2 / 3 courses), on a full-bleed coral
+plane that `10e1fbf` tilted (`transform: rotate(-1deg)` on `.teamWall`, so plane and cards shared one
+transform). Measured before the change: the plane's height already followed the courses (about 30 px above
+and below in every category at 1024, 1280, 1440 and 393), so there was no stale height; what read as
+empty coral was (a) short lists as small natural-width cards centred in a full-width band, (b) uneven wrapping
+at mid widths (Smart Contracts 3 + 1 at 1024), (c) the tilt moving the band edges by up to about 13 px across
+the screen, and (d) the recording, which crops a wider window. Root cause of the difference: the editorial
+grid's removal in `a8ff16c`, not a height calculation.
+
+**Change.**
+- `src/components/venture/builderGrid.ts` restored byte for byte from `2bf270d`.
+- `src/components/TeamWall.tsx`: the `BuilderGrid` path restored (1–8 results, masonry modules); 9+ keep the
+  three-course masonry wall; the iteration 04 tiers (`data-tier`, 1/2-course rows) removed.
+- `src/components/venture/venture.module.css`: the iteration 04 tier block replaced by the `2bf270d` grid
+  rules (container query, slot shapes, name scaling) plus opaque tiles on the coral plane (cream / navy;
+  hover cyan / #303675 as before). The coral plane is **flat** (tilt removed), wraps the grid or the wall,
+  `height: auto` with 28 px above and below (the old 430 px and 340 px wall heights no longer apply); the grid
+  keeps the section's content width inside the full-bleed plane; a moving wall still runs edge to edge.
+- `tests/members.test.mjs`: the iteration 04 rows test replaced by the restored `2bf270d` grid tests.
+- Angle: **removed.** The tilt leant the cards with the plane and made the slack around short lists read
+  as uneven; the earlier behaviour is flat. The coral plane itself is kept, flat, hugging the content.
+- Unchanged: section order, copy, assets, filters, wall speed (36 px/s), drag, CTA system.
+
+**Validation (focused, dev server).** `bunx tsc --noEmit --incremental false` passes; `bun run test` 82/82;
+`bun run lint` 0 errors (old warning). Probe `scratchpad/pw/builders.mjs`: /clients and /community, 1440 and
+393, light and dark, all six categories (48 states): plane = content + 28 px above and below in every
+state, no transform, no horizontal overflow, grid cards inside the content width (x 86–1354 at 1440, 24–369
+at 393), no console errors; with reduced motion (48 states) no moving copy, same fit, no overflow.
+Contact sheets: `scratchpad/pw/{clients-1440-light,community-1440-dark,clients-393-light,community-393-dark}.png`.
+The full CTA browser suite was not rerun (as asked).
+
+**Open.** (44) The brief's tiers say "5–8: two-row brick layout"; the restored earlier behaviour (the video)
+uses the editorial 12 × 3 templates for 5–8 as well. Kept the video's behaviour; a two-row 5–8 variant is a
+small follow-up if wanted. (45) On phones the moving wall's names render in a different face from desktop;
+not changed in this pass (no diff touches it), not investigated. (46) At 1440 every 1–8 grid is the same
+height (three content-sized rows, 348 px), as before.
+
+## October 30: shared CTA system and landing-page inventory (uncommitted)
+
+Brief: the owner's recording `~/Desktop/Oct-30-2026 09-27-22.mp4` (13 s, /community hero; it was not attached
+to the message, this is the file of that time on the Desktop) shows the hero CTAs behaving differently in
+Light and Dark. Measured before the change (1440, both routes):
+
+| Control | Light | Dark |
+|---|---|---|
+| Outline CTA, rest | cream fill, ink label, pink border | transparent, white label, cream border |
+| Outline CTA, hover | canonical pink, ink label, no ring | canonical pink, ink label, cream ring |
+| Filled CTA, hover | #CE1252, cream label, no ring | #CE1252, white label, cream ring |
+| Join panel CTAs, hover | cream ring (local override) | cream ring |
+| "Your Guild kit" | pink text on the surface (under 4.5:1) | same |
+| "Explore all … discoveries" | 1 px outline, no hover | same |
+| Explore filters | 24 px radius, 1 px border, pink edge on hover | same |
+| Showcase arrows, Hats tree link | pink | pink |
+| Theme toggle, hover | darker surface | no change |
+| Form Back / Next | 6 px radius, body type; Back hover 8% tint (dark: cream tint) | |
+
+### Landing-page inventory (numbered, English; order unchanged)
+
+`00` is the shared site shell (fixed, not part of the section order). "Shared" means the same component on
+both routes; the copy may differ by route.
+
+**`/clients`, Hire the DAO** (`src/app/(venture)/clients/page.tsx`)
+
+| # | Block | DOM anchor | Component | Shared with /community | Interactive controls |
+|---|---|---|---|---|---|
+| 00 | Site Header + persistent top bar | (none; `#site-navigation`) | `shell/SiteHeader.tsx`, `shell/AudienceSwitch.tsx`, `shell/ThemeSwitch.tsx` (`segmented`) | Yes (route nav items) | Pinned bar: sword logo (→ `/`), audience switch (2 links), Day/Night switch (2 buttons; one switch on phones). Scrolling header: nav links (Previous works, Services, Builders, Build with us), mobile menu button |
+| 01 | Hero | `#top` | `sections/Hero.tsx` (`grouped curtain still`) | Yes (copy differs) | Filled pill "Tell us what you're building", outline pill "Explore our work ↓"; curtain on hover/scroll |
+| 02 | Guild Ticker | (none) | `sections/GuildTicker.tsx` (`LoopBand`) | Yes, identical | None |
+| 03 | Client Showcase ("What we've built for our clients") | `#case-studies` (`#featured-work`) | `sections/PreviousWorks.tsx` (`rotate`), `primitives/LogoMarquee.tsx` | No | 9 logo buttons ×4 copies in marquees, previous/next arrows (desktop), project site text link, compact filled pill "Discuss your project"; 3 s rotation |
+| 04 | Services & Capabilities ("What are you trying to ship?") | `#spears` (`#services`, `#capabilities`) | `sections/Services.tsx` | Same module as /community 10 (different content) | 5 accordion disclosures; compact filled pill (phones only) |
+| 05 | Builders Network ("A wide network of builders.") | `#team` | `sections/BuilderNetwork.tsx` (`masonry`), `TeamWall.tsx` | Yes | 6 filter tabs, text link "Build with the Guild →", 30 builder cards (links), drag on the moving wall |
+| 06 | People Behind the Work ("The Guild runs on owners, not employees.") | `#stewards` | `sections/Stewardship.tsx` | No | 4 steward cards (links), "Explore all members ↗" |
+| 07 | Guild Inquiry ("Begin a transmission" / "Tell us what you're building") | `#contact` (`#project-inquiry`) | `sections/GuildInquiry.tsx`, `HireUs.tsx`, `ui/wizard.tsx` | No | Inquiry bar (disclosure), 3-step form (fields, select, Back/Previous, Next/Complete), close link, hunt clue disclosures |
+| 08 | RaidGuild Creed | (none) | `sections/Creed.tsx` | Yes (copy differs) | Filled pill; hunt "walker" disclosures |
+| 09 | Footer | (none) | `shell/SiteFooter.tsx` | Yes, identical | Brand link, GitHub, X, Discord, Brand archive |
+
+**`/community`, Join the DAO** (`src/app/(venture)/community/page.tsx`)
+
+| # | Block | DOM anchor | Component | Shared with /clients | Interactive controls |
+|---|---|---|---|---|---|
+| 00 | Site Header + persistent top bar | (none; `#site-navigation`) | `shell/SiteHeader.tsx`, `AudienceSwitch.tsx`, `ThemeSwitch.tsx` | Yes (route nav items) | Same pinned bar as /clients 00; nav links (Membership, Queen Raida, Projects, Join our community ↗), mobile menu button |
+| 01 | Hero ("Find your people / Build something / TOGETHER") | `#top` | `sections/Hero.tsx` (`grouped curtain still`, `title.finale`) | Yes (copy differs) | Filled pill "Explore the community →", outline pill "See what we're building ↓" |
+| 02 | Guild Ticker | (none) | `sections/GuildTicker.tsx` | Yes, identical | None |
+| 03 | About RaidGuild ("Builder-owned / member-governed") | `#guild` | `sections/GuildPrologue.tsx` (`kitExpander`) | No (also on `/`) | "See more ↗" disclosure, "Your Guild kit →" toggle and panel with close ×, filled "Join the DAO →", outline "Enter Discord", 2 text links |
+| 04 | Queen Raida ("A scout for signal. A scribe for the Guild.") | `#raida` | `sections/ImmersiveFeature.tsx` (`tone="raida"`) | No | Filled pill "Ask our AI CTO" |
+| 05 | About Moloch ("Together we slay / Moloch" + sword mark) | `#moloch` | `sections/ImmersiveFeature.tsx` (`tone="moloch"`) | No | Outline pill "Find your path into the Guild" (coral scene) |
+| 06 | Projects & Experiments ("What happens when builders follow their curiosity.") | `#work` (`#uncharted`, `#gallery`) | `sections/WallOfCuriosities.tsx`, `ArtifactGallery.tsx` | No (also on `/`) | 5 filter chips, discovery cards (buttons), "Explore all … discoveries", detail view (back link, filled action) |
+| 07 | Builders Network | `#team` | `sections/BuilderNetwork.tsx` (`masonry`) | Yes | Same as /clients 05 ("Meet the Guild on Portal ↗") |
+| 08 | Hats Tree ("RaidGuild's Hats Tree") | `#hats` (`#stewards`) | `sections/HatsTree.tsx` | No | 5 role cards (buttons, `aria-pressed`), "Explore the Hats Tree ↗" |
+| 09 | Join the DAO ("Your first step into the Guild.") | `#join` | `sections/JoinCTA.tsx` | No (shares the /clients panel surface) | Filled "Create your Portal profile →", outline "Enter Discord", membership guide link |
+| 10 | Ideas into Working Systems | `#spears` (`#services`, `#capabilities`) | `sections/Services.tsx` (`practices`) | Same module as /clients 04 | 5 accordion disclosures, specialist practices disclosure, compact filled pill (phones only) |
+| 11 | RaidGuild Creed | (none) | `sections/Creed.tsx` | Yes (copy differs) | Filled pill; hunt disclosures |
+| 12 | Footer | (none) | `shell/SiteFooter.tsx` | Yes, identical | Same as /clients 09 |
+
+Shared blocks: Header, Hero, Guild Ticker, Builders Network, Creed, Footer, and the Services module (with
+different content). Route-specific: /clients Showcase, People, Inquiry; /community About RaidGuild, Queen
+Raida, Moloch, Projects & Experiments, Hats Tree, Join. Note: `#stewards` is the People section on /clients
+but an anchor inside the Hats Tree on /community.
+
+### Button behaviour decision
+
+One system for both routes, identical in Light and Dark (decision record: `docs/venture-integration.md`,
+October 30). The dark theme block no longer redefines any `--cta-*` token.
+
+| State | All variants | Detail |
+|---|---|---|
+| Rest | Filled: canonical pink #EE3C78, ink label #071C1D (4.66:1), pink edge. Outline: transparent, border and label in the surface's text colour. | Chips at rest are outline; selected or open chips are the filled rest |
+| Hover | Deep coral #CE1252, white label #FAFAFA (5.25:1), edge kept, 2 px lift | Only under `(hover: hover)`: no stuck hover after a tap |
+| Pressed | #A80E44, white label (7.16:1), inset shadow, no lift | Returns to rest on release |
+| Focus | 3 px dark-green outline at 3 px offset over a 3 px cream halo | Same geometry and colours in both themes |
+| Disabled | Opacity .5, not-allowed, no hover or lift | |
+
+Hover model chosen: the "white text conversion" option on a fixed deep-coral surface, the existing dark
+hover. Cream fill and cream outline were rejected: the light theme puts CTAs on cream and light-blue
+surfaces, where both would disappear.
+
+Contrast exceptions (by surface, documented in the CSS): (1) light-blue surfaces in the light theme (Join and
+inquiry panels, Explore band): dark-green edge instead of pink (2.66:1); (2) coral scenes (Moloch in both
+themes, the dark creed): filled buttons rest on deep navy #12163B with a white label, every edge navy.
+
+Applied to: hero, section, compact and creed pills; the inquiry bar; form Back/Previous (outline) and
+Next/Complete (filled), now pills in the compact pill type (mono 12 px caps); "Your Guild kit" (chip;
+selected when open); the kit close ×; "Explore all … discoveries" (outline); builder and Explore filters
+(chips, 100 px radius, 2 px border); the detail view's actions (filled) and back link; the audience switch
+(chip; current = selected); the theme toggle; the showcase arrows (icon buttons in the surface colour). Text
+links (builders, showcase site, handbook, membership guide, Hats tree, close inquiry): surface colour,
+underline 1 → 2 px on hover. Accordions keep their coral row hover; their focus ring is the shared one.
+Content cards (builder cards in the moving wall, Explore cards, logo marquee) keep their inset rings
+because their containers clip.
+
+Visible consequences to review: the light hero outline CTA is now transparent (was cream-filled); the
+Moloch outline CTA is transparent with a navy border (was a filled navy pill); the dark creed CTA is
+deep navy (was pink on the pink creed); the showcase arrows and Hats tree link are no longer pink.
+
+### Files changed (uncommitted)
+
+- `src/components/venture/venture.module.css`: tokens; the B3.1 block replaced by the shared system
+  (pills, exceptions, inquiry bar, form buttons); form Back/Previous; old ring overrides removed; a closing
+  section for chips, toggles, icon buttons, text links and focus.
+- `src/components/venture/{audience,showcase,hats,services,feature}.module.css`, `src/components/ArtifactGallery.module.css`.
+- `tests/cta-contrast.test.mjs`: rewritten for the shared tokens (dark block defines no `--cta-*`;
+  labels, edges and two-tone focus on every surface; coral exceptions).
+- `docs/venture-integration.md` (October 30 entry), `STATUS.md`.
+- No TSX, copy, data, order or asset changes.
+
+### Validation (2026-10-30, dev server http://localhost:3017)
+
+- `bun run test` 81/81. `bunx tsc --noEmit --incremental false` passes. `bun run lint` 0 errors, the old
+  `ThemeAnchor` warning.
+- Browser suite `scratchpad/pw/cta.mjs` (Playwright, system Chrome), **1080/1080 on the dev server** (run 2, before the restart and before the builder change below). Covers /clients and
+  /community at 1600, 1440, 393 and 375 px in light and dark: no horizontal overflow, no broken images, no
+  console errors or failed requests, every visible link/button/disclosure ≥ 44 px; every pill 100 px radius,
+  2 px border; filled rest pink + ink (navy + white on coral), outline transparent with border = label =
+  surface colour; for 25 control classes plus form Back/Next and the kit close: hover = #CE1252 + white
+  (desktop), pressed = #A80E44 + white and back to rest on release, text links thicken without turning
+  pink, focus ring 3 px dark green + cream halo; on phones a tap leaves no hover; disabled (pill, filter,
+  form button) at .5 and not-allowed with no hover; Tab from the top reaches both hero CTAs with a ring at
+  every stop; hover, pressed and focus identical in Light and Dark for every class; reduced motion: colour
+  change without lift or transition.
+- Run 1 found two defects, fixed: the selected builder filter lost its focus halo (no semantic focus rule in
+  `audience.module.css`), and the light theme toggle kept its hover surface after a tap on phones.
+- Comparison matrix: **not produced.** The run on the restarted server (run 3), which was to capture
+  the crops and assemble the matrix (`scratchpad/pw/compose.mjs`), was stopped when the builder
+  iteration below started; its start had already removed run 2's crops. Rerun `node cta.mjs && node
+  compose.mjs` in `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/4717b022-d4f9-4cde-9670-71d41c82afce/scratchpad/pw/`
+  to produce `scratchpad/cta-matrix-1440.png`. The suite's per-class state values are in run 2's log
+  (`scratchpad/pw/cta-run2.txt`); the state table above is what it verified.
+- Not run: production build (not requested; dev server only). Not verified: Safari, Firefox, physical
+  devices (touch was emulated), screen readers; visual parity with `40f3910` (not compared; these
+  controls were superseded by later owner decisions).
+
+### Remaining inconsistencies and open questions
+
+38. **Moloch CTA**: now a transparent navy-outlined pill (the rule for outline CTAs). The owner had
+    approved a filled navy pill there; if that look should stay, make the CTA `variant: "filled"` in
+    `community.ts` (it would then rest navy with a white label under the coral exception).
+39. **Dark creed CTA** is deep navy on the pink creed (was pink on pink, an invisible edge). Confirm.
+40. **Accordion rows** (Services) keep a coral text hover rather than the button hover; they are
+    disclosures, not buttons.
+41. **Header nav links** keep their underline-grow hover; only their focus ring changed.
+42. **Hats role cards, builder cards, Explore cards and logo buttons** keep their own hover (content cards);
+    the logo buttons' and Hats cards' focus now use the shared ring.
+43. **Form buttons** now use the compact pill type (uppercase mono); the labels' copy is unchanged.
+
+Comparison matrix: produced in the afternoon run (see "October 30 (afternoon)" above).
 
 ## Design system normalization, iteration 01 (2026-10-29; committed with iteration 02)
 
@@ -615,6 +1347,10 @@ the session scratchpad
     iteration 01 "white labels in dark" decision.
 37. **Builder layouts:** short categories (≤ 8) never move; on phones they stack one card per line. The
     9+ tier still moves when wider than the screen (All builders everywhere, Coordination on phones).
+44–46. **Builder module (October 30, later):** see the builder section (5–8 layout, phone wall face, grid
+    height).
+38–43. **Shared CTA system (October 30):** see "Remaining inconsistencies and open questions" in the October 30
+    section (Moloch CTA variant, dark creed CTA, accordion and nav hovers, content cards, form button type).
 
 ## Iteration 04: Moloch title, builder layouts, CTA states (2026-10-29, committed with this note)
 

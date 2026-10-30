@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { featuredHats, hatImageSize, hatsParent } from "@/lib/data/hats";
 import type { HatsContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
@@ -19,12 +19,22 @@ const BRANCHES = [10, 30, 50, 70, 90].map((x) => `M50 0 C50 22 ${x} 16 ${x} 40`)
 // five featured roles). On phones one column with a vertical tree. Each role
 // card reads artwork, name, then ID. Hovering highlights a card; clicking or
 // focusing selects it (aria-pressed): it grows slightly and its siblings go
-// quieter; clicking it again or Escape clears it. Reduced motion keeps the
+// quieter; clicking it again, clicking outside the roles or Escape clears
+// it. Reduced motion keeps the
 // states without the zoom. It is a reference snapshot of roles
 // (lib/data/hats.ts), never of wearers; the full tree, the section's one
 // link, opens on Hats Protocol.
 export default function HatsTree({ content }: { content: HatsContent }) {
   const [active, setActive] = useState<string | null>(null);
+  const rolesRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    if (!active) return;
+    const clear = (event: PointerEvent) => { if (!rolesRef.current?.contains(event.target as Node)) setActive(null); };
+    document.addEventListener("pointerdown", clear);
+    return () => document.removeEventListener("pointerdown", clear);
+  }, [active]);
+
   return (
     <section id="hats" className={styles.hats} aria-labelledby="hats-title">
       <span id="stewards" className={venture.anchorTarget} />
@@ -48,7 +58,7 @@ export default function HatsTree({ content }: { content: HatsContent }) {
             {BRANCHES.map((d) => <path key={d} d={d} />)}
           </svg>
           <p className={styles.srOnly}><CopyText copy={content.featuredLabel} /></p>
-          <ul className={styles.children} data-active={active ? "" : undefined} onKeyDown={(event) => { if (event.key === "Escape") setActive(null); }}>
+          <ul ref={rolesRef} className={styles.children} data-active={active ? "" : undefined} onKeyDown={(event) => { if (event.key === "Escape") setActive(null); }}>
             {featuredHats.map((item) => (
               <li key={item.slug} style={{ "--hat-accent": item.accent } as CSSProperties}>
                 <button
