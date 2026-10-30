@@ -40,12 +40,13 @@
 
   /* Semantic CTA states (B3.1). Website-scoped and provisional: #071C1D and
      #CE1252 await brand-system approval; canonical pink stays #EE3C78.
-     Light: default 4.66:1 (ink on pink), hover/pressed 4.52:1 (cream on #CE1252). */
+     Light: default 4.66:1 (ink on pink), hover 4.52:1 (cream on #CE1252),
+     pressed 6.3:1 (cream on #A80E44), so rest, hover and pressed all differ. */
   --cta-bg: var(--color-pink);
   --cta-fg: #071c1d;
   --cta-bg-hover: #ce1252;
   --cta-fg-hover: var(--color-cream);
-  --cta-bg-active: #ce1252;
+  --cta-bg-active: #a80e44;
   --cta-fg-active: var(--color-cream);
   --cta-hover-ring: transparent;
   --cta-ring: var(--color-dark-green);
@@ -71,16 +72,15 @@
   --surface-selected: var(--color-cyan);
   --on-selected: var(--color-navy);
   --text-meta: var(--color-cream);
-  /* Dark (October 29): white labels in every button. White on canonical pink is
-     3.8:1, too low for 16px labels, so filled buttons use #CE1252 (5.3:1) and
-     keep a canonical pink edge, since #CE1252 alone is 2.87:1 against navy.
-     Hover adds a cream ring. Outline buttons are transparent with a cream edge.
-     So that the resting button never reads as pressed, hover is a brighter pink
-     (#E0185E, 4.5:1) and pressed a darker one (#A80E44, 7.2:1). */
-  --cta-bg: #ce1252;
-  --cta-fg: var(--color-white);
+  /* Dark (October 29, final): the light system. Filled buttons rest on the
+     canonical pink #EE3C78 with the ink label (4.66:1; white on canonical pink
+     is only 3.8:1); hover darkens to #CE1252 with a white label (5.3:1) and a
+     cream ring; pressed is #A80E44 (7.2:1). Pink keeps a 4.2:1 edge on navy.
+     Outline buttons are transparent with a cream edge and white label. */
+  --cta-bg: var(--color-pink);
+  --cta-fg: #071c1d;
   --cta-edge: var(--color-pink);
-  --cta-bg-hover: #e0185e;
+  --cta-bg-hover: #ce1252;
   --cta-bg-active: #a80e44;
   --cta-fg-hover: var(--color-white);
   --cta-fg-active: var(--color-white);
@@ -1886,15 +1886,21 @@
 }
 @media (prefers-reduced-motion: reduce) { .heroCurtain .heroForeground { transition: none; } }
 
-/* Builder network, lists that fit without moving (short categories, reduced
-   motion): the moving wall's composition, still. Cards keep their natural
-   width (as on the wall, never stretched), rows are staggered like brick
-   courses, and the block is centred on the coral band. */
+/* Builder network, lists that fit without moving: the moving wall's
+   composition, still. Cards keep their natural width (never stretched) and are
+   centred with auto margins (a wider list is never cut off on the left). Up to
+   8 results (data-tier 1-2, 3-4, 5-8) fill the plane's width and wrap, centred,
+   so phones stack them instead of scrolling; from 760 px the second of two
+   courses is staggered like brick. 9+ keeps its three courses. */
 .site[data-audience] .teamNetwork .memberLoop:has(> .memberMasonry[data-static]) { min-width: 100%; }
-/* Auto margins centre it without ever pushing a wider list off the left edge. */
 .site[data-audience] .teamNetwork .memberMasonry[data-static] { align-items: flex-start; flex: 0 0 auto; margin-inline: auto; }
 .site[data-audience] .teamNetwork .memberMasonry[data-static] > .memberRail > :is(a, div) { flex: 0 0 auto; }
-.site[data-audience] .teamNetwork .memberMasonry[data-static] > .memberRail:nth-child(even) { margin-left: clamp(28px, 5vw, 72px); }
+.site[data-audience] .teamNetwork .memberLoop:has(> .memberMasonry:not([data-tier="9+"])) { width: 100%; }
+.site[data-audience] .teamNetwork .memberMasonry:not([data-tier="9+"]) { align-items: center; width: 100%; }
+.site[data-audience] .teamNetwork .memberMasonry:not([data-tier="9+"]) > .memberRail { flex-wrap: wrap; justify-content: center; max-width: 100%; }
+@media (min-width: 760px) {
+  .site[data-audience] .teamNetwork .memberMasonry[data-tier="5-8"] > .memberRail:nth-child(2) { margin-left: clamp(56px, 8vw, 144px); }
+}
 
 /* Inquiry form on the light-blue module (Frame 122, refined for Frame 123):
    it reads as the introduction panel transformed, not an application inside
@@ -1966,26 +1972,26 @@
 .site[data-audience] .teamNetwork .teamWall[data-bleed] .memberMarquee { -webkit-mask-image: none; mask-image: none; }
 
 /* /community scenes (October 29): in the dark theme each major module is its
-   own surface instead of one continuous navy. About RaidGuild and the builders
-   stay navy, the builders' wall on a coral band; Queen Raida and the Hats Tree
-   are deep navy (feature.module.css, hats.module.css) and Moloch coral;
-   Projects and the capabilities are raised navy and the Join scene deep navy,
-   with its panel raised. */
+   own surface instead of one continuous navy. In page order: About RaidGuild
+   navy, Queen Raida deep navy, Moloch coral, Projects raised navy, builders
+   navy (wall on the coral plane), Hats Tree deep navy, Join navy with its panel
+   raised, capabilities raised navy; no two neighbours share a surface. */
 :global(html[data-theme="dark"]) .site[data-audience="community"] :global(#work) { background: var(--color-navy-raised); }
-:global(html[data-theme="dark"]) .site[data-audience="community"] :global(#join) { background: var(--surface-deep); }
+:global(html[data-theme="dark"]) .site[data-audience="community"] :global(#join) { background: var(--color-navy); }
 :global(html[data-theme="dark"]) .site[data-audience="community"] :global(#spears) { background: var(--color-navy-raised); }
 
-/* Builder wall, both audience routes (October 29): every category runs on a
-   Moloch coral band (the site's coral, #EE3C78) in both themes, tilted 1
-   degree with its brick rows and cards, so the whole wall leans together; at
-   1 degree the names stay easy to scan. Cards are opaque (cream in light, navy
-   in dark) so names and roles keep their usual contrast on the band. The
-   section keeps its own surface. A moving wall's band is wider than the
-   screen so its tilted ends never show a gap; the section clips it. */
+/* Builder wall, both audience routes (October 29): every category runs on one
+   continuous Moloch coral plane (the site's coral, #EE3C78) across the full
+   width, in both themes, tilted 1 degree with its courses and cards, so the
+   whole wall leans together; at 1 degree the names stay easy to scan. The
+   plane's height follows the courses, so a short category never sits in a
+   large empty container. Cards are opaque (cream in light, navy in dark) so
+   names and roles keep their usual contrast. The plane is wider than the
+   screen so its tilted ends never show a gap; the section clips it. Still
+   lists get side padding that keeps cards inside the screen. */
 .site[data-audience] .teamNetwork { overflow-x: clip; }
-.site[data-audience] .teamNetwork .teamWall:has(.memberMasonry) { background: var(--coral); border-radius: 24px; box-sizing: content-box; height: auto; padding-block: 26px; transform: rotate(-1deg); }
-.site[data-audience] .teamNetwork .teamWall[data-bleed]:has(.memberMasonry) { border-radius: 0; margin-inline: calc(50% - 50vw - 32px); width: calc(100vw + 64px); }
-.site[data-audience] .teamNetwork .teamWall:has(.memberMasonry) .memberMarquee { height: auto; padding-inline: 16px; }
+.site[data-audience] .teamNetwork .teamWall:has(.memberMasonry) { background: var(--coral); box-sizing: border-box; height: auto; margin-inline: calc(50% - 50vw - 32px); max-width: none; padding-block: 28px; transform: rotate(-1deg); width: calc(100vw + 64px); }
+.site[data-audience] .teamNetwork .teamWall:has(.memberMasonry) .memberMarquee { -webkit-mask-image: none; height: auto; mask-image: none; padding: 0 calc(32px + var(--composition-gutter, 24px)); }
 .site[data-audience] .teamNetwork .teamWall[data-bleed]:has(.memberMasonry) .memberMarquee { padding-inline: 0; }
 .site[data-audience] .teamNetwork .memberMasonry :where(.memberRail > a, .memberRail > div) { background: var(--paper); }
 :global(html[data-theme="dark"]) .site[data-audience] .teamNetwork .memberMasonry :where(.memberRail > a, .memberRail > div) { background: var(--color-navy); }
@@ -1994,10 +2000,14 @@
    (cream on light blue was unreadable); the dark panel keeps cream. */
 :global(html:not([data-theme="dark"])) .site .joinContact .contactCopy .handbookLink { color: var(--color-dark-green); }
 
-/* H3 headings on both audience routes use Ubuntu, never Grinder or Retalic
-   (October 29); display type stays on the section titles (h2). Some h3 rules
-   are module-scoped and more specific, hence the !important. */
+/* Supporting H3 headings on both audience routes use Ubuntu, not Grinder or
+   Retalic (October 29); display type stays on the section titles (h2). Some h3
+   rules are module-scoped and more specific, hence the !important. */
 .site[data-audience] h3, .site[data-audience] h3 em { font-family: var(--font-body), sans-serif !important; }
+/* Exception (owner, October 29): "The Guild runs on owners, / not employees."
+   (.rosterHeading, /clients) keeps its approved display treatment (Grinder,
+   as before the Ubuntu rule). */
+.site[data-audience] .rosterHeading h3, .site[data-audience] .rosterHeading h3 em { font-family: var(--font-display), sans-serif !important; }
 
 /* Audience headlines (Hire and Join, October 29): one treatment and one scale
    logic. Both segments in the headline colour (white on /community), each on

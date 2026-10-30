@@ -14,7 +14,6 @@ import {
 const HB = "https://handbook.raidguild.org/docs/";
 const tae = (text: string) => approved(text, "tae-brief");
 const existing = (text: string) => approved(text, "existing-site");
-const steward = (text: string) => approved(text, "steward-brief");
 
 const joinDestination = () => claim(
   "Interim destination: Portal account sign-up",
@@ -201,12 +200,12 @@ export const communityActivity: ActivityContent = defineNarrative("community.act
   postsHeading: wording("Latest field notes"),
   postsUnavailable: wording("Field notes are temporarily unavailable."),
   allPosts: { label: wording("All field notes on Portal ↗"), href: "https://portal.raidguild.org/posts" },
-  // B3.4: heading and description supplied by the brand steward. The section
-  // keeps its #work / #gallery anchors.
+  // October 29: heading and description from the owner (they replace the brand
+  // steward's B3.4 lines). The section keeps its #work / #gallery anchors.
   collection: {
     label: existing("[ EXPLORE ]"),
     title: { lead: owner("What happens when builders"), em: owner("follow their curiosity.") },
-    intro: steward("A collection of artifacts, experiments, games and ideas RaidGuild members have brought to life across emerging technology."),
+    intro: owner("Games, tools, digital experiences, and field notes from Guild members. Explore what they made, how they approached it, and what they learned."),
   },
 } satisfies ActivityContent);
 
@@ -295,10 +294,11 @@ export const communityRaidaFeature: ImmersiveContent = defineNarrative("communit
   artwork: { alt: existing("Queen Raida") },
 } satisfies ImmersiveContent);
 
-// The October 28 "About Moloch" copy, moved here verbatim.
+// The October 28 "About Moloch" body, verbatim; the October 29 title.
 export const communityMoloch: ImmersiveContent = defineNarrative("community.moloch", {
   label: existing("[ THE GUILD ]"),
-  title: { lead: approved("About", "owner-approval"), em: approved("Moloch", "owner-approval") },
+  title: { lead: owner("Together we slay"), em: owner("Moloch +") },
+  titleMark: { src: "/images/venture/hats/raidguild.png", width: 800, height: 800, alt: existing("RaidGuild") },
   body: claim(
     "In RaidGuild lore, Moloch represents coordination failure: when individual incentives lead to outcomes nobody wants. Building together is our response—through shared ownership, useful tools, and systems that make cooperation easier.",
     "handbook",

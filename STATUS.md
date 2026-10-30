@@ -1,19 +1,24 @@
 # STATUS
 
-Snapshot: 2026-10-29, late evening (-0300). **Iteration 03** (the final visual refinement pass before the
-review deployment) is committed on `feat/venture-beyond-integration` on top of iteration 02 (`a8ff16c`)
-and pushed to `fork/feat/venture-beyond-integration`. **Not deployed:** the fork has no Vercel Git
-integration (no deployments or commit statuses on any commit), so a push creates no preview; the review
-project has only ever been deployed manually with the Vercel CLI, which needs the owner's approval. The
-last deployed review is still release `2bf270d` (`dpl_HqkPYA55qh5V9QHFQpUxwWZ1xjko`).
+Snapshot: 2026-10-29, night (-0300). **Iteration 04** (Moloch title, Explore copy, builder layouts by
+result count, Hats/Projects swap, CTA states) is committed on `feat/venture-beyond-integration` on top of
+iteration 03 (`6ecb1c7`) and pushed to `fork/feat/venture-beyond-integration`. The fork has no Vercel Git
+integration (no deployments or commit statuses on any commit), so the push creates no preview, and this
+iteration was **not deployed** (owner: "do not deploy yet").
 
-Left uncommitted on purpose (the owner's, not part of the iterations): `package.json` (`packageManager`),
-the 21 deleted legacy images, `public/images/casestudies/clients.pdf`, `.DS_Store` files.
+Deployments: Production review still release `2bf270d` (`dpl_HqkPYA55qh5V9QHFQpUxwWZ1xjko`,
+https://raidguild-venture-beyond-review.vercel.app). Preview of iteration 03 `6ecb1c7`:
+`dpl_9RDNQZ5VNvT9hcjDtC5ANj5ho3G8`, https://raidguild-venture-beyond-review-72zh7hv5h.vercel.app (Vercel
+login; deployed 2026-10-29 22:18 with `--build-env SHOW_REVIEW_FLAGS=false`, project env unchanged; record
+`~/Projects/raidguild-backups/2026-10-29/DEPLOY-vercel-review-6ecb1c7.md`).
 
-**Local server:** http://localhost:3017 is running (`bun run dev --port 3017`, restarted at the end of
-this session); `/clients` and `/community` return 200.
+Left uncommitted on purpose (the owner's): `package.json` (`packageManager`), the 21 deleted legacy images,
+`public/images/casestudies/clients.pdf`, `.DS_Store` files.
 
-**Next priority:** owner review of iteration 03, then approval (or not) to deploy it to the review project.
+**Local server:** http://localhost:3017 is running (`bun run dev --port 3017`, restarted at the end of this
+session); `/clients` and `/community` return 200.
+
+**Next priority:** owner review of iteration 04 locally; a preview or production deploy needs approval.
 
 ## Environment
 
@@ -479,8 +484,8 @@ the session scratchpad
 
 ## Working tree
 
-- HEAD: the iteration 03 commit (parent `a8ff16c`, iteration 02, parent `2bf270d`), pushed to
-  `fork/feat/venture-beyond-integration`. `a8ff16c`
+- HEAD: the iteration 04 commit (parent `6ecb1c7`, iteration 03; then `a8ff16c`, iteration 02; then
+  `2bf270d`), pushed to `fork/feat/venture-beyond-integration`. `a8ff16c`
   It contains the documentation reconciliation, iteration 01, the Community follow-up, iteration 02, the
   owner's artwork in `public/images/venture/` (12 PNGs, approved for commit on 2026-10-29) and the deletion
   of `public/images/queen-raida/queen-raida-v2.png` (the owner removed it; nothing references it).
@@ -495,7 +500,7 @@ the session scratchpad
 
 ## Next actions
 
-1. **Owner review** of iteration 03 at http://localhost:3017 (no Git preview exists for the fork). Any
+1. **Owner review** of iteration 04 at http://localhost:3017 (no Git preview exists for the fork). Any
    deploy needs explicit approval (AGENTS.md).
 2. Answer the open questions below, especially those about `/community` (21–24) and the
    copy confirmations (1, 2, 19).
@@ -605,8 +610,55 @@ the session scratchpad
     Hire" (light and dark already matched). Confirm, or describe the dark-theme motion meant.
 35. **Hats selection** has no detail panel (removed in the follow-up); it only enlarges the card. Should a
     selected hat show anything else?
+36. **Dark CTA labels:** resting filled buttons now use the ink label on canonical pink in dark too (white
+    on canonical pink is 3.8:1); labels turn white on hover and press. Confirm this replaces the
+    iteration 01 "white labels in dark" decision.
+37. **Builder layouts:** short categories (≤ 8) never move; on phones they stack one card per line. The
+    9+ tier still moves when wider than the screen (All builders everywhere, Coordination on phones).
 
-## Iteration 03: final visual refinement pass (2026-10-29, committed with this note)
+## Iteration 04: Moloch title, builder layouts, CTA states (2026-10-29, committed with this note)
+
+References: the owner's brief and the full-page captures of the iteration 03 preview
+(`~/Downloads/screencapture-raidguild-venture-beyond-review-72zh7hv5h-vercel-app-*-2026-10-29-22_2*.png`,
+unannotated). Decisions in `docs/venture-integration.md` (iteration 04 entry).
+
+| Area | Change |
+|---|---|
+| About Moloch | Title "Together we slay" / "Moloch +" followed by the supplied `raidguild.png` (alt "RaidGuild"; its square is the coral #EE3C78, so only the swords show on the scene); 34 / 52 hierarchy kept. Body and CTA unchanged. |
+| Explore | Description: "Games, tools, digital experiences, and field notes from Guild members. Explore what they made, how they approached it, and what they learned." (owner); filters, cards, interactions unchanged. |
+| Typography | "The Guild runs on owners, / not employees." (/clients) keeps its display face (Grinder) via an override of the H3 Ubuntu rule; other supporting H3s and Hats labels stay Ubuntu. |
+| Builders, both routes | One continuous full-width coral plane in every category, tilted 1°, its height following the courses (no empty container). Layout by result count (`data-tier`): 1–2 and 3–4 one course, 5–8 two courses (second staggered from 760 px), 9+ three courses (the moving wall when wider than the screen). Up to 8 results always sit still, wrap and centre inside the screen (phones stack them). Same cards, avatars, spacing, hover/focus. |
+| /community order | About → Queen Raida → Moloch → Projects (Explore) → builders → Hats Tree → Join → Ideas → creed (Hats and Explore swapped). Dark: Join's scene is now navy so it differs from the deep-navy Hats Tree before it. |
+| CTAs, both routes and themes | Filled buttons rest on the canonical pink #EE3C78 with the ink label (dark previously rested on #CE1252, the light hover colour); hover #CE1252 (light: cream label, dark: white label, cream ring); pressed #A80E44 (both). Outline, focus and disabled states verified. |
+
+Incident during the session (fixed before commit): a CSS edit that replaced the builder-wall block also
+deleted the blocks after it in `venture.module.css` (the H3 Ubuntu rule, the shared headline fit, the
+Guild kit styles, the creed highlight). The suite caught it; they were restored from `6ecb1c7` and the full
+diff against HEAD was reviewed.
+
+Files: `src/app/(venture)/community/page.tsx`, `src/components/TeamWall.tsx`,
+`src/components/venture/sections/ImmersiveFeature.tsx`, `src/components/venture/{venture,feature}.module.css`,
+`src/lib/narrative/{community,types}.ts`, `tests/{narrative,cta-contrast}.test.mjs`, `STATUS.md`,
+`CHANGELOG.md`, `docs/venture-integration.md`.
+
+### Verification of iteration 04 (2026-10-29)
+
+- `bun run test` 80/80; `bunx tsc --noEmit --incremental false` passes; `bun run lint` 0 errors (the old
+  `ThemeAnchor` warning).
+- Isolated production build (`scratchpad/build-ds03`, no `.env*`) passes; 0 review ids; served on 3018, stopped.
+- Browser suite `scratchpad/pw/ds05.mjs` (ds04 plus this pass): **1112/1112 on the dev server and on the
+  production build.** Adds: section order with the swap; anchors #guild, #raida, #work, #team, #hats,
+  #stewards, #join scroll to their sections (1440, 393); Moloch title text, logo loaded with alt, hierarchy;
+  Explore description; "Guild runs on owners" in Grinder, other H3s Ubuntu; every builder category's tier,
+  full-width plane hugging its content (within 40 px), up to 8 results still and inside the screen with one
+  accessible copy; filled CTAs rest on canonical pink everywhere; filled rest/hover/pressed colours and
+  label contrast, outline hover, keyboard focus ring and disabled state on both routes in both themes. The
+  plane-height allowance was widened from 24 to 40 px after phones measured 2 px over (82 px of padding
+  around the courses); no layout change.
+- Screenshots (production build): `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/afb6ffad-2e28-42d6-b989-2be86bcb321f/scratchpad/ds05/final/`.
+- Not verified: Safari, Firefox, physical devices, screen readers; parity with `40f3910`.
+
+## Iteration 03: final visual refinement pass (2026-10-29, `6ecb1c7`, preview-deployed)
 
 References: the owner's brief, the note "el parallax de la versión light no está desplazando los paneles
 laterales; usar misma transición que dark", and `~/Desktop/Screenshot 2026-10-29 at 9.36.04 PM.png`

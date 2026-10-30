@@ -16,6 +16,11 @@
 .label { color: var(--coral); font: 700 var(--type-accent-label, 19px)/1.35 var(--font-mono), monospace; grid-column: 1 / -1; letter-spacing: .12em; margin: 0 0 18px; text-transform: uppercase; }
 .feature .title { color: inherit; font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 900; grid-column: 1; letter-spacing: .01em; line-height: 1.05; margin: 0; text-transform: uppercase; }
 .feature .title em { color: var(--coral); display: inline-block; font-family: var(--font-display), sans-serif; font-size: 52px; font-style: italic; font-weight: 400; line-height: 1; margin-top: 4px; }
+/* The logo after "Moloch +": the supplied RaidGuild mark. Its square is the
+   scene's coral, so only the crossed swords show; they fill about half the
+   square, so the image is 1.9em with negative margins, and the swords stand
+   about one cap height tall on the line. */
+.titleMark { display: inline-block; height: 1.9em; margin: -.5em -.4em -.5em -.35em; vertical-align: -.48em; width: 1.9em; }
 .body { font: 400 var(--type-body-lg, 18px)/1.5 var(--font-body), sans-serif; grid-column: 2; margin: 0; max-width: 36em; }
 .cta { grid-column: 2; justify-self: start; margin-top: 32px; }
 

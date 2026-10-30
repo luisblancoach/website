@@ -42,10 +42,17 @@ describe("semantic CTA tokens", () => {
     assert.ok(contrast(light("on-pink"), light("cta-bg")) >= 4.5, "text on the pink band");
   });
 
-  test("dark theme (October 29): white labels on #CE1252 with a canonical pink edge", () => {
-    assert.equal(darkTok("cta-fg"), "#fafafa");
-    assert.ok(contrast(darkTok("cta-fg"), darkTok("cta-bg")) >= 4.5, "dark default");
-    assert.ok(contrast("#fafafa", "#ee3c78") < 4.5, "white on canonical pink would fail");
+  test("both themes rest on canonical pink; hover and pressed are distinct darker states", () => {
+    for (const tok of [light, darkTok]) {
+      assert.equal(tok("cta-bg"), "#ee3c78", "default is the canonical pink");
+      assert.notEqual(tok("cta-bg-hover"), tok("cta-bg"), "hover differs from rest");
+      assert.notEqual(tok("cta-bg-active"), tok("cta-bg-hover"), "pressed differs from hover");
+      assert.ok(contrast(tok("cta-fg"), tok("cta-bg")) >= 4.5, "default label");
+    }
+    assert.ok(contrast("#fafafa", "#ee3c78") < 4.5, "white on canonical pink would fail, hence the ink label");
+  });
+
+  test("dark theme: outline buttons and the pink edge on navy", () => {
     assert.ok(contrast(darkTok("cta-edge"), surfaces.navy) >= 3, "pink edge on navy");
     assert.ok(contrast(darkTok("cta-outline-fg"), surfaces.navy) >= 4.5, "outline label on navy");
     assert.ok(contrast(darkTok("cta-outline-border"), surfaces.navy) >= 3, "outline edge on navy");

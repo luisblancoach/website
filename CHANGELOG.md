@@ -6,7 +6,16 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
-## 2026-10-29 · Iteration 03 commit (pushed to `fork/feat/venture-beyond-integration`, not deployed)
+## 2026-10-29 · Iteration 04 commit (pushed to `fork/feat/venture-beyond-integration`, not deployed)
+
+- Moloch title with the RaidGuild logo; the owner's Explore description; display face kept for "The Guild
+  runs on owners"; builder layouts by result count on one full-width coral plane; Hats Tree and Projects
+  swapped on /community; canonical-pink resting CTAs with distinct hover and pressed states in both themes.
+- Verified: `bun run test` 80/80, `tsc`, lint (0 errors), isolated production build, browser suite
+  1112/1112 on the dev server and the production build. No Git preview (the fork has no Vercel Git
+  integration). Not verified: Safari, Firefox, devices, screen readers.
+
+## 2026-10-29 · Iteration 03 commit `6ecb1c7` (pushed; preview `dpl_9RDNQZ5VNvT9hcjDtC5ANj5ho3G8`, not production)
 
 - Final visual refinement pass for `/clients` and `/community`: the hero curtain on both routes; the
   new /community order with Moloch after Queen Raida; the Hats Tree with branches, artwork-first cards

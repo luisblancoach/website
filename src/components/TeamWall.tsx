@@ -93,9 +93,14 @@ export default function TeamWall({ members, suspended = false, masonry = false, 
     };
   }, [suspended, loops, speed]);
 
-  // Every category uses the same masonry cards (October 29): short lists get
-  // fewer rows (one or two cards per row) and sit still.
-  const rows = Math.min(3, Math.ceil(members.length / 2));
+  // Every category uses the same masonry cards on the same coral plane
+  // (October 29). The layout follows the number of results: 1–2 and 3–4 in
+  // one course, 5–8 in two staggered courses, 9+ in three (the moving wall when
+  // wider than the screen). Lists up to 8 wrap within the plane on narrow
+  // screens instead of moving, so they never sit in an empty container.
+  const count = members.length;
+  const tier = count <= 2 ? "1-2" : count <= 4 ? "3-4" : count <= 8 ? "5-8" : "9+";
+  const rows = count <= 4 ? 1 : count <= 8 ? 2 : 3;
   return (
     <div className={styles.teamWall} data-bleed={bleed && loops ? "" : undefined}>
       <div
@@ -140,7 +145,7 @@ export default function TeamWall({ members, suspended = false, masonry = false, 
                 : <div key={member.name}>{content}</div>;
             });
             return masonry ? (
-              <div className={styles.memberMasonry} key={copy} aria-hidden={copy === 1 ? true : undefined} data-static={loops ? undefined : ""}>
+              <div className={styles.memberMasonry} key={copy} aria-hidden={copy === 1 ? true : undefined} data-static={loops ? undefined : ""} data-tier={tier}>
                 {masonryRows(members, rows).map((row, index) => <div className={styles.memberRail} key={index}>{cards(row)}</div>)}
               </div>
             ) : (

@@ -1,6 +1,6 @@
 "use client";
 
-import { getImageProps } from "next/image";
+import Image, { getImageProps } from "next/image";
 import type { EntityArtwork } from "@/lib/data/illustrations";
 import type { ImmersiveContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
@@ -35,7 +35,7 @@ export default function ImmersiveFeature({ id, content, artwork, tone }: { id: s
       </div>
       <div className={styles.copy}>
         <p className={styles.label}><CopyText copy={content.label} /></p>
-        <h2 id={`${id}-title`} className={styles.title}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+        <h2 id={`${id}-title`} className={styles.title}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} />{content.titleMark && <> <Image className={styles.titleMark} src={content.titleMark.src} width={content.titleMark.width} height={content.titleMark.height} alt={content.titleMark.alt.text} sizes="64px" /></>}</em></h2>
         <p className={styles.body}><CopyText copy={content.body} /></p>
         <NarrativeAnchor link={content.cta} className={`${venture.pill} ${filled ? venture.pillFilled : venture.pillOutline} ${styles.cta}`}>
           <span><CopyText copy={content.cta.label} /></span>

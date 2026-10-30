@@ -15,6 +15,21 @@ Integration decisions:
 - Retain the supplied illustrations, palettes, icons, portraits and video scenes.
 - Make section sizing responsive rather than enforcing Figma heights when content grows.
 
+October 29, 2026 (night) — Iteration 04 (committed and pushed, not deployed):
+- About Moloch: "Together we slay" / "Moloch +" with the supplied `raidguild.png` as an image (alt
+  "RaidGuild"), sized 1.9em with negative margins because the swords fill about half its square; the
+  square is the scene's coral, so it disappears.
+- Explore: the owner's description; the brand steward's B3.4 lines are fully replaced.
+- "The Guild runs on owners, / not employees." keeps Grinder (override after the H3 Ubuntu rule).
+- Builders: a full-width coral plane in every category (no rounded container); layout tiers by count
+  (1–2, 3–4 one course; 5–8 two, staggered; 9+ three). Tiers up to 8 fill the plane width and wrap,
+  so they never trigger the moving wall and phones stack them.
+- /community: Projects before builders, Hats Tree after them; Join's dark scene navy.
+- CTAs: one state system in both themes. Rest canonical pink + ink label, hover #CE1252, pressed
+  #A80E44. In dark this replaces the iteration 01 #CE1252 resting colour (it was the hover colour).
+- Process note: a block replacement by text range deleted unrelated later blocks; restored from the
+  previous commit. Range edits on this file need an exact end marker.
+
 October 29, 2026 (late evening) — Iteration 03, final visual refinement pass (committed and pushed,
 not deployed):
 - Hero: light and dark already matched; the side panels moved only on /clients. /community now uses

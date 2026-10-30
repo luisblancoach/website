@@ -182,6 +182,8 @@ export type QueenRaidaContent = {
 export type ImmersiveContent = {
   label: Copy;
   title: Title;
+  // An image after the second title line (About Moloch: the RaidGuild logo).
+  titleMark?: { src: string; width: number; height: number; alt: Copy };
   body: Copy;
   cta: NarrativeLink & { variant: "filled" | "outline" };
   artwork: { alt: Copy };

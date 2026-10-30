@@ -19,7 +19,7 @@ import { foundryHorizontal, foundryPortrait, molochArtwork, queenRaidaArtwork } 
 import { forAudience } from "@/lib/narrative/public";
 
 // Join the DAO architecture (October 29, final pass): hero → About RaidGuild →
-// Queen Raida → About Moloch → Hats Tree → builders → Projects & Experiments →
+// Queen Raida → About Moloch → Projects & Experiments → builders → Hats Tree →
 // join → ideas into working systems → creed. The hero uses the same curtain
 // as /clients. Tae's tension, path and activity chapters
 // (Phase 2) return in the editorial batch. Unconfirmed claims are flagged in
@@ -52,9 +52,9 @@ export default function CommunityPage() {
       <GuildPrologue content={forAudience(communityGuild)} metrics={false} kitExpander />
       <ImmersiveFeature id="raida" content={forAudience(communityRaidaFeature)} artwork={queenRaidaArtwork} tone="raida" />
       <ImmersiveFeature id="moloch" content={forAudience(communityMoloch)} artwork={molochArtwork} tone="moloch" />
-      <HatsTree content={forAudience(communityHats)} />
-      <BuilderNetwork content={forAudience(buildersCommunity)} masonry />
       <WallOfCuriosities content={forAudience(communityActivity.collection)} />
+      <BuilderNetwork content={forAudience(buildersCommunity)} masonry />
+      <HatsTree content={forAudience(communityHats)} />
       <JoinCTA content={forAudience(communityJoin)} />
       <Services content={ideas} portrait={foundryPortrait} horizontal={foundryHorizontal} practices={{ label: capabilities.practicesLabel, items: capabilities.practices }} />
       <Creed content={forAudience(communityCreed)} />

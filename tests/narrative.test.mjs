@@ -261,9 +261,11 @@ describe("Join the DAO iteration (/community)", () => {
     assert.equal(guild.kit.items.length, 4);
   });
 
-  test("Moloch is its own feature with the October 28 copy, verbatim", () => {
+  test("Moloch is its own feature: October 29 title with the logo, October 28 body verbatim", () => {
     const moloch = communityNarrative.communityMoloch;
-    assert.equal(`${moloch.title.lead.text} ${moloch.title.em.text}`, "About Moloch");
+    assert.equal(`${moloch.title.lead.text} ${moloch.title.em.text}`, "Together we slay Moloch +");
+    assert.equal(moloch.titleMark.src, "/images/venture/hats/raidguild.png", "the supplied RaidGuild logo, not text");
+    assert.equal(moloch.titleMark.alt.text, "RaidGuild");
     assert.match(moloch.body.text, /^In RaidGuild lore, Moloch represents coordination failure/);
     assert.equal(moloch.cta.label.text, "Find your path into the Guild");
   });
@@ -331,13 +333,11 @@ describe("October 29 artwork contract", () => {
 });
 
 describe("steward-supplied copy", () => {
-  // Only the brand steward's verbatim B3.4 lines may carry the "steward-brief" source.
-  const STEWARD_BRIEF = new Set(["Projects and", "Experiments", "A collection of artifacts, experiments, games and ideas RaidGuild members have brought to life across emerging technology."]);
-  test("steward lines are verbatim and approved", () => {
+  test("the steward's B3.4 lines were replaced by the owner's October 29 copy", () => {
     const lines = collectCopy([communityNarrative, clientsNarrative, sharedNarrative]).filter((copy) => copy.source === "steward-brief");
-    // October 29: the owner replaced the heading; the steward's intro remains.
-    assert.equal(lines.length, 1);
-    for (const copy of lines) { assert.ok(STEWARD_BRIEF.has(copy.text), copy.text); assert.equal(copy.status, "approved"); }
+    assert.equal(lines.length, 0);
+    assert.equal(communityNarrative.communityActivity.collection.intro.text, "Games, tools, digital experiences, and field notes from Guild members. Explore what they made, how they approached it, and what they learned.");
+    assert.equal(communityNarrative.communityActivity.collection.intro.source, "owner-approval");
   });
 
   test("the gallery heading is the owner's October 29 line; its anchor and nav label are unchanged", () => {
