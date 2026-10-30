@@ -13,3 +13,16 @@ export const foundryHorizontal: Illustration = { src: "/images/illustrations/ilu
 export const crewHorizontal: Illustration = { src: "/images/illustrations/ilus_horiz_003.png", width: 1024, height: 768 };
 // A builder keeping the antenna, servers and tools running: "Keepers of the signal".
 export const keeperHorizontal: Illustration = { src: "/images/illustrations/ilus_horiz_001.png", width: 1024, height: 768 };
+
+// Immersive features on /community (October 29): the owner's artwork in three
+// cuts per entity (docs/asset-provenance.md). Desktop shows the wide horizontal
+// cut, phones the vertical cut, and the 16:9 rectangle covers tablets and
+// squarer monitors (ImmersiveFeature). Replace a file at its path to change the art.
+export type EntityArtwork = { desktop: Illustration; rectangle: Illustration; mobile: Illustration };
+const entity = (name: string, file: string): EntityArtwork => ({
+  desktop: { src: `/images/venture/entities/${name}/${file}-desktop.png`, width: 2877, height: 1230 },
+  rectangle: { src: `/images/venture/entities/${name}/${file}-rectangle.png`, width: 2508, height: 1412 },
+  mobile: { src: `/images/venture/entities/${name}/${file}-mobile.png`, width: 1536, height: 2304 },
+});
+export const queenRaidaArtwork = entity("queen-raida", "queen");
+export const molochArtwork = entity("moloch", "moloch");

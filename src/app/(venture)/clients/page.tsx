@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export default function ClientsPage() {
   return (
     <>
-      <Hero content={forAudience(clientsHero)} grouped curtain />
+      <Hero content={forAudience(clientsHero)} grouped curtain still />
       <GuildTicker />
       <PreviousWorks content={forAudience(clientsPreviousWorks)} rotate />
       <Services content={forAudience(clientsServices)} portrait={foundryPortrait} horizontal={foundryHorizontal} />

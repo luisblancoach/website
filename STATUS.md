@@ -1,26 +1,21 @@
 # STATUS
 
-Snapshot: 2026-10-28 (evening). The validated `/clients` iteration is deployed
-to the independent Vercel review (`dpl_7Bm3eKJtSDLEHyeHRRPdHfU4Nx1N`). The Hire the DAO iteration is released as `da9165b` and deployed
-to the independent Vercel review (`dpl_HeuA2CyFgTtiAtvut1MrQB8ECkbR`). The team's October 28
-feedback, the follow-up interaction fixes, the Frame 122 refinements (hero curtain, showcase
-spacing, adaptive builder results, two-state inquiry module, form hierarchy) and the Frame 123
-refinements (builder heading scale, faster builder wall, compact line-based inquiry form), the
-full-bleed builder wall, the automatic showcase rotation and the /community "Join the DAO" copy
-(Join our community, About Moloch) are implemented locally and **uncommitted**, awaiting the owner's review at http://localhost:3017/clients.
-Nothing was staged, committed or pushed. The `/clients` iteration was deployed from a clean temporary archive;
-the worktree changes remain uncommitted.
+Snapshot: 2026-10-29 21:xx -0300. **Iteration 02** (the owner's October 29 evening brief for `/clients` and
+`/community`) is committed on `feat/venture-beyond-integration` together with the uncommitted work it builds
+on (the October 29 documentation reconciliation, design system normalization iteration 01, the Community
+visual refinement follow-up) and the owner's artwork in `public/images/venture/` (approved for commit in
+this session), then pushed to `fork/feat/venture-beyond-integration`. The commit hash, the push and
+whether Vercel built a preview are reported to the owner at close; Vercel was not deployed manually. The
+last deployed review is still release `2bf270d` (`dpl_HqkPYA55qh5V9QHFQpUxwWZ1xjko`) unless a Git-connected
+preview appears.
 
-## In progress: Join the DAO iteration
+Left uncommitted on purpose (the owner's, not part of the iteration): `package.json` (`packageManager`),
+the 21 deleted legacy images, `public/images/casestudies/clients.pdf`, `.DS_Store` files.
 
-The community hero, navigation and creed primary CTAs now read “Join our community”. The Guild chapter
-is now “About Moloch” and includes the supplied Moloch, Hats Tree and stewardship copy, with links to
-the DAO Roles handbook and Hats Protocol. Its actions are “Explore the Hats Tree” and “Find your path
-into the Guild”. Changes are uncommitted and not deployed.
+**Local server:** http://localhost:3017 is running (`bun run dev --port 3017`, restarted at the end of
+this session); `/clients` and `/community` return 200.
 
-Verification: `bun run test` 68/68, `bunx tsc --noEmit` passes, and `bun run build` passes with the
-existing `HeaderJoin.tsx` unused-variable warning removed for this iteration. Visual parity against the
-October 23 baseline is not verified because the referenced checkout is unavailable.
+**Next priority:** owner feedback on iteration 02 (local or preview), then the open questions 27–33.
 
 ## Environment
 
@@ -28,18 +23,19 @@ October 23 baseline is not verified because the referenced checkout is unavailab
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
 | Branch | `feat/venture-beyond-integration` (no upstream configured) |
-| HEAD | The documentation closeout commit "docs: record the Hire the DAO review release", whose parent is the release `da9165b10a9b1347e932809ac4af984fde21f3c8`. Both are pushed to `fork/feat/venture-beyond-integration`. |
-| Compared with `origin/main` (`b02d67b`) | 84 ahead, 1 behind |
-| Other worktrees | `raidguild-venture-beyond` (`feat/tae-content-update`), `raidguild-tae-narrative`, `raidguild-tae-review` |
+| HEAD | The release `2bf270dc02806ed19a4420fd93e8c04fd130a344` "feat(venture): October 28 Hire the DAO and Join the DAO refinements", parent `f842d87`. Pushed to `fork/feat/venture-beyond-integration`. |
+| Compared with `origin/main` (`b02d67b`) | 85 ahead, 1 behind |
+| Other worktrees | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
+| Local server | http://localhost:3017 (`bun run dev --port 3017`, restarted 2026-10-29); `/`, `/clients`, `/community` 200, serving the `2bf270d` application code |
 
 ## References (keep them separate)
 
 | | Approved visual baseline | Integrated release | Deployed review |
 |---|---|---|---|
-| **What** | October 23 Venture Beyond dual-audience iteration | Hire the DAO iteration (October 27 designs) | Independent review deployment of the integrated release |
-| **Commit** | `40f39109cb85` (2026-10-23 16:24 -0300) | `da9165b10a9b` (2026-10-28). Previous release: `4a771d873e0f` (2026-10-27). | `da9165b10a9b` (clean `git archive` of the commit) |
+| **What** | October 23 Venture Beyond dual-audience iteration | October 28 Hire the DAO and Join the DAO refinements | Independent review deployment of the integrated release |
+| **Commit** | `40f39109cb85` (2026-10-23 16:24 -0300) | `2bf270dc0280` (2026-10-28 22:23 -0300). Previous releases: `da9165b10a9b` (2026-10-28), `4a771d873e0f` (2026-10-27). | `2bf270dc0280` (clean `git archive` of the commit) |
 | **Where** | `~/Projects/raid-guild/website`, branch `design/venture-beyond-iteration` | This worktree; https://github.com/luisblancoach/website/tree/feat/venture-beyond-integration | https://raidguild-venture-beyond-review.vercel.app |
-| **Tags** | `checkpoint/oct23-iteration`, `backup/venture-beyond-oct23` | None for `da9165b` (not requested). Earlier: `release/review-4a771d8`, `release/review-b4c9e1e`. | none |
+| **Tags** | `checkpoint/oct23-iteration`, `backup/venture-beyond-oct23` | None for `2bf270d` or `da9165b` (not requested). Earlier: `release/review-4a771d8`, `release/review-b4c9e1e`. | none |
 | **In this branch's history** | No; its compositions were ported in separately (B3.x commits) | Yes | Yes (same commit) |
 
 ### Approved visual baseline
@@ -67,19 +63,19 @@ October 23 baseline is not verified because the referenced checkout is unavailab
 
 ### Deployed review
 
-Source: `~/Projects/raidguild-backups/2026-10-28/DEPLOY-vercel-review-da9165b.md`, which
-follows the procedure in `~/Projects/raidguild-backups/2026-10-27/DEPLOY-vercel-review-4a771d8.md`.
+Source: `~/Projects/raidguild-backups/2026-10-28/DEPLOY-vercel-review-2bf270d.md`, which
+follows the procedure in `DEPLOY-vercel-review-da9165b.md` (same folder).
 
 | Item | Value |
 |---|---|
-| Deployed | 2026-10-28 04:18 UTC, via Vercel CLI 65.2.0 (`npx` cache; the 4a771d8 deploy used 65.4.0) |
+| Deployed | 2026-10-29 01:25 UTC (2026-10-28 22:25 -0300), via Vercel CLI 65.2.0 (`npx` cache) |
 | Project | `raidguild-venture-beyond-review` (scope `luisblancoachs-projects`) |
-| Environment and ID | Vercel Production, `dpl_HeuA2CyFgTtiAtvut1MrQB8ECkbR` (https://raidguild-venture-beyond-review-ia727ffql.vercel.app; per-deployment URLs require Vercel login) |
-| Production URL | https://raidguild-venture-beyond-review.vercel.app |
-| Release | `da9165b`, from a clean `git archive` (`~/Projects/raidguild-backups/2026-10-28/deploy-da9165b`). It excludes the uncommitted `packageManager` line, `clients.pdf` and the vertical Queen Raida image. The `.env.local` that `vercel link` wrote (an OIDC token) was deleted before upload. |
-| Build | Next.js 15.5.23 with Bun (`bun install --frozen-lockfile`, `bun run build`) on Vercel; the same archive was built and tested locally first |
-| Variables | `SHOW_REVIEW_FLAGS` only (Production and Preview), value `false`; no secrets |
-| Rollback | Promote `dpl_2PQiaWtMuRVojKoLXuYgAD4cmgSa` (release `4a771d8`, deployed 2026-10-27 04:25 UTC), for example with `vercel promote` or a rollback in the Vercel dashboard |
+| Environment and ID | Vercel Production, `dpl_HqkPYA55qh5V9QHFQpUxwWZ1xjko` (https://raidguild-venture-beyond-review-qz9pi1ezj.vercel.app; per-deployment URLs require Vercel login) |
+| Production URL | https://raidguild-venture-beyond-review.vercel.app (`/clients`, `/community`) |
+| Release | `2bf270d`, from a clean `git archive` (`~/Projects/raidguild-backups/2026-10-28/deploy-2bf270d`) plus `.vercel/project.json` copied from the da9165b deploy (no `vercel link`, no `.env*` written). It excludes the uncommitted `packageManager` line, the 21 deleted legacy images (still in the repository and deployed), `clients.pdf` and the vertical Queen Raida image. |
+| Build | Next.js 15.5.23 with Bun on Vercel; the exact release tree was installed, tested (71/71), type-checked and built locally first |
+| Variables | `SHOW_REVIEW_FLAGS` (Production) only; no secrets |
+| Rollback | Promote `dpl_DsHcdtCVBX6QNKNHSx4iwUaxyhxz` (22:16, same content, uncommitted source) or `dpl_HeuA2CyFgTtiAtvut1MrQB8ECkbR` (release `da9165b`), with `vercel promote` or Instant Rollback |
 | Unavailable by design | Project inquiry form (HTTP 500) and `/chat` (503), because there are no secrets |
 
 - `raidguild-venture-review` is a separate October 23 deployment, untouched (last updated
@@ -88,7 +84,93 @@ follows the procedure in `~/Projects/raidguild-backups/2026-10-27/DEPLOY-vercel-
   UTC it still returned 302 to `raidguild-website-redesign-production.up.railway.app`.
 - Not changed: raidguild.org, Cloudflare, Railway and `origin`.
 
-## In progress: October 28 feedback (uncommitted, not deployed)
+## Design system normalization, iteration 01 (2026-10-29; committed with iteration 02)
+
+References: the owner's October 29 captures of `/clients` and `/community`
+(`~/Downloads/screencapture-localhost-3017-{clients,community}-2026-10-29-*.png`, light and dark) and
+the Hats app screenshot of tree 1822 (`~/Desktop/Screenshot 2026-10-29 at 5.14.37 PM.png`). Decisions
+are in `docs/venture-integration.md` (October 29 entry); the asset manifest is in
+`docs/asset-provenance.md` ("Placeholder slots").
+
+| Area | Change |
+|---|---|
+| Hero | One title scale for both routes (`.heroTitleLong`): lead `min(34px, 8.4vw)` / 46 / 58 px, second line `min(52px, 13.2vw)` / 58 / 73 px (the October 27 design). /community was 34–58 px on both lines. /community keeps its coral second line; /clients keeps its headline-colour line (`.heroTitlePlain`) and the curtain. Copy and video unchanged. |
+| Buttons | Dark theme, both routes: white labels (`--color-white`, the brand's #FAFAFA); filled buttons on `#CE1252` (5.3:1; white on canonical pink is 3.8:1) with a canonical pink edge (`--cta-edge`, 4.2:1 on navy); hover adds the cream ring; outline buttons transparent with a cream edge (`--cta-outline-border`). The "Start a Guild inquiry" summary follows. Light theme unchanged. Heights, paddings, radii and icons were already shared (56/52 px pills; 44 px compact pills on /clients). |
+| Builder network | /community uses the /clients implementation (`BuilderNetwork masonry`): masonry wall at 36 px/s, adaptive grids for 1–8 results, full bleed while moving, showcase-scale heading. Data, links, filters, reduced motion and the no-duplicates fix unchanged. No illustration added to /community. |
+| Capabilities | /community renders "Ideas into working systems" with the shared `Services` module (same accordion, typography, spacing, foundry portrait/horizontal art), keeping its heading, intro, services, "Open a Guild inquiry" and the specialist practices disclosure (`Services practices`). `Capabilities.tsx` is no longer used by /community. |
+| Join | `JoinCTA` sits on the /clients inquiry panel (`contactCyan`: light-blue in light, raised navy in dark). Copy, Portal and Discord actions and the membership guide unchanged; no inquiry form. |
+| Order | hero → About RaidGuild (`#guild`) → Queen Raida (`#raida`) → Projects and Experiments (`#work`) → the Hats Tree (`#hats`, anchor `#stewards`) → builders (`#team`) → Join (`#join`) → About Moloch (`#moloch`) → ideas into working systems (`#spears`) → creed. Navigation anchors unchanged. |
+| About RaidGuild | `communityGuild` restored verbatim from `f842d87` ("Builder-owned / member-governed", body, "See more", "Your Guild kit" with four benefits, the cohort requirement, "Join the DAO" / "Enter Discord", handbook and Queen Raida links). |
+| Queen Raida / Moloch | New `sections/ImmersiveFeature.tsx` + `feature.module.css`: full-width art via `<picture>` (desktop horizontal, phones ≤ 700 px vertical, from `getImageProps`), copy below, showcase heading scale, one CTA. Queen Raida: approved heading and body (owner-approval), CTA "Ask our AI CTO" (existing), art `queen-raida-v2.png` / the owner's untracked vertical cut (falls back to the horizontal cut when missing). Moloch: the October 28 copy verbatim, CTA "Find your path into the Guild", placeholder art. Surfaces: Queen Raida `--scroll-100` (light) / `--surface-deep` #12163B (dark); Moloch `--moloch-600` in both themes with cream text and `--moloch-200` accents. No parallax: neither artwork has separated layers. The October 23 Queen Raida carousel is no longer rendered (copy kept). |
+| Hats Tree | New `sections/HatsTree.tsx` + `hats.module.css`, data in `src/lib/data/hats.ts`: parent 1822 "RaidGuild Steward Admin" above the five featured roles (Knowledge, Infrastructure, Sync, Participation, Brand), tree connectors, the other four roles listed, a reference-snapshot caption, "Explore the Hats Tree" → https://app.hatsprotocol.xyz/trees/100/1822, DAO Roles and Hats Protocol links. Role cards are buttons (hover, focus, tap or click select; `aria-pressed`; details in a polite live region). Descriptions only for Brand and Sync Steward, quoted from the handbook's DAO Roles page (claims). No wearers or portraits. Dark green scene in both themes; vertical tree on phones. Replaces "Keepers of the signal" (steward roster no longer rendered on /community; still on /clients as People behind the work). The October 28 Hats Tree and stewardship copy moved here verbatim. |
+| Dark scenes | /community: About navy, Queen Raida deep navy, Projects raised navy, Hats dark green, builders navy, Join deep navy with a raised panel, Moloch red, capabilities raised navy, creed pink; no two neighbours share a surface. |
+| Creed | The coral "build." and the taller mobile creed now apply to both routes. |
+
+Files (uncommitted):
+- Modified: `src/app/(venture)/community/page.tsx`, `src/components/venture/{venture,audience,services}.module.css`,
+  `src/components/venture/sections/{BuilderNetwork,JoinCTA,Services}.tsx`, `src/lib/data/illustrations.ts`,
+  `src/lib/narrative/{community,types}.ts`, `tests/{narrative,cta-contrast}.test.mjs`,
+  `docs/{asset-provenance,venture-integration}.md`, `STATUS.md`, `CHANGELOG.md`.
+- New: `src/components/venture/sections/{ImmersiveFeature,HatsTree}.tsx`,
+  `src/components/venture/{feature,hats}.module.css`, `src/lib/data/hats.ts`, and the seven placeholder
+  PNGs in `public/images/venture/entities/` and `public/images/venture/hats/`.
+
+### Verification of iteration 01 (2026-10-29)
+
+- `bun run test` 78/78 (new: About restored, Moloch and Queen Raida copy, Hats content and links,
+  tree structure, hat PNG size and transparency, Moloch slot sizes, dark CTA contrast).
+  `bunx tsc --noEmit` passes. Lint: 0 errors, the old `ThemeAnchor` warning.
+- `SHOW_REVIEW_FLAGS=false bun run build` passes in an isolated copy (no `.env*`); served on 3018
+  and stopped afterwards; 0 review ids in `/community`.
+- Browser suite (`ds01.mjs`, Playwright): 396/396 on the dev server and on the production build:
+  both routes at 1600, 1440, 393 and 375 px in light and dark: shared hero scale, filled-button
+  contrast ≥ 4.5:1, white dark-theme labels, light buttons unchanged, every builder filter unique with
+  the right count and one accessible copy, adaptive grids, full-bleed masonry wall, no overflow, no
+  broken images or failed requests, no console errors; on /community: section order, About restored,
+  Queen Raida and Moloch art switching horizontal/vertical, full width, copy below, approved copy,
+  Hats parent, five roles in order, four more, connectors, tree link, snapshot label, no wearers,
+  capabilities on the Services module, Join panel and actions, distinct dark scenes, Moloch red,
+  navigation targets; Hats keyboard focus, hover (desktop) and tap (phone), wall 36 px/s, reduced
+  motion (still wall, no transitions); /clients curtain, rotation and inquiry states unchanged.
+- Screenshots (side by side, both routes, light and dark, 1440 and 393; full pages at all four widths):
+  `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/afb6ffad-2e28-42d6-b989-2be86bcb321f/scratchpad/ds01/final/`.
+- Not verified: Safari, Firefox, physical devices, screen readers; live Hats data (the app is
+  client-rendered; the tree is labelled a snapshot); visual parity with `40f3910` (not compared:
+  these modules are new or superseded by the owner's later references).
+
+## Released: October 28 refinements (`2bf270d`)
+
+The sections below ("Contents: October 28 feedback", "Interaction fixes", "Frame 122", "Frame 123",
+"Full-bleed wall and showcase rotation", "/community: Join the DAO iteration") describe what this
+release contains, written while the work was in progress; all of it is committed in `2bf270d` and
+deployed. Where they say "uncommitted", read "committed in `2bf270d`".
+
+### Verification summary
+
+| Check | Result |
+|---|---|
+| Release tree before committing (clean export) | `bun run test` 71/71; `bunx tsc --noEmit` passes; `bun run build` passes; 0 review ids in the prerendered `/clients` and `/community` pages |
+| Lint | 0 errors, 1 warning (`ThemeAnchor` unused, `HeaderJoin.tsx:78`), present before this work |
+| Production URL, browser suites | general 75/75, rotation and full-bleed wall 66/66, October 28 96/96, marquee 40/40; Frame 122/123 suite: the full 1440 px pass (61 checks) ran, one failure caused by a local DNS outage, which also stopped the run |
+| Frame 122/123 suite at 1024, 393 and 375 px | 365/365 on the identical local production build; **not run on production** |
+| Not verified | form submission (no backend secrets), Safari, Firefox, physical devices (touch was emulated), screen readers, visual parity of the new `/community` Guild copy |
+
+### Verification of the published review (2026-10-28 22:26–23:40 -0300, production URL)
+
+- `/`, `/clients`, `/community` HTTP 200; release markers present ("Build with us", Tae's Daedalus
+  copy, "The Guild runs on owners", "Join our community", "About Moloch", "DAO Roles"); no review
+  ids or notes in the HTML.
+- New Daedalus button (MD5 `97089d2b…`) and screenshot 200; `clients.pdf` 404; ddls.co, the DAO
+  Roles page, join-the-guild, Hats Protocol and Portal join respond 200.
+- Browser suites against the production URL: general 75/75, rotation and full-bleed wall 66/66,
+  October 28 96/96, marquee 40/40. The Frame 122/123 suite ran its full 1440 px pass, 61 checks,
+  all passing except one that failed only because this machine lost DNS mid-run
+  (`ERR_NAME_NOT_RESOLVED`), which also stopped the run; its 1024, 393 and 375 px passes were not
+  run on production (they passed 365/365 on the identical local production build). Two suites
+  needed a longer page-load wait on production (slow image responses from this connection).
+- Not verified: form submission (no backend), Safari, Firefox, physical devices, screen readers.
+
+## Contents: October 28 feedback (released in `2bf270d`)
 
 Against the deployed review (`dpl_HeuA2CyFgTtiAtvut1MrQB8ECkbR`, release `da9165b`). References:
 `~/Downloads/Frame 120.png` (desktop, 3840 px wide, a 1600 px layout at 2.4×) and
@@ -174,7 +256,7 @@ builder wall. No handwritten note asks for a faster wall; the speed change follo
   no overflow, no console errors. Screenshots (local and the published review, before/after):
   `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/afb6ffad-2e28-42d6-b989-2be86bcb321f/scratchpad/join/`.
 
-Changed files (all uncommitted):
+Files in `2bf270d` (listed while uncommitted):
 - Code and data: `src/lib/narrative/types.ts`, `src/lib/narrative/clients.ts`,
   `src/lib/narrative/shared.ts`, `src/lib/data/caseStudies.ts`, `src/components/TeamWall.tsx`,
   `src/components/venture/sections/BuilderNetwork.tsx`,
@@ -399,32 +481,29 @@ the session scratchpad
 
 ## Working tree
 
-- The release `da9165b` contains exactly the 38 approved files. The documentation closeout
-  commit changes only `STATUS.md` and `CHANGELOG.md`.
-- **October 28 feedback**: uncommitted; see "In progress" above.
-- **User changes, preserved and still uncommitted:**
+- HEAD: the iteration 02 commit (parent `2bf270d`), pushed to `fork/feat/venture-beyond-integration`.
+  It contains the documentation reconciliation, iteration 01, the Community follow-up, iteration 02, the
+  owner's artwork in `public/images/venture/` (12 PNGs, approved for commit on 2026-10-29) and the deletion
+  of `public/images/queen-raida/queen-raida-v2.png` (the owner removed it; nothing references it).
+- **Owner's changes, preserved and still uncommitted:**
   - `package.json`: the `packageManager: yarn@1.22.22` line.
-  - 21 manually deleted legacy images in `public/images/`: `cohort-*` (8),
-    `expect-image-*` (4), `hire-image-*` (4) and `home-*` (5).
-    - They are still in the repository and in the deployed archive.
-    - Only the unused components `HomeHero`, `CohortHero`, `HireUsSection`,
-      `CohortProcessSection` and `CohortValueSection` reference them.
-  - `public/images/queen-raida/queen_raida_reference_vertical.png`: untracked `/community`
-    artwork, not used.
-- **Never commit these local files:**
-  - `public/images/casestudies/clients.pdf` (reference only)
-  - `public/images/casestudies/.DS_Store` and `public/images/queen-raida/.DS_Store` (gitignored)
+  - 21 manually deleted legacy images in `public/images/`: `cohort-*` (8), `expect-image-*` (4),
+    `hire-image-*` (4) and `home-*` (5). Still in the repository and in the deployed archive;
+    only unused components reference them.
+- **Never commit these local files:** `public/images/casestudies/clients.pdf`; `.DS_Store` files.
+- Do not run `bun run build` in this worktree while `bun run dev` is running; build in a copy
+  (the dev server and the build share `.next`).
 
 ## Next actions
 
-1. Owner review of the October 28 feedback and interaction fixes at
-   http://localhost:3017/clients (dev server on port 3017, started this session with
-   `bun run dev --port 3017`), and a decision on the hero parallax (open question 13).
-2. On approval: commit the files listed under "In progress" (not `package.json`, the 21
-   legacy deletions, `clients.pdf` or the vertical Queen Raida image), push to the fork, and
-   deploy a clean archive to `raidguild-venture-beyond-review` as for `da9165b`.
-3. Physical-device checks: trackpad momentum, iOS and Android touch flings, Safari and
-   Firefox, and a screen reader on the marquee.
+1. **Owner feedback** on iteration 02 (http://localhost:3017, or the Vercel preview if the push built one).
+   Any deploy still needs explicit approval (AGENTS.md).
+2. Answer the open questions below, especially those about `/community` (21–24) and the
+   copy confirmations (1, 2, 19).
+3. Decide on a documentation commit for this reconciliation, and on `release/review-2bf270d`
+   (and `release/review-da9165b`) tags.
+4. Physical-device checks: trackpad momentum, iOS and Android, Safari and Firefox, a screen reader.
+5. Optional: rerun the Frame 122/123 suite on production for 1024, 393 and 375 px.
 
 ## Open questions
 
@@ -447,7 +526,7 @@ the session scratchpad
    work and have not been rechecked.
 7. **`raidguild.estudioblanco.org`:** when and how should it be redirected to
    `raidguild-venture-beyond-review`?
-8. **Release tag:** should `da9165b` get a `release/review-da9165b` tag, like the earlier
+8. **Release tags:** should `da9165b` and `2bf270d` get `release/review-*` tags, like the earlier
    review releases?
 9. **Problem** is displayed as "Problem"; Tae's copy says "Problem Media". Rename the project?
 10. **/community** shares the builder wall, people section and creed. Apply the masonry wall,
@@ -490,3 +569,151 @@ the session scratchpad
     Discord". Align it with "Join our community"?
 24. **Guild CTAs on desktop** now stack (the longer labels no longer fit side by side, as "Join the
     DAO" and "Enter Discord" did).
+25. **Iteration 01 decisions:** (a) the dark filled-button pink is #CE1252, not canonical pink,
+    so white labels pass 4.5:1; (b) /community keeps its coral hero line; (c) the October 23 Queen
+    Raida carousel and the steward roster are no longer shown on /community; (d) "About RaidGuild"
+    restores "Join the DAO" / "Enter Discord" and the four Guild-kit benefits verbatim, though the
+    main CTA now reads "Join our community"; (e) Moloch uses Moloch red, not coral (coral fails
+    body-text contrast); (f) the new labels "[ Queen Raida ]", "Featured roles", "Also in the tree",
+    the snapshot caption and "DAO Roles ↗" are flagged as wording; (g) "Find your path into the
+    Guild" wraps onto two lines in its pill at 393 px; (h) Projects and Experiments keeps its own
+    heading scale. (Follow-up update: (b) superseded, the hero is now all white; (e) superseded, Moloch is
+    coral with navy text; "Also in the tree" and "DAO Roles ↗" are no longer used.)
+26. **Hats role descriptions:** no longer shown (the detail panel was removed in the follow-up).
+    If they return: the handbook calls infrastructure "Infrastructure Maestro" and knowledge
+    "Handbook Steward"; confirm the mapping first.
+27. **Follow-up interpretations (2026-10-29):** (a) "Moloch Coral" read as the site's coral #EE3C78
+    (it matches the Moloch artwork); no token of that name exists. (b) "Lilac/blue" text on coral is
+    deep navy #12163B: navy and indigo fail contrast on coral. (c) The coral background on the builder
+    network is a tilted band behind the masonry, not the whole section (so the heading and filters keep
+    their contrast). (d) "The Participation Steward detail" read as the role detail panel below the
+    tree (it showed whichever role was selected); the "Stewards." intro paragraph is kept. Confirm, or
+    remove that paragraph too. (e) With no detail panel, the hat cards are no longer interactive.
+28. **Join headline size on phones:** keeping "SERIOUS WEB3 BUILDERS" on one line makes it about
+    23 px at 393 px (the Hire headline is 33 / 52 px and wraps "WORKING PRODUCTS" onto two lines below
+    about 420 px). Accept the smaller headline, shorten the copy, or allow the wrap?
+29. **Rights for the new artwork** in `public/images/venture/` were not stated; the earlier approval
+    covered `queen-raida-v2.png`. Confirm public use. (The owner approved committing it on 2026-10-29.)
+30. **Headline size on phones:** keeping each segment on one line makes the Join headline 16 / 20 px and
+    the Hire headline 23.5 / 29.5 px at 393 px. Accept, shorten the copy, or allow a wrap on phones?
+31. **"Explore the community →"** keeps the Portal join destination of the old primary CTA. Should it go
+    elsewhere (for example the Portal home or an in-page section)?
+32. **Builders:** short categories now use the masonry cards instead of the October 28 editorial grid;
+    confirm that the grid can go for good.
+33. **Guild kit on /clients:** the Guild module is not on /clients, so the expander exists only on
+    /community. The H3, CTA, accordion, creed, builder and panel changes apply to both routes.
+
+## Iteration 02: October 29 evening brief (2026-10-29, committed with this note)
+
+References: the owner's brief and the three Desktop captures of that evening
+(`~/Desktop/Screenshot 2026-10-29 at 6.22.58 PM.png`, the Guild kit; `8.20.25 PM`, the builder band in the
+Coordination filter; `8.38.17 PM`, the Join panel with review markers on its heading, body and actions).
+Decisions are in `docs/venture-integration.md` (iteration 02 entry). Applied to both routes wherever the
+module is shared.
+
+| Area | Change |
+|---|---|
+| Hero, /community | Owner copy: eyebrow "[ THE GUILD ]", "Find your people." / "Build something together.", the new subtitle ("builder owned community" in bold), "Explore the community →" (Portal join, unchanged destination) and "See what we’re building ↓" (#work). |
+| Hero, both routes | No parallax: `Hero still` turns off the pointer and scroll layer motion and the copy fade (the /clients curtain stays). One headline rule: the second line scales to its space (≤ 73 px), the first at 58:73, each on one line at every width; `--title-fit` holds each route's measured line width. Phones: Join 16 / 20 px, Hire 23.5 / 29.5 px at 393 px (Hire previously wrapped "WORKING PRODUCTS"). Eyebrow 17 px bold with a shadow. |
+| H3 | Ubuntu on both routes, including h3 em, never Grinder or Retalic (`!important`, since module rules are more specific). Hat labels Ubuntu. "The Guild runs on owners" (/clients) is now Ubuntu. |
+| Guild kit, /community | `GuildPrologue kitExpander`: a "Your Guild kit →" button (`aria-expanded`, `aria-controls`). Desktop: the kit panel slides in from the right in its own grid column and pushes the illustration and text left. Phones: it opens below the text. Closed it is hidden and `inert`; Escape (anywhere) or its close button closes it and returns focus to the toggle; no animation with reduced motion. Not shared with /clients (the module is /community only); "/" keeps the inline kit. |
+| Queen Raida, Moloch | Desktop cut confirmed on desktop, mobile on phones, rectangle on tablets and squarer monitors. Artwork held to `min(58svh, 600px)` (phones 72svh), cropped from the bottom (`object-position: top`); copy 28–44 px below it. No parallax: the files are single flattened images. |
+| Hats Tree | Desktop: title, both texts and the tree link on the left, a smaller tree on the right (96 px RaidGuild mark, five compact cards); one column below 961 px, a vertical tree on phones. The "Explore the roles…" line was removed; one link remains. |
+| Builders, both routes | One card system for every category: the editorial grid for short lists (`builderGrid.ts`, Frame 122) is removed; all categories use the masonry cards (short lists one or two per row, still). Every category runs on the coral band, tilted −1° together with its rows and cards (no counter-rotation). |
+| CTAs | Dark filled buttons: hover #E0185E and pressed #A80E44, distinct from the resting #CE1252 (hover previously equalled rest). Equivalent actions share icons: Portal actions → (hero, Guild "Join the DAO", Join, creed on /community), in-page ↓ (creed on /clients). Every visible link, button and disclosure is ≥ 44 px tall (brand, socials, handbook links, "See more", footnote links). |
+| Expandable rows | Services accordion (both routes): titles 700 at full contrast; descriptions at 82% of the text colour (≥ 7:1). |
+| Creed, both routes | "build." preselected: indigo #303675 highlight with cream type (9:1), no shadow. |
+| Join, /community | Owner copy: "Your first step / into the Guild." (Grinder, regular weight, not italic), new subtitle, "Create your Portal profile →". The rounded coral-stroked panel now frames the /clients inquiry panel too. |
+| Projects heading | "What happens when builders / follow their curiosity." (owner); nav label and anchor unchanged. |
+
+Files: `src/app/(venture)/{clients,community}/page.tsx`, `src/components/TeamWall.tsx`,
+`src/components/ArtifactGallery.module.css`, `src/components/venture/builderGrid.ts` (deleted),
+`src/components/venture/sections/{Hero,GuildPrologue,JoinCTA,Creed,HatsTree}.tsx`,
+`src/components/venture/{venture,hats,feature,services}.module.css`, `src/lib/narrative/{community,types}.ts`,
+`tests/{narrative,members}.test.mjs`, `STATUS.md`, `CHANGELOG.md`, `docs/venture-integration.md`.
+
+### Verification of iteration 02 (2026-10-29)
+
+- `bun run test` 79/79 (copy tests updated to the brief; builder-grid tests replaced by a masonry test).
+  `bunx tsc --noEmit --incremental false` passes. `bun run lint`: 0 errors, the old `ThemeAnchor` warning.
+- `SHOW_REVIEW_FLAGS=false bun run build` passes in an isolated copy (`scratchpad/build-ds03`, fresh
+  `bun install --frozen-lockfile`, no `.env*`); 0 review ids in `/clients` and `/community`; served on 3018, stopped.
+- Browser suite `scratchpad/pw/ds03.mjs`: **712/712 on the dev server and 712/712 on the production build.**
+  Both routes at 1600, 1440, 393, 375 px, light and dark: hero copy and CTAs, one-line headlines inside the
+  screen, no parallax on scroll or pointer, eyebrow weight, filled-button contrast, 44 px targets for every
+  visible link/button/disclosure, all H3 in Ubuntu, accordion title/description contrast, creed highlight and
+  CTA icon, every builder category (counts, uniqueness, one accessible copy, same masonry cards and heights,
+  coral band at −1° with no counter-rotation, card contrast), no overflow, no broken images or failed
+  requests, no console errors, audience switch (fixed, `aria-current`, 44 px, in view at the bottom), coral
+  panel stroke on both routes; /community: section order, art cuts and heights, gap to copy, Moloch contrast,
+  Projects heading, Hats composition, parent mark, order, Ubuntu labels, single link, scenes, connectors, Join
+  copy and Grinder Regular, link contrast. Guild kit at 1600/1440/393/375: closed and inert, Enter opens it
+  (desktop from the right with the image and text moving left; phones below the text, no overflow), Escape
+  and the close button close it and return focus, reduced motion without animation. Art direction at
+  1024×768, 1280×1024, 820×1180, 1920×1080, 1600×900, 700 px. Keyboard reach of the switch, CTA rest vs hover
+  and focus rings, wall speed, reduced motion on both routes; /clients curtain, rotation and inquiry.
+  While writing the suite, its own bugs (a CSS-module selector, a colour parser, rotated card heights,
+  object-position format, a missing `.copy` class in `hats.module.css`) were fixed; one real defect found:
+  Escape did not close the kit after a click on its text (fixed with a document listener).
+- Screenshots (production build): `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/afb6ffad-2e28-42d6-b989-2be86bcb321f/scratchpad/ds03/final/` (`side-by-side-{light,dark}-{1440,393}.png` and full
+  pages). The session scratchpad was wiped once during the day: the iteration 01 and follow-up screenshots
+  and scripts listed in older sections below no longer exist.
+- Not verified: Safari, Firefox, physical devices, screen readers; visual parity with `40f3910` (superseded
+  modules); the attached captures were compared by eye only.
+
+## Community visual refinement follow-up (2026-10-29; committed with iteration 02)
+
+Two passes on the owner's brief of the evening of October 29. A first pass (another session, about
+18:48) changed `HatsTree.tsx`, `hats.module.css` and `venture.module.css` and left 3 tests failing
+(75/78) without a browser check. This session (second pass) completed it and corrected it; decisions
+are in `docs/venture-integration.md` (follow-up entry), artwork in `docs/asset-provenance.md`.
+
+**Owner's working-tree changes found at the start** (left untouched): `public/images/queen-raida/`
+removed (tracked `queen-raida-v2.png` deleted, untracked vertical cut gone); new untracked artwork in
+`public/images/venture/entities/{queen-raida,moloch}/` (desktop, rectangle, mobile) and
+`public/images/venture/hats/` (five 600 × 600 hats plus `raidguild.png`), replacing the iteration 01
+placeholders (which no longer exist). `.DS_Store` files are also in `public/images/venture/`.
+
+| Area | Change |
+|---|---|
+| Hero (/community) | Both segments white and on one line at every width; the second line scales to its space (≤ 73 px), the first at 58:73. 393 px: 18.5 / 23.3 px (was 33 / 52 px with the line clipped). /clients unchanged. |
+| Queen Raida, Moloch | Owner's cuts via `<picture>`: mobile ≤ 700 px, rectangle at ≤ 1199 px or aspect ≤ 3:2, desktop otherwise. Missing-file fallback removed. The dormant October 23 carousel's artwork reference points to `queen-rectangle.png` (the old file was deleted). |
+| Builder wall | Masonry on a coral (#EE3C78) band tilted −1°, wall counter-rotated +1° (level cards); opaque cards (cream / navy); section keeps its surface; band clipped, no overflow. Replaces the first pass's whole-section Moloch red and net-zero ±0.6° tilt. |
+| Join | 2 px coral stroke, 28 px radius (first pass). Membership-guide link dark green on the light panel (was cream on light blue). |
+| Moloch | Coral background, deep navy #12163B text (4.6:1), navy pill CTA with a white label. |
+| Hats Tree | `raidguild.png` parent node with connectors to the five roles; removed "Also in the tree", the role detail panel, the pill CTA and the DAO Roles / GitHub links; one link "Explore the Hats Tree ↗" to tree 1822; cards are a plain list (no buttons); "Stewards." intro paragraph restored (approved copy, removed by the first pass). Deep navy in dark (no green), dark green in light. |
+| H3 | Ubuntu on /community (first pass applied it to both routes; now scoped). |
+| Audience switch | Unchanged; verified fixed, `aria-current`, 44 px targets, keyboard focus ring. |
+
+Files touched in this follow-up: `src/app/(venture)/community/page.tsx`,
+`src/components/venture/sections/{HatsTree,ImmersiveFeature}.tsx`,
+`src/components/venture/{hats,feature,venture}.module.css`, `src/lib/data/{hats,illustrations}.ts`,
+`src/lib/narrative/{community,types}.ts`, `tests/{narrative,public-content,cta-contrast}.test.mjs`,
+`docs/{asset-provenance,venture-integration}.md`, `STATUS.md`, `CHANGELOG.md`.
+
+### Verification (2026-10-29, this session)
+
+- `bun run test`: 80/80 (artwork contract updated to the owner's files and sizes; Hats single link;
+  new coral-scene contrast tests). `bunx tsc --noEmit --incremental false`: passes. `bun run lint`:
+  0 errors, the old `ThemeAnchor` warning (`HeaderJoin.tsx:78`).
+- `SHOW_REVIEW_FLAGS=false bun run build` passes in an isolated copy (`scratchpad/build-ds01`, no
+  `.env*`); 0 review ids in the prerendered `/community`; served on 3018, then stopped.
+- Browser suite `scratchpad/pw/ds02.mjs` (Playwright, system Chrome): production build 476/476. Dev
+  server: first run 475/476, one real failure, a transient `net::ERR_CONNECTION_RESET` at
+  `/community` 1600 light while full-page captures ran against 3018; rerun alone 476/476. A first-run
+  test bug (/clients panel border read as style rather than width) was fixed in the suite, not the page.
+  Covers /clients and /community at 1600, 1440, 393, 375 px in light and dark: Join headline one line
+  per segment, white, inside the screen; /clients headline unchanged; filled-button contrast; builder
+  filters and counts; coral band, tilt angles, level cards, card contrast; no overflow, broken images,
+  failed requests or console errors; audience switch fixed, `aria-current`, ≥ 44 px, in view at the
+  page bottom; section order; artwork cuts, full width, copy below, alt text; Moloch coral and navy
+  text ≥ 4.5:1, CTA contrast; Hats parent mark, five roles in order, removed elements absent, exactly
+  one link to tree 1822, intro and snapshot, scene colours, connectors meeting; all H3 Ubuntu; Join
+  stroke, radius and link contrast; distinct dark scenes with no green. Also: rectangle cut at
+  1024 × 768, 1280 × 1024, 820 × 1180 and 701 px, desktop cut at 1920 × 1080, mobile at 700 px; keyboard
+  reach and focus rings on the switch and the Hats link (1440, 393); wall 36 px/s; reduced motion
+  (still wall, band kept); /clients curtain, rotation and inquiry unchanged.
+- Screenshots (production build): `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/afb6ffad-2e28-42d6-b989-2be86bcb321f/scratchpad/ds02/final/` (side by side `side-by-side-{light,dark}-{1440,393}.png`,
+  full pages per route). Before-state captures of the first pass: `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/afb6ffad-2e28-42d6-b989-2be86bcb321f/scratchpad/ds02/before/`.
+- Not verified: Safari, Firefox, physical devices, screen readers, 1600 px screenshots (suite only),
+  visual parity with `40f3910` (these modules are new or superseded by later owner references).

@@ -1,35 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { Mercenary } from "@/lib/data/members";
 import { masonryRows } from "@/lib/data/memberCategories";
-import { builderGridSlots } from "./venture/builderGrid";
 import styles from "./venture/venture.module.css";
-
-// Short filtered lists on /clients: an editorial grid that fills the wall's
-// area (builderGrid.ts). Each member is one card, in data order.
-function BuilderGrid({ members }: { members: Mercenary[] }) {
-  const slots = builderGridSlots(members.length);
-  if (!slots) return null;
-  const area = ([c1, c2, r1, r2]: number[]) => `${r1} / ${c1} / ${r2} / ${c2}`;
-  return (
-    <div className={styles.teamWall}>
-      <div className={styles.memberGridFrame} role="region" aria-label="Guild members">
-        <div className={styles.memberGrid} data-count={members.length}>
-          {members.map((member, index) => {
-            const slot = slots[index];
-            const style = { "--wide-area": area(slot.wide), "--narrow-area": area(slot.narrow), "--chars": member.name.length } as CSSProperties;
-            const content = <><Image src={member.imagePath} alt="" width={160} height={160} draggable={false} /><span><strong title={member.name}>{member.name}</strong><small>{member.title}</small></span></>;
-            return member.link
-              ? <a key={member.name} className={styles.memberTile} style={style} data-wide={slot.wideShape} data-narrow={slot.narrowShape} href={member.link} target="_blank" rel="noopener noreferrer">{content}<i aria-hidden="true">↗</i></a>
-              : <div key={member.name} className={styles.memberTile} style={style} data-wide={slot.wideShape} data-narrow={slot.narrowShape}>{content}</div>;
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // The first copy is the list of results: each member appears in it once, and it
 // is the only copy in the accessibility tree and the tab order. A second,
@@ -118,8 +93,9 @@ export default function TeamWall({ members, suspended = false, masonry = false, 
     };
   }, [suspended, loops, speed]);
 
-  if (masonry && builderGridSlots(members.length)) return <BuilderGrid members={members} />;
-
+  // Every category uses the same masonry cards (October 29): short lists get
+  // fewer rows (one or two cards per row) and sit still.
+  const rows = Math.min(3, Math.ceil(members.length / 2));
   return (
     <div className={styles.teamWall} data-bleed={bleed && loops ? "" : undefined}>
       <div
@@ -165,7 +141,7 @@ export default function TeamWall({ members, suspended = false, masonry = false, 
             });
             return masonry ? (
               <div className={styles.memberMasonry} key={copy} aria-hidden={copy === 1 ? true : undefined} data-static={loops ? undefined : ""}>
-                {masonryRows(members).map((row, index) => <div className={styles.memberRail} key={index}>{cards(row)}</div>)}
+                {masonryRows(members, rows).map((row, index) => <div className={styles.memberRail} key={index}>{cards(row)}</div>)}
               </div>
             ) : (
               <div className={styles.memberRail} key={copy} aria-hidden={copy === 1 ? true : undefined}>{cards(members)}</div>

@@ -1,5 +1,6 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { communityNarrative } from "../src/lib/narrative/community.ts";
 import { clientsNarrative } from "../src/lib/narrative/clients.ts";
 import { sharedNarrative } from "../src/lib/narrative/shared.ts";
@@ -8,6 +9,8 @@ import { services } from "../src/lib/data/content.ts";
 import { activeSpears } from "../src/lib/data/venture.ts";
 import { caseStudyProjects } from "../src/lib/data/caseStudies.ts";
 import { PORTAL_JOIN_URL } from "../src/lib/data/constants.ts";
+import { HATS_TREE_URL, featuredHats, hatImageSize, hatsParent, hatsRoles } from "../src/lib/data/hats.ts";
+import { molochArtwork, queenRaidaArtwork } from "../src/lib/data/illustrations.ts";
 import { collectCopy, reviewFlagsEnabled } from "../src/lib/narrative/types.ts";
 import { existsSync } from "node:fs";
 
@@ -55,11 +58,16 @@ describe("community narrative", () => {
 
   test("the headline lines from the brief are present and approved", () => {
     const { communityHero, communityTension, communityPath, communityJoin } = communityNarrative;
-    assert.equal(`${communityHero.title.lead.text} ${communityHero.title.em.text}`, "The guild for serious Web3 builders");
+    assert.equal(`${communityHero.title.lead.text} ${communityHero.title.em.text}`, "Find your people. Build something together.");
+    assert.equal(communityHero.eyebrow.text, "[ THE GUILD ]");
     assert.equal(`${communityTension.title.lead.text} ${communityTension.title.em.text}`, "Freelance work versus real ownership");
     assert.deepEqual(communityPath.steps.map((step) => step.title.text), ["Enter a cohort", "Take a raid", "Earn ownership"]);
-      assert.equal(communityHero.paths[0].label.text, "Join our community");
-      assert.equal(communityJoin.actions[0].label.text, "Join the DAO");
+      assert.equal(communityHero.paths[0].label.text, "Explore the community");
+      assert.equal(communityHero.paths[1].label.text, "See what we’re building");
+      assert.equal(communityHero.paths[1].section, "work");
+      assert.equal(`${communityJoin.title.lead.text} ${communityJoin.title.em.text}`, "Your first step into the Guild.");
+      assert.equal(communityJoin.body.text, "Create a Portal profile to explore sessions, projects, and posts. Meet the community on Discord, and read the membership guide when you’re ready to learn how joining the DAO works.");
+      assert.equal(communityJoin.actions[0].label.text, "Create your Portal profile");
   });
 
   test("ownership, governance and membership statements stay flagged", () => {
@@ -235,33 +243,90 @@ describe("clients narrative", () => {
 });
 
 describe("Join the DAO iteration (/community)", () => {
-  test("the main call to action reads Join our community and keeps its destination", () => {
+  test("the main call to action keeps its destination; navigation and creed read Join our community", () => {
     const { communityHero, communityNav, communityCreed } = communityNarrative;
     const primary = communityHero.paths.find((path) => path.primary);
-    assert.equal(primary.label.text, "Join our community");
+    assert.equal(primary.label.text, "Explore the community");
     assert.equal(primary.href, PORTAL_JOIN_URL);
     assert.equal(communityNav.cta.label.text, "Join our community");
     assert.equal(communityNav.cta.href, PORTAL_JOIN_URL);
     assert.equal(communityCreed.cta.label.text, "Join our community");
   });
 
-  test("the Guild section is About Moloch with the Hats Tree and stewardship copy", () => {
+  test("About RaidGuild is restored from f842d87", () => {
     const guild = communityNarrative.communityGuild;
-    assert.equal(`${guild.title.lead.text} ${guild.title.em.text}`, "About Moloch");
-    assert.match(guild.body.text, /^In RaidGuild lore, Moloch represents coordination failure/);
-    assert.equal(guild.more.summary.text, "RaidGuild's Hats Tree");
-    assert.match(guild.more.text.text, /powered by Hats Protocol/);
-    assert.equal(guild.kit.heading.text, "Stewardship");
-    assert.match(guild.kit.items[0].detail.text, /^Stewards are members who take responsibility/);
-    assert.deepEqual(guild.actions.map((action) => action.label.text), ["Explore the Hats Tree", "Find your path into the Guild"]);
-    assert.deepEqual(guild.actions.map((action) => action.variant), ["filled", "outline"]);
-    assert.ok(guild.actions.every((action) => /^https:\/\//.test(action.href)));
+    assert.equal(`${guild.title.lead.text} ${guild.title.em.text}`, "Builder-owned member-governed");
+    assert.match(guild.body.text, /runs as a DAO with no single leader/);
+    assert.equal(guild.kit.heading.text, "Your Guild kit");
+    assert.equal(guild.kit.items.length, 4);
   });
 
-  test("the Guild section links to the DAO Roles handbook page and Hats Protocol", () => {
-    const hrefs = communityNarrative.communityGuild.links.map((link) => link.href);
-    assert.ok(hrefs.some((href) => /dao-operations\/dao-roles$/.test(href)), "DAO Roles handbook");
-    assert.ok(hrefs.some((href) => /Hats-Protocol\/hats-protocol$/.test(href)), "Hats Protocol");
+  test("Moloch is its own feature with the October 28 copy, verbatim", () => {
+    const moloch = communityNarrative.communityMoloch;
+    assert.equal(`${moloch.title.lead.text} ${moloch.title.em.text}`, "About Moloch");
+    assert.match(moloch.body.text, /^In RaidGuild lore, Moloch represents coordination failure/);
+    assert.equal(moloch.cta.label.text, "Find your path into the Guild");
+  });
+
+  test("Queen Raida feature uses the approved copy", () => {
+    const raida = communityNarrative.communityRaidaFeature;
+    assert.equal(`${raida.title.lead.text} ${raida.title.em.text}`, "A scout for signal. A scribe for the Guild.");
+    assert.equal(raida.body.text, "Queen Raida is RaidGuild’s AI agent. She helps spot useful developments, gather context, and turn the Guild’s work into clear updates, drafts, and next steps - giving members more room for the work that needs human judgment: choosing what matters, building trust, and making decisions.");
+    assert.equal(raida.body.source, "owner-approval");
+  });
+
+  test("the Hats Tree section carries the Hats Tree and stewardship copy and links to tree 1822", () => {
+    const hats = communityNarrative.communityHats;
+    assert.equal(`${hats.title.lead.text} ${hats.title.em.text}`, "RaidGuild's Hats Tree");
+    assert.match(hats.intro.text, /powered by Hats Protocol/);
+    assert.match(hats.stewards.detail.text, /^Stewards are members who take responsibility/);
+    assert.match(hats.snapshot.text, /Reference snapshot/);
+  });
+
+  test("the Hats Tree section has one link: the full tree on Hats Protocol", () => {
+    const hats = communityNarrative.communityHats;
+    assert.equal(hats.treeLink.label.text, "Explore the Hats Tree");
+    assert.equal(hats.treeLink.href, "https://app.hatsprotocol.xyz/trees/100/1822");
+    // October 29 follow-up: no "Also in the tree" list, role details, pill CTA or extra links.
+    for (const field of ["moreLabel", "descriptions", "cta", "links"]) assert.equal(field in hats, false, field);
+  });
+});
+
+describe("October 29 artwork contract", () => {
+  const png = (path) => {
+    const buf = readFileSync(new URL(`../public${path}`, import.meta.url));
+    assert.equal(buf.toString("ascii", 1, 4), "PNG", path);
+    return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20), alpha: buf[25] === 6 || buf[25] === 4 };
+  };
+
+  test("the Hats tree: parent 1822, nine roles, five featured in the owner's order", () => {
+    assert.equal(hatsParent.id, "1822");
+    assert.deepEqual(hatsRoles.map((role) => role.id), ["1822.1", "1822.2", "1822.3", "1822.4", "1822.5", "1822.6", "1822.7", "1822.8", "1822.9"]);
+    assert.deepEqual(featuredHats.map((role) => role.name), ["Knowledge Steward", "Infrastructure Steward", "Sync Steward", "Participation Steward", "Brand Steward"]);
+    assert.equal(HATS_TREE_URL, "https://app.hatsprotocol.xyz/trees/100/1822");
+  });
+
+  test("each featured hat has the owner's 600 × 600 PNG and its own accent; the parent is the RaidGuild mark", () => {
+    for (const role of featuredHats) {
+      assert.equal(role.image, `/images/venture/hats/${role.slug}.png`);
+      assert.deepEqual(png(role.image), { ...hatImageSize, alpha: true }, role.slug);
+    }
+    assert.equal(new Set(featuredHats.map((role) => role.accent)).size, 5);
+    assert.equal(hatsParent.image, "/images/venture/hats/raidguild.png");
+    assert.deepEqual(png(hatsParent.image), { width: hatsParent.width, height: hatsParent.height, alpha: true });
+  });
+
+  test("Queen Raida and Moloch: desktop, rectangle and mobile cuts exist with their declared sizes", () => {
+    for (const artwork of [queenRaidaArtwork, molochArtwork]) {
+      for (const cut of [artwork.desktop, artwork.rectangle, artwork.mobile]) {
+        const { width, height } = png(cut.src);
+        assert.deepEqual({ width, height }, { width: cut.width, height: cut.height }, cut.src);
+        assert.match(cut.src, /^\/images\/venture\/entities\/(queen-raida|moloch)\//);
+      }
+      assert.ok(artwork.desktop.width / artwork.desktop.height > 2, "wide horizontal desktop cut");
+      assert.ok(Math.abs(artwork.rectangle.width / artwork.rectangle.height - 16 / 9) < .01, "16:9 rectangle");
+      assert.ok(artwork.mobile.height > artwork.mobile.width, "vertical mobile cut");
+    }
   });
 });
 
@@ -270,13 +335,14 @@ describe("steward-supplied copy", () => {
   const STEWARD_BRIEF = new Set(["Projects and", "Experiments", "A collection of artifacts, experiments, games and ideas RaidGuild members have brought to life across emerging technology."]);
   test("steward lines are verbatim and approved", () => {
     const lines = collectCopy([communityNarrative, clientsNarrative, sharedNarrative]).filter((copy) => copy.source === "steward-brief");
-    assert.equal(lines.length, 3);
+    // October 29: the owner replaced the heading; the steward's intro remains.
+    assert.equal(lines.length, 1);
     for (const copy of lines) { assert.ok(STEWARD_BRIEF.has(copy.text), copy.text); assert.equal(copy.status, "approved"); }
   });
 
-  test("the gallery is renamed Projects and Experiments without moving its anchor", () => {
+  test("the gallery heading is the owner's October 29 line; its anchor and nav label are unchanged", () => {
     const { collection } = communityNarrative.communityActivity;
-    assert.equal(`${collection.title.lead.text} ${collection.title.em.text}`, "Projects and Experiments");
+    assert.equal(`${collection.title.lead.text} ${collection.title.em.text}`, "What happens when builders follow their curiosity.");
     assert.equal(communityNarrative.communityNav.items.find((item) => item.section === "work")?.label.text, "Projects");
   });
 });
@@ -288,7 +354,7 @@ describe("community additions", () => {
     assert.equal(raida.cta.label.text, "Ask our AI CTO", "the October 23 carousel is kept as-is");
     assert.equal(raida.artwork.rights.status, "approved");
     assert.equal(raida.artwork.rights.source, "owner-approval");
-    assert.equal(raida.artwork.src, "/images/queen-raida/queen-raida-v2.png", "the updated artwork");
+    assert.equal(raida.artwork.src, "/images/venture/entities/queen-raida/queen-rectangle.png", "the owner's current artwork");
     assert.ok(existsSync(new URL(`../public${raida.artwork.src}`, import.meta.url)), "the artwork ships with the build");
   });
 

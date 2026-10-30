@@ -11,7 +11,7 @@ ownership is claimed for these files.
 
 | File in the repository | Source | Details |
 |---|---|---|
-| `public/images/queen-raida/queen-raida-v2.png` | `raid-guild/website` working copy, `public/images/queen-raida/queen-raida-reference.png`, modified 2026-10-26 23:56 | 1672 × 941 PNG, no transparency, MD5 `b533c6119cb4f3e73cbc80868d47e8c1`. Used by the Queen Raida module on `/community`. |
+| `public/images/queen-raida/queen-raida-v2.png` | `raid-guild/website` working copy, `public/images/queen-raida/queen-raida-reference.png`, modified 2026-10-26 23:56 | 1672 × 941 PNG, no transparency, MD5 `b533c6119cb4f3e73cbc80868d47e8c1`. Used by the Queen Raida module on `/community` until October 29; deleted from the working tree by the owner on October 29 (uncommitted) and no longer referenced. |
 
 The previous reference image (1632 × 818) is superseded, is not referenced by the site
 and is not part of the repository.
@@ -75,6 +75,33 @@ still 1692 × 908. Superseded MD5s: button `f806ac6564142cc902f93270ddcdc80b`, s
 links) is a reference document only and is not part of the repository. Placements are
 declared in `src/lib/data/caseStudies.ts`.
 
-`public/images/queen-raida/queen_raida_reference_vertical.png` (1024 × 1536, MD5
-`11d2e4a202d17fb6ab20ed85545f994b`) is present in the working tree for the `/community`
-Queen Raida module. It is not referenced by the site and not yet recorded as shipped.
+**Queen Raida and Moloch, Hats (October 29, 2026; owner-supplied, committed with iteration 02).** By the evening of
+October 29 the owner had removed `public/images/queen-raida/` from the working tree (the tracked
+`queen-raida-v2.png` shows as deleted; the untracked `queen_raida_reference_vertical.png` is gone) and
+placed their own artwork under `public/images/venture/`, replacing the seven placeholder PNGs drawn
+in iteration 01 (those files and paths no longer exist). Nothing was resized, recompressed or
+substituted in this repository. The owner approved committing them on 2026-10-29; they are committed
+with iteration 02 (without `.DS_Store` files), together with the deletion of `queen-raida-v2.png`. Paths are declared in
+`src/lib/data/illustrations.ts` (`queenRaidaArtwork`, `molochArtwork`) and `src/lib/data/hats.ts`.
+
+| Path | Pixels | Ratio | Format | Used for | MD5 |
+|---|---|---|---|---|---|
+| `public/images/venture/entities/queen-raida/queen-desktop.png` | 2877 × 1230 | 2.34:1 | PNG RGBA | Queen Raida, desktop (wide screens) | `f851a3dc3d74e652f11ddfc5a5be26c4` |
+| `public/images/venture/entities/queen-raida/queen-rectangle.png` | 2508 × 1412 | 16:9 | PNG RGBA | tablets and squarer monitors; also the dormant October 23 carousel's artwork reference | `4c332b0672a65f20a43134f2c55c8085` |
+| `public/images/venture/entities/queen-raida/queen-mobile.png` | 1536 × 2304 | 2:3 | PNG RGBA | phones (≤ 700 px) | `aff51e0fb14045cd007e7203d71b7bd8` |
+| `public/images/venture/entities/moloch/moloch-desktop.png` | 2877 × 1230 | 2.34:1 | PNG RGBA | About Moloch, desktop | `58ea72d071196d79791605238766f75a` |
+| `public/images/venture/entities/moloch/moloch-rectangle.png` | 2508 × 1412 | 16:9 | PNG RGBA | tablets and squarer monitors | `002f2958b406b4ae54d91571709c5bad` |
+| `public/images/venture/entities/moloch/moloch-mobile.png` | 1536 × 2304 | 2:3 | PNG RGBA | phones | `5a50b07449f84d2c678add21a476d322` |
+| `public/images/venture/hats/raidguild.png` | 800 × 800 | 1:1 | PNG RGBA | Hats Tree parent node (1822), 132 px desktop, 64 px phone | `c077e8ec73708f758923919cac0e447c` |
+| `public/images/venture/hats/knowledge-steward.png` | 600 × 600 | 1:1 | PNG RGBA | role card, about 176 px desktop, 76 px phone | `7c631ba0254b08c7b35b327a0b1b8fd0` |
+| `public/images/venture/hats/infrastructure-steward.png` | 600 × 600 | 1:1 | PNG RGBA | same | `5b9ea78f7a2846e1828db2c802bdbdfb` |
+| `public/images/venture/hats/sync-steward.png` | 600 × 600 | 1:1 | PNG RGBA | same | `aa8bbaecefcf5a0b05b0901ce3fb5bfb` |
+| `public/images/venture/hats/participation-steward.png` | 600 × 600 | 1:1 | PNG RGBA | same | `f9286ef24937fb2139d52ea948b0c7d7` |
+| `public/images/venture/hats/brand-steward.png` | 600 × 600 | 1:1 | PNG RGBA | same | `c49e7758f0a3881b08b6ba8d8d9c6069` |
+
+Art direction (`sections/ImmersiveFeature.tsx`): `(max-width: 700px)` → mobile cut;
+`(max-width: 1199px), (max-aspect-ratio: 3/2)` → rectangle; otherwise the desktop cut. Each is shown
+full width, at most 88svh tall (`object-fit: cover`) above 700 px and whole on phones. The hat
+illustrations carry their own painted backgrounds and fill their tiles. Each entity file is 5.2–6.0 MB;
+next/image serves resized WebP. Rights and provenance of the new files were not stated with them: confirm
+they are approved for public use (the earlier Queen Raida approval covered `queen-raida-v2.png`).

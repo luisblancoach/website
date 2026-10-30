@@ -36,43 +36,14 @@ test("filter counts match the builders they list", () => {
   assert.deepEqual(counts, { "All builders": 30, Frontend: 5, "Smart Contracts": 4, "UX/UI": 3, Fullstack: 6, Coordination: 12 });
 });
 
-// Frame 122: short filtered lists fill the wall's area with an editorial grid.
-// Every template must cover its grid exactly once (no gap, no overlap) and give
-// each result one cell; longer lists keep the moving wall.
-import { BUILDER_GRID_MAX, BUILDER_GRID_WIDE, builderGridSlots } from "../src/components/venture/builderGrid.ts";
-
-const coverage = (areas, columns) => {
-  const rows = Math.max(...areas.map(([, , , r2]) => r2)) - 1;
-  const cells = new Map();
-  for (const [c1, c2, r1, r2] of areas) for (let c = c1; c < c2; c++) for (let r = r1; r < r2; r++) cells.set(`${c},${r}`, (cells.get(`${c},${r}`) ?? 0) + 1);
-  const all = [...Array(columns).keys()].flatMap((c) => [...Array(rows).keys()].map((r) => `${c + 1},${r + 1}`));
-  return { gaps: all.filter((key) => !cells.has(key)), overlaps: [...cells].filter(([, n]) => n > 1).map(([key]) => key), outside: [...cells.keys()].filter((key) => !all.includes(key)) };
-};
-
-test("adaptive builder layouts cover their grid exactly once for 1 to 8 results", () => {
-  for (let count = 1; count <= BUILDER_GRID_MAX; count++) {
-    const slots = builderGridSlots(count);
-    assert.equal(slots.length, count, `${count}: one cell per result`);
-    const wide = coverage(slots.map((slot) => slot.wide), BUILDER_GRID_WIDE.columns);
-    assert.deepEqual(wide, { gaps: [], overlaps: [], outside: [] }, `${count}: wide template`);
-    assert.equal(Math.max(...slots.map((slot) => slot.wide[3])) - 1, BUILDER_GRID_WIDE.rows, `${count}: wide uses all three rows`);
-    assert.deepEqual(coverage(slots.map((slot) => slot.narrow), 2), { gaps: [], overlaps: [], outside: [] }, `${count}: narrow template`);
+// October 29: every category uses the same masonry cards (the editorial grid
+// for short lists is gone). Short lists use fewer rows, as TeamWall does.
+test("short filtered lists use one or two cards per row, every builder once", () => {
+  for (const category of memberCategories) {
+    const results = filterMembers(mercenaries, category);
+    const rows = masonryRows(results, Math.min(3, Math.ceil(results.length / 2)));
+    assert.equal(rows.flat().length, results.length, category);
+    assert.equal(new Set(rows.flat().map((member) => member.name)).size, results.length, `${category}: no duplicates`);
+    if (results.length <= 6) assert.ok(rows.every((row) => row.length <= 2), `${category}: at most two per row`);
   }
-  assert.equal(builderGridSlots(0), null);
-  assert.equal(builderGridSlots(BUILDER_GRID_MAX + 1), null, "longer lists keep the moving wall");
-});
-
-test("adaptive layouts follow the agreed compositions", () => {
-  assert.deepEqual(builderGridSlots(1).map((slot) => slot.wideShape), ["feature"], "one prominent card");
-  assert.deepEqual(builderGridSlots(2).map((slot) => slot.wideShape), ["feature", "feature"], "two balanced cards");
-  for (const count of [3, 4]) {
-    const sizes = builderGridSlots(count).map(({ wide: [c1, c2, r1, r2] }) => (c2 - c1) * (r2 - r1));
-    assert.ok(new Set(sizes).size > 1, `${count}: asymmetric proportions`);
-    assert.ok(new Set(builderGridSlots(count).map((slot) => slot.wideShape)).size > 1, `${count}: mixed vertical and horizontal cards`);
-  }
-  for (const [category, count] of [["Frontend", 5], ["Smart Contracts", 4], ["UX/UI", 3], ["Fullstack", 6]]) {
-    assert.equal(filterMembers(mercenaries, category).length, count);
-    assert.ok(builderGridSlots(count), `${category} uses the adaptive grid`);
-  }
-  assert.equal(builderGridSlots(filterMembers(mercenaries, "Coordination").length), null, "Coordination (12) keeps the wall");
 });

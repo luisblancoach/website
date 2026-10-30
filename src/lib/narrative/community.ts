@@ -1,8 +1,9 @@
 import { DISCORD_INVITE_URL, PORTAL_JOIN_URL } from "../data/constants";
+import { HATS_TREE_URL } from "../data/hats";
 import {
   approved, claim, defineNarrative, oct23, wording,
   type ActivityContent, type Copy, type CreedContent, type GuildContent, type HeroContent, type JoinContent, type NavContent, type PathContent,
-  type QueenRaidaContent, type StewardshipContent, type TensionContent,
+  type HatsContent, type ImmersiveContent, type QueenRaidaContent, type StewardshipContent, type TensionContent,
 } from "./types";
 
 // Community narrative (dark by default). Structure and headline lines follow
@@ -22,26 +23,28 @@ const joinDestination = () => claim(
   PORTAL_JOIN_URL,
 );
 
+const unverifiedBenefit = (text: string): Copy => claim(
+  text,
+  "existing-site",
+  "Member benefit published on the current redesign; not documented in the handbook. Confirm it is offered today.",
+);
+
 const unverifiedMetric = (text: string): Copy => claim(
   text,
   "existing-site",
   "Unverified mockup value (docs/venture-integration.md). Confirm or replace with a sourced figure.",
 );
 
+// October 29 (evening) owner copy. "builder owned community" is set in bold for
+// emphasis; the words are verbatim.
+const owner = (text: string) => approved(text, "owner-approval");
 export const communityHero: HeroContent = defineNarrative("community.hero", {
-  eyebrow: wording("Venture Beyond · The Guild"),
-  title: { lead: tae("The guild for"), em: tae("serious Web3 builders"), long: true },
-  dek: claim(
-    "RaidGuild is a community-driven DAO of Web3 builders. Members shape its culture, its strategy, and the raids it takes on.",
-    "handbook",
-    "Paraphrases the handbook: “a community-driven DAO” whose members define its culture, shape its strategies, and execute raids. Confirm it describes the guild today.",
-    `${HB}overview/what-is-raidguild`,
-  ),
+  eyebrow: owner("[ THE GUILD ]"),
+  title: { lead: owner("Find your people."), em: owner("Build something together."), long: true },
+  dek: owner("RaidGuild is a **builder owned community** working across onchain systems, applied AI, and open source software. Meet fellow builders, explore their experiments, and find a place to contribute."),
   paths: [
-    { label: approved("Join our community", "owner-approval"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "↗", primary: true },
-    // October 23 composition: two hero actions. "See the path" returns with the
-    // path chapter in the editorial batch.
-    { label: wording("Meet the builders"), section: "team", variant: "outline", icon: "↓" },
+    { label: owner("Explore the community"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "→", primary: true },
+    { label: owner("See what we’re building"), section: "work", variant: "outline", icon: "↓" },
   ],
 } satisfies HeroContent);
 
@@ -128,55 +131,59 @@ export const communityPath: PathContent = defineNarrative("community.path", {
   footnote: { label: wording("Read the membership guide in the handbook ↗"), href: `${HB}membership/join-the-guild` },
 } satisfies PathContent);
 
+// About RaidGuild: the "Builder-owned / member-governed" chapter as published
+// before October 28 (restored from f842d87 on October 29). Its October 28
+// replacement copy moved to the Moloch feature and the Hats Tree section below.
 export const communityGuild: GuildContent = defineNarrative("community.guild", {
   label: existing("[ THE GUILD ]"),
   title: {
-    lead: approved("About", "owner-approval"),
-    em: approved("Moloch", "owner-approval"),
+    lead: existing("Builder-owned"),
+    em: claim(
+      "member-governed",
+      "handbook",
+      "Supported by the handbook's DAO operations page (members sponsor and vote on proposals). Confirm the wording.",
+      `${HB}dao-operations/`,
+    ),
   },
   body: claim(
-    "In RaidGuild lore, Moloch represents coordination failure: when individual incentives lead to outcomes nobody wants. Building together is our response—through shared ownership, useful tools, and systems that make cooperation easier.",
+    "**RaidGuild** runs as a DAO with no single leader. **Members** sponsor and vote on proposals, from welcoming new members to funding guild projects.",
     "handbook",
-    "Owner-supplied Join the DAO copy. Confirm the lore framing and current ownership language before publishing.",
-    "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
+    "Paraphrases what-is-raidguild (“operates without a single leader”) and DAO operations (member sponsorship and votes). Confirm.",
+    `${HB}dao-operations/`,
   ),
   more: {
-    summary: approved("RaidGuild's Hats Tree", "owner-approval"),
+    summary: existing("See more"),
     text: claim(
-      "RaidGuild’s Hats Tree maps the roles that help the Guild work: what each role is responsible for, how it fits into the wider organization, and who’s eligible to hold it. The tree is powered by Hats Protocol, which represents roles and their permissions onchain. Some roles also have budgets or defined decision-making authority.",
+      "Proposals are made through DAOhaus. After a vote closes, members have a grace period to ragequit if they disagree with the outcome.",
       "handbook",
-      "Owner-supplied Join the DAO copy. Confirm current Hats assignments, permissions, budgets and decision-making authority.",
-      "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
+      "Handbook DAO operations (source last edited Nov 2024): 72-hour vote, simple majority, 48-hour grace period. Confirm the governance setup is current.",
+      `${HB}dao-operations/`,
     ),
   },
   kit: {
-    heading: approved("Stewardship", "owner-approval"),
+    heading: existing("Your Guild kit"),
     items: [
+      { term: existing("Guild email"), detail: unverifiedBenefit("Your own @raidguild.org address") },
+      { term: existing("Space to launch"), detail: unverifiedBenefit("A raidguild.org subdomain for your personal site or Tip of the Spear initiative") },
       {
-        term: approved("Stewards", "owner-approval"),
-        detail: claim(
-          "Stewards are members who take responsibility for keeping important parts of the Guild moving. A Brand Steward, for example, helps maintain a shared brand; a Handbook Steward guides upkeep of the Guild’s knowledge. Stewardship means doing and reporting on the work—not being everyone’s boss. Taking action and staying accountable is important to keep the org moving forward.",
-          "handbook",
-          "Owner-supplied Join the DAO copy. Confirm current steward roles and responsibilities.",
-          "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
-        ),
+        term: claim("Voting shares", "handbook", "Replaces “Shared ownership: Equity in the company”, which no RaidGuild source supports. Confirm which ownership language is correct.", `${HB}membership/raid-guild-shares`),
+        detail: claim("One vote per share and a proportional claim on the guild treasury", "handbook", "Handbook, Raid Guild shares (source last edited Nov 2024).", `${HB}membership/raid-guild-shares`),
       },
+      { term: existing("AI companion"), detail: unverifiedBenefit("Your own personal organizational AI assistant") },
     ],
     requirement: claim(
-      "Explore the roles, responsibilities and paths that help the Guild coordinate.",
-      "handbook",
-      "Owner-supplied Join the DAO framing; confirm the current path into the Guild.",
-      "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
+      "To become a member, first complete a cohort.",
+      "existing-site",
+      "Published on the current redesign, but handbook pages disagree on whether a cohort is required. Confirm.",
     ),
   },
   actions: [
-    { label: approved("Explore the Hats Tree", "owner-approval"), href: "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles", variant: "filled", icon: "logo" },
-    // A handbook link, so the Guild mark rather than the Discord icon.
-    { label: approved("Find your path into the Guild", "owner-approval"), href: `${HB}membership/join-the-guild`, variant: "outline", icon: "logo" },
+    { label: tae("Join the DAO"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "→" },
+    { label: existing("Enter Discord"), href: DISCORD_INVITE_URL, variant: "outline", icon: "discord" },
   ],
   links: [
-    { label: wording("DAO Roles ↗", "Link label for the handbook's DAO Roles page; confirm."), href: "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles" },
-    { label: approved("Hats Protocol ↗", "owner-approval"), href: "https://github.com/Hats-Protocol/hats-protocol" },
+    { label: existing("Read the handbook ↗"), href: `${HB}overview/what-is-raidguild` },
+    { label: existing("Questions? Ask Queen Raida, our AI CTO ↗"), href: "/chat" },
   ],
   metricsLabel: "RaidGuild statistics",
   metrics: [
@@ -198,22 +205,17 @@ export const communityActivity: ActivityContent = defineNarrative("community.act
   // keeps its #work / #gallery anchors.
   collection: {
     label: existing("[ EXPLORE ]"),
-    title: { lead: steward("Projects and"), em: steward("Experiments") },
+    title: { lead: owner("What happens when builders"), em: owner("follow their curiosity.") },
     intro: steward("A collection of artifacts, experiments, games and ideas RaidGuild members have brought to life across emerging technology."),
   },
 } satisfies ActivityContent);
 
 export const communityJoin: JoinContent = defineNarrative("community.join", {
   label: wording("[ JOIN THE GUILD ]"),
-  title: { lead: tae("Join"), em: tae("the DAO") },
-  body: claim(
-    "Start with a Portal account: create a profile, explore live sessions, projects, and posts, and find people working on what you care about.",
-    "portal",
-    "Describes portal.raidguild.org/join today. A Portal account is not DAO membership; confirm the intended first step.",
-    PORTAL_JOIN_URL,
-  ),
+  title: { lead: owner("Your first step"), em: owner("into the Guild.") },
+  body: owner("Create a Portal profile to explore sessions, projects, and posts. Meet the community on Discord, and read the membership guide when you’re ready to learn how joining the DAO works."),
   actions: [
-    { label: tae("Join the DAO"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "logo" },
+    { label: owner("Create your Portal profile"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "→" },
     { label: existing("Enter Discord"), href: DISCORD_INVITE_URL, variant: "outline", icon: "discord" },
   ],
   links: [
@@ -253,7 +255,7 @@ export const communityQueenRaida: QueenRaidaContent = defineNarrative("community
   ],
   detailsLabel: oct23("Explore this role"),
   artwork: {
-    src: "/images/queen-raida/queen-raida-v2.png",
+    src: "/images/venture/entities/queen-raida/queen-rectangle.png",
     alt: existing("Queen Raida"),
     caption: existing("Queen Raida"),
     rights: approved("AI-generated for RaidGuild; approved for public use in this project by the project owner", "owner-approval"),
@@ -283,6 +285,57 @@ export const communityStewardship: StewardshipContent = defineNarrative("communi
   },
 } satisfies StewardshipContent);
 
+// Immersive features (October 29): Queen Raida and Moloch share one layout
+// (sections/ImmersiveFeature.tsx); artwork paths live in lib/data/illustrations.ts.
+export const communityRaidaFeature: ImmersiveContent = defineNarrative("community.raidaFeature", {
+  label: wording("[ Queen Raida ]", "Section label for the Queen Raida feature; confirm."),
+  title: { lead: approved("A scout for signal.", "owner-approval"), em: approved("A scribe for the Guild.", "owner-approval") },
+  body: approved("Queen Raida is RaidGuild’s AI agent. She helps spot useful developments, gather context, and turn the Guild’s work into clear updates, drafts, and next steps - giving members more room for the work that needs human judgment: choosing what matters, building trust, and making decisions.", "owner-approval"),
+  cta: { label: oct23("Ask our AI CTO"), href: "/chat", variant: "filled" },
+  artwork: { alt: existing("Queen Raida") },
+} satisfies ImmersiveContent);
+
+// The October 28 "About Moloch" copy, moved here verbatim.
+export const communityMoloch: ImmersiveContent = defineNarrative("community.moloch", {
+  label: existing("[ THE GUILD ]"),
+  title: { lead: approved("About", "owner-approval"), em: approved("Moloch", "owner-approval") },
+  body: claim(
+    "In RaidGuild lore, Moloch represents coordination failure: when individual incentives lead to outcomes nobody wants. Building together is our response—through shared ownership, useful tools, and systems that make cooperation easier.",
+    "handbook",
+    "Owner-supplied Join the DAO copy. Confirm the lore framing and current ownership language before publishing.",
+    "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
+  ),
+  cta: { label: approved("Find your path into the Guild", "owner-approval"), href: `${HB}membership/join-the-guild`, variant: "outline" },
+  artwork: { alt: existing("Moloch") },
+} satisfies ImmersiveContent);
+
+// The Hats Tree (October 29): replaces "Keepers of the signal". The October 28
+// Hats Tree and stewardship copy moved here verbatim. The tree itself is a
+// reference snapshot (lib/data/hats.ts); live roles and wearers are on Hats
+// Protocol, the section's one link.
+export const communityHats: HatsContent = defineNarrative("community.hats", {
+  label: oct23("[ STEWARDSHIP ]"),
+  title: { lead: approved("RaidGuild's", "owner-approval"), em: approved("Hats Tree", "owner-approval") },
+  intro: claim(
+    "RaidGuild’s Hats Tree maps the roles that help the Guild work: what each role is responsible for, how it fits into the wider organization, and who’s eligible to hold it. The tree is powered by Hats Protocol, which represents roles and their permissions onchain. Some roles also have budgets or defined decision-making authority.",
+    "handbook",
+    "Owner-supplied Join the DAO copy. Confirm current Hats assignments, permissions, budgets and decision-making authority.",
+    "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
+  ),
+  stewards: {
+    term: approved("Stewards", "owner-approval"),
+    detail: claim(
+      "Stewards are members who take responsibility for keeping important parts of the Guild moving. A Brand Steward, for example, helps maintain a shared brand; a Handbook Steward guides upkeep of the Guild’s knowledge. Stewardship means doing and reporting on the work—not being everyone’s boss. Taking action and staying accountable is important to keep the org moving forward.",
+      "handbook",
+      "Owner-supplied Join the DAO copy. Confirm current steward roles and responsibilities.",
+      "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
+    ),
+  },
+  snapshot: wording("Reference snapshot of the tree, October 29, 2026. Live roles and wearers are on Hats Protocol.", "States that the diagram is not live data; confirm the wording."),
+  featuredLabel: wording("Featured roles", "Label for the five featured hats; confirm."),
+  treeLink: { label: approved("Explore the Hats Tree", "owner-approval"), href: HATS_TREE_URL },
+} satisfies HatsContent);
+
 export const communityNav: NavContent = defineNarrative("community.nav", {
   // The October 23 navigation: one item per chapter it links to. The path and
   // activity chapters rejoin the navigation with the editorial batch.
@@ -301,4 +354,5 @@ export const communityCreed: CreedContent = defineNarrative("community.creed", {
 export const communityNarrative = {
   communityHero, communityTension, communityPath, communityGuild, communityActivity, communityJoin,
   communityQueenRaida, communityStewardship, communityNav, communityCreed,
+  communityRaidaFeature, communityMoloch, communityHats,
 };

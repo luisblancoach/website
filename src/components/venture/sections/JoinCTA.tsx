@@ -9,11 +9,12 @@ import styles from "../venture.module.css";
 
 // The Join chapter in the October 23 contact composition (40f3910): the Guild
 // characters on one side, and one panel holding the invitation, both actions
-// and the membership guide on the other.
+// and the membership guide on the other. On the light-blue panel of the
+// /clients inquiry (October 29); its membership actions stay its own.
 export default function JoinCTA({ content }: { content: JoinContent }) {
   const { arrivalTarget } = useVenture();
   return (
-    <section className={`${styles.contact} ${styles.joinContact} ${arrivalTarget === "join" ? styles.sectionArriving : ""}`} id="join" aria-labelledby="join-heading">
+    <section className={`${styles.contact} ${styles.contactCyan} ${styles.joinContact} ${arrivalTarget === "join" ? styles.sectionArriving : ""}`} id="join" aria-labelledby="join-heading">
       <div className={styles.contactIntro}>
         <Image className={styles.contactDruid} src="/images/neo/contact-druid-transparent.png" alt="" width={768} height={1024} sizes="(max-width: 600px) 82vw, 440px" aria-hidden="true" />
         <div className={styles.contactCopy}>
@@ -24,7 +25,7 @@ export default function JoinCTA({ content }: { content: JoinContent }) {
             {content.actions.map((action) => (
               <NarrativeAnchor key={action.label.id} link={action} className={`${styles.pill} ${action.variant === "filled" ? styles.pillFilled : styles.pillOutline}`}>
                 <span><CopyText copy={action.label} /></span>
-                <i className={styles.pillIcon}><b className={action.icon === "discord" ? styles.iconDiscord : styles.iconLogo} /></i>
+                <i className={styles.pillIcon} aria-hidden="true">{action.icon === "→" ? "→" : <b className={action.icon === "discord" ? styles.iconDiscord : styles.iconLogo} />}</i>
               </NarrativeAnchor>
             ))}
           </div>

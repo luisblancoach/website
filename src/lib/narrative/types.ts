@@ -59,7 +59,7 @@ export type HeroContent = {
   // `plain` sets the second line in the headline colour instead of the accent.
   title: { lead: Copy; em: Copy; long?: boolean; plain?: boolean };
   dek: Copy;
-  paths: (NarrativeLink & { variant: "filled" | "outline"; icon: "↓" | "↗"; primary?: boolean })[];
+  paths: (NarrativeLink & { variant: "filled" | "outline"; icon: "↓" | "↗" | "→"; primary?: boolean })[];
 };
 
 export type GuildContent = {
@@ -68,14 +68,14 @@ export type GuildContent = {
   body: Copy;
   more: { summary: Copy; text: Copy };
   kit: { heading: Copy; items: { term: Copy; detail: Copy }[]; requirement: Copy };
-  actions: (NarrativeLink & { variant: "filled" | "outline"; icon: "logo" | "discord" })[];
+  actions: Action[];
   links: NarrativeLink[];
   metricsLabel: string;
   metrics: { value: Copy; label: Copy }[];
 };
 
 type Title = { lead: Copy; em: Copy };
-type Action = NarrativeLink & { variant: "filled" | "outline"; icon: "logo" | "discord" };
+type Action = NarrativeLink & { variant: "filled" | "outline"; icon: "logo" | "discord" | "→" };
 
 export type TensionContent = {
   label: Copy;
@@ -175,6 +175,28 @@ export type QueenRaidaContent = {
   panels: { subtitle: Copy; title: Copy; copy: Copy; detail: Copy }[];
   detailsLabel: Copy;
   artwork: { src: string; alt: Copy; caption: Copy; rights: Copy };
+};
+
+// October 29 immersive feature (Queen Raida, Moloch): full-width artwork with
+// the copy below it. Artwork paths live in lib/data/illustrations.ts.
+export type ImmersiveContent = {
+  label: Copy;
+  title: Title;
+  body: Copy;
+  cta: NarrativeLink & { variant: "filled" | "outline" };
+  artwork: { alt: Copy };
+};
+
+// October 29 Hats Tree: the tree structure is in lib/data/hats.ts; this holds
+// the copy around it. `treeLink` is the one link: the full tree on Hats Protocol.
+export type HatsContent = {
+  label: Copy;
+  title: Title;
+  intro: Copy;
+  stewards: { term: Copy; detail: Copy };
+  snapshot: Copy;
+  featuredLabel: Copy;
+  treeLink: NarrativeLink;
 };
 
 export type StewardshipContent = {

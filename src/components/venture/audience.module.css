@@ -73,12 +73,12 @@
   .heading { flex-direction: column; align-items: start; gap: 16px; } .featuredWork { grid-template-columns: 1fr; } .workLogoStage { min-height: 200px; } .tabs { gap: 8px; } .tabs button { padding: 12px; font-size: var(--type-ui, 14px); } .network.network { min-height: 640px; } }
 @media (max-width: 700px) { .raidaLayout { grid-template-columns: 1fr; } .raidaArtwork { min-height: 320px; order: -1; padding: 32px 20px; } }
 @media (prefers-reduced-motion: reduce) { .section *, .network * { scroll-behavior: auto; } }
-/* /clients (Frame 123): the builder heading uses the showcase heading scale
+/* Both audience routes (Frame 123; /community from October 29): the builder heading uses the showcase heading scale
    (showcase.module.css .showcaseTitle): a 34 px lead over a 52 px coral line. */
-:global([data-audience="clients"]) .network .heading h2 { font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 900; letter-spacing: .01em; line-height: 1.05; }
-:global([data-audience="clients"]) .network .heading h2 em { display: inline-block; font-family: var(--font-display), sans-serif; font-size: 52px; font-style: italic; font-weight: 400; line-height: 1; margin-top: 4px; }
+:global([data-audience]) .network .heading h2 { font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 900; letter-spacing: .01em; line-height: 1.05; }
+:global([data-audience]) .network .heading h2 em { display: inline-block; font-family: var(--font-display), sans-serif; font-size: 52px; font-style: italic; font-weight: 400; line-height: 1; margin-top: 4px; }
 @media (max-width: 760px) {
-  :global([data-audience="clients"]) .network .heading h2 { font-size: 20px; }
+  :global([data-audience]) .network .heading h2 { font-size: 20px; }
   /* "Of builders." is a letter longer than "Our clients", so it caps lower. */
-  :global([data-audience="clients"]) .network .heading h2 em { font-size: clamp(30px, 10.2vw, 48px); }
+  :global([data-audience]) .network .heading h2 em { font-size: clamp(30px, 10.2vw, 48px); }
 }

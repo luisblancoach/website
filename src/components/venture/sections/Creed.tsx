@@ -6,7 +6,9 @@ import { CopyText } from "../primitives/Review";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
 import styles from "../venture.module.css";
 
-// The audience routes add the October 23 call to action under the creed.
+// The audience routes add the October 23 call to action under the creed. Its
+// icon matches the equivalent hero action: ↓ for a section on the page, → for
+// the Portal.
 export default function Creed({ content }: { content?: CreedContent }) {
   return (
     <section className={styles.creed}>
@@ -26,7 +28,7 @@ export default function Creed({ content }: { content?: CreedContent }) {
         <blockquote>The future is not something to predict. It is something to <em>build.</em></blockquote>
         {content && (
           <NarrativeAnchor link={content.cta} className={`${styles.pill} ${styles.pillFilled} ${styles.creedCta}`}>
-            <span><CopyText copy={content.cta.label} /></span><i className={styles.pillIcon} aria-hidden="true">↗</i>
+            <span><CopyText copy={content.cta.label} /></span><i className={styles.pillIcon} aria-hidden="true">{content.cta.section ? "↓" : "→"}</i>
           </NarrativeAnchor>
         )}
       </div>

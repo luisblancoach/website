@@ -21,7 +21,10 @@ const CURTAIN_REST_MS = 2200;
 // Scroll distance, as a share of the hero height, over which the curtain opens.
 const CURTAIN_REACH = 0.45;
 
-export default function Hero({ content, grouped = false, curtain = false }: { content: HeroContent; grouped?: boolean; curtain?: boolean }) {
+// `still` (the audience routes, October 29) turns off the layered parallax: the
+// sky, landscape, title and copy no longer move with the pointer or the scroll,
+// and the copy no longer fades. The curtain is a separate effect and stays.
+export default function Hero({ content, grouped = false, curtain = false, still = false }: { content: HeroContent; grouped?: boolean; curtain?: boolean; still?: boolean }) {
   const { portalOpen } = useVenture();
   const heroRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
@@ -81,7 +84,7 @@ export default function Hero({ content, grouped = false, curtain = false }: { co
 
   useEffect(() => {
     const root = heroRef.current;
-    if (!root || portalOpen) return;
+    if (!root || portalOpen || still) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = window.matchMedia("(pointer: fine)");
     let frame = 0;
@@ -106,11 +109,11 @@ export default function Hero({ content, grouped = false, curtain = false }: { co
       cancelAnimationFrame(frame);
       reset();
     };
-  }, [portalOpen]);
+  }, [portalOpen, still]);
 
   useEffect(() => {
     const hero = heroRef.current;
-    if (!hero || portalOpen) return;
+    if (!hero || portalOpen || still) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let visible = false;
     let frame = 0;
@@ -155,7 +158,7 @@ export default function Hero({ content, grouped = false, curtain = false }: { co
       window.removeEventListener("resize", resize);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [portalOpen]);
+  }, [portalOpen, still]);
 
   const supplement = (
     <div className={styles.heroSupplement}>

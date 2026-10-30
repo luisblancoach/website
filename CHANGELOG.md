@@ -6,38 +6,57 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
-- Join the DAO iteration (uncommitted): the community hero, navigation and creed CTAs now
-  read “Join our community”; the Guild chapter is now “About Moloch” with the supplied lore,
-  Hats Tree and stewardship copy plus “Explore the Hats Tree” and “Find your path into the
-  Guild” actions.
+## 2026-10-29 · Iteration 02 commit (pushed to `fork/feat/venture-beyond-integration`, not deployed manually)
 
-- October 28 team feedback on `/clients` (uncommitted, not deployed; see `STATUS.md`):
-  review flags off in local development, Tae's copy for all nine case studies, the new
-  Daedalus link and assets, the "Guild runs on owners" people heading, a masonry builder
-  wall, the light-blue inquiry panel, and the coral, taller mobile creed.
-- Interaction fixes on `/clients` (uncommitted, not deployed): each filtered builder appears
-  once (the loop copy renders only when needed), the inquiry form opens inside the
-  "Begin a transmission" module, and the navigation call to action reads "Build with us".
-  The hero parallax request is investigated, not implemented (decision pending).
-- Frame 122 refinements on `/clients` (uncommitted, not deployed): the August 19 hero curtain
-  restored (title hover, keyboard focus and scroll), more room around the showcase heading,
-  adaptive layouts for 1–8 filtered builders, the inquiry form replacing its introduction in
-  the light-blue module (Close, Back, Previous), and a clearer form hierarchy.
-- Frame 123 refinements on `/clients` (uncommitted, not deployed): the builder heading on the
-  showcase heading scale, the builder wall at 36 px/s (was 18), and a compact inquiry form with a
-  smaller heading, no "Three steps" line, a light stepper and line-based fields.
-- `/clients` (uncommitted, not deployed): the moving builder wall runs edge to edge, and the
-  client showcase rotates to the next project every 3 seconds with a short crossfade, pausing on
-  hover and keyboard focus and staying still with reduced motion.
-- `/community` (uncommitted, not deployed): the main call to action reads "Join our community";
-  the Guild section becomes "About Moloch" with the owner-supplied Moloch, Hats Tree and
-  stewardship copy, the calls "Explore the Hats Tree" and "Find your path into the Guild", and
-  links to the DAO Roles handbook page and Hats Protocol.
+- Design system normalization iteration 01, the Community visual refinement follow-up and iteration 02
+  for `/clients` and `/community`: the owner's hero, Join and Projects copy; no hero parallax; one
+  headline rule; Ubuntu H3s; the Guild kit expander; held Queen Raida and Moloch artwork; a two-column
+  Hats Tree; one builder card system on a tilted coral band; CTA states, icons and 44 px targets;
+  accordion contrast; the creed highlight; the owner's artwork in `public/images/venture/`.
+- Verified: `bun run test` 79/79, `tsc`, lint (0 errors), isolated production build, browser suite
+  712/712 on the dev server and on the production build. Not verified: Safari, Firefox, devices,
+  screen readers.
+- Documentation only (2026-10-29, committed with iteration 02): `STATUS.md` and this file reconciled with release
+  `2bf270d`, including the corrections below.
+- Design system normalization, iteration 01 (2026-10-29, committed with iteration 02): one hero scale
+  and dark-theme button treatment for `/clients` and `/community`; `/community` reorganized (About
+  RaidGuild restored from `f842d87`, Queen Raida and About Moloch as immersive features, the Hats
+  Tree replacing "Keepers of the signal", the shared builder wall, Services and inquiry panel) with
+  distinct dark scenes; seven placeholder PNGs for Moloch and the five featured hats.
+- Community visual refinement follow-up (2026-10-29, committed with iteration 02): the owner's Queen
+  Raida, Moloch and Hats artwork (desktop, rectangle and mobile cuts); Join headline on one line per
+  segment; builder wall on a tilted coral band; coral-stroked Join panel; Moloch on coral with navy
+  text; Hats Tree with the RaidGuild parent mark, less text and one link; Ubuntu H3s on /community.
 
-- October 28 deployment: the validated `/clients` iteration was published to Vercel Production
-  in `raidguild-venture-beyond-review` as `dpl_7Bm3eKJtSDLEHyeHRRPdHfU4Nx1N`. The deployment
-  was built from a clean temporary archive that preserved the 21 legacy images and excluded the
-  local `package.json` change, `clients.pdf`, and the local vertical Queen Raida image.
+## 2026-10-28 · Review release `2bf270d`
+
+- `2bf270d`: the October 28 refinements, 30 files.
+  - `/clients`: Tae's copy for all nine case studies; Daedalus links to ddls.co with the owner's
+    new assets; review flags off in local development; "The Guild runs on owners, not employees.";
+    the builder heading on the showcase scale, adaptive grids for 1–8 filtered builders, and a
+    masonry wall at 36 px/s running edge to edge, each builder shown once; the inquiry form
+    replacing its introduction in the light-blue module, compact and line-based; the hero curtain
+    (4ffb591) restored; showcase rotation every 3 s with a crossfade; "Build with us"; a coral,
+    taller mobile creed.
+  - `/community`: "Join our community"; the Guild section "About Moloch" with the owner's
+    Moloch, Hats Tree and stewardship copy, and links to DAO Roles and Hats Protocol.
+- Deployed to Vercel Production in `raidguild-venture-beyond-review`, deployment
+  `dpl_HqkPYA55qh5V9QHFQpUxwWZ1xjko` (https://raidguild-venture-beyond-review.vercel.app,
+  `SHOW_REVIEW_FLAGS=false`), from a clean `git archive`, and verified in production. Source:
+  `~/Projects/raidguild-backups/2026-10-28/DEPLOY-vercel-review-2bf270d.md`.
+- Verified: release tree `bun run test` 71/71, `bunx tsc --noEmit`, `bun run build`; on the
+  production URL the general (75/75), rotation and wall (66/66), October 28 (96/96) and marquee
+  (40/40) suites, and the 1440 px pass of the Frame 122/123 suite (its other widths only on the
+  identical local build). Not verified: form submission, Safari, Firefox, physical devices, screen
+  readers.
+- Earlier the same evening, `dpl_7Bm3eKJtSDLEHyeHRRPdHfU4Nx1N` (21:28) and
+  `dpl_DsHcdtCVBX6QNKNHSx4iwUaxyhxz` (22:16) were deployed outside this session from an
+  uncommitted working tree; `dpl_HqkPYA…` superseded both.
+- Corrections to the documentation committed in `2bf270d`: its `STATUS.md` said the
+  `HeaderJoin.tsx` lint warning was removed (it was not; `bun run lint` still reports the unused
+  `ThemeAnchor`) and that the October 23 reference checkout was unavailable (it is available at
+  `40f3910`); its `STATUS.md` named `dpl_7Bm3…` as the review; and its `CHANGELOG.md` listed this
+  work as uncommitted and not deployed. Corrected in the uncommitted documentation update.
 
 ## 2026-10-28 · Review release `da9165b`
 

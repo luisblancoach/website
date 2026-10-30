@@ -1,0 +1,49 @@
+/* October 29 immersive features (Queen Raida, Moloch): a full-width artwork
+   scene with the copy below it. Headings use the showcase heading scale
+   (showcase.module.css .showcaseTitle); widths follow the 1144 px content
+   column. Each tone is its own surface in both themes. */
+
+.feature { overflow: hidden; scroll-margin-top: 90px; transition: background-color .9s ease, color .9s ease; }
+.media { line-height: 0; position: relative; }
+.media picture { display: block; }
+/* The wide desktop cut at full width, held to an editorial height: at most
+   58% of the screen and 600 px, so it never fills a large monitor. When the
+   cut is taller than that, it is cropped from the bottom up (object-position
+   top keeps the faces and horizons). The copy follows closely, as one block. */
+.image { display: block; height: auto; max-height: min(58svh, 600px); object-fit: cover; object-position: center top; width: 100%; }
+
+.copy { align-items: start; column-gap: clamp(40px, 6vw, 120px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); margin: 0 auto; max-width: 1144px; padding: clamp(28px, 3vw, 44px) clamp(24px, 6vw, 88px) clamp(56px, 6vw, 88px); }
+.label { color: var(--coral); font: 700 var(--type-accent-label, 19px)/1.35 var(--font-mono), monospace; grid-column: 1 / -1; letter-spacing: .12em; margin: 0 0 18px; text-transform: uppercase; }
+.feature .title { color: inherit; font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 900; grid-column: 1; letter-spacing: .01em; line-height: 1.05; margin: 0; text-transform: uppercase; }
+.feature .title em { color: var(--coral); display: inline-block; font-family: var(--font-display), sans-serif; font-size: 52px; font-style: italic; font-weight: 400; line-height: 1; margin-top: 4px; }
+.body { font: 400 var(--type-body-lg, 18px)/1.5 var(--font-body), sans-serif; grid-column: 2; margin: 0; max-width: 36em; }
+.cta { grid-column: 2; justify-self: start; margin-top: 32px; }
+
+/* Queen Raida: the lightest neutral in the light theme, a deep navy in dark. */
+.raida { background: var(--scroll-100, #f9f7e7); color: var(--ink); }
+:global(html[data-theme="dark"]) .raida { background: var(--surface-deep, #12163b); color: var(--color-cream); }
+
+/* Moloch: the site's coral (#EE3C78, the glow of the Moloch artwork) in both
+   themes, with RaidGuild deep navy text (#12163B, 4.6:1; navy #191E4E is 4.2:1
+   and indigo 2.9:1, too low for body copy). The CTA is a deep navy pill with a
+   white label (16:1) that turns cream on hover; focus rings are navy on cream. */
+.moloch { --on-coral: #12163b; background: var(--coral); color: var(--on-coral); }
+.moloch .label, .moloch .title em { color: var(--on-coral); }
+.moloch {
+  --cta-bg: var(--color-cream); --cta-fg: var(--on-coral); --cta-bg-active: var(--color-cream); --cta-fg-active: var(--on-coral);
+  --cta-outline-bg: var(--on-coral); --cta-outline-fg: var(--color-white, #fafafa); --cta-outline-border: var(--on-coral);
+  --cta-hover-ring: var(--on-coral); --cta-ring: var(--on-coral); --cta-ring-halo: var(--color-cream);
+}
+
+@media (max-width: 760px) {
+  .copy { display: block; padding: 24px 24px 56px; }
+  .feature .title { font-size: 20px; }
+  .feature .title em { font-size: clamp(30px, 10.2vw, 48px); }
+  .body { margin-top: 20px; }
+  .cta { margin-top: 28px; }
+}
+@media (max-width: 700px) {
+  /* The vertical cut, cropped from the bottom to at most 72% of the screen. */
+  .image { max-height: 72svh; }
+}
+@media (prefers-reduced-motion: reduce) { .feature { transition: none; } }

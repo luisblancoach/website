@@ -22,7 +22,7 @@ describe("public narrative content", () => {
     assert.deepEqual(works.map((w) => w.id), ["daohaus", "daedalus", "brightid", "livepeer", "hypercerts", "pocket", "problem", "gitcoin", "yieldnest"]);
     assert.equal(works[0].description.id, "clients.previousWorks.works.0.description");
     assert.equal(works[0].link.href, "https://daohaus.org/");
-    assert.equal(publicTree.communityNarrative.communityQueenRaida.artwork.src, "/images/queen-raida/queen-raida-v2.png");
+    assert.equal(publicTree.communityNarrative.communityQueenRaida.artwork.src, "/images/venture/entities/queen-raida/queen-rectangle.png");
   });
 
   test("pending works are dropped in production", () => {

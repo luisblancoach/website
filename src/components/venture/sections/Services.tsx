@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import type { Illustration } from "@/lib/data/illustrations";
-import type { ServicesContent } from "@/lib/narrative/types";
+import type { CapabilitiesContent, Copy, ServicesContent } from "@/lib/narrative/types";
 import { CopyText } from "../primitives/Review";
 import NarrativeAnchor from "../primitives/NarrativeAnchor";
 import { useVenture } from "../shell/VentureShell";
@@ -15,7 +15,11 @@ import styles from "../services.module.css";
 // accordion and the foundry illustration as separate regions. Desktop shows the
 // portrait cut beside the copy; mobile shows the horizontal cut above it. Keeps
 // the "spears", "services" and "capabilities" anchors used by navigation.
-export default function Services({ content, portrait, horizontal }: { content: ServicesContent; portrait: Illustration; horizontal: Illustration }) {
+// /community (October 29) uses the same module for "Ideas into working
+// systems" and adds its specialist practices behind a disclosure.
+type Practices = { label: Copy; items: CapabilitiesContent["practices"] };
+
+export default function Services({ content, portrait, horizontal, practices }: { content: ServicesContent; portrait: Illustration; horizontal: Illustration; practices?: Practices }) {
   const { arrivalTarget } = useVenture();
   return (
     <section className={`${styles.services} ${arrivalTarget === "spears" || arrivalTarget === "capabilities" ? venture.sectionArriving : ""}`} id="spears" aria-labelledby="services-title">
@@ -35,6 +39,24 @@ export default function Services({ content, portrait, horizontal }: { content: S
               </details>
             ))}
           </div>
+          {practices && (
+            <details className={`${venture.practiceDisclosure} ${styles.practices}`}>
+              <summary><CopyText copy={practices.label} /></summary>
+              <div className={venture.practiceCards}>
+                {practices.items.map((item) => (
+                  <article className={venture.practiceCard} key={item.title.id}>
+                    <Image src={item.image.src} alt={item.image.alt.text} width={1024} height={768} />
+                    <div>
+                      <p className={venture.disciplineTag}><CopyText copy={item.tag} /></p>
+                      <h3><CopyText copy={item.title} /></h3>
+                      <p><CopyText copy={item.body} /></p>
+                      <NarrativeAnchor link={item.link}><CopyText copy={item.link.label} /> <span>↗</span></NarrativeAnchor>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </details>
+          )}
           <NarrativeAnchor link={content.cta} className={`${venture.pill} ${venture.pillFilled} ${showcase.compactPill} ${styles.cta}`}>
             <span><CopyText copy={content.cta.label} /></span>
             <i className={venture.pillIcon} aria-hidden="true"><b className={venture.iconLogo} /></i>

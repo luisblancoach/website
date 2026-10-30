@@ -42,6 +42,15 @@ describe("semantic CTA tokens", () => {
     assert.ok(contrast(light("on-pink"), light("cta-bg")) >= 4.5, "text on the pink band");
   });
 
+  test("dark theme (October 29): white labels on #CE1252 with a canonical pink edge", () => {
+    assert.equal(darkTok("cta-fg"), "#fafafa");
+    assert.ok(contrast(darkTok("cta-fg"), darkTok("cta-bg")) >= 4.5, "dark default");
+    assert.ok(contrast("#fafafa", "#ee3c78") < 4.5, "white on canonical pink would fail");
+    assert.ok(contrast(darkTok("cta-edge"), surfaces.navy) >= 3, "pink edge on navy");
+    assert.ok(contrast(darkTok("cta-outline-fg"), surfaces.navy) >= 4.5, "outline label on navy");
+    assert.ok(contrast(darkTok("cta-outline-border"), surfaces.navy) >= 3, "outline edge on navy");
+  });
+
   test("dark-green #102D2C alone would fail on pink, which is why it is not the label colour", () => {
     assert.ok(contrast("#102d2c", "#ee3c78") < 4.5);
     assert.notEqual(light("cta-fg"), "#102d2c");
@@ -64,5 +73,24 @@ describe("semantic CTA tokens", () => {
     assert.ok(contrast(darkTok("cta-ring"), surfaces.navy) >= 3, "dark ring on navy");
     assert.ok(contrast(darkTok("cta-ring"), surfaces.raised) >= 3, "dark ring on raised navy");
     assert.ok(/--cta-ring: var\(--color-cream\);[^}]*--cta-hover-ring: var\(--color-cream\)/.test(css), "deep-green light surfaces switch to cream rings");
+  });
+});
+
+describe("October 29 coral scenes (/community)", () => {
+  const feature = readFileSync(new URL("../src/components/venture/feature.module.css", import.meta.url), "utf8");
+  const coral = palette["color-pink"];
+  const onCoral = (feature.match(/--on-coral:\s*(#[0-9a-f]{6})/i) || [])[1];
+
+  test("Moloch: deep navy text on coral meets 4.5:1; navy and indigo would not", () => {
+    assert.equal(coral, "#ee3c78");
+    assert.equal(onCoral, "#12163b");
+    assert.ok(contrast(onCoral, coral) >= 4.5, `${contrast(onCoral, coral).toFixed(2)}:1`);
+    assert.ok(contrast(palette["color-navy"], coral) < 4.5, "navy #191E4E is below 4.5:1 on coral");
+    assert.ok(contrast(palette["color-indigo"], coral) < 3, "indigo #303675 is below 3:1 on coral");
+  });
+
+  test("Moloch CTA: white on deep navy, and the pill keeps a 3:1 edge on coral", () => {
+    assert.ok(contrast(palette["color-white"], onCoral) >= 4.5);
+    assert.ok(contrast(onCoral, coral) >= 3);
   });
 });
