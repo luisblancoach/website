@@ -1,13 +1,14 @@
 # STATUS
 
-Snapshot: 2026-10-30, afternoon (-0300). **Uncommitted on top of `10e1fbf`: the shared CTA system, the
+Snapshot: 2026-10-30, afternoon (-0300). **Release `07031e2` is committed, pushed and deployed to Vercel production:**
+`dpl_Bz4p12G9bayZT3kdJo41U73PGpGM`, https://raidguild-venture-beyond-review.vercel.app. **The shared CTA system, the
 numbered landing-page inventory, the builder module restored to the October 28 editorial grid on a flat
 coral plane, the afternoon pass (page container, persistent top bar, Join hero title, Moloch title
 with the sword mark, Hats and heading refinements), the final contact module's scene and profession
 gallery, the night refinements (foam removed, creed, hero, random gallery, Hire SEO), the CTA icon and pill
 system, and the final pass (logo restored, single outline, open form, clues in the footer, section
 rhythm)** (sections "October 30" below). Nothing committed, pushed or deployed; the owner
-reviews first.
+reviews first; the release is now approved for external review.**
 
 Previous snapshot, 2026-10-29, night (-0300). **Iteration 04** (Moloch title, Explore copy, builder layouts by
 result count, Hats/Projects swap, CTA states) is committed on `feat/venture-beyond-integration` on top of
@@ -30,10 +31,17 @@ login; deployed 2026-10-29 22:18 with `--build-env SHOW_REVIEW_FLAGS=false`, pro
 Left uncommitted on purpose (the owner's): `package.json` (`packageManager`), the 21 deleted legacy images,
 `public/images/casestudies/clients.pdf`, `.DS_Store` files.
 
+**Production verification:** anonymous requests to `/clients` and `/community` return 200; authenticated
+`vercel curl` responses contain the new metadata, Moloch title and Join copy.
+
 **Local server:** http://localhost:3017 is running (`bun run dev --port 3017`, restarted 2026-10-30
 afternoon because it kept serving a stale narrative module); `/clients` and `/community` return 200.
 
-**Next priority:** release of the October 30 work (all uncommitted, sections below): commit, push and
+**Next priority:** collect external feedback on the published October 30 release. The remaining local-only
+files are intentionally excluded from the release: `package.json`, the 21 deleted legacy images,
+`public/images/casestudies/clients.pdf`, and `.DS_Store` files.
+
+Previous next priority was: release of the October 30 work (all uncommitted, sections below): commit, push and
 Vercel publish once approved; the owner's new files it references must be committed with it
 (`public/images/swords.svg`, `public/images/neo/join-*-{light,dark}.png`, `public/images/professions/`,
 `public/images/icons/favicon-moloch.png`, the new `public/images/icons/*.svg` incl. `ico_telegram.svg`). Section reordering uses the numbered inventory below, in a later

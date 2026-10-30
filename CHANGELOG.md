@@ -6,6 +6,16 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
+## 2026-10-30 · Approved Venture Beyond release `07031e2`
+
+- Published to Vercel Production in `raidguild-venture-beyond-review`, deployment
+  `dpl_Bz4p12G9bayZT3kdJo41U73PGpGM` (`https://raidguild-venture-beyond-review.vercel.app`).
+- `/clients` and `/community` return 200 publicly. The release includes the approved landing-page
+  refinements, shared CTA system, pinned contact scenes, responsive profession gallery, normalized
+  Builders/People/Hats cards, form stepper and dropdown updates, and route-specific sharing metadata.
+- Verified before publish: `bun run test` 85/85, TypeScript, lint with one pre-existing warning, and
+  production build. The deployment was created from a clean archive with `SHOW_REVIEW_FLAGS=false`.
+
 ## 2026-10-29 · Iteration 04 commit (pushed to `fork/feat/venture-beyond-integration`, not deployed)
 
 - Moloch title with the RaidGuild logo; the owner's Explore description; display face kept for "The Guild
