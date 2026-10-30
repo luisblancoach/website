@@ -9,8 +9,8 @@
 .artPortrait { display: block; height: auto; margin-top: -24px; max-width: 520px; position: sticky; top: 120px; width: 100%; }
 
 .label { color: var(--coral); font: 700 var(--type-accent-label, 19px)/1.35 var(--font-mono), monospace; letter-spacing: .12em; margin: 0 0 18px; text-transform: uppercase; }
-.services .title { font-family: var(--font-display), sans-serif; font-size: 32px; letter-spacing: .01em; line-height: 1.05; margin: 0; text-transform: uppercase; }
-.services .title em { color: var(--coral); display: inline-block; font-family: var(--font-display), sans-serif; font-size: 46px; font-style: italic; font-weight: 400; line-height: 1.05; margin-top: 2px; }
+.services .title { font-family: var(--font-display), sans-serif; font-size: 34px; letter-spacing: .01em; line-height: 1.05; margin: 0; text-transform: uppercase; }
+.services .title em { color: var(--coral); display: inline-block; font-family: var(--font-display), sans-serif; font-size: 52px; font-style: italic; font-weight: 400; line-height: 1.05; margin-top: 2px; }
 .intro { margin-top: 24px; max-width: 34em; }
 .intro p { display: inline; font: 400 var(--type-body-lg, 18px)/1.4 var(--font-body), sans-serif; margin: 0; }
 .intro p + p::before { content: " "; }
@@ -53,8 +53,8 @@
   .artHorizontal { display: block; height: auto; margin: 0 auto 32px; max-width: 360px; width: 100%; }
   .label, .services .title, .intro { text-align: center; }
   .label { font-size: 17px; letter-spacing: .1em; }
-  .services .title { font-size: 32px; }
-  .services .title em { font-size: clamp(26px, 8.8vw, 40px); }
+  .services .title { font-size: 20px; }
+  .services .title em { font-size: clamp(30px, 10.2vw, 40px); }
   .intro { margin-inline: auto; }
   .intro p { display: block; }
   .intro p + p { margin-top: 18px; }

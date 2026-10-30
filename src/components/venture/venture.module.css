@@ -1886,10 +1886,15 @@
 }
 @media (prefers-reduced-motion: reduce) { .heroCurtain .heroForeground { transition: none; } }
 
-/* Builder network: a list that fits on screen without moving fills the width
-   (all categories share the masonry cards since October 29). */
+/* Builder network, lists that fit without moving (short categories, reduced
+   motion): the moving wall's composition, still. Cards keep their natural
+   width (as on the wall, never stretched), rows are staggered like brick
+   courses, and the block is centred on the coral band. */
 .site[data-audience] .teamNetwork .memberLoop:has(> .memberMasonry[data-static]) { min-width: 100%; }
-.site[data-audience] .teamNetwork .memberMasonry[data-static] { flex: 1 0 auto; min-width: 100%; }
+/* Auto margins centre it without ever pushing a wider list off the left edge. */
+.site[data-audience] .teamNetwork .memberMasonry[data-static] { align-items: flex-start; flex: 0 0 auto; margin-inline: auto; }
+.site[data-audience] .teamNetwork .memberMasonry[data-static] > .memberRail > :is(a, div) { flex: 0 0 auto; }
+.site[data-audience] .teamNetwork .memberMasonry[data-static] > .memberRail:nth-child(even) { margin-left: clamp(28px, 5vw, 72px); }
 
 /* Inquiry form on the light-blue module (Frame 122, refined for Frame 123):
    it reads as the introduction panel transformed, not an application inside
@@ -2049,17 +2054,22 @@
   .prologue[data-kit], .prologue[data-kit] .kitPanel, .kitToggle { transition: none !important; }
 }
 
-/* Creed (both audience routes, October 29): "build." reads as the preselected
-   word, a dark violet highlight (RaidGuild indigo #303675) with cream type
-   (8.9:1), the same in both themes. It is a text highlight, not a control: no
-   border, shadow or pressed depth. */
-.site[data-audience] .creed .creedContent blockquote em { background: var(--color-indigo); border-radius: .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; color: var(--color-cream); padding: 0 .16em .04em; text-shadow: none; }
+/* Creed (both audience routes, October 29, final pass): "build." reads as the
+   preselected word: a coral highlight with RaidGuild deep navy type (#12163B,
+   4.6:1, large text), the same in both themes. It is a text highlight, not a
+   control: no border, shadow or pressed depth. */
+.site[data-audience] .creed .creedContent blockquote em { background: var(--coral); border-radius: .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; color: #12163b; padding: 0 .16em .04em; text-shadow: none; }
 
 /* Panels on the light-blue module, both routes: the Join panel's rounded coral
    stroke (October 29) now frames the Hire inquiry panel too; the inquiry
    summary inside it follows the radius. */
 .site[data-audience] .contactCyan .contactCopy { border: 2px solid var(--coral); border-radius: 28px; }
 .site[data-audience] .contactCyan .inquiryMore > summary { border-radius: 16px; }
+/* The Hire panel is two stacked blocks (introduction, inquiry): one stroke
+   wraps both, and the inquiry alone once the form replaces the introduction. */
+.site[data-audience] .contactCyan:has(> .inquiryMore) .contactCopy { border-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.site[data-audience] .contactCyan > .inquiryMore { border: 2px solid var(--coral); border-radius: 0 0 28px 28px; border-top: 0; }
+.site[data-audience] .contactCyan.contactExpanded > .inquiryMore { border-radius: 28px; border-top: 2px solid var(--coral); }
 
 /* Join the DAO heading: Grinder Regular for both lines (the approved display
    face at its regular weight), not italic. */
@@ -2075,3 +2085,29 @@
    disclosures reach 44 px without changing their type. */
 .site[data-audience] .brand, .site[data-audience] .socials a { min-height: 44px; }
 .site[data-audience] :is(.handbookLink, .rosterAside a, .guildMore > summary) { align-items: center; display: inline-flex; min-height: 44px; padding-block: 0; }
+
+/* Two-level section headings, both audience routes (October 29, final pass):
+   a smaller first line and a larger, more expressive second line read as one
+   composition. The showcase scale everywhere: 34 / 52 px on desktop, 20 px /
+   about 40 px on phones. The panel headings (Hire inquiry, Join) sit a step
+   lower, 30 / 46 px, so they stay controlled inside their panels. */
+.site[data-audience] .collectionHeading h2,
+.site[data-audience] .prologue h2,
+.site[data-audience] .contact h2.contactHeadline { font-family: var(--font-display), sans-serif; font-size: 34px; letter-spacing: .01em; line-height: 1.05; }
+.site[data-audience] .collectionHeading h2 em,
+.site[data-audience] .prologue h2 em { display: inline-block; font-size: 52px; line-height: 1; margin-top: 4px; }
+/* "MEMBER-GOVERNED" is long: 44 px keeps it on one line when the Guild kit
+   narrows its column. */
+.site[data-audience] .prologue h2 em { font-size: 44px; }
+@media (max-width: 760px) { .site[data-audience] .prologue h2 em { font-size: clamp(30px, 10.2vw, 40px); } }
+.site[data-audience] .contact h2.contactHeadline { font-size: 30px; }
+.site[data-audience] .contact h2.contactHeadline em { display: block; font-size: 46px; line-height: 1; margin-top: 4px; }
+.site[data-audience] .contact h2.contactHeadline span { display: inline; white-space: normal; }
+@media (max-width: 760px) {
+  .site[data-audience] .collectionHeading h2,
+  .site[data-audience] .prologue h2,
+  .site[data-audience] .contact h2.contactHeadline { font-size: 20px; }
+  .site[data-audience] .collectionHeading h2 em,
+  .site[data-audience] .prologue h2 em,
+  .site[data-audience] .contact h2.contactHeadline em { font-size: clamp(30px, 10.2vw, 40px); }
+}

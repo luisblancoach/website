@@ -6,7 +6,17 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
-## 2026-10-29 · Iteration 02 commit (pushed to `fork/feat/venture-beyond-integration`, not deployed manually)
+## 2026-10-29 · Iteration 03 commit (pushed to `fork/feat/venture-beyond-integration`, not deployed)
+
+- Final visual refinement pass for `/clients` and `/community`: the hero curtain on both routes; the
+  new /community order with Moloch after Queen Raida; the Hats Tree with branches, artwork-first cards
+  and select-to-enlarge; one two-level heading scale; still builder lists in the wall's style; the
+  coral creed highlight; one stroke around the Hire panel.
+- Verified: `bun run test` 79/79, `tsc`, lint (0 errors), isolated production build, browser suite
+  882/882 on the dev server and the production build. No preview: the fork has no Vercel Git
+  integration. Not verified: Safari, Firefox, devices, screen readers.
+
+## 2026-10-29 · Iteration 02 commit `a8ff16c` (pushed to `fork/feat/venture-beyond-integration`, not deployed manually)
 
 - Design system normalization iteration 01, the Community visual refinement follow-up and iteration 02
   for `/clients` and `/community`: the owner's hero, Join and Projects copy; no hero parallax; one

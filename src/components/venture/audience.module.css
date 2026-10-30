@@ -80,5 +80,5 @@
 @media (max-width: 760px) {
   :global([data-audience]) .network .heading h2 { font-size: 20px; }
   /* "Of builders." is a letter longer than "Our clients", so it caps lower. */
-  :global([data-audience]) .network .heading h2 em { font-size: clamp(30px, 10.2vw, 48px); }
+  :global([data-audience]) .network .heading h2 em { font-size: clamp(30px, 10.2vw, 40px); }
 }

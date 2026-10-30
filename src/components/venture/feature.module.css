@@ -38,7 +38,7 @@
 @media (max-width: 760px) {
   .copy { display: block; padding: 24px 24px 56px; }
   .feature .title { font-size: 20px; }
-  .feature .title em { font-size: clamp(30px, 10.2vw, 48px); }
+  .feature .title em { font-size: clamp(30px, 10.2vw, 40px); }
   .body { margin-top: 20px; }
   .cta { margin-top: 28px; }
 }

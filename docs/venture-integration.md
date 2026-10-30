@@ -15,6 +15,21 @@ Integration decisions:
 - Retain the supplied illustrations, palettes, icons, portraits and video scenes.
 - Make section sizing responsive rather than enforcing Figma heights when content grows.
 
+October 29, 2026 (late evening) — Iteration 03, final visual refinement pass (committed and pushed,
+not deployed):
+- Hero: light and dark already matched; the side panels moved only on /clients. /community now uses
+  the same curtain (owner note: "use the same transition"); layer parallax stays off.
+- /community order: About → Queen Raida → Moloch → Hats → Builders → Projects → Join → Ideas →
+  creed (owner's choice for the two sections missing from the brief's list).
+- Hats Tree: curved SVG branches from the parent (no single trunk line); cards artwork → name → ID;
+  `aria-pressed` buttons with hover highlight, select-to-enlarge (1.1 / 1.04 on phones), dimmed
+  siblings, Escape or a second click to clear; focus-visible selection only for keyboard focus, so
+  a mouse click does not toggle twice. Stewards paragraph emphasised (coral rule and term).
+- Headings: one two-level scale (34 / 52, phones 20 / ≤ 40); Guild 34 / 44; panel headings 30 / 46.
+- Builders: still lists keep natural-width cards in staggered rows, centred with auto margins
+  (`justify-content: center` would clip a wider list on the left).
+- Creed: coral highlight, deep navy type. Hire panel: one stroke around both stacked blocks.
+
 October 29, 2026 (evening) — Iteration 02, both audience routes (committed and pushed with the work
 it builds on; owner approved committing the artwork):
 - Hero (/community): the owner's copy (eyebrow, two lines, subtitle, two CTAs); "builder owned

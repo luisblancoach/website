@@ -18,9 +18,10 @@ import type { ServicesContent } from "@/lib/narrative/types";
 import { foundryHorizontal, foundryPortrait, molochArtwork, queenRaidaArtwork } from "@/lib/data/illustrations";
 import { forAudience } from "@/lib/narrative/public";
 
-// October 29 Join the DAO architecture: hero → About RaidGuild → Queen Raida →
-// Projects & Experiments → Hats Tree → builders → join → About Moloch → ideas
-// into working systems → creed. Tae's tension, path and activity chapters
+// Join the DAO architecture (October 29, final pass): hero → About RaidGuild →
+// Queen Raida → About Moloch → Hats Tree → builders → Projects & Experiments →
+// join → ideas into working systems → creed. The hero uses the same curtain
+// as /clients. Tae's tension, path and activity chapters
 // (Phase 2) return in the editorial batch. Unconfirmed claims are flagged in
 // review builds; keep the route out of search until they are resolved.
 export const metadata: Metadata = {
@@ -46,15 +47,15 @@ const ideas: ServicesContent = {
 export default function CommunityPage() {
   return (
     <>
-      <Hero content={forAudience(communityHero)} grouped still />
+      <Hero content={forAudience(communityHero)} grouped curtain still />
       <GuildTicker />
       <GuildPrologue content={forAudience(communityGuild)} metrics={false} kitExpander />
       <ImmersiveFeature id="raida" content={forAudience(communityRaidaFeature)} artwork={queenRaidaArtwork} tone="raida" />
-      <WallOfCuriosities content={forAudience(communityActivity.collection)} />
+      <ImmersiveFeature id="moloch" content={forAudience(communityMoloch)} artwork={molochArtwork} tone="moloch" />
       <HatsTree content={forAudience(communityHats)} />
       <BuilderNetwork content={forAudience(buildersCommunity)} masonry />
+      <WallOfCuriosities content={forAudience(communityActivity.collection)} />
       <JoinCTA content={forAudience(communityJoin)} />
-      <ImmersiveFeature id="moloch" content={forAudience(communityMoloch)} artwork={molochArtwork} tone="moloch" />
       <Services content={ideas} portrait={foundryPortrait} horizontal={foundryHorizontal} practices={{ label: capabilities.practicesLabel, items: capabilities.practices }} />
       <Creed content={forAudience(communityCreed)} />
     </>

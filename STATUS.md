@@ -1,21 +1,19 @@
 # STATUS
 
-Snapshot: 2026-10-29 21:xx -0300. **Iteration 02** (the owner's October 29 evening brief for `/clients` and
-`/community`) is committed on `feat/venture-beyond-integration` together with the uncommitted work it builds
-on (the October 29 documentation reconciliation, design system normalization iteration 01, the Community
-visual refinement follow-up) and the owner's artwork in `public/images/venture/` (approved for commit in
-this session), then pushed to `fork/feat/venture-beyond-integration`. The commit hash, the push and
-whether Vercel built a preview are reported to the owner at close; Vercel was not deployed manually. The
-last deployed review is still release `2bf270d` (`dpl_HqkPYA55qh5V9QHFQpUxwWZ1xjko`) unless a Git-connected
-preview appears.
+Snapshot: 2026-10-29, late evening (-0300). **Iteration 03** (the final visual refinement pass before the
+review deployment) is committed on `feat/venture-beyond-integration` on top of iteration 02 (`a8ff16c`)
+and pushed to `fork/feat/venture-beyond-integration`. **Not deployed:** the fork has no Vercel Git
+integration (no deployments or commit statuses on any commit), so a push creates no preview; the review
+project has only ever been deployed manually with the Vercel CLI, which needs the owner's approval. The
+last deployed review is still release `2bf270d` (`dpl_HqkPYA55qh5V9QHFQpUxwWZ1xjko`).
 
-Left uncommitted on purpose (the owner's, not part of the iteration): `package.json` (`packageManager`),
+Left uncommitted on purpose (the owner's, not part of the iterations): `package.json` (`packageManager`),
 the 21 deleted legacy images, `public/images/casestudies/clients.pdf`, `.DS_Store` files.
 
 **Local server:** http://localhost:3017 is running (`bun run dev --port 3017`, restarted at the end of
 this session); `/clients` and `/community` return 200.
 
-**Next priority:** owner feedback on iteration 02 (local or preview), then the open questions 27–33.
+**Next priority:** owner review of iteration 03, then approval (or not) to deploy it to the review project.
 
 ## Environment
 
@@ -481,7 +479,8 @@ the session scratchpad
 
 ## Working tree
 
-- HEAD: the iteration 02 commit (parent `2bf270d`), pushed to `fork/feat/venture-beyond-integration`.
+- HEAD: the iteration 03 commit (parent `a8ff16c`, iteration 02, parent `2bf270d`), pushed to
+  `fork/feat/venture-beyond-integration`. `a8ff16c`
   It contains the documentation reconciliation, iteration 01, the Community follow-up, iteration 02, the
   owner's artwork in `public/images/venture/` (12 PNGs, approved for commit on 2026-10-29) and the deletion
   of `public/images/queen-raida/queen-raida-v2.png` (the owner removed it; nothing references it).
@@ -496,8 +495,8 @@ the session scratchpad
 
 ## Next actions
 
-1. **Owner feedback** on iteration 02 (http://localhost:3017, or the Vercel preview if the push built one).
-   Any deploy still needs explicit approval (AGENTS.md).
+1. **Owner review** of iteration 03 at http://localhost:3017 (no Git preview exists for the fork). Any
+   deploy needs explicit approval (AGENTS.md).
 2. Answer the open questions below, especially those about `/community` (21–24) and the
    copy confirmations (1, 2, 19).
 3. Decide on a documentation commit for this reconciliation, and on `release/review-2bf270d`
@@ -602,8 +601,52 @@ the session scratchpad
     confirm that the grid can go for good.
 33. **Guild kit on /clients:** the Guild module is not on /clients, so the expander exists only on
     /community. The H3, CTA, accordion, creed, builder and panel changes apply to both routes.
+34. **Hero curtain on /community:** the owner's note was read as "Join should part its side panels like
+    Hire" (light and dark already matched). Confirm, or describe the dark-theme motion meant.
+35. **Hats selection** has no detail panel (removed in the follow-up); it only enlarges the card. Should a
+    selected hat show anything else?
 
-## Iteration 02: October 29 evening brief (2026-10-29, committed with this note)
+## Iteration 03: final visual refinement pass (2026-10-29, committed with this note)
+
+References: the owner's brief, the note "el parallax de la versión light no está desplazando los paneles
+laterales; usar misma transición que dark", and `~/Desktop/Screenshot 2026-10-29 at 9.36.04 PM.png`
+(Fullstack: the band as a plain container of stretched cards). The owner chose where the two unlisted
+sections go (Projects after Builders; Ideas into Working Systems after Join). Decisions are in
+`docs/venture-integration.md` (iteration 03 entry).
+
+| Area | Change |
+|---|---|
+| Hero side panels | Measured: light and dark already behaved identically; the panels parted only on /clients (the curtain) and never on /community. Read as "Join should part its panels like Hire": /community now uses the same curtain (`Hero curtain still`), same distances and timing, both themes. Layer parallax stays off. |
+| /community order | About RaidGuild → Queen Raida → About Moloch → Hats Tree → Builders → Projects & Experiments → Join → Ideas into Working Systems → creed. Dark neighbours stay distinct. |
+| Hats Tree | Left: label, title, intro, and the stewards paragraph set apart (coral rule, "Stewards." in coral, 17 px). Right: the RaidGuild mark (88 px) with five curved SVG branches to the roles (no single trunk line). Cards read artwork, name, ID (Ubuntu). Cards are buttons again (`aria-pressed`): hover highlights; click, tap or keyboard focus selects (scale 1.1, 1.04 on phones), siblings dim to 62%; clicking again or Escape clears; reduced motion keeps the state without zoom. Phones: vertical tree with a rail and rounded stubs. |
+| Headings | One two-level scale on both routes: 34 / 52 px desktop, 20 / ≤ 40 px phones (Projects, Services, Hats, Moloch, Queen Raida, builders); Guild 34 / 44 px (so "MEMBER-GOVERNED" holds one line when the kit opens); panel headings (Hire inquiry, Join) 30 / 46 px, second line on its own row. Every two-line heading's second line is ≥ 1.2× its first. |
+| Builders | Short categories keep the wall's look: natural-width cards (never stretched), staggered brick rows, centred with auto margins (a wider list can't be cut off), on the same coral band tilted −1° with its rows and cards. |
+| Creed | "build." on a coral highlight with deep navy type (#12163B), both themes. |
+| Panels | The Hire panel is two stacked blocks; one coral stroke now wraps both (and the inquiry alone when the form is open). This fixes the iteration 02 stroke that framed only the introduction. Join unchanged (30 / 46 heading). |
+| Themes | Light uses green, coral, cream and light blue only; no navy/night section surface in light (tested). |
+
+Files: `src/app/(venture)/community/page.tsx`, `src/components/venture/sections/HatsTree.tsx`,
+`src/components/venture/{hats,venture,services,feature,audience}.module.css`, `STATUS.md`,
+`CHANGELOG.md`, `docs/venture-integration.md`.
+
+### Verification of iteration 03 (2026-10-29)
+
+- `bun run test` 79/79; `bunx tsc --noEmit --incremental false` passes; `bun run lint` 0 errors (the old
+  `ThemeAnchor` warning).
+- Isolated production build (`scratchpad/build-ds03`, no `.env*`) passes; 0 review ids; served on 3018, stopped.
+- Browser suite `scratchpad/pw/ds04.mjs` (ds03 plus this pass): **882/882 on the production build and
+  882/882 on the dev server.** Adds: section order with Moloch after Queen Raida; coral creed highlight;
+  every two-line heading ≥ 1.2×; no navy surfaces in light; still builder lists unstretched and not cut
+  off; Hats cards artwork → name → ID, five `aria-pressed` buttons, coral "Stewards", five branches meeting
+  the parent and the cards; Hats hover highlight, click/tap select with zoom and dimmed siblings, no
+  overflow, toggle off, keyboard focus selection with a ring, Tab moves it, Escape clears, reduced motion
+  without zoom (1440 light, 1600 dark, 393 dark, 375 light); hero panels part on hover and scroll on both
+  routes in both themes; Join heading 30 / 46. Suite bugs fixed while writing it (a stretch heuristic, the
+  card text order) were in the tests, not the page.
+- Screenshots (production build): `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/afb6ffad-2e28-42d6-b989-2be86bcb321f/scratchpad/ds04/final/` (`side-by-side-{light,dark}-{1440,393}.png`, full pages).
+- Not verified: Safari, Firefox, physical devices, screen readers; parity with `40f3910`.
+
+## Iteration 02: October 29 evening brief (2026-10-29, `a8ff16c`)
 
 References: the owner's brief and the three Desktop captures of that evening
 (`~/Desktop/Screenshot 2026-10-29 at 6.22.58 PM.png`, the Guild kit; `8.20.25 PM`, the builder band in the
