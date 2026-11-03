@@ -55,7 +55,8 @@ export type NarrativeLink = {
 };
 
 export type HeroContent = {
-  eyebrow: Copy;
+  // Optional since November 2 (hero experiment): the audience heroes have none.
+  eyebrow?: Copy;
   // `plain` sets the second line in the headline colour instead of the accent.
   // `finale` (October 30) adds a third, much larger accent line; `lead` and
   // `em` then share one reading level above it.
@@ -160,6 +161,35 @@ export type ServicesContent = {
   footnote: { lead: Copy; link: NarrativeLink };
 };
 
+// Feature gallery (November 2): one horizontally scrollable row of cards, the
+// shared component for /clients services and /community member benefits
+// (sections/FeatureGallery.tsx). Images are decorative (the card's title names
+// it); `fit: "contain"` keeps a transparent illustration whole on the card.
+export type GalleryCard = {
+  label: Copy;
+  title: Title;
+  body: Copy;
+  image: { src: string; width: number; height: number; fit?: "cover" | "contain" };
+  link?: NarrativeLink;
+};
+export type FeatureGalleryContent = {
+  label: Copy;
+  title: Title;
+  intro?: Copy;
+  cards: GalleryCard[];
+  cta?: NarrativeLink;
+  footnote?: { lead: Copy; link: NarrativeLink };
+};
+
+// FAQ (November 2): questions as headings with disclosure buttons
+// (sections/Faq.tsx). Bracketed segments in an answer ("[$X–$Y]") are
+// unconfirmed values and render as marked placeholders, never as facts.
+export type FaqContent = {
+  label: Copy;
+  title: Title;
+  items: { question: Copy; answer: Copy }[];
+};
+
 export type InquiryContent = {
   label: Copy;
   title: Title;
@@ -184,8 +214,6 @@ export type QueenRaidaContent = {
 export type ImmersiveContent = {
   label: Copy;
   title: Title;
-  // An image after the second title line (About Moloch: the RaidGuild logo).
-  titleMark?: { src: string; width: number; height: number; alt: Copy };
   body: Copy;
   // The pill's icon (October 30): the RaidGuild logo unless the destination has its own mark.
   cta: NarrativeLink & { variant: "filled" | "outline"; icon?: "logo" | "handbook" };

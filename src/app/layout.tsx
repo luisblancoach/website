@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import {
   afacadFlux,
-  grinder,
-  grinderRetalic,
+  lastDuel,
+  lastDuelRetalic,
+  lastDuelExtended,
   ebGaramond,
   maziusDisplay,
   ubuntu,
@@ -59,7 +60,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${grinder.variable} ${grinderRetalic.variable} ${afacadFlux.variable} ${ebGaramond.variable} ${maziusDisplay.variable} ${ubuntu.variable} ${ubuntuMono.variable} antialiased`}
+        className={`${lastDuel.variable} ${lastDuelRetalic.variable} ${lastDuelExtended.variable} ${afacadFlux.variable} ${ebGaramond.variable} ${maziusDisplay.variable} ${ubuntu.variable} ${ubuntuMono.variable} antialiased`}
       >
         <VercelAnalytics />
         {/* <ThemeProvider

@@ -18,8 +18,9 @@ export const keeperHorizontal: Illustration = { src: "/images/illustrations/ilus
 
 // Immersive features on /community (October 29): the owner's artwork in three
 // cuts per entity (docs/asset-provenance.md). Desktop shows the wide horizontal
-// cut, phones the vertical cut, and the 16:9 rectangle covers tablets and
-// squarer monitors (ImmersiveFeature). Replace a file at its path to change the art.
+// cut and the 16:9 rectangle covers tablets and squarer monitors; phones show
+// the rectangle's centre square (November 2), so the vertical cut is kept but
+// not rendered (ImmersiveFeature). Replace a file at its path to change the art.
 export type EntityArtwork = { desktop: Illustration; rectangle: Illustration; mobile: Illustration };
 const entity = (name: string, file: string): EntityArtwork => ({
   desktop: { src: `/images/venture/entities/${name}/${file}-desktop.png`, width: 2877, height: 1230 },

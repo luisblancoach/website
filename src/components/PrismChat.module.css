@@ -8,8 +8,8 @@
 .issue { color: #b8e0df; }
 .intro { padding: clamp(40px, 6vw, 76px) 0 32px; }
 .kicker { color: #d7e34d; margin: 0 0 12px; }
-.intro h1 { font-family: var(--font-grinder), sans-serif; font-size: clamp(44px, 8vw, 82px); line-height: .95; margin: 0; text-transform: uppercase; }
-.intro h1 em { color: #ee3c78; font-family: var(--font-grinder-retalic), sans-serif; }
+.intro h1 { font-family: var(--font-last-duel), sans-serif; font-size: clamp(44px, 8vw, 82px); line-height: .95; margin: 0; text-transform: uppercase; }
+.intro h1 em { color: #ee3c78; font-family: var(--font-last-duel-retalic), sans-serif; }
 .intro > p:last-child { font-size: clamp(16px, 2vw, 19px); line-height: 1.5; margin: 22px 0 0; max-width: 650px; }
 .console { background: #efe9d7; box-shadow: 16px 16px 0 #b8e0df; color: #102d2c; }
 .consoleHead { align-items: center; background: #102d2c; color: #efe9d7; display: flex; justify-content: space-between; gap: 16px; padding: 18px 24px; }

@@ -621,3 +621,84 @@ October 29, 2026 — Design system normalization, iteration 01 (uncommitted):
   roles with placeholder art, four more listed, "Explore the Hats Tree" to the Hats app. No wearers.
 - Dark scenes: navy, deep navy (--surface-deep #12163B), raised navy, dark green (Hats), Moloch red
   (--moloch-600; the literal coral fails body-text contrast).
+
+November 2, 2026 — Typography migration, Grinder → Last Duel (uncommitted):
+- Last Duel replaces Grinder as the landing pages' display family (owner's brief); Ubuntu and Ubuntu
+  Mono stay for body, labels, navigation, buttons and forms.
+- Mapping from the files' name tables, mirroring Grinder's structure so every element keeps its
+  authored style: one family `--font-last-duel` (Ex2 400 / BoldEx2 700 upright; Oblique 400 /
+  BoldOblique 700 italic) and one `--font-last-duel-retalic` (Ex2Retalic 400). The upright cuts are the
+  Extended 2 widths; the only italics are normal width. BoldEx2Retalic is not wired (no Retalic text
+  asks for 600+; next/font preloads every registered file).
+- `font-synthesis: none` stays, so heading lead lines set at 900 now show the real bold cut (Grinder
+  had no bold and rendered them regular).
+- Card names keep their approved style (italic → Oblique); upright Regular for them is open (STATUS 65).
+- The wider Extended 2 cuts required re-fitting the lines that are fitted to one line or a column:
+  /community hero (14.5 em), /clients inquiry "YOU'RE BUILDING" (12.8), Guild "MEMBER-GOVERNED"
+  (15.2, above 760 px), and on "/" the phone hero, rail names (per name, `--chars`) and steward names
+  (one shared size).
+- Grinder is removed from code and assets (the six woff2 files deleted); `.gitignore` keeps its rules
+  so stray Grinder binaries stay out of Git.
+- The supplied Last Duel files carry a private, no-web-hosting licence field (Eurostile LT Std
+  derivative): they are not to be committed or deployed until that is resolved (STATUS 64).
+
+November 2, 2026 — Display hierarchy pass (uncommitted):
+- Two-level display headings everywhere (heroes, section headings, Builder-owned / Member-governed,
+  Queen Raida, Moloch, Join, Hire inquiry, Hats, Explore, creed): top line Last Duel Bold Extended
+  Retalic, smaller; bottom line Bold Extended italic, about 1.3–1.4 times larger. Last Duel has no
+  extended italic, so the bottom line is BoldEx2 with the browser's synthesized oblique (its own family,
+  `--font-last-duel-extended`); BoldOblique is the alternative (STATUS 67).
+- One scale: section 28 / 37 px (phones 18 / ≤24), panels 24 / ≤32 (16 / ≤22), creed 40 / 54 (22 / 30);
+  heroes and one-line bottom lines fit their column. Replaces the 34 / 52 (20 / 40) showcase scale and
+  the heroes' 2× second lines.
+- Standalone display labels (TRANSMISSION, the hero index, section markers) in Last Duel Bold, upright;
+  the thin regular Retalic and the regular "001" are retired. Card names unchanged (STATUS 65).
+- Guild module: Join the DAO and Your Guild kit grouped 14 px apart (no longer pushed to the edges).
+- Grinder's `.gitignore` rules removed; no Grinder reference remains in code or configuration.
+
+November 2, 2026 — Mobile pass (uncommitted; phones ≤ 760 px unless noted, desktop unchanged):
+- Audience heroes in two groups: eyebrow + headline at the top, dek + actions at the foot within thumb reach,
+  the artwork visible between them; the hero is one screen tall (640–780 px).
+- One phone CTA object on every route: full column width, 52 px, fully rounded, 40 px icon disc inset 6 px on
+  three sides, 14 px label on one line. Labels were not shortened; the Join panel's side padding is 20 px at
+  ≤ 400 px so "Create your Portal profile" fits at 375.
+- Top bar: 16 px gutters both sides; the menu's lines end on the theme switch's edge.
+- Queen Raida and Moloch on phones show the rectangle cut's centre square (the vertical cut is no longer used).
+  The Moloch heading's second line is 1.6 × the shared phone scale and its first line grows as far as it fits
+  on one line. The crossed-swords mark after "MOLOCH" (swords.svg) is removed at every width, and the file
+  deleted, at the owner's request.
+- Builder categories: two per row, full width, outlined when inactive, filled when selected.
+- Hats tree: the parent node is the tree's title (80 px mark, 21 px bold name); "Explore the Hats tree" sits
+  under the tree, above the snapshot note, on phones (rendered twice, one copy displayed per width range).
+- Join module and Hire inquiry scene: larger profession group, panel 32 px below its feet (no overlap).
+- Creed on phones: Last Duel Extended Regular, upright and centred, "BUILD." highlighted in Bold Extended
+  upright, with a soft navy veil for legibility. This is a documented exception to the two-level display rule
+  (phones only; desktop keeps the two-level creed pending STATUS 68).
+- /clients steward names fit their card on one line on phones.
+
+November 2, 2026 — Hero experiment (uncommitted; /clients and /community, both themes, all widths):
+- The hero keeps its height; the scene takes the upper field and the copy sits on a solid navy floor (#191E4E,
+  both themes, with a soft indigo glow) that the scene fades into (96 px phones / 160 px). The art is re-framed
+  into the shorter box with `object-fit: cover`, never stretched.
+- No eyebrow on either audience hero; the field is optional and "/" keeps its own.
+- /clients: "HARD PROBLEMS," is as wide as "WORKING PRODUCTS" (1.16 × its size); faces and slants unchanged.
+- Actions side by side from 1000 px, stacked below.
+- Case-study names on /clients: Last Duel Bold (upright), an exception to the audience routes' Ubuntu h3 rule.
+
+November 2, 2026 — Hero desktop pass (uncommitted; ≥ 761 px only, phones unchanged):
+- More scene within the same hero height: actions side by side, dek and actions on one row from 1360 px, the
+  art bleeding under the title into a 200 px fade.
+- Two-line title, never wrapped; /clients back to the two-level ratio on desktop ("HARD PROBLEMS," 1 / 1.15 of
+  "WORKING PRODUCTS"); phones keep their approved 1.16 ×.
+- Day inverts the floor: cream with a celeste glow, all hero text in the Light UI dark green; Night keeps navy
+  and cream. CTAs keep the shared tokens.
+- TRANSMISSION 001 leaves the hero's foot: on the floor beside the title from 1300 px, at the scene's lower
+  right below that (cream halo in Day).
+
+November 2, 2026 — Galleries and FAQ (uncommitted):
+- The services accordion is replaced by one shared horizontal card gallery (FeatureGallery): /clients services
+  right after the hero ("What we can build for you"), /community member benefits right after the hero ("What
+  you can access as a member"), and /community "Ideas into working systems" with the service cards.
+- Buyer FAQ before the /clients inquiry; member FAQ before the /community Join module, built only from
+  existing community copy. Unknown values in the buyer answers are visible placeholders, not facts.
+- New copy (card labels, titles, benefit bodies, FAQ questions, gallery headings) is flagged for approval.

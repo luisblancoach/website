@@ -105,3 +105,13 @@
    shared content column (--page-inline, venture.module.css). The builder plane
    runs wider on its own (venture.module.css, "Builder plane"). */
 :global([data-audience]) :is(.section, .network.network) { padding-inline: var(--page-inline); }
+
+/* Builder categories on phones (November 2, mobile pass): two per row across
+   the full column, each label on one line and centred with its count. The
+   inactive categories stay outlined (transparent, a currentColor edge); the
+   selected one is the filled CTA colour, so the state does not rely on colour
+   alone (fill against outline). */
+@media (max-width: 760px) {
+  .network .tabs { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .network .tabs button { align-items: center; display: flex; justify-content: center; min-height: 48px; padding: 10px 8px; white-space: nowrap; width: 100%; }
+}

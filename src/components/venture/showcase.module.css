@@ -143,3 +143,14 @@
   .showcase .workCta.workCta { gap: 16px; height: 52px; padding: 6px 6px 6px 20px; }
   .showcase .workCta.workCta > span { font-size: 13px; letter-spacing: .12em; }
 }
+
+/* Case-study names (November 2, owner): Last Duel Bold (LastDuel-BoldEx2,
+   upright) instead of Ubuntu, an exception to the audience routes' Ubuntu h3
+   rule (venture.module.css), hence the !important. The wider cut is fitted to
+   the copy column so the longest single word, "HYPERCERTS", stays on one line;
+   "Pocket Network" may break between its words. Description and links stay
+   Ubuntu. */
+:global(html) :global([data-audience]) .workCopy.workCopy { container-type: inline-size; }
+:global(html) :global([data-audience]) .workCopy.workCopy h3 {
+  font-family: var(--font-last-duel), sans-serif !important; font-size: min(49px, 100cqi / 10.6); font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1.04;
+}

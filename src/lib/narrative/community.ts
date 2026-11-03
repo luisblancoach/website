@@ -2,7 +2,7 @@ import { DISCORD_INVITE_URL, PORTAL_JOIN_URL } from "../data/constants";
 import { HATS_TREE_URL } from "../data/hats";
 import {
   approved, claim, defineNarrative, oct23, wording,
-  type ActivityContent, type Copy, type CreedContent, type GuildContent, type HeroContent, type JoinContent, type NavContent, type PathContent,
+  type ActivityContent, type Copy, type CreedContent, type FaqContent, type FeatureGalleryContent, type GuildContent, type HeroContent, type JoinContent, type NavContent, type PathContent,
   type HatsContent, type ImmersiveContent, type QueenRaidaContent, type StewardshipContent, type TensionContent,
 } from "./types";
 
@@ -38,7 +38,7 @@ const unverifiedMetric = (text: string): Copy => claim(
 // emphasis; the words are verbatim.
 const owner = (text: string) => approved(text, "owner-approval");
 export const communityHero: HeroContent = defineNarrative("community.hero", {
-  eyebrow: owner("[ THE GUILD ]"),
+  // No eyebrow (November 2, hero experiment): "[ THE GUILD ]" and its dot were removed, as on /clients.
   // October 30: two sentences, "Find your people." / "Build something together.",
   // set on three lines with "together." much larger (the headline colour).
   title: { lead: owner("Find your people."), em: owner("Build something"), finale: owner("together.") },
@@ -296,12 +296,11 @@ export const communityRaidaFeature: ImmersiveContent = defineNarrative("communit
   artwork: { alt: existing("Queen Raida") },
 } satisfies ImmersiveContent);
 
-// The October 28 "About Moloch" body, verbatim; the October 30 title: no "+",
-// and the owner's crossed-swords mark (public/images/swords.svg) after "Moloch".
+// The October 28 "About Moloch" body, verbatim; the October 30 title: no "+".
+// The crossed-swords mark after "Moloch" (October 30) was removed on November 2.
 export const communityMoloch: ImmersiveContent = defineNarrative("community.moloch", {
   label: existing("[ THE GUILD ]"),
   title: { lead: owner("Together we slay"), em: owner("Moloch") },
-  titleMark: { src: "/images/swords.svg", width: 224, height: 212, alt: existing("RaidGuild") },
   body: claim(
     "In RaidGuild lore, Moloch represents coordination failure: when individual incentives lead to outcomes nobody wants. Building together is our response—through shared ownership, useful tools, and systems that make cooperation easier.",
     "handbook",
@@ -354,8 +353,46 @@ export const communityCreed: CreedContent = defineNarrative("community.creed", {
   cta: { label: approved("Join our community", "owner-approval"), href: PORTAL_JOIN_URL, destination: joinDestination() },
 } satisfies CreedContent);
 
+
+// Member benefits gallery (November 2), right after the hero: the four
+// benefits named in the November 2 brief, in the clients gallery's component.
+// Titles and bodies are new draft copy and stay flagged; the price of the Guild
+// email and Linktree comes from the brief and is unconfirmed. Art: site
+// illustrations not used elsewhere on this page.
+const benefitNote = "Member benefit from the November 2 brief; draft wording. Confirm it is offered today and how.";
+const benefit = (text: string, note = benefitNote) => claim(text, "draft", note);
+export const communityBenefits: FeatureGalleryContent = defineNarrative("community.benefits", {
+  label: wording("[ Membership ]"),
+  title: { lead: wording("What you can access", "Framing from the November 2 brief. Confirm as the heading."), em: wording("as a member", "Framing from the November 2 brief. Confirm as the heading.") },
+  intro: wording("Ways to learn, build and fund work with other members once you are in the Guild."),
+  cards: [
+    { label: wording("Learn and earn"), title: { lead: benefit("Cohorts, bounties"), em: benefit("and raids") }, body: benefit("Start in a cohort with other newcomers, then take on bounties and join raids alongside Guild members."), image: { src: "/images/neo/hero-landmarks-v1.png", width: 1919, height: 820 } },
+    { label: wording("Build together"), title: { lead: benefit("Hackathons"), em: benefit("and hackerhouses") }, body: benefit("Build with other members at hackathons and hackerhouses, and meet the people you raid with."), image: { src: "/images/neo/sky-citadel.png", width: 972, height: 1619 } },
+    { label: wording("Fund the work"), title: { lead: benefit("RIPs and"), em: benefit("shared funding") }, body: benefit("Propose ideas through the RIP system and the Guild’s decentralized funding mechanisms.", "Member benefit from the November 2 brief. Confirm what RIPs are called and how proposals are funded today."), image: { src: "/images/neo/field-protocol-garden.png", width: 971, height: 1619 } },
+    { label: wording("Guild kit"), title: { lead: benefit("Guild email"), em: benefit("and Linktree") }, body: benefit("An @raidguild.org address and Linktree access for $20 a month.", "Price and offer from the November 2 brief; unconfirmed. Confirm the price, billing and what is included."), image: { src: "/images/neo/creed-flyer-v1.png", width: 1536, height: 1024, fit: "contain" } },
+  ],
+} satisfies FeatureGalleryContent);
+
+// Member FAQ (November 2): onboarding and participation, answered only with
+// copy already on the page (the Join panel, the Guild module, the Queen Raida
+// panel and the kit), so no new membership, financial or governance claim is
+// made; flags carry over from the originals.
+const again = (copy: Copy): Copy => ({ ...copy, id: "" });
+const kitEmail = communityGuild.kit.items[0].detail;
+export const communityFaq: FaqContent = defineNarrative("community.faq", {
+  label: wording("[ Before you join ]"),
+  title: { lead: wording("Questions"), em: wording("before you join") },
+  items: [
+    { question: wording("Where do I start?"), answer: again(communityJoin.body) },
+    { question: wording("How do I become a member?"), answer: again(communityGuild.kit.requirement) },
+    { question: wording("Where do applications happen?"), answer: again(communityQueenRaida.panels[2].detail) },
+    { question: wording("Who runs the Guild?"), answer: again(communityGuild.body) },
+    { question: wording("Do members get a Guild email?"), answer: again(kitEmail) },
+  ],
+} satisfies FaqContent);
+
 export const communityNarrative = {
   communityHero, communityTension, communityPath, communityGuild, communityActivity, communityJoin,
   communityQueenRaida, communityStewardship, communityNav, communityCreed,
-  communityRaidaFeature, communityMoloch, communityHats,
+  communityRaidaFeature, communityMoloch, communityHats, communityBenefits, communityFaq,
 };

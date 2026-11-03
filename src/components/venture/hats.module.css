@@ -12,7 +12,7 @@
 .copy { min-width: 0; }
 .srOnly { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px; }
 
-.label { color: var(--coral); font: 700 var(--type-accent-label, 19px)/1.35 var(--font-mono), monospace; letter-spacing: .12em; margin: 0 0 18px; text-transform: uppercase; }
+.label { color: var(--coral); font: 700 var(--type-marker, 19px)/1.35 var(--font-marker, var(--font-mono)), monospace; letter-spacing: var(--tracking-marker, .12em); margin: 0 0 18px; text-transform: uppercase; }
 .hats .title { color: inherit; font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 900; letter-spacing: .01em; line-height: 1.05; margin: 0; text-transform: uppercase; }
 .hats .title em { color: var(--coral); display: inline-block; font-family: var(--font-display), sans-serif; font-size: 52px; font-style: italic; font-weight: 400; line-height: 1; margin-top: 4px; }
 .intro { margin-top: 24px; }
@@ -98,3 +98,27 @@
 :global([data-audience]) .card[aria-pressed="true"] { background: color-mix(in srgb, var(--hat-accent) 10%, transparent); box-shadow: inset 0 0 0 3px var(--color-cream); transform: none; }
 :global([data-audience]) .children[data-active] .card[aria-pressed="false"] { filter: none; opacity: 1; }
 :global([data-audience]) .card:focus-visible { outline: 3px solid var(--color-cream); outline-offset: 3px; }
+
+/* Mobile pass (November 2), phones up to 760 px.
+   - The parent node reads as the tree's title: an 80 px mark (the roles'
+     artwork is 72 px) and the name at 21 px bold, so "RaidGuild Steward
+     Admin" leads the five roles. The rail moves to the mark's new centre
+     (40 px) and the roles' stubs follow it.
+   - "Explore the Hats tree" follows the tree and precedes the snapshot note:
+     tree, link, legend, in one column. The copy column's link is hidden here
+     and the one under the tree is hidden above 760 px (HatsTree.tsx). */
+.treeLinkBelow { display: none; }
+@media (max-width: 760px) {
+  .treeLinkAside { display: none; }
+  .treeLinkBelow { align-self: flex-start; display: inline-flex; margin-top: 28px; }
+  .parent { gap: 16px; }
+  .parentArt { border-radius: 18px; height: 80px; width: 80px; }
+  .parent::after { height: 24px; left: 39px; }
+  .parent .nodeText { gap: 4px; }
+  .parent .nodeText strong { font-size: 21px; letter-spacing: .005em; line-height: 1.15; }
+  .parent .nodeText small { font-size: 13px; }
+  .children { margin-top: 24px; padding-left: 60px; }
+  .children::before { left: 39px; top: -24px; }
+  .children > li::before { left: -21px; width: 19px; }
+  .snapshot { margin-top: 12px; }
+}

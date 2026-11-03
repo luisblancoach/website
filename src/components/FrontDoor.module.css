@@ -44,7 +44,7 @@
 .door a:focus-visible { outline: 2px solid #ee3c78; outline-offset: 6px; }
 .door { overflow-x: hidden; }
 .content { flex-shrink: 0; margin: auto; }
-.door { --font-display: var(--font-grinder); --font-body: var(--font-afacad); }
+.door { --font-display: var(--font-last-duel); --font-body: var(--font-afacad); }
 .content h1 { font-weight: 400; font-synthesis: none; letter-spacing: 0; font-size: clamp(36px, 4.5vw, 64px); }
 .opening { background: transparent; pointer-events: none; overflow: hidden; }
 .opening .cluster { transform: var(--spread); opacity: 0; }

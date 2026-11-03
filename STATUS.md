@@ -1,6 +1,349 @@
 # STATUS
 
-Snapshot: 2026-10-30, afternoon (-0300). **Release `07031e2` is committed, pushed and deployed to Vercel production:**
+Snapshot: 2026-11-02, night (-0300). HEAD `1adb327` (the October 30 release `07031e2` plus its release
+record), with this session's **uncommitted November 2 work: the Grinder → Last Duel migration, the display
+hierarchy pass and the mobile pass** (sections "November 2" below) and the owner's files. Nothing committed,
+pushed or deployed. **Blocker before any commit or deploy: the Last Duel files' own licence field forbids web
+hosting and redistribution** (open question 64).
+
+**Next priority:** the owner reviews the galleries / FAQ (and supplies the FAQ placeholder values), the hero desktop pass and the hero experiment (70), the mobile pass and the hierarchy pass and decides 64 (licence), 65 (card
+names), 67 (bottom-line italic), 68 (creed on desktop) and 69 (Moloch mark); commit / deploy only once those are
+settled and approved. (69 is resolved: the Moloch mark was removed.)
+
+## November 2 (Figma reference export, no code changes)
+
+- Figma: the local server at http://127.0.0.1:3845/mcp is the Figma desktop app's Dev Mode MCP server (running,
+  answers `initialize`); its tools are read-only (`get_design_context`, `get_variable_defs`, `get_screenshot`,
+  `get_motion_context`, `get_metadata`, `get_figjam`), so it cannot create frames or place images. Frames were
+  not created in Figma.
+- Fallback export (scratchpad, not versioned): `scratchpad/figma-export/` with `<Route>/<Theme>/<Size>/` folders
+  for Clients and Community × Light / Dark × Desktop 1440 / Tablet 768 / Mobile 393 (12 states, 202 PNGs at 1×):
+  full page, full page in ≤ 4000 px parts, and one slice per section; `INVENTORY.md` (section number, name,
+  anchor, heading, y / height per size) and `manifest.json`. Interactive states are at rest.
+
+## November 2 (galleries and FAQ): services and member-benefit galleries, buyer / member FAQ (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("November 2, galleries and FAQ").
+- One shared component, `sections/FeatureGallery.tsx` + `gallery.module.css`: a focusable horizontal scroll
+  region (snap per card, arrow keys, swipe) with previous / next sword buttons (disabled at the ends, instant
+  with reduced motion); cards = artwork, category label, two-level title (Retalic over extended italic, each line
+  fitted to one line), Ubuntu body, optional text link. Content types `FeatureGalleryContent`, `GalleryCard`.
+- /clients: services gallery right after the hero (`id="spears"`, keeps the "services" / "capabilities"
+  anchors): six cards, the five published services (bodies unchanged, still flagged) plus "Smart contracts,
+  onchain systems" (the Onchain practice copy and link); Applied AI links to its practice. Heading "What we can /
+  build for you" (brief framing, flagged). The services accordion (`Services.tsx`, `services.module.css`) is
+  deleted; previous works now follow the gallery.
+- /community: member benefits gallery right after the hero (`id="benefits"`, celeste in Day, deep navy in Night):
+  Cohorts, bounties and raids; Hackathons and hackerhouses; RIPs and shared funding; Guild email and Linktree
+  ($20 a month). All draft copy, flagged as claims. "Ideas into working systems" uses the same gallery with the
+  service cards (it replaces the accordion and the practices disclosure).
+- FAQ (`sections/Faq.tsx`): question headings (h3) with disclosure buttons. /clients before the inquiry, the
+  brief's six questions; /community before Join, five questions answered only with existing community copy.
+- Content placeholders (unresolved, shown as dashed "to be confirmed" marks, never as facts): cost
+  `[$X–$Y]`; duration `[X–Y weeks]`, `[X days]`; payment `[fiat / USDC / both]`, `[entity / agreement]`. Every
+  clients FAQ answer is flagged for confirmation. Also unconfirmed: the $20 / month Guild email + Linktree price,
+  how RIPs and funding work, cohort / bounty / raid / hackathon wording, the card category labels.
+- Validation (focused, 10 cases, dev server): /clients 1440 light, 1440 dark, 375 light, 900 dark; /community 393
+  dark, 1440 light, 768 light; keyboard; reduced motion; regressions (hero, builders wall and tabs, inquiry,
+  Join scene, nav targets). All: overflow 0, broken images 0, console errors 0, no failed requests (videos'
+  aborted ranges and dev Analytics excepted), card titles one line each, galleries scroll, next / previous work.
+  Typecheck passes; tests 88/88 (3 new); lint 0 errors (1 old warning). Not run: the full browser matrix,
+  Safari / Firefox, devices, production build.
+- Screenshots: `scratchpad/pw/shots/gx/`.
+- Later (owner): /community order swapped: the services gallery ("Ideas into working systems") now follows the
+  hero and the member benefits gallery follows Join. Every sword arrow is turned 180° so the hilt leads like an
+  arrowhead (new `public/images/icons/arrow-*-hilt.svg`, the owner's five arrows rotated; originals untouched;
+  masks in `venture.module.css`).
+
+## November 2 (hero desktop pass): more scene, two-line title, Day/Night floor (uncommitted)
+
+Phones (≤ 760 px) are the approved reference and unchanged: every rule is in a `min-width: 761px` (or wider)
+query in the "Hero, desktop and tablet" block at the end of `venture.module.css`; the shared floor rules only
+gained colour variables with the same Night values. Measured unchanged at 375 / 393 (scene 450 / 448 px
+/clients, 374 / 369 /community; same title sizes, copy positions, CTA rows and cream text in both themes).
+
+Desktop / tablet, /clients and /community, both themes; hero height unchanged (800 px at 768 / 900, 860 px at
+1440 / 1920):
+- More scene: the actions sit side by side from 761 px; from 1360 px the dek and the actions share one row
+  under the title; floor bottom padding 80 px; the art bleeds 56 px under the title's first line, where the
+  200 px fade ends. Scene height (art box) /clients: 768 → 539 px (was 373 at 900 / 473 at 1440 before), 900 →
+  523, 1440 / 1920 → 619 of 860. /community: 768 / 900 → 463, 1440 / 1920 → 564.
+- Title: two lines, nowrap, measured one row each at 768 / 900 / 1440 / 1920. /clients "HARD PROBLEMS," is
+  1 / 1.15 of "WORKING PRODUCTS" here (47 / 54 px at 1440, 36.4 / 41.9 at 768); phones keep 1.16 ×. /community
+  keeps its approved three-line stacked title (38 / 38 / 53 px).
+- Floor: Night navy (#191E4E) with cream text, as before. Day: cream (#EFE9D7) with a soft celeste glow
+  (#B8E0DF), the art fading into it, and all hero text in the Light UI dark green (#102D2C): title (h1 and its
+  lines), dek, TRANSMISSION, scroll cue. CTAs keep the shared tokens (pink primary, cream secondary with its
+  navy edge).
+- TRANSMISSION 001: from 1300 px on the floor, level with the title, right of it; 761–1299 px at the scene's
+  lower right (20 px above the floor), with a cream halo in Day. It no longer meets the actions.
+- Contrast (text pixels vs what is behind them, worst 10%): title ≥ 8.7:1 Day, ≥ 11.5:1 Night; marker ≥ 8.6:1
+  Day, ≥ 6.4:1 Night, at 768–1920.
+
+Validation: `bunx tsc --noEmit` passes; `bun run test` 85/85; `bun run lint` 0 errors (1 old warning,
+`ThemeAnchor`). "/", /clients, /community × light/dark × 375/393/768/900/1440/1920: overflow 0, console errors
+0, layout shift 0 except "/" dark 1440 (0.0006, as before) and 1920 (0.0003; "/" is untouched); 0 Grinder;
+failed requests are the videos' aborted range requests and the dev-blocked Analytics script. Spill check 0 at
+the six widths; CTA audit 0 at 375 / 393; no CTA / marker / title collisions (geometry check). Reduced motion:
+same layout (nothing new animates). Not verified: Safari / Firefox, devices, production build.
+Screenshots: `scratchpad/pw/shots/d3/{clients,community}-{375,393,768,900,1440,1920}-{light,dark}.png`,
+reduced motion `shots/d3rm/`, sheet `shots/d3/s-final-wide.png`.
+
+## November 2 (hero experiment): scene above, copy on a solid navy floor; Last Duel case-study names (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("November 2, hero experiment"). /clients and /community, both
+themes, all widths; "/" unchanged. Implementation: "Hero experiment" block at the end of `venture.module.css`.
+
+- Hero height unchanged (780 px phones, 800 px at 761–999, `min(860px, 100svh)` above). The stage is a two-row
+  grid: the copy's own height at the bottom, the scene above. Art, wash, moons and curtain foreground are placed in
+  the top row (absolutely positioned grid items, rows spelled `1 / 2` because an `auto` end line means the stage's
+  edge), so `object-fit: cover` re-frames the art into the shorter box: cropped, never stretched. The phone videos
+  are landscape (≈ 1440 × 620), so the shorter box shows more of the scene than before (less zoom).
+- Floor: the stage's `::after`, solid #191E4E (both themes) with a soft #303675 glow behind the copy, fading in
+  over the last 96 px (phones) / 160 px of the scene; above the foreground, below the copy. The wash only darkens
+  the top, under the navigation.
+- Measured scene / floor split: 1440 → 473 / 379 px (/clients), 400 / 452 (/community); 900 → 373 / 427 and
+  321 / 479; 393 → 448 / 332 and 369 / 411.
+- Eyebrows removed from both audience heroes ("Venture Beyond · Hire the DAO" and "[ THE GUILD ]", with their
+  dots): `eyebrow` is optional in `HeroContent`; `Hero.tsx` renders it only when present ("/" keeps its own).
+- /clients title: "HARD PROBLEMS," at 1.16 × the size of "WORKING PRODUCTS", so the two lines are the same width
+  (852 / 859 px at 1440, 332 / 335 at 393). Faces unchanged (Retalic top, extended italic bottom); the size ratio
+  is inverted for this hero (open question 70).
+- From 1000 px the two actions sit side by side; below, stacked full width. The copy keeps the 12% left column
+  from 1000 px, clear of the vertical "SCROLL TO DESCEND" cue.
+- Case-study names (/clients showcase, owner request): Last Duel Bold (`LastDuel-BoldEx2`, upright) instead of
+  Ubuntu, fitted to the copy column (`min(49px, 100cqi / 10.6)`) so "HYPERCERTS" stays on one line
+  (`showcase.module.css`). Description and links stay Ubuntu.
+
+Validation: `bunx tsc --noEmit` passes; `bun run test` 85/85; `bun run lint` 0 errors (1 old warning).
+"/", /clients, /community × light/dark × 375/393/768/900/1440: no overflow, no console errors, layout shift 0
+(0.0006 on "/" dark 1440, as before), 0 Grinder; request failures are the videos' aborted range requests and
+the dev-blocked Analytics script. Spill check 0 issues (1440/900/768/393/375); CTA audit 0 issues at 375/393.
+Not compared with the mobile reference screenshot (none was attached to the brief) nor with October 23.
+Screenshots: `scratchpad/pw/shots/hx/` (`{clients,community}-…-{375,393,768,900,1440}-{light,dark}.png`,
+`phones2.png`, `wide2.png`, `workcopy.png`).
+
+Open questions (new):
+
+70. **Hero experiment:** keep it? Also confirm removing the /community eyebrow ("[ THE GUILD ]"; the brief named
+    the /clients one) and the inverted title size ratio on /clients (top line 1.16 × the bottom line).
+
+## November 2 (mobile pass): phone heroes, one CTA object, entity squares, filters, Hats, Join, creed (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("November 2, mobile pass"). Phones (≤ 760 px unless noted), "/",
+/clients, /community, both themes. Desktop is unchanged.
+
+- **Top bar** (audience routes, ≤ 699 px): one 16 px gutter on both sides (was 8 px); logo, audience switch and
+  theme switch all 52 px, centred on one line; the menu's lines end on the theme switch's right edge. The
+  switch's links tighten below 381 px (and gaps to 4 px below 371 px) so the bar fits at 360.
+- **Heroes** (/clients, /community): eyebrow + headline at the top (from 148 px), dek + both actions grouped at
+  the foot (ending 64 px above the hero's bottom, above the ticker); the artwork shows between them (≈ 210–270 px
+  at 375 / 393). Hero height `clamp(640px, 100svh, 780px)` so the actions stay above the fold on short phones.
+  /clients eyebrow: a no-break space ties "·" to "Beyond" (`src/lib/narrative/clients.ts`), so it breaks as
+  "VENTURE BEYOND ·" / "HIRE THE DAO" (balanced) instead of starting a line with "·". Text unchanged.
+- **CTAs, one object** on every route: full column width, 52 px, 26 px radius, 40 px icon disc inset 6 px
+  top / bottom / right (was 6–8 px vertical, 10 px right), label 14 px, tracking .06 em, one line. Covers
+  `.pill` and the showcase's compact / case-study pills; "Explore all … discoveries" is full width at 52 px
+  (`ArtifactGallery.module.css`). No label was shortened: at 375 the tightest ("Create your Portal profile")
+  clears its icon by 15 px after the Join panel's side padding went 24 → 20 px (≤ 400 px). Grouped actions
+  12 px apart (the Guild pair was 14 px).
+- **Queen Raida / Moloch** (≤ 700 px): the 16:9 rectangle cut's centre square (`aspect-ratio: 1`), which holds the
+  face / bull head and the travellers; the vertical cut is no longer rendered (kept in `illustrations.ts`).
+  Copy 28 px below on the same surface. Moloch heading: "MOLOCH" 22 → 36 px (1.6 ×; 34 px at 375); "TOGETHER
+  WE SLAY" grows only as far as it stays on one line (23 px at 393, 1.26 ×). **Sword mark removed** at the
+  owner's request (all widths): `titleMark` dropped from `community.ts`, the narrative type, `ImmersiveFeature`
+  and `feature.module.css`; `public/images/swords.svg` deleted (tracked, unstaged deletion; restorable from Git).
+- **Builder categories** (both routes): two per row across the full column (160 / 169 px at 375 / 393), centred,
+  one line; inactive outlined (transparent, 2 px edge), selected filled. The Explore filters are unchanged.
+- **Hats tree**: "RaidGuild Steward Admin" is the tree's title node (80 px mark, name 21 px bold; was 64 px /
+  16 px), rail and stubs moved to the new centre; "Explore the Hats tree" follows the tree, above the snapshot
+  note. The link is rendered in both places, each displayed at its own widths, so focus order = visual order.
+- **Join module and Hire inquiry scene** (≤ 600 px): profession group larger (box 34–98 % of the art's height,
+  88 % wide; was 44–99 %, 76 %: ≈ 360 px tall at 375, was ≈ 310), and the panel starts 32 px below the group's
+  feet (it overlapped them by 40 px). Nothing overlaps the panel, form or buttons.
+- **Creed** (audience routes, ≤ 760 px): Last Duel Extended Regular (`LastDuel-Ex2`), upright, centred, no
+  back-slant or italic; "BUILD." keeps the coral highlight in Bold Extended, upright. One screen tall (560–720
+  px), label / sentence / action one centred group. A soft navy veil behind the group keeps the thinner strokes
+  legible: sentence contrast on the art 5.4:1 median, ≥ 3.1:1 for 90 % of text pixels (was 3.1 median, 2.3).
+  Documented exception to the two-level display rule; desktop keeps the two-level creed (open question 68).
+- **Steward names** (/clients, ≤ 760 px): fitted to the card on one line (`min(24px, 100cqi / 5.6)`);
+  "ECWireless" broke mid-word ("ECWireles / s") at 360–375.
+
+Files: `src/components/venture/venture.module.css` ("Mobile pass" block at the end), `feature.module.css`,
+`hats.module.css`, `audience.module.css`, `src/components/ArtifactGallery.module.css`,
+`src/components/venture/sections/ImmersiveFeature.tsx`, `sections/HatsTree.tsx`, `src/lib/data/illustrations.ts`
+(comment), `src/lib/narrative/clients.ts` (no-break space).
+
+Validation (dev server http://localhost:3017, restarted on 2026-11-02 night because it served a stale server
+module; Chrome via Playwright, mobile emulation, touch):
+- `bunx tsc --noEmit` passes; `bun run test` 85/85; `bun run lint` 0 errors (1 old warning, `ThemeAnchor`).
+- `/`, `/clients`, `/community` × light / dark × 375 / 393: no horizontal overflow, no console errors, layout
+  shift 0, all font files 200, 0 Grinder, no broken images. Request "failures" are the videos' aborted range
+  requests (206 then abort) and the Vercel Analytics debug script blocked in dev (ORB).
+- CTA audit (every pill, 360 / 375 / 393): all one line, all 52 px, icon inset 6 / 6 / 6. The only flag is "/"
+  "DAY" (the celestial toggle, a false positive: its text is in several spans).
+- Spill check (display text, every builder tab): 0 issues at 393, 375, 360, 600, 700, 760. Word-break scan
+  (any word split across lines): none on the three routes at 360 / 375 / 393.
+- Touch / keyboard: tapping a Hats role selects it, Escape clears; Tab goes from the last role to the moved
+  link; arrow keys and taps switch builder categories.
+- Font fallback: one glyph, "↓" in "/"'s "Start a Guild inquiry" summary (Last Duel has no arrows), renders in
+  Arial. Not in this pass's scope; left as is.
+- Kept: at ≤ 380 px "Infrastructure Steward" and "Participation Steward" wrap to two lines inside their Hats
+  cards (between words; they wrapped at 375 before this pass too).
+- Not compared with the October 23 reference (it predates both the face change and this layout). Not verified:
+  Safari / Firefox, real devices, production build, 320 px.
+
+Screenshots (scratchpad, not versioned): `scratchpad/pw/shots/final/` — full pages
+`{home,clients,community}-{375,393}-{light,dark}.png` and modules `m-{hero,raida,moloch,filters,hats,join,creed,
+stewards}-…png`; before: `scratchpad/pw/shots/before/`.
+
+Open questions (new):
+
+68. **Creed on desktop:** the regular, upright, centred creed applies to phones only (this pass's scope); desktop
+    keeps the two-level Retalic / italic creed. Extend it to desktop?
+69. ~~Moloch mark~~ Resolved November 2: the owner asked to remove `swords.svg`; the Moloch title has no mark.
+
+## November 2 (hierarchy pass): two-level display headings, bold labels, grouped Guild actions (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("November 2, hierarchy pass"). Supersedes the mapping table in
+the migration section below.
+
+| Role | Cut (file) | Where |
+|---|---|---|
+| Two-level heading, top line | Bold Extended Retalic (`LastDuel-BoldEx2Retalic`, +12°), 700 | every heading's own text; hero `<span>` lines; creed sentence |
+| Two-level heading, bottom line | "Bold Extended Italic": `LastDuel-BoldEx2` with synthesized oblique (`font-synthesis: style`, family `--font-last-duel-extended`) | every heading's `<em>`; hero `<em>`; creed "BUILD." |
+| Standalone display labels | Bold Extended (`LastDuel-BoldEx2`), upright | TRANSMISSION, hero index "001", section markers (`.sectionLabel`, `.eyebrow`, module `.label`) |
+| Display titles that were regular | Bold Extended (`LastDuel-BoldEx2`) | `/` practice cards, Explore gallery h4s, `/` "Start a Guild inquiry"; footer motto (Bold Oblique, italic) |
+| Card names (unchanged, see 65) | `LastDuel-Oblique` (italic) / `LastDuel-Ex2` (upright on "/" phones and steward cards) | builder and steward cards |
+| Stats (unchanged) | `LastDuel-BoldOblique` | "/" Guild stats |
+| Body, UI labels, navigation, buttons, forms | Ubuntu / Ubuntu Mono (unchanged) | |
+
+Wired files: BoldEx2, BoldEx2Retalic, BoldOblique, Ex2, Oblique (five requests per page; BoldEx2 is shared by two
+families and fetched once). Not wired: `LastDuel-Ex2Retalic` (nothing sets Retalic below 700 any more).
+
+- Last Duel has no Bold Extended italic file. The bottom lines use BoldEx2 slanted by the browser (Chrome about
+  14°): the same width as the top line, slanted the opposite way. Alternative: the BoldOblique file (normal width,
+  real italic): one-line change in `venture.module.css` (bottom-line `font-family`), comparison image
+  `scratchpad/pw/shots/compare-bottom-line.png`. Open question 67.
+- Scale, one ratio everywhere (bottom ≈ 1.3–1.4 × top, "slightly larger"): section headings 28 / 37 px (phones
+  18 / ≤24 px, bounded by the widest unbreakable line, "WORKING SYSTEMS"); panel headings (Hire inquiry, Join,
+  "/" contact) 24 / ≤32 px (16 / ≤22), fitted to the panel; creed 40 / 54 px (22 / 30); heroes fitted on one line
+  per line: /community 38 / 53 px (top ≤ copy column / 15.4 em), /clients "WORKING PRODUCTS" ≤ 54 px with "HARD
+  PROBLEMS," 1 / 1.3 of it, "/" "BEYOND" ≤ 80 px with "VENTURE" 1 / 1.35. "MEMBER-GOVERNED" fits its heading at
+  every width. Before: tops 30–58 px, bottoms 44–88 px, ratios up to 2.2.
+- The thin regular Retalic hero lines and the regular "001" are gone; no large heading stays in a light weight.
+  Exception (documented): card names keep their regular weight pending 65; they are not headings.
+- Guild module (/community): "Join the DAO" and "Your Guild kit" form one group, 14 px apart (the kit was pushed
+  to the row's right edge). Order, alignment (left), stacking on phones (14 px), styles, icons, kit behaviour
+  unchanged.
+- Grinder: no references left in code or `.gitignore` (its two ignore rules removed); historical mentions remain
+  in `HANDOFF.md` (never rewritten), `CHANGELOG.md` and earlier STATUS sections.
+- Implementation: a "Display type hierarchy" block at the end of `venture.module.css` (role selectors such as
+  `main section h2:has(> em)`, `.hero h1 > span / > em`, `.creed blockquote`, `.contact h2.contactHeadline`;
+  `!important` on family, weight, style and size because earlier rules use up to three doubled classes and
+  `!important`); marker tokens (`--font-marker`, `--type-marker`, `--tracking-marker`) read by the `.label`
+  rules in `hats`, `feature`, `services.module.css`; bold h4s in `ArtifactGallery.module.css`.
+
+Files: `src/lib/fonts.ts`, `src/app/layout.tsx`, `src/components/venture/venture.module.css`,
+`src/components/venture/{hats,feature,services}.module.css`, `src/components/ArtifactGallery.module.css`,
+`.gitignore` (plus the migration files below).
+
+Validation (dev server http://localhost:3017; Chrome via Playwright; rendered cuts via CDP):
+- `bunx tsc --noEmit` passes; `bun run test` 85/85; `bun run lint` 0 errors (1 old warning, `ThemeAnchor`).
+- Role inventory at 1440 on all three routes: every top line BoldEx2Retalic 700, every bottom line the extended
+  family 700 italic, every marker / TRANSMISSION / "001" BoldEx2 700. Pixel measurement confirms the top lines'
+  12° back-slant (it reads subtly on the wide caps).
+- `/`, `/clients`, `/community` × light/dark × 1440/393: 0 Grinder elements, all wired files 200, no failed
+  requests except the hero videos (as before), no console errors, no horizontal overflow, layout shift 0
+  (0.0006 on "/" dark 1440, as before).
+- Spill check (display text vs its box, clipping ancestor and viewport, every builder tab): 0 issues at 1440,
+  1280, 1024, 900, 768, 600, 414, 393, 375, 360 on the three routes.
+- Guild actions: same row 14 px apart at 1440 / 1100 / 900; stacked 14 px apart at 393; order Join → Kit.
+- Screenshots reviewed (light and dark, 1440 and 393): heroes on all routes, Builder-owned / Guild, Queen Raida,
+  Moloch, Join, Hats, Explore, People, Hire inquiry, creed, "/" sections. Kept: the "/" hero eyebrow wraps to two
+  lines at 393 (between words).
+- Not compared with the October 23 reference (it predates the face change). Not verified: Safari / Firefox
+  (synthesized oblique angles differ slightly by engine), devices, production build, 320 px.
+
+Open questions (new):
+
+67. **Bottom-line italic:** keep BoldEx2 with the browser's oblique (same width as the top line), or use the
+    narrower BoldOblique file? Or supply a real Bold Extended italic cut.
+
+## November 2: typography migration, Grinder → Last Duel (uncommitted)
+
+Decision record: `docs/venture-integration.md` ("November 2"); font provenance: `docs/asset-provenance.md`.
+
+Font mapping at the end of the migration (superseded by the hierarchy pass above):
+
+| Role | CSS | File (name table) |
+|---|---|---|
+| Upright display (`--font-display`, normal, 400) | `--font-last-duel` | `LastDuel-Ex2.otf` (Last Duel Ext Two Regular, width 7) |
+| Upright bold (requests of 600+) | `--font-last-duel` | `LastDuel-BoldEx2.otf` (Bold Extended 2) |
+| Italic (`font-style: italic`, 400) | `--font-last-duel` | `LastDuel-Oblique.otf` (Last Duel Italic, −12°, normal width) |
+| Italic bold (600+) | `--font-last-duel` | `LastDuel-BoldOblique.otf` |
+| Retalic (`--font-retalic`, 400) | `--font-last-duel-retalic` | `LastDuel-Ex2Retalic.otf` (+12° back-slant, width 7) |
+| Retalic bold | not wired | `LastDuel-BoldEx2Retalic.otf`: no Retalic text asks for 600+, and next/font preloads every registered file |
+
+- The structure mirrors Grinder's (Regular/Italic family plus a separate Retalic family), so every element
+  keeps its authored style: upright → Ex2, italic → Oblique, Retalic → Ex2Retalic. `font-synthesis: none`
+  stays: 500 renders the 400 cut; 600–900 now render the real bold cuts (Grinder had none, so those requests
+  showed regular before): heading lead lines (`font-weight: 900`, e.g. "A WIDE NETWORK", "THE GUILD RUNS ON
+  OWNERS,"), the Guild stats, "Start a Guild inquiry" on "/".
+- Supporting faces unchanged: Ubuntu (body), Ubuntu Mono (labels, navigation, buttons, forms).
+- Grinder purged: `@font-face`/`localFont` declarations and the layout variables removed; `--font-grinder*`
+  references replaced in `venture.module.css`, `FrontDoor.module.css`, `PrismChat.module.css` (/chat);
+  comments updated; the six unreferenced `public/fonts/Grinder*.woff2` deleted (tracked; restorable from Git).
+  Retained on purpose: the `.gitignore` rules for Grinder binaries (they keep stray copies out of Git) and the
+  historical mentions in `HANDOFF.md`, `CHANGELOG.md` and earlier STATUS sections.
+- Width: the Extended 2 cuts are 25–45 % wider than Grinder, so fitted lines were re-fitted:
+  - /community hero, "FIND YOUR PEOPLE. / BUILD SOMETHING": divisor 11.4 → 14.5; 40 px on desktop
+    (was 46, which ran past the copy column), about 24 px at 393 (was 30, clipped).
+  - /clients inquiry, "YOU'RE BUILDING": `100cqi / 10.3` → `/ 12.8` (it overran its box by 95 px).
+  - /community Guild, "MEMBER-GOVERNED": fits the heading width above 760 px (44 px max) instead of
+    breaking at the hyphen; phones wrap as before.
+  - "/": hero "VENTURE" fits the phone gutters; builder rail names below 1000 px fit per name (`--chars`,
+    new on the rail `<strong>` in `TeamWall.tsx`); the five steward names share one fitted size.
+- Files: `src/lib/fonts.ts`, `src/app/layout.tsx`, `src/components/venture/venture.module.css`,
+  `src/components/FrontDoor.module.css`, `src/components/PrismChat.module.css`, `src/components/TeamWall.tsx`,
+  the six deleted Grinder files; new untracked `public/fonts/LastDuel-*.otf` (do not commit, see 64).
+
+Validation (dev server http://localhost:3017, Chrome via Playwright, rendered fonts read through CDP
+`CSS.getPlatformFontsForNode`):
+- `bunx tsc --noEmit` passes; `bun run test` 85/85; `bun run lint` 0 errors (1 old warning, `ThemeAnchor`).
+- `/`, `/clients`, `/community` × light/dark × 1440/393: 0 elements rendered in Grinder; every display element
+  in a Last Duel cut; the five wired files load (200) and are preloaded; no failed requests except the hero
+  videos (same as before); no console errors; no horizontal overflow; layout shift 0 (0.0006 on "/" dark
+  1440, as before). The only system-font glyph in display text is the arrow in "/"'s "Start a Guild inquiry"
+  (Last Duel has no →; it sits in an Ubuntu Mono span).
+- Spill check, all display text against its box, clipping ancestor and viewport, every builder tab:
+  0 issues on the three routes at 1440, 1280, 1024, 1000, 900, 768, 600, 414, 393, 375 and 360.
+- Wrapping that changed and was kept (reviewed in screenshots): the creed quote gains a line (3 → 4 desktop,
+  5 → 6 phone); footer motto 2 → 4 lines on phones; "A scout for signal." 4 → 5 lines; "Follow your
+  curiosity." 1 → 2 (/ and /community, 1440); on "/" at 393 "Keepers of the signal" 2 → 4 and "Specialized
+  at" 3 → 4; /clients 393 "What we've built for" and "The Guild runs on owners" 3 → 4.
+- Share images (`og/*.webp`, `opengraph-image.png`) are artwork without lettering: unaffected.
+- Not compared with the October 23 reference (the reference uses Grinder; the face change is the owner's
+  brief). Not run: the October 30 behaviour probes (wall height, form growth, pinned scene; the scratch
+  scripts were lost with the temp directory; typography cannot change them: fixed wall height, layout shift
+  0). Not verified: Safari, Firefox, devices, production build, 320 px (see 66).
+
+Open questions (new):
+
+64. **Last Duel licence.** 2026-11-02 (night): the owner chose to deploy with Last Duel to the review preview
+    anyway, confirming the right to host these files there; the five wired files are committed with the November 2
+    work (`LastDuel-Ex2Retalic.otf` stays untracked, unused). Original note: The supplied OTFs are private builds renamed from Adobe's Eurostile LT
+    Std 2.035 (`fsType` 4). Their licence field: "PRIVATE / INTERNAL USE ONLY ... No redistribution,
+    sublicensing, web hosting or open-source licensing is granted. Renaming does not change the license
+    status." Serving them from a public site, or committing them to the public fork, would conflict with
+    that. Needs a webfont licence for Eurostile (or an equivalent licensed family) before commit/deploy.
+65. **Card names:** the brief asks for Last Duel Regular on card display text. Builder and /clients steward
+    names are italic in the approved design, so they now use the Oblique (the italic cut); only cards that
+    were upright use Ex2. Switch the card names to upright Ex2 (the existing name fitting has room for it)?
+66. At 320 px, "/" ("Keepers of", "Specialized at the applied edge", "starting point.", the legacy form's
+    "Let's Get Started") overflows; 360 px and up are clean. In scope?
+
+Previous snapshot: 2026-10-30, afternoon (-0300). **Release `07031e2` is committed, pushed and deployed to Vercel production:**
 `dpl_Bz4p12G9bayZT3kdJo41U73PGpGM`, https://raidguild-venture-beyond-review.vercel.app. **The shared CTA system, the
 numbered landing-page inventory, the builder module restored to the October 28 editorial grid on a flat
 coral plane, the afternoon pass (page container, persistent top bar, Join hero title, Moloch title
@@ -37,7 +380,7 @@ Left uncommitted on purpose (the owner's): `package.json` (`packageManager`), th
 **Local server:** http://localhost:3017 is running (`bun run dev --port 3017`, restarted 2026-10-30
 afternoon because it kept serving a stale narrative module); `/clients` and `/community` return 200.
 
-**Next priority:** collect external feedback on the published October 30 release. The remaining local-only
+Next priority at that snapshot: collect external feedback on the published October 30 release. The remaining local-only
 files are intentionally excluded from the release: `package.json`, the 21 deleted legacy images,
 `public/images/casestudies/clients.pdf`, and `.DS_Store` files.
 
@@ -53,10 +396,10 @@ iteration. Promoting iteration 04 to production still needs approval.
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
 | Branch | `feat/venture-beyond-integration` (no upstream configured) |
-| HEAD | `10e1fbf3cf2e7715794d89ac5301de61d9d3817d` "feat(venture): Moloch title, builder layouts and CTA states" (iteration 04), parent `6ecb1c7`. Pushed to `fork/feat/venture-beyond-integration`; preview-deployed. |
-| Compared with `origin/main` (`b02d67b`) | 88 ahead, 1 behind |
+| HEAD | `1adb3273a34297b29dd718429ce89181ef1f5d0c` "docs: record Venture Beyond production release" (2026-10-30), on release `07031e2`. Uncommitted: the November 2 typography migration, hierarchy pass and mobile pass, and the owner's files. |
+| Compared with `origin/main` (`b02d67b`) | 90 ahead, 1 behind |
 | Other worktrees | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
-| Local server | http://localhost:3017 (`bun run dev --port 3017`, restarted 2026-10-30); `/clients`, `/community` 200, serving `10e1fbf` plus the uncommitted CTA system |
+| Local server | http://localhost:3017 (`bun run dev --port 3017`, restarted 2026-11-02 night; it served a stale server module); `/`, `/clients`, `/community` 200, serving `1adb327` plus the uncommitted November 2 work |
 
 ## References (keep them separate)
 

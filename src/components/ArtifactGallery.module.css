@@ -1,7 +1,7 @@
 .section { --gallery-card-surface: var(--paper); --gallery-card-ink: var(--ink); --gallery-card-border: rgba(16,45,44,.45); --gallery-logo-surface: #12302d; --gallery-placeholder-surface: var(--deep); --gallery-detail-surface: transparent; --gallery-detail-border: currentColor; margin: 32px 0 0; color: var(--ink); width: 100%; min-width: 0; }
 .featured { max-width: 1300px; margin: 0 auto 72px; padding: 0 24px; }
 .featuredHeading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
-.featuredHeading h4 { font: 32px/1.1 var(--font-display), sans-serif; margin: 0; }
+.featuredHeading h4 { font: 700 32px/1.1 var(--font-display), sans-serif; margin: 0; }
 .featuredHeading p { max-width: 450px; font: 15px/1.5 var(--font-body), sans-serif; margin: 0; }
 .featuredGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .featuredCard { background: var(--paper); border: 1px solid currentColor; padding: 20px; min-width: 0; }
@@ -46,14 +46,14 @@
 .detail { background: var(--gallery-detail-surface); border: 1px solid var(--gallery-detail-border); padding: 24px; min-width: 0; position: sticky; top: 100px; max-height: calc(100dvh - 120px); overflow-y: auto; }
 .empty { min-height: 300px; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
 .empty > span { color: var(--coral); font-size: 48px; }
-.empty h4 { font: 28px/1.2 var(--font-display), sans-serif; }
+.empty h4 { font: 700 28px/1.2 var(--font-display), sans-serif; }
 .empty p { font-size: 16px; line-height: 1.5; }
 .card button[aria-expanded="true"]::after { box-shadow: inset 0 0 0 3px var(--coral), inset 0 0 18px rgba(0,0,0,.2); }
 .card[data-peek="true"] button::after { box-shadow: inset 0 0 0 2px var(--coral), inset 0 0 18px rgba(0,0,0,.2); }
 .back { background: transparent; border: 0; color: inherit; cursor: pointer; font: inherit; display: flex; justify-content: space-between; width: 100%; padding: 0 0 20px; }
 .feature { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 16px; }
 .feature > img { width: 100%; height: 220px; object-fit: cover; }
-.feature h4 { font: 28px/1.2 var(--font-display), sans-serif; margin: 12px 0 16px; }
+.feature h4 { font: 700 28px/1.2 var(--font-display), sans-serif; margin: 12px 0 16px; }
 .feature p { font-size: 16px; line-height: 1.5; }
 .feature a { display: block; color: var(--ink); background: var(--paper); padding: 14px 18px; margin-top: 24px; }
 .feature .portalLaunch { display: block; width: 100%; border: 0; background: var(--coral); color: var(--paper); cursor: pointer; font: 700 14px/1.4 var(--font-mono), monospace; margin-top: 24px; padding: 14px 18px; text-align: left; }
@@ -116,3 +116,10 @@
 :global([data-cta="semantic"]) :is(.filters button, .moreButton):disabled { cursor: not-allowed; opacity: var(--cta-disabled-opacity); }
 :global([data-cta="semantic"]) .back { min-height: var(--tap-min, 44px); align-items: center; }
 @media (prefers-reduced-motion: reduce) { :global([data-cta="semantic"]) :is(.filters button, .moreButton, .feature a, .feature .portalLaunch) { transition: none; } }
+
+/* Phones (November 2, mobile pass): "Explore all … discoveries" takes the
+   column's full width and the phone CTA height (52 px, fully rounded), like
+   the pill actions (venture.module.css). */
+@media (max-width: 760px) {
+  .moreButton { border-radius: 26px; min-height: 52px; padding-block: 0; width: 100%; }
+}

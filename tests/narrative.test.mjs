@@ -59,7 +59,7 @@ describe("community narrative", () => {
   test("the headline lines from the brief are present and approved", () => {
     const { communityHero, communityTension, communityPath, communityJoin } = communityNarrative;
     assert.equal([communityHero.title.lead, communityHero.title.em, communityHero.title.finale].map((copy) => copy.text).join(" "), "Find your people. Build something together.");
-    assert.equal(communityHero.eyebrow.text, "[ THE GUILD ]");
+    assert.equal(communityHero.eyebrow, undefined, "no hero eyebrow (November 2, hero experiment)");
     assert.equal(`${communityTension.title.lead.text} ${communityTension.title.em.text}`, "Freelance work versus real ownership");
     assert.deepEqual(communityPath.steps.map((step) => step.title.text), ["Enter a cohort", "Take a raid", "Earn ownership"]);
       assert.equal(communityHero.paths[0].label.text, "Explore the community");
@@ -169,6 +169,7 @@ describe("clients narrative", () => {
     assert.equal(`${clientsHero.title.lead.text} ${clientsHero.title.em.text}`, "Hard problems, working products");
     assert.equal(clientsHero.title.lead.source, "oct27-design");
     assert.equal(clientsHero.title.plain, true);
+    assert.equal(clientsHero.eyebrow, undefined, "no hero eyebrow (November 2, hero experiment)");
     assert.deepEqual(clientsHero.paths.map((p) => p.label.text), ["Tell us what you're building", "Explore our work"]);
     assert.equal(clientsHero.paths[0].section, "project-inquiry");
     assert.equal(`${clientsInquiry.title.lead.text} ${clientsInquiry.title.em.text}`, "Tell us what you're building");
@@ -261,11 +262,10 @@ describe("Join the DAO iteration (/community)", () => {
     assert.equal(guild.kit.items.length, 4);
   });
 
-  test("Moloch is its own feature: October 30 title with the sword mark, October 28 body verbatim", () => {
+  test("Moloch is its own feature: October 30 title without a mark, October 28 body verbatim", () => {
     const moloch = communityNarrative.communityMoloch;
     assert.equal(`${moloch.title.lead.text} ${moloch.title.em.text}`, "Together we slay Moloch");
-    assert.equal(moloch.titleMark.src, "/images/swords.svg", "the supplied sword mark, not text");
-    assert.equal(moloch.titleMark.alt.text, "RaidGuild");
+    assert.equal(moloch.titleMark, undefined, "the sword mark was removed (November 2)");
     assert.match(moloch.body.text, /^In RaidGuild lore, Moloch represents coordination failure/);
     assert.equal(moloch.cta.label.text, "Find your path into the Guild");
   });
@@ -368,5 +368,36 @@ describe("community additions", () => {
     const hats = communityNarrative.communityStewardship.hats;
     assert.equal(hats.body.reason, "claim");
     assert.match(hats.body.sourceUrl, /handbook\.raidguild\.org\/docs\/dao-operations\/dao-roles/);
+  });
+});
+
+describe("November 2 galleries and FAQs", () => {
+  test("the clients services gallery covers the published services plus onchain systems, every body still flagged", () => {
+    const { clientsServiceGallery } = clientsNarrative;
+    assert.equal(clientsServiceGallery.cards.length, 6);
+    const bodies = clientsServiceGallery.cards.map((card) => card.body.text);
+    for (const record of services) assert.ok(bodies.includes(record.bodyText), `${record.title} keeps its published body`);
+    for (const card of clientsServiceGallery.cards) {
+      assert.notEqual(card.body.status, "approved", card.title.lead.text);
+      assert.ok(readFileSync(new URL(`../public${card.image.src}`, import.meta.url)), card.image.src);
+    }
+  });
+
+  test("the member benefits are the brief's four, flagged, with existing art", () => {
+    const { communityBenefits } = communityNarrative;
+    assert.deepEqual(communityBenefits.cards.map((card) => `${card.title.lead.text} ${card.title.em.text}`), ["Cohorts, bounties and raids", "Hackathons and hackerhouses", "RIPs and shared funding", "Guild email and Linktree"]);
+    for (const card of communityBenefits.cards) {
+      assert.equal(card.body.reason, "claim", card.title.lead.text);
+      assert.ok(readFileSync(new URL(`../public${card.image.src}`, import.meta.url)), card.image.src);
+    }
+  });
+
+  test("FAQ placeholders are never approved; the community FAQ reuses existing copy only", () => {
+    const { clientsFaq } = clientsNarrative;
+    const { communityFaq } = communityNarrative;
+    assert.equal(clientsFaq.items.length, 6);
+    for (const item of clientsFaq.items) assert.equal(item.answer.reason, "claim", item.question.text);
+    assert.ok(clientsFaq.items.some((item) => /\[\$X–\$Y\]/.test(item.answer.text)), "cost stays a placeholder");
+    for (const item of communityFaq.items) assert.notEqual(item.answer.source, "draft", item.question.text);
   });
 });

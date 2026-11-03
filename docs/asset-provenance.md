@@ -106,16 +106,26 @@ illustrations carry their own painted backgrounds and fill their tiles. Each ent
 next/image serves resized WebP. Rights and provenance of the new files were not stated with them: confirm
 they are approved for public use (the earlier Queen Raida approval covered `queen-raida-v2.png`).
 
-## Moloch title mark (2026-10-30)
+## Moloch title mark (2026-10-30; removed 2026-11-02)
+
+**Removed on 2026-11-02 at the owner's request:** the title no longer carries a mark and the file is deleted
+(tracked in Git, restorable from `1adb327`). The record below is historical.
 
 | Path | Size | Format | Used for | MD5 |
 |---|---|---|---|---|
 | `public/images/swords.svg` | 224 × 212 viewBox | SVG, two fills (cream `#EFE9D7`, navy `#191E4E`) | After "Moloch" in the About Moloch title, `/community`, about one cap height | `e311325daa5cfcf97f6bb9b2f454b9dd` |
 
 Supplied by the owner on 2026-10-30 (untracked in the worktree at 10:41; the brief names it
-`public/images/sword.svg`, the file on disk is `swords.svg` and is used as is). It replaces the
+`public/images/sword.svg`, the file on disk is `swords.svg` and is used as is). November 2 (mobile pass): on
+phones it is drawn at 1.6 times the MOLOCH line (about 57 px), hanging after the word, instead of one cap
+height; desktop is unchanged. Same file (identical to the owner's `~/Downloads/swords.svg`). It replaces the
 `venture/hats/raidguild.png` crop in the Moloch title; that PNG remains the Hats Tree parent. Not yet
 committed: it must be committed with the code that references it.
+
+## Entity artwork on phones (2026-11-02, mobile pass)
+
+Queen Raida and Moloch phones now show the centre square of each `*-rectangle.png` (CSS crop, no new file);
+the `*-mobile.png` vertical cuts are no longer rendered but stay on disk and in `illustrations.ts`.
 
 ## Final contact module: Venture Beyond scene and professions (2026-10-30, afternoon)
 
@@ -174,3 +184,30 @@ WebP q82); the originals are untouched.
 |---|---|---|---|
 | `public/images/venture/og/clients-queen-raida.webp` | `entities/queen-raida/queen-rectangle.png` | 150 KB | `aec1bcc26c65d4e2e2f2ba6b0550979c` |
 | `public/images/venture/og/community-moloch.webp` | `entities/moloch/moloch-rectangle.png` | 111 KB | `59a2f85487e6895efb07d679af84b93e` |
+
+## Last Duel display fonts (2026-11-02)
+
+Supplied by the owner on 2026-11-02 in `public/fonts/` (untracked; not to be committed until the licence
+is settled, STATUS open question 64). Name tables: private builds "renamed from EurostileLTStd-* 2.035"
+(Adobe; Eurostile is a Linotype trademark), Retalic cuts "+12° derived from EurostileLTStd-Ex2"; `fsType` 4;
+licence field "PRIVATE / INTERNAL USE ONLY ... No redistribution, sublicensing, web hosting or open-source
+licensing is granted. Renaming does not change the license status." 261 glyphs each (Latin, no arrows).
+
+| File | Name table (family / style) | Used | SHA-256 |
+|---|---|---|---|
+| `LastDuel-Ex2.otf` | Last Duel Ext Two / Regular (400, width 7) | upright display | `8cde147b01fbc5377d96cc3d3138bf959ad84ca093e80a491b35999a6accdc4a` |
+| `LastDuel-BoldEx2.otf` | Last Duel Ext Two / Bold (700, width 7) | upright 600+, labels; heading bottom lines with synthesized oblique | `c8ec0fcdf584bb1c1903eba7ed432d3b382f1dd146de684ceb9febc8d932ba70` |
+| `LastDuel-Oblique.otf` | Last Duel / Italic (400, −12°) | italic | `197881fea5f2715948f9f3eba115a4ef4c4db1a5ac260c2c949f1b1313830b41` |
+| `LastDuel-BoldOblique.otf` | Last Duel Bold / Italic (700, −12°) | italic, 600+ | `521457c9320244ac92354a563638abd8ce18597fd39a87d4984c41a02ac51fe6` |
+| `LastDuel-Ex2Retalic.otf` | Last Duel Ext Two Retalic / Regular (400, +12°) | not wired (hierarchy pass) | `5721249a825b820992e14545260d3bd9bc684172eb9046837c4ec9f26733d2d1` |
+| `LastDuel-BoldEx2Retalic.otf` | Last Duel Ext Two Retalic / Bold (700, +12°) | heading top lines (hierarchy pass) | `06c694f754983a49951d342f0d387039c0da341c6cff1085d477f8a2c4579b58` |
+
+Removed the same day: the six Grinder WOFF2 files (`Grinder-{Regular,Italic,Retalic}.woff2`,
+`Grinder-Refined-{Regular,Italic,Retalic}.woff2`), no longer referenced; recoverable from Git history.
+
+## Sword arrows turned (2026-11-02, owner)
+
+`public/images/icons/arrow-{right,left,down,right-down,right-up}-hilt.svg`: the owner's five sword arrows
+(`arrow-right-flat`, `arrow-left-flat`, `arrow-down`, `arrow-right-down`, `arrow-right-up`) wrapped in a 180°
+rotation, so the hilt leads in the action's direction. Generated from the originals, which stay on disk; the
+pill icon masks (`venture.module.css`) use the new files. Untracked until committed with that CSS.

@@ -179,7 +179,7 @@ export default function TeamWall({ members, suspended = false, masonry = false, 
         <div className={styles.memberLoop}>
           {(loops ? [0, 1] : [0]).map((copy) => {
             const cards = (list: Mercenary[]) => list.map((member) => {
-              const content = <><Image src={member.imagePath} alt="" width={58} height={58} draggable={false} /><span><strong title={member.name}>{member.name}</strong><small title={member.title}>{member.title}</small></span></>;
+              const content = <><Image src={member.imagePath} alt="" width={58} height={58} draggable={false} /><span><strong title={member.name} style={{ "--chars": member.name.length } as CSSProperties}>{member.name}</strong><small title={member.title}>{member.title}</small></span></>;
               return <a key={member.name} {...cardLink(member)} target="_blank" rel="noopener noreferrer" tabIndex={copy === 1 ? -1 : undefined}>{content}<i aria-hidden="true"><b className={styles.iconLogo} /></i></a>;
             });
             return masonry ? (

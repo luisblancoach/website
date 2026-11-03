@@ -13,14 +13,9 @@
 .image { display: block; height: auto; max-height: min(58svh, 600px); object-fit: cover; object-position: center top; width: 100%; }
 
 .copy { align-items: start; column-gap: clamp(40px, 6vw, 120px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); margin: 0 auto; max-width: 1144px; padding: clamp(28px, 3vw, 44px) clamp(24px, 6vw, 88px) clamp(56px, 6vw, 88px); }
-.label { color: var(--coral); font: 700 var(--type-accent-label, 19px)/1.35 var(--font-mono), monospace; grid-column: 1 / -1; letter-spacing: .12em; margin: 0 0 18px; text-transform: uppercase; }
+.label { color: var(--coral); font: 700 var(--type-marker, 19px)/1.35 var(--font-marker, var(--font-mono)), monospace; grid-column: 1 / -1; letter-spacing: var(--tracking-marker, .12em); margin: 0 0 18px; text-transform: uppercase; }
 .feature .title { color: inherit; font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 900; grid-column: 1; letter-spacing: .01em; line-height: 1.05; margin: 0; text-transform: uppercase; }
 .feature .title em { color: var(--coral); display: inline-block; font-family: var(--font-display), sans-serif; font-size: 52px; font-style: italic; font-weight: 400; line-height: 1; margin-top: 4px; }
-/* The mark after "Moloch" (October 30): the owner's crossed swords
-   (swords.svg, cream blades with a navy edge), drawn edge to edge in its box,
-   so it stands one cap height plus a little on the Moloch line, sitting on
-   its baseline. */
-.titleMark { display: inline-block; height: .92em; margin-left: .22em; vertical-align: -.1em; width: auto; }
 .body { font: 400 var(--type-body-lg, 18px)/1.5 var(--font-body), sans-serif; grid-column: 2; margin: 0; max-width: 36em; }
 .cta { grid-column: 2; justify-self: start; margin-top: 32px; }
 
@@ -60,11 +55,28 @@
 /* Moloch title (October 30, wall pass): "TOGETHER WE SLAY" in cream (3.1:1 on
    coral, large display text), "MOLOCH" about 40% larger than the other second
    lines (73 px, the hero headline's scale; phones up to 56 px), so the scene's
-   title carries the weight of Queen Raida's beside it. The sword mark scales
-   with it. */
+   title carries the weight of Queen Raida's beside it. */
 .moloch .title { color: var(--color-cream, #efe9d7); }
-/* The mark stays on the MOLOCH line. With the mark the line measures about
-   6.6 em, so phones size it to the column (about 51 px at
-   393, 49 px at 375). */
+/* MOLOCH stays on one line (the sword mark that followed it was removed on
+   November 2); phones size it to the column. */
 .moloch .title em { font-size: 73px; line-height: .95; margin-top: 6px; white-space: nowrap; }
 @media (max-width: 760px) { .moloch .title em { font-size: min(56px, (100vw - 48px) / 6.7); } }
+
+/* Mobile pass (November 2), phones up to 700 px.
+   - The artwork is the rectangle cut's centre square (ImmersiveFeature):
+     Queen Raida's face and the Moloch head above the travellers. The copy
+     follows on the same surface, 28 px below, so image and text read as one
+     block with room between them.
+   - Moloch heading about 60% larger than the shared phone scale, to carry the
+     weight of Queen Raida's: "MOLOCH" 22 → 35 px (1.6 ×, at most 36 px);
+     "TOGETHER WE SLAY" grows as far as it stays on one line (15.2 em, so
+     about 1.26 × at 393 px; never more than 1.6 ×). The hierarchy rules in
+     venture.module.css set these sizes with !important, so these do too.
+   - No sword mark after "MOLOCH" (removed at the owner's request, November 2,
+     at every width). */
+@media (max-width: 700px) {
+  .image { aspect-ratio: 1; height: auto; max-height: none; object-fit: cover; object-position: center; }
+  .copy { padding-top: 28px; }
+  :global(html) :global([data-audience]) section.moloch.moloch h2.title { font-size: min(28.8px, (100vw - 48px) / 15.2) !important; }
+  :global(html) :global([data-audience]) section.moloch.moloch h2.title > em { font-size: min(36px, (100vw - 48px) / 9.6) !important; }
+}

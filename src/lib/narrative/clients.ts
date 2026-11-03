@@ -3,8 +3,8 @@ import { services } from "../data/content";
 import { activeSpears } from "../data/venture";
 import {
   approved, claim, defineNarrative, oct23, wording,
-  type CapabilitiesContent, type CreedContent, type HeroContent, type InquiryContent, type NavContent, type PreviousWorksContent,
-  type ServicesContent, type ShowcaseWork,
+  type CapabilitiesContent, type CreedContent, type FaqContent, type FeatureGalleryContent, type GalleryCard, type HeroContent,
+  type InquiryContent, type NavContent, type PreviousWorksContent, type ServicesContent, type ShowcaseWork,
 } from "./types";
 
 // Clients narrative ("Hire the DAO", light by default). Headline and calls to
@@ -19,7 +19,7 @@ const existing = (text: string) => approved(text, "existing-site");
 const design = (text: string) => approved(text, "oct27-design");
 
 export const clientsHero: HeroContent = defineNarrative("clients.hero", {
-  eyebrow: wording("Venture Beyond · Hire the DAO"),
+  // No eyebrow (November 2, hero experiment): "Venture Beyond · Hire the DAO" and its dot were removed.
   title: { lead: design("Hard problems,"), em: design("working products"), long: true, plain: true },
   dek: claim(
     "A decentralized collective of designers and engineers building onchain products, digital experiences and applied AI.",
@@ -137,6 +137,60 @@ export const clientsServices: ServicesContent = defineNarrative("clients.service
   footnote: { lead: existing("Not sure which practice fits?"), link: { label: existing("Open the Guild inquiry form →"), section: "project-inquiry" } },
 } satisfies ServicesContent);
 
+// Services gallery (November 2): the services accordion becomes a row of
+// cards right after the hero. Bodies are the published service copy (and the
+// Onchain practice's copy for the smart-contract card), unchanged and still
+// flagged; each title is the published service name split into two lines, the
+// "Smart contracts and onchain systems" and "Applied AI" names follow the brief.
+// Category labels are new wording. Art: existing site illustrations, none
+// repeated on this page.
+const cardNote = "Card title from the published service name, set on two lines (November 2 gallery). Confirm.";
+const serviceCard = (title: string, lead: string, em: string, label: string, image: GalleryCard["image"], link?: GalleryCard["link"]): GalleryCard => {
+  const record = services.find((item) => item.title === title);
+  if (!record) throw new Error(`Unknown service: ${title}`);
+  return { label: wording(label), title: { lead: claim(lead, "existing-site", cardNote), em: claim(em, "existing-site", cardNote) }, body: claim(record.bodyText, "existing-site", serviceNote), image, ...(link ? { link } : {}) };
+};
+const onchain = activeSpears.find((item) => item.title === "Onchain Systems")!;
+const appliedAi = activeSpears.find((item) => item.title === "Applied AI")!;
+export const clientsServiceGallery: FeatureGalleryContent = defineNarrative("clients.serviceGallery", {
+  label: design("[ Services & capabilities ]"),
+  title: { lead: wording("What we can", "Framing from the November 2 brief (“What we can build for you”). Confirm as the heading."), em: wording("build for you", "Framing from the November 2 brief. Confirm as the heading.") },
+  intro: design("The Guild is the center of gravity. We operate tightly scoped raids with small senior teams."),
+  cards: [
+    serviceCard("Full-Stack Development", "Full-stack", "development", "Engineering", { src: "/images/neo/project-ship-schematic-v1.webp", width: 2160, height: 912 }),
+    {
+      label: wording("Onchain"),
+      title: { lead: wording("Smart contracts,", "Service name from the November 2 brief (“Smart contracts and onchain systems”), on two lines. Confirm."), em: wording("onchain systems", "Service name from the November 2 brief. Confirm.") },
+      body: claim(onchain.copy, "existing-site", "The Onchain Systems practice copy (lib/data/venture.ts); it mentions governance and shared ownership. Confirm the wording with the practice."),
+      image: { src: onchain.art, width: 1024, height: 768, fit: "contain" },
+      link: { label: existing(onchain.cta), href: onchain.href, destination: claim("Railway production URL", "existing-site", "The practice link points to a railway.app deployment. Confirm the public URL.") },
+    },
+    serviceCard("AI Solutions & Automation", "Applied AI", "and automation", "Applied AI", { src: appliedAi.art, width: 1024, height: 768, fit: "contain" }, { label: existing(appliedAi.cta), href: appliedAi.href }),
+    serviceCard("Product & System Design", "Product and", "system design", "Design", { src: "/images/neo/guild-builders-v1.png", width: 768, height: 1024, fit: "contain" }),
+    serviceCard("Marketing & Content Strategy", "Marketing and", "content strategy", "Growth", { src: "/images/neo/field-signal-commons.png", width: 1122, height: 1402 }),
+    serviceCard("DAO Consulting & Governance", "DAO consulting", "and governance", "Coordination", { src: "/images/neo/field-autonomous-treasury.png", width: 1003, height: 1568 }),
+  ],
+  cta: { label: design("Discuss your project"), section: "project-inquiry" },
+} satisfies FeatureGalleryContent);
+
+// Buyer FAQ (November 2), right before the inquiry. Questions and answers are
+// the brief's; bracketed values are placeholders awaiting the owner and render
+// as marked placeholders (Faq.tsx). Every answer stays flagged until confirmed.
+const faqNote = "Buyer FAQ answer from the November 2 brief. Confirm the facts; bracketed values are placeholders.";
+const faq = (question: string, answer: string) => ({ question: wording(question, "Buyer FAQ question from the November 2 brief."), answer: claim(answer, "draft", faqNote) });
+export const clientsFaq: FaqContent = defineNarrative("clients.faq", {
+  label: wording("[ Before you start ]"),
+  title: { lead: wording("Questions"), em: wording("before a raid") },
+  items: [
+    faq("What does it cost?", "Most raids run [$X–$Y]. Fixed scope, fixed price, quoted after a scoping call."),
+    faq("How long does it take?", "Typical raids run [X–Y weeks]. Smaller fixes can start within [X days]."),
+    faq("Who is accountable in a DAO?", "One project lead is your point of contact from kickoff to handoff. You get one contract and one invoice."),
+    faq("What is the process?", "Brief, then scoping call, then proposal, then raid with weekly demos, then handoff with docs and runbooks."),
+    faq("How do payment and contracts work?", "We invoice in [fiat / USDC / both] under [entity / agreement]."),
+    faq("What happens after launch?", "We document everything and hand it off, or stay on for maintenance."),
+  ],
+} satisfies FaqContent);
+
 export const clientsInquiry: InquiryContent = defineNarrative("clients.inquiry", {
   label: existing("[ Begin a transmission ]"),
   title: { lead: tae("Tell us what"), em: tae("you're building") },
@@ -161,4 +215,4 @@ export const clientsCreed: CreedContent = defineNarrative("clients.creed", {
   cta: { label: tae("Tell us what you're building"), section: "project-inquiry" },
 } satisfies CreedContent);
 
-export const clientsNarrative = { clientsHero, clientsCapabilities, clientsServices, clientsPreviousWorks, clientsInquiry, clientsNav, clientsCreed };
+export const clientsNarrative = { clientsHero, clientsCapabilities, clientsServices, clientsServiceGallery, clientsPreviousWorks, clientsFaq, clientsInquiry, clientsNav, clientsCreed };

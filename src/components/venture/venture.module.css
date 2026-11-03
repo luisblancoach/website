@@ -94,9 +94,9 @@
   --cta-focus-halo: var(--color-cream);
   --cta-disabled-opacity: .5;
   --on-pink: #071c1d;
-  /* Supplied Grinder display cuts; Ubuntu follows the handoff for body copy. */
-  --font-display: var(--font-grinder);
-  --font-retalic: var(--font-grinder-retalic);
+  /* Last Duel display cuts (src/lib/fonts.ts); Ubuntu follows the handoff for body copy. */
+  --font-display: var(--font-last-duel);
+  --font-retalic: var(--font-last-duel-retalic);
   font-synthesis: none;
   --font-body: var(--font-ubuntu);
   background: var(--paper);
@@ -170,11 +170,14 @@
 .iconDiscord { -webkit-mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; }
 .iconPortal { -webkit-mask: url("/images/icons/ico_portal.svg") center / contain no-repeat; mask: url("/images/icons/ico_portal.svg") center / contain no-repeat; }
 .iconHandbook { -webkit-mask: url("/images/icons/ico_handbook.svg") center / contain no-repeat; mask: url("/images/icons/ico_handbook.svg") center / contain no-repeat; }
-.iconSwordRight { -webkit-mask: url("/images/icons/arrow-right-flat.svg") center / contain no-repeat; mask: url("/images/icons/arrow-right-flat.svg") center / contain no-repeat; }
-.iconSwordLeft { -webkit-mask: url("/images/icons/arrow-left-flat.svg") center / contain no-repeat; mask: url("/images/icons/arrow-left-flat.svg") center / contain no-repeat; }
-.iconSwordDown { -webkit-mask: url("/images/icons/arrow-down.svg") center / contain no-repeat; mask: url("/images/icons/arrow-down.svg") center / contain no-repeat; }
-.iconSwordDownRight { -webkit-mask: url("/images/icons/arrow-right-down.svg") center / contain no-repeat; mask: url("/images/icons/arrow-right-down.svg") center / contain no-repeat; }
-.iconSwordUpRight { -webkit-mask: url("/images/icons/arrow-right-up.svg") center / contain no-repeat; mask: url("/images/icons/arrow-right-up.svg") center / contain no-repeat; }
+/* November 2 (owner): every sword is turned 180° (the *-hilt.svg files are the
+   owner's arrows rotated, the originals are untouched), so the hilt leads like
+   an arrowhead in the action's direction. */
+.iconSwordRight { -webkit-mask: url("/images/icons/arrow-right-hilt.svg") center / contain no-repeat; mask: url("/images/icons/arrow-right-hilt.svg") center / contain no-repeat; }
+.iconSwordLeft { -webkit-mask: url("/images/icons/arrow-left-hilt.svg") center / contain no-repeat; mask: url("/images/icons/arrow-left-hilt.svg") center / contain no-repeat; }
+.iconSwordDown { -webkit-mask: url("/images/icons/arrow-down-hilt.svg") center / contain no-repeat; mask: url("/images/icons/arrow-down-hilt.svg") center / contain no-repeat; }
+.iconSwordDownRight { -webkit-mask: url("/images/icons/arrow-right-down-hilt.svg") center / contain no-repeat; mask: url("/images/icons/arrow-right-down-hilt.svg") center / contain no-repeat; }
+.iconSwordUpRight { -webkit-mask: url("/images/icons/arrow-right-up-hilt.svg") center / contain no-repeat; mask: url("/images/icons/arrow-right-up-hilt.svg") center / contain no-repeat; }
 
 /* Componente button de Figma (19:4977 y variantes): alto 56, radio 100,
    padding 8/8/8/24, gap 24, contenedor de icono 40 y glifo 32. */
@@ -2111,13 +2114,13 @@
    (cream on light blue was unreadable); the dark panel keeps cream. */
 :global(html:not([data-theme="dark"])) .site .joinContact .contactCopy .handbookLink { color: var(--color-dark-green); }
 
-/* Supporting H3 headings on both audience routes use Ubuntu, not Grinder or
-   Retalic (October 29); display type stays on the section titles (h2). Some h3
+/* Supporting H3 headings on both audience routes use Ubuntu, not the display
+   face or Retalic (October 29); display type stays on the section titles (h2). Some h3
    rules are module-scoped and more specific, hence the !important. */
 .site[data-audience] h3, .site[data-audience] h3 em { font-family: var(--font-body), sans-serif !important; }
 /* Exception (owner, October 29): "The Guild runs on owners, / not employees."
-   (.rosterHeading, /clients) keeps its approved display treatment (Grinder,
-   as before the Ubuntu rule). */
+   (.rosterHeading, /clients) keeps its approved display treatment (the display
+   face, Last Duel since November 2, as before the Ubuntu rule). */
 .site[data-audience] .rosterHeading h3, .site[data-audience] .rosterHeading h3 em { font-family: var(--font-display), sans-serif !important; }
 
 /* Audience headlines (Hire and Join, October 29): one treatment and one scale
@@ -2192,7 +2195,7 @@
 .site[data-audience] .contactCyan > .inquiryMore { border: 2px solid var(--coral); border-radius: 0 0 28px 28px; border-top: 0; }
 .site[data-audience] .contactCyan.contactExpanded > .inquiryMore { border-radius: 28px; border-top: 2px solid var(--coral); }
 
-/* Join the DAO heading: Grinder Regular for both lines (the approved display
+/* Join the DAO heading: the display face's Regular for both lines (the approved display
    face at its regular weight), not italic. */
 .site[data-audience] .joinContact h2.contactHeadline,
 .site[data-audience] .joinContact h2.contactHeadline em { font-family: var(--font-display), sans-serif; font-style: normal; font-weight: 400; }
@@ -2220,6 +2223,13 @@
 /* "MEMBER-GOVERNED" is long: 44 px keeps it on one line when the Guild kit
    narrows its column. */
 .site[data-audience] .prologue h2 em { font-size: 44px; }
+/* November 2 (Last Duel): in the Extended 2 Retalic cut the line is 15 em, a
+   little more than 44 px allows in the 650 px column, so above phone widths
+   it fits the heading's width instead (44 px at most). */
+@media (min-width: 761px) {
+  .site[data-audience] .prologue h2 { container-type: inline-size; }
+  .site[data-audience] .prologue h2 em { font-size: min(44px, 100cqi / 15.2); white-space: nowrap; }
+}
 @media (max-width: 760px) { .site[data-audience] .prologue h2 em { font-size: clamp(30px, 10.2vw, 40px); } }
 .site[data-audience] .contact h2.contactHeadline { font-size: 30px; }
 .site[data-audience] .contact h2.contactHeadline em { display: block; font-size: 46px; line-height: 1; margin-top: 4px; }
@@ -2342,17 +2352,21 @@
    no longer runs across the characters in the artwork. Phones: every line
    fits the 24 px gutters ("FIND YOUR PEOPLE." is about 11.3 em wide,
    "TOGETHER." about 6.2 em); the first two lines stay near 30 px (29 px at
-   375). Desktop: 88 px keeps "TOGETHER." inside the copy column. */
+   375). Desktop: 88 px keeps "TOGETHER." inside the copy column.
+   November 2 (Last Duel): "FIND YOUR PEOPLE." is 14.3 em in the Extended 2
+   Retalic cut ("TOGETHER." 5.4 em in the Oblique), so the first two lines fit
+   by 14.5 em: about 24 px on a 393 px phone, 40 px on desktop (568 px, inside
+   the copy column). */
 .site[data-audience] .hero .heroTitleStacked { width: max-content; }
-.site[data-audience] .hero .heroTitleStacked h1 { font-size: min(32px, calc((100vw - 48px) / 11.4)); letter-spacing: -.005em; line-height: 1; }
+.site[data-audience] .hero .heroTitleStacked h1 { font-size: min(32px, calc((100vw - 48px) / 14.5)); letter-spacing: -.005em; line-height: 1; }
 .site[data-audience] .hero .heroTitleStacked h1 > span { font-size: inherit; white-space: nowrap; }
 .site[data-audience] .hero .heroTitleStacked h1 > em { color: inherit; display: inline-block; font-size: min(56px, calc((100vw - 48px) / 6.3)); line-height: .95; margin-top: .08em; white-space: nowrap; }
 @media (min-width: 600px) {
-  .site[data-audience] .hero .heroTitleStacked h1 { font-size: 40px; }
+  .site[data-audience] .hero .heroTitleStacked h1 { font-size: min(40px, calc((100vw - 48px) / 14.5)); }
   .site[data-audience] .hero .heroTitleStacked h1 > em { font-size: 80px; }
 }
 @media (min-width: 1000px) {
-  .site[data-audience] .hero .heroTitleStacked h1 { font-size: 46px; }
+  .site[data-audience] .hero .heroTitleStacked h1 { font-size: 40px; }
   .site[data-audience] .hero .heroTitleStacked h1 > em { font-size: 88px; }
 }
 
@@ -2544,7 +2558,9 @@
    instead of wrapping (about 29 px on a 393 px phone). "TELL US WHAT" keeps
    its size above it. */
 .site[data-audience] .contact:not(.joinContact) .contactCopy { container-type: inline-size; }
-.site[data-audience] .contact:not(.joinContact) h2.contactHeadline em { font-size: min(46px, 100cqi / 10.3); white-space: nowrap; }
+.site[data-audience] .contact:not(.joinContact) h2.contactHeadline em { font-size: min(46px, 100cqi / 12.8); white-space: nowrap; }
+/* November 2 (Last Duel): "YOU'RE BUILDING" in the Extended 2 Retalic cut is
+   12.3 em wide (10.3 suited the earlier face), so the divisor follows it. */
 
 /* Builder cards (October 30, wall pass): the count line above the wall is for
    screen readers only (BuilderNetwork). Every linked card carries the
@@ -2860,13 +2876,342 @@
 :global(html) .site[data-audience] .keepers .stewardPortrait img { filter: none; }
 @media (prefers-reduced-motion: reduce) { .site[data-audience] .keepers .stewardTop > i { transition: none; } }
 
-/* Guild CTA row (October 30, release pass): "Join the DAO" first on the left,
+/* Guild CTA row (October 30, release pass; grouped on November 2, below): "Join the DAO" first on the left,
    "Your Guild kit" anchored to the row's right edge (margin-left: auto); the
    row spans the copy column. Phones stack them in that order, left-aligned.
    The kit pill's link-free styles, icon and states are unchanged. */
-.site[data-audience] .prologue .guildActions { flex-wrap: nowrap; width: 100%; }
-.site[data-audience] .prologue .guildActions > .kitPill { margin-left: auto; }
+/* November 2: Join the DAO and the Guild kit read as one action group, a
+   compact 14 px apart (the kit was pushed to the row's right edge). */
+.site[data-audience] .prologue .guildActions { flex-wrap: nowrap; gap: 14px; width: 100%; }
 @media (max-width: 760px) {
   .site[data-audience] .prologue .guildActions { align-items: flex-start; flex-direction: column; }
-  .site[data-audience] .prologue .guildActions > .kitPill { margin-left: 0; }
+}
+
+/* Last Duel (November 2) on "/": the Extended 2 upright is wider than the
+   earlier display cut, so names that filled their card now fit by size, as
+   the audience walls do. Rail names below 1000 px scale per name (--chars,
+   about .9 em per character at most); the five steward names share one size,
+   set by the longest ("ECWireless", 7.45 em) in the card's content box. */
+@media (max-width: 999px) {
+  .site:not([data-audience]) .teamWall .memberRail span { container-type: inline-size; }
+  .site:not([data-audience]) .teamWall .memberRail strong { font-size: min(17px, (100cqi - 3px) / (var(--chars, 8) * .9)); }
+}
+.site:not([data-audience]) .stewardCard { container-type: inline-size; }
+.site:not([data-audience]) .stewardCard h4 { font-size: min(30px, 100cqi / 7.6); }
+@media (min-width: 1000px) { .site:not([data-audience]) .stewardCard h4 { font-size: min(24px, 100cqi / 7.6); } }
+/* The hero's "VENTURE" (Extended 2 Retalic, 6.3 em with the -.055em
+   tracking) fits the 24 px gutters on phones. */
+@media (max-width: 600px) { .site:not([data-audience]) .hero h1 { font-size: min(68px, calc((100vw - 48px) / 6.4)); } }
+
+/* ── Display type hierarchy (November 2, hierarchy pass) ─────────────────────
+   One system on "/", /clients and /community, both themes. Faces: src/lib/fonts.ts.
+   - Two-level display headings (the heading's own text, then its <em>; the
+     heroes' <span> lines, then the <em>): the top line in Last Duel Bold
+     Extended Retalic (LastDuel-BoldEx2Retalic, back-slanted), smaller; the
+     bottom line in Bold Extended italic (LastDuel-BoldEx2 with synthesized
+     oblique, see fonts.ts), about 1.3 to 1.4 times larger. Same width and
+     weight, opposite slants: one family, with tension in scale and slant.
+   - Standalone display labels (TRANSMISSION, the hero index, section markers)
+     in Last Duel Bold (LastDuel-BoldEx2), upright.
+   - Body, UI labels, navigation, buttons and forms keep Ubuntu / Ubuntu Mono.
+   Earlier rules size and colour these elements with up to three doubled
+   classes and !important (the audience h3 rule), so the roles below use
+   !important for family, weight, style and size; colours stay where they are.
+   Scale tokens: section headings 28 / 37 px (phones 18 / 24), panel headings
+   24 / 32 px (16 / 22), creed 40 / 54 px (22 / 30); lines that must stay on
+   one line fit their column (cqi or vw) instead. */
+.site {
+  --head-top: 28px; --head-bottom: 37px;
+  --panel-top: 24px; --panel-bottom: 32px;
+  --creed-top: 40px; --creed-bottom: 54px;
+  --font-marker: var(--font-last-duel); --type-marker: 16px; --tracking-marker: .06em;
+}
+@media (max-width: 760px) {
+  .site {
+    --head-top: 18px; --head-bottom: 24px;
+    --panel-top: 16px; --panel-bottom: 22px;
+    --creed-top: 22px; --creed-bottom: 30px;
+    --type-marker: 13px; --tracking-marker: .04em;
+  }
+}
+
+/* Top lines. */
+:global(html) .site.site :is(main section h2:has(> em), .rosterHeading h3, .teamCopy h3, .creed blockquote),
+:global(html) .site.site .hero h1 > span {
+  font-family: var(--font-last-duel-retalic), var(--font-display), sans-serif !important;
+  font-style: normal !important; font-weight: 700 !important; letter-spacing: 0 !important;
+}
+/* Bottom lines. */
+:global(html) .site.site :is(main section h2:has(> em), .rosterHeading h3, .teamCopy h3, .creed blockquote) > em,
+:global(html) .site.site .hero h1 > em {
+  font-family: var(--font-last-duel-extended), var(--font-display), sans-serif !important;
+  font-style: italic !important; font-synthesis: style !important; font-weight: 700 !important; letter-spacing: 0 !important;
+}
+
+/* Section headings. */
+:global(html) .site.site :is(main section h2:has(> em), .rosterHeading h3, .teamCopy h3) { font-size: var(--head-top) !important; line-height: 1.08 !important; }
+:global(html) .site.site :is(main section h2:has(> em), .rosterHeading h3, .teamCopy h3) > em { font-size: var(--head-bottom) !important; line-height: 1.02 !important; margin-top: .08em; }
+/* Phones: the bottom lines that stay on one line ("WORKING SYSTEMS", 15.4 em,
+   is the widest) bound every section's second line, so they keep one size. */
+@media (max-width: 760px) {
+  :global(html) .site.site :is(main section h2:has(> em), .rosterHeading h3, .teamCopy h3) > em { font-size: min(var(--head-bottom), (100vw - 48px) / 15.4) !important; }
+}
+/* "MEMBER-GOVERNED" (15.5 em) stays on one line at every width. */
+:global(html) .site.site[data-audience] .prologue h2 { container-type: inline-size; }
+:global(html) .site.site[data-audience] .prologue h2 > em { font-size: min(var(--head-bottom), 100cqi / 15.8) !important; white-space: nowrap; }
+
+/* Panel headings (Hire inquiry, Join, "/" contact); on the audience routes
+   the second line fits the panel ("YOU'RE BUILDING" is 13.1 em). */
+:global(html) .site.site .contact h2.contactHeadline { font-size: var(--panel-top) !important; line-height: 1.08 !important; }
+:global(html) .site.site .contact h2.contactHeadline > em { font-size: var(--panel-bottom) !important; line-height: 1.02 !important; }
+:global(html) .site.site[data-audience] .contact h2.contactHeadline > em { font-size: min(var(--panel-bottom), 100cqi / 13.5) !important; white-space: nowrap; }
+
+/* Creed. */
+:global(html) .site.site .creed blockquote { font-size: var(--creed-top) !important; line-height: 1.12 !important; }
+:global(html) .site.site .creed blockquote > em { font-size: var(--creed-bottom) !important; line-height: 1 !important; }
+
+/* Heroes: one line each, fitted. /community: "FIND YOUR PEOPLE." (15.0 em)
+   inside the 580 px copy column, "TOGETHER." 1.4 times larger. /clients:
+   "WORKING PRODUCTS" (15.9 em) at most 54 px, "HARD PROBLEMS," 1 / 1.3 of it.
+   "/": "BEYOND" (6.4 em) at most 80 px, "VENTURE" 1 / 1.35 of it. */
+:global(html) .site.site .hero .heroTitleStacked h1 { --hero-top: min(38px, calc((100vw - 48px) / 15.4)); line-height: 1.04; }
+:global(html) .site.site .hero .heroTitleStacked h1 > span { font-size: var(--hero-top) !important; }
+:global(html) .site.site .hero .heroTitleStacked h1 > em { font-size: calc(var(--hero-top) * 1.4) !important; line-height: 1 !important; margin-top: .06em; }
+:global(html) .site.site[data-audience] .hero .heroTitleLong h1 { --title-em: min(54px, calc(var(--title-space) / 16.4)); line-height: 1.04; }
+:global(html) .site.site[data-audience] .hero .heroTitleLong h1 > em { font-size: var(--title-em) !important; }
+:global(html) .site.site[data-audience] .hero .heroTitleLong h1 > span { font-size: calc(var(--title-em) / 1.3) !important; }
+:global(html) .site.site:not([data-audience]) .hero h1 { --hero-bottom: min(80px, calc((100vw - 48px) / 6.9)); line-height: 1; }
+:global(html) .site.site:not([data-audience]) .hero h1 > em { font-size: var(--hero-bottom) !important; }
+:global(html) .site.site:not([data-audience]) .hero h1 > span { font-size: calc(var(--hero-bottom) / 1.35) !important; }
+
+/* Standalone display labels: Last Duel Bold, upright. */
+:global(html) .site.site .heroIndex span { font-family: var(--font-last-duel), sans-serif; font-style: normal; font-weight: 700; letter-spacing: .08em; }
+:global(html) .site.site .heroIndex strong { font-weight: 700; letter-spacing: 0; }
+/* The hero eyebrow is nowrap from 1000 px; its box follows the wider face. */
+@media (min-width: 1000px) { :global(html) .site.site .hero .eyebrow { width: max-content; } }
+:global(html) .site.site :is(.sectionLabel, .eyebrow) { font-family: var(--font-marker), sans-serif !important; font-size: var(--type-marker) !important; font-style: normal !important; font-weight: 700 !important; letter-spacing: var(--tracking-marker) !important; }
+/* Display titles that stood in the regular weight. */
+:global(html) .site.site .practiceCard h3, .site .footer > p { font-weight: 700; }
+
+
+/* ── Mobile pass (November 2) ─────────────────────────────────────────────────
+   Phones (up to 760 px unless noted), "/", /clients and /community, both
+   themes. The typography roles above are unchanged except the creed (below). */
+
+/* Top bar (audience routes, up to 699 px): one 16 px gutter on both sides,
+   so the logo, the audience switch and the theme switch (all 52 px tall,
+   centred on one line) sit inside the same margins, and the menu's two lines
+   end on the theme switch's right edge (the 44 px button keeps its tap area;
+   its lines are inset 10 px). Below 381 px the switch's links tighten so the
+   three still fit with 6 px gaps (4 px gaps below 371 px). */
+@media (max-width: 699px) {
+  :global(html) .site.site[data-audience] .topBar { padding-inline: 16px; }
+  :global(html) .site.site .headerWithSwitch .menuButton { margin-right: -18px; }
+}
+@media (max-width: 380px) {
+  :global(html) .site.site[data-audience] .topBar .audienceSwitch a { padding-inline: 8px; }
+}
+@media (max-width: 370px) {
+  :global(html) .site.site[data-audience] .topBar { gap: 4px; }
+  :global(html) .site.site[data-audience] .topBar .audienceSwitch a { padding-inline: 6px; }
+}
+
+/* Hero (audience routes): two groups. The eyebrow and headline sit at the top,
+   under the bar and the menu; the dek and both actions sit together at the
+   foot, above the ticker, within thumb reach; the space between them leaves
+   the artwork visible. The hero is one screen tall (640 to 780 px), so the
+   actions stay above the fold on short phones. */
+@media (max-width: 760px) {
+  :global(html) .site.site[data-audience] .hero,
+  :global(html) .site.site[data-audience] .heroStage { height: clamp(640px, 100svh, 780px); min-height: 0; }
+  :global(html) .site.site[data-audience] .heroCopy { bottom: 64px; display: flex; flex-direction: column; top: 148px; }
+  :global(html) .site.site[data-audience] .heroSupplement { margin-top: auto; padding-top: 24px; }
+  :global(html) .site.site[data-audience] .hero .eyebrow { text-wrap: balance; }
+  :global(html) .site.site[data-audience] .heroPaths { gap: 12px; margin-top: 20px; }
+}
+
+/* Actions: every pill CTA on phones is the same object. Full column width
+   (no partial widths), 52 px tall, fully rounded (26 px radius), a 40 px icon
+   disc inset 6 px from the top, bottom and right edges (the 2 px edge
+   included), the label left at 14 px, upright tracking .06 em, on one line.
+   The showcase's compact and case-study pills (showcase.module.css) follow
+   the same geometry here. */
+@media (max-width: 760px) {
+  :global(html) .site.site .pill.pill {
+    border-radius: 26px; display: flex; gap: 12px; height: 52px; justify-content: space-between;
+    margin-inline: 0; max-width: 100%; min-height: 52px; padding: 0 calc(6px - var(--cta-border-width, 2px)) 0 20px; width: 100%;
+  }
+  :global(html) .site.site .pill.pill > span { font-size: 14px; letter-spacing: .06em; line-height: 20px; min-width: 0; white-space: nowrap; }
+  :global(html) .site.site .pill.pill > .pillIcon { height: 40px; width: 40px; }
+  :global(html) .site.site .pill.pill > .pillIcon > b { height: 32px; width: 32px; }
+  :global(html) .site.site .pill.pill > .pillIcon > b:not([data-glyph="logo"])[data-glyph] { height: 24px; width: 24px; }
+  :global(html) .site.site .pill.pill > .pillIcon > b:is([data-glyph="→"], [data-glyph="←"], [data-glyph="↓"], [data-glyph="↘"], [data-glyph="↗"]) { height: 28px; width: 28px; }
+  /* Grouped actions keep one 12 px rhythm. */
+  :global(html) .site.site[data-audience] .prologue .guildActions,
+  :global(html) .site.site .contact .guildActions { gap: 12px; width: 100%; }
+}
+
+/* Join module and Hire inquiry scene (phones up to 600 px, vertical art): the
+   profession group is larger (the box from 34% to 98% of the art's height,
+   88% of its width; was 44–99%, 76%), and the panel starts 32 px below the
+   group's feet instead of overlapping them by 40 px, so the art never sits
+   behind the panel, its form or its buttons. */
+@media (max-width: 600px) {
+  .contactSceneStage .professionGallery.professionGallery { height: 64%; left: 6%; top: 34%; width: 88%; }
+  .site[data-audience] .contact .contactGallerySlot.contactGallerySlot { height: calc(min(100vw, var(--page-wide)) * 1.5 * .98 + 32px - var(--section-space)); }
+}
+/* The Join panel's actions: at 400 px and below its side padding is 20 px
+   (was 24), so "Create your Portal profile" keeps its full label on one line
+   with the 12 px gap before the icon at 375 px. */
+@media (max-width: 400px) {
+  :global(html) .site.site[data-audience] .joinContact .contactCopy { padding-inline: 20px; }
+}
+
+/* Creed (audience routes, phones): calm and centred. The sentence is Last
+   Duel Extended Regular (LastDuel-Ex2), upright and centred, with no
+   back-slant or italic; "BUILD." keeps the brand highlight (the coral block,
+   cream type) in Last Duel Bold Extended, upright. Documented exception to
+   the two-level display rule on phones (docs/venture-integration.md). The
+   module is one screen tall (560 to 720 px) and its label, sentence and
+   action are one centred group with even spacing. */
+@media (max-width: 760px) {
+  :global(html) .site.site[data-audience] .creed { align-items: center; display: flex; flex-direction: column; justify-content: center; min-height: clamp(560px, 100svh, 720px); padding: 72px 24px; }
+  :global(html) .site.site[data-audience] .creed .creedContent { text-align: center; width: 100%; }
+  :global(html) .site.site[data-audience] .creed .creedContent .sectionLabel { margin: 0 0 28px; }
+  :global(html) .site.site[data-audience] .creed .creedContent blockquote {
+    font-family: var(--font-last-duel), var(--font-display), sans-serif !important; font-size: min(24px, (100vw - 48px) / 13.5) !important;
+    font-style: normal !important; font-weight: 400 !important; letter-spacing: .01em !important; line-height: 1.32 !important;
+    margin: 0 auto; max-width: 21em; text-align: center; text-wrap: balance;
+  }
+  :global(html) .site.site[data-audience] .creed .creedContent blockquote > em {
+    font-family: var(--font-last-duel), var(--font-display), sans-serif !important; font-size: 1.12em !important;
+    font-style: normal !important; font-synthesis: none !important; font-weight: 700 !important; line-height: 1.2 !important; margin-top: .2em;
+  }
+  :global(html) .site.site[data-audience] .creed .creedCta { margin-top: 40px; }
+  /* Regular strokes are thinner than the bold they replace: a soft navy veil
+     between the artwork and the group (the module's centre, fading out
+     before its edges) keeps the cream sentence legible on the bright
+     machine. */
+  :global(html) .site.site[data-audience] .creed::before { background: radial-gradient(ellipse 80% 42% at 50% 50%, rgba(18,22,59,.5), rgba(18,22,59,.22) 60%, rgba(18,22,59,0) 100%); content: ""; inset: 0; pointer-events: none; position: absolute; z-index: 1; }
+}
+
+/* Steward names on the audience routes (phones): "ECWireless" (5.42 em at
+   24 px) broke mid-word in the 122–130 px cards at 360–375 px. Names fit
+   the card (24 px at most, 1 / 5.6 of its content width) on one line, as on
+   "/" (the steward cards above). */
+@media (max-width: 760px) {
+  :global(html) .site.site[data-audience] .keepers.keepers .stewardCard { container-type: inline-size; }
+  :global(html) .site.site[data-audience] .keepers.keepers .stewardCard h4 { font-size: min(24px, 100cqi / 5.6); overflow-wrap: normal; white-space: nowrap; }
+}
+
+/* ── Hero experiment (November 2): scene above, copy on a solid floor ─────────
+   /clients and /community, both themes, every width. The hero keeps its height
+   (780 px on phones, 800 px at 761–999 px, min(860 px, 100svh) above). The
+   stage becomes two rows: the copy's own height at the bottom, the scene in
+   whatever is left above it. The artwork, its wash, the moons and the curtain
+   foreground are placed in the top row (absolutely positioned grid items, so
+   the row is their box): the art is re-framed by object-fit: cover into a
+   shorter box, cropped, never stretched. A floor layer (the stage's ::after,
+   above the foreground, below the copy) covers the bottom row in solid navy
+   (#191E4E, both themes) with a soft indigo glow behind the copy, and fades in
+   over the last 96 px (phones) / 160 px of the scene, so the scene dissolves
+   into the floor. No eyebrow (removed from both narratives). */
+:global(html) .site.site[data-audience] .hero { --hero-floor: #191e4e; --hero-floor-clear: rgba(25, 30, 78, 0); --hero-glow: rgba(48, 54, 117, .6); --hero-glow-clear: rgba(48, 54, 117, 0); --hero-fade: 160px; --hero-floor-pad: 96px; background: var(--hero-floor); }
+@media (max-width: 760px) { :global(html) .site.site[data-audience] .hero { --hero-fade: 96px; --hero-floor-pad: 64px; } }
+:global(html) .site.site[data-audience] .heroStage { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+/* Absolutely positioned grid items: an `auto` end line means the stage's
+   edge, so the row is spelled out (1 / 2). */
+:global(html) .site.site[data-audience] :is(.heroArt, .heroWash, .heroCelestial, .heroForeground) { grid-column: 1; grid-row: 1 / 2; }
+:global(html) .site.site[data-audience] :is(.heroArt, .heroWash) { height: auto; inset: 0; min-height: 0; }
+:global(html) .site.site[data-audience] :is(.heroImage, .heroNightImage) { height: 100%; min-height: 0; }
+/* The wash only darkens the top, under the navigation; no text sits on the art. */
+:global(html) .site.site[data-audience] .heroWash { background: linear-gradient(180deg, rgba(5, 20, 40, .5) 0, rgba(5, 20, 40, 0) 34%); }
+:global(html) .site.site[data-audience] .heroStage::after {
+  background:
+    radial-gradient(ellipse 70% 80% at 22% 100%, var(--hero-glow), var(--hero-glow-clear) 72%),
+    linear-gradient(180deg, var(--hero-floor-clear) 0, var(--hero-floor) var(--hero-fade));
+  bottom: 0; content: ""; grid-column: 1; grid-row: 2; left: 0; pointer-events: none; position: absolute; right: 0;
+  top: calc(-1 * var(--hero-fade)); z-index: 6;
+}
+:global(html) .site.site[data-audience] .heroCopy {
+  bottom: auto; display: block; grid-column: 1; grid-row: 2; left: auto; opacity: 1; padding: 0 var(--page-inline) var(--hero-floor-pad);
+  position: relative; right: auto; top: auto; transform: none; width: auto; z-index: 7;
+}
+:global(html) .site.site[data-audience] .heroSupplement { margin-top: 28px; padding-top: 0; }
+:global(html) .site.site[data-audience] .heroDek { max-width: 560px; }
+@media (max-width: 760px) { :global(html) .site.site[data-audience] .heroSupplement { margin-top: 20px; } }
+/* From 1000 px the two actions sit side by side (their own widths), so the
+   floor stays low and the scene keeps the upper field. */
+@media (min-width: 1000px) {
+  /* The copy keeps the column it had (12% from the left), clear of the
+     vertical "SCROLL TO DESCEND" cue at 80 px. */
+  :global(html) .site.site[data-audience] .heroCopy { padding-left: max(var(--page-inline), 12%); }
+  :global(html) .site.site[data-audience] .heroPaths { display: flex; flex-wrap: wrap; gap: 12px; max-width: none; }
+  :global(html) .site.site[data-audience] .heroPaths .pill { width: auto; }
+}
+/* /clients title: "HARD PROBLEMS," as wide as "WORKING PRODUCTS" (15.9 em vs
+   13.6 em of the top line, so 1.16 times its size), both lines one line each.
+   Faces and slants are the hierarchy's: Retalic on top, italic below. */
+:global(html) .site.site[data-audience] .hero .heroTitleLong h1 > span { font-size: calc(var(--title-em) * 1.16) !important; }
+
+/* ── Hero, desktop and tablet (November 2, later): more scene, a two-line title
+   and a themed floor. From 761 px only; phones (≤ 760 px, the approved
+   composition) are untouched by this block. The hero's height is unchanged.
+   - More scene: the copy block is shorter (actions side by side from 761 px;
+     from 1360 px the dek and the actions share one row under the title; the
+     floor's bottom padding is 80 px, still clear of the ticker), and the art
+     bleeds 56 px under the title, where the fade ends: the scene runs into
+     the title's first line instead of stopping above it.
+   - Title: two lines, never wrapped (nowrap; both lines fit the column at
+     every width from 761 px). /clients returns to the two-level ratio here:
+     "HARD PROBLEMS," 1 / 1.15 of "WORKING PRODUCTS" (phones keep 1.16 ×).
+     /community keeps its approved three-line stacked title.
+   - Floor: Night keeps the navy floor and cream text. Day inverts it: a cream
+     floor (#EFE9D7) with a soft celeste glow (#B8E0DF) behind the copy, the
+     art fading into it over 200 px, and every hero text (title, dek,
+     TRANSMISSION, the scroll cue) in the Light UI dark green (#102D2C). The
+     actions keep the shared CTA tokens (pink primary; cream secondary with its
+     navy edge, as on every Light surface). Nothing here animates, so reduced
+     motion needs no extra rule.
+   - TRANSMISSION 001 leaves the foot (the side-by-side actions reach it): on
+     the floor beside the title from 1300 px, at the scene's lower right below
+     that (with a cream halo in Day). */
+@media (min-width: 761px) {
+  :global(html) .site.site[data-audience] .hero { --hero-fade: 200px; --hero-floor-pad: 80px; --hero-bleed: 56px; }
+  :global(html) .site.site[data-audience] :is(.heroArt, .heroWash) { bottom: calc(-1 * var(--hero-bleed)); }
+  :global(html) .site.site[data-audience] .heroStage::after { top: calc(var(--hero-bleed) - var(--hero-fade)); }
+  :global(html) .site.site[data-audience] .hero h1 > :is(span, em) { white-space: nowrap; }
+  :global(html) .site.site[data-audience] .hero .heroTitleLong h1 > span { font-size: calc(var(--title-em) / 1.15) !important; }
+  :global(html) .site.site[data-audience] .heroSupplement { margin-top: 24px; }
+  :global(html) .site.site[data-audience] .heroPaths { display: flex; flex-wrap: wrap; gap: 12px; max-width: none; }
+  :global(html) .site.site[data-audience] .heroPaths .pill { width: auto; }
+  /* TRANSMISSION 001 moves from the hero's foot (where the side-by-side
+     actions now reach) to the scene's lower right, 20 px above the floor's
+     edge, clear of the title below it. */
+  :global(html) .site.site[data-audience] .heroIndex { bottom: 20px; grid-column: 1; grid-row: 1 / 2; top: auto; }
+}
+/* From 1300 px the marker sits on the floor, level with the title's first
+   line, right of the title (12% + 859 px at most; the marker starts at
+   96% − 201 px, so they clear each other from about 1282 px). */
+@media (min-width: 1300px) {
+  :global(html) .site.site[data-audience] .heroIndex { bottom: auto; grid-row: 2 / 3; top: 8px; }
+}
+/* Below that, Day only: the dark-green marker stays on the scene's lower
+   edge, so a soft cream halo (the floor's colour) keeps it legible on
+   darker art. */
+@media (min-width: 761px) and (max-width: 1299px) {
+  :global(html:not([data-theme="dark"])) .site.site[data-audience] .heroIndex :is(span, strong) { text-shadow: 0 0 2px rgba(239, 233, 215, .9), 0 0 14px rgba(239, 233, 215, .95), 0 0 28px rgba(239, 233, 215, .8); }
+}
+@media (min-width: 1360px) {
+  :global(html) .site.site[data-audience] .heroSupplement { align-items: center; column-gap: 48px; display: grid; grid-template-columns: minmax(0, 520px) auto; justify-content: start; }
+  :global(html) .site.site[data-audience] .heroSupplement .heroPaths { margin-top: 0; }
+}
+@media (min-width: 761px) {
+  :global(html:not([data-theme="dark"])) .site.site[data-audience] .hero {
+    --hero-floor: #efe9d7; --hero-floor-clear: rgba(239, 233, 215, 0);
+    --hero-glow: rgba(184, 224, 223, .55); --hero-glow-clear: rgba(184, 224, 223, 0);
+  }
+  :global(html:not([data-theme="dark"])) .site.site[data-audience] :is(.heroCopy, .heroIndex, .heroScrollCue),
+  :global(html:not([data-theme="dark"])) .site.site[data-audience] .hero :is(h1, h1 > span, h1 > em) { color: var(--color-dark-green); }
+  :global(html:not([data-theme="dark"])) .site.site[data-audience] .hero h1 { text-shadow: none; }
 }

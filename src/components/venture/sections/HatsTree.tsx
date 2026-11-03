@@ -23,7 +23,10 @@ const BRANCHES = [10, 30, 50, 70, 90].map((x) => `M50 0 C50 22 ${x} 16 ${x} 40`)
 // it. Reduced motion keeps the
 // states without the zoom. It is a reference snapshot of roles
 // (lib/data/hats.ts), never of wearers; the full tree, the section's one
-// link, opens on Hats Protocol.
+// link, opens on Hats Protocol. Phones (November 2) show that link under the
+// tree, above the snapshot note: it is rendered in both places and each copy
+// is displayed at its own widths only (hats.module.css), so the focus order
+// always follows the visual order.
 export default function HatsTree({ content }: { content: HatsContent }) {
   const [active, setActive] = useState<string | null>(null);
   const rolesRef = useRef<HTMLUListElement>(null);
@@ -46,7 +49,7 @@ export default function HatsTree({ content }: { content: HatsContent }) {
             <p><CopyText copy={content.intro} /></p>
             <p className={styles.stewards}><strong><CopyText copy={content.stewards.term} />.</strong> <CopyText copy={content.stewards.detail} /></p>
           </div>
-          <NarrativeAnchor link={content.treeLink} className={styles.treeLink}><CopyText copy={content.treeLink.label} /> <span aria-hidden="true">↗</span></NarrativeAnchor>
+          <NarrativeAnchor link={content.treeLink} className={`${styles.treeLink} ${styles.treeLinkAside}`}><CopyText copy={content.treeLink.label} /> <span aria-hidden="true">↗</span></NarrativeAnchor>
         </div>
 
         <figure className={styles.tree} aria-labelledby="hats-snapshot">
@@ -74,6 +77,7 @@ export default function HatsTree({ content }: { content: HatsContent }) {
               </li>
             ))}
           </ul>
+          <NarrativeAnchor link={content.treeLink} className={`${styles.treeLink} ${styles.treeLinkBelow}`}><CopyText copy={content.treeLink.label} /> <span aria-hidden="true">↗</span></NarrativeAnchor>
           <figcaption id="hats-snapshot" className={styles.snapshot}><CopyText copy={content.snapshot} /></figcaption>
         </figure>
       </div>

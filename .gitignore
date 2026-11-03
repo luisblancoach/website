@@ -53,14 +53,6 @@ COHORT/
 # planning docs live outside the repo, in BrandSteward/
 docs/
 
-# Grinder source binaries; the served woff2 live in public/fonts/grinder/
-/src/grinder-font/
-
-# Grinder binaries: licence provenance unconfirmed (no copyright/licence in the
-# name table, and not listed in RaidGuild's BRAND-ASSETS.md). The wiring is
-# committed; drop the three woff2 into public/fonts/grinder/ to build locally.
-/public/fonts/grinder/*.woff2
-
 # Scratch from the Figma asset pull, and the PR body draft.
 /.figma-raw/
 /PR-BODY.md
