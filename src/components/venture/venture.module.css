@@ -3215,3 +3215,27 @@
   :global(html:not([data-theme="dark"])) .site.site[data-audience] .hero :is(h1, h1 > span, h1 > em) { color: var(--color-dark-green); }
   :global(html:not([data-theme="dark"])) .site.site[data-audience] .hero h1 { text-shadow: none; }
 }
+
+/* Hero layer seam (November 3), /clients and /community, both themes, from
+   1000 px. The scene layers now share one box: the hero's top edge down to
+   56 px under the title's top (--hero-bleed), where the floor turns solid.
+   The art and its wash already ended there; the curtain foreground (the
+   cloaked figures and plants, z 6) stopped at the title's top, where the
+   floor is only about 72% opaque, so its edge showed as a hard horizontal
+   cut. It now runs to the same bottom edge. Its top edge and the image's
+   framing stay where they were: object-fit cover keeps the scale (the box is
+   still wider than the 1672 × 941 cut at these widths), and the image keeps
+   the vertical offset it had in the old box (58% of the difference),
+   clamped only where the taller box needs more of the image to stay covered
+   (about 1000–1100 px, at most 29 px). Nothing is stretched. Below 1000 px
+   the foreground already overhangs the floor (inset −14%), and phones are
+   untouched. */
+@media (min-width: 1000px) {
+  :global(html) .site.site[data-audience] .heroForeground { bottom: calc(-1 * var(--hero-bleed)); container-type: size; }
+  :global(html) .site.site[data-audience] .foregroundImage {
+    --fg-h: 100cqh;
+    --fg-h0: calc(100cqh - var(--hero-bleed));
+    --fg-cut: calc(100cqw * 941 / 1672);
+    object-position: 48% clamp(var(--fg-h) - max(var(--fg-cut), var(--fg-h)), .58 * (var(--fg-h0) - max(var(--fg-cut), var(--fg-h0))), 0px);
+  }
+}

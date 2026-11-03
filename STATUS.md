@@ -1,6 +1,6 @@
 # STATUS
 
-Snapshot: 2026-11-02, night (-0300). HEAD `1adb327` (the October 30 release `07031e2` plus its release
+Snapshot: 2026-11-02, night (-0300). HEAD `04da57f` (the November 2 work, committed, not pushed; deployed as a Vercel preview), on `1adb327` (the October 30 release `07031e2` plus its release
 record), with this session's **uncommitted November 2 work: the Grinder → Last Duel migration, the display
 hierarchy pass and the mobile pass** (sections "November 2" below) and the owner's files. Nothing committed,
 pushed or deployed. **Blocker before any commit or deploy: the Last Duel files' own licence field forbids web
@@ -9,6 +9,56 @@ hosting and redistribution** (open question 64).
 **Next priority:** the owner reviews the galleries / FAQ (and supplies the FAQ placeholder values), the hero desktop pass and the hero experiment (70), the mobile pass and the hierarchy pass and decides 64 (licence), 65 (card
 names), 67 (bottom-line italic), 68 (creed on desktop) and 69 (Moloch mark); commit / deploy only once those are
 settled and approved. (69 is resolved: the Moloch mark was removed.)
+
+## November 3 (preview deploy of the working tree)
+
+- Deployed as a Vercel preview at the owner's request (no commit): HEAD `04da57f` + this session's uncommitted
+  iteration (hero seam, "Works", /community capabilities and member benefits), built from a clean copy without
+  the owner's uncommitted files (`package.json` yarn `packageManager`, deleted legacy images, `clients.pdf`,
+  `LastDuel-Ex2Retalic.otf`). `dpl_Di9vK5qe5LQAgzu4aALNtYd6U8iK`, Ready,
+  https://raidguild-venture-beyond-review-9t9eegmg6.vercel.app (Vercel login required). /clients and /community
+  200 with the new markers. Review alias and production unchanged. Record and patch:
+  `~/Projects/raidguild-backups/2026-11-03/`. The deployed code is not in any commit yet.
+
+## November 3 (community restructure): builder-side capabilities, separate member benefits (uncommitted)
+
+- /community "Ideas into working systems" no longer reuses the /clients gallery content: new
+  `communityCapabilities` (`src/lib/narrative/community.ts`), the same six capabilities and art, framed for
+  builders. Titles: Ship on / real raids; The onchain / practice; The applied AI / practice; Make it /
+  understandable; Carry the / Guild's voice; Shape how / the Guild runs. Bodies reuse page copy (handbook raid
+  claim, practice copy, stewardship intro) plus two flagged drafts (Design, Coordination). Links: handbook
+  (raids, DAO operations), the two practices, Portal field notes, `#work`. CTA "Explore the Guild" → `#guild`;
+  footnote "Not sure where you fit? Ask our AI CTO" → `/chat`. No inquiry or client language.
+- Member benefits: own component `sections/MemberBenefits.tsx` + `benefits.module.css` (gallery surface and
+  heading, compact layout): numbered cards with a small square of art; 2 columns from 700 px (art beside the
+  copy from 1000 px, beside the label below), a stack on phones; no scroll row or controls. Heading now "Why
+  builders / join the Guild" (flagged). Height: 1440 1030 → 738 px; 768 927 → 814; 393 885 → 1226 (the
+  scrolling row became the requested stack).
+- `/clients` unchanged. `src/app/(venture)/community/page.tsx` wires both; `tests/narrative.test.mjs` adds a
+  test (six capabilities, same art, no inquiry/client wording, CTA → guild).
+- Checks: section shots at 1440/768/393 × Light/Dark for /community (both modules) and /clients (services),
+  plus 360/700/1000/1920: no overflow, broken images, page errors or wrapped/overflowing card titles; gallery
+  links listed and the CTA lands on `#guild`. Narrative tests 40/40, `tsc` OK, eslint on the changed files OK.
+  Not compared against the October 23 reference. Figma export not started (by request).
+- Open question 71: approve the builder-side card titles, intro, link labels, the two draft bodies and the
+  benefits heading; confirm "How raids work" / "How the DAO works" handbook pages are the right destinations.
+
+## November 3 (hero layer seam, nav label): uncommitted, on top of `04da57f`
+
+- Hero seam (/clients and /community, both themes, from 1000 px): the curtain foreground (cloaked figures and
+  plants) ended at the title's top, where the floor is only ~72% opaque, leaving a hard horizontal cut. It now
+  shares the art's box (hero top down to `--hero-bleed` under the title, where the floor is solid); same top
+  edge, same scale, and the image keeps its old vertical offset (computed with container units), clamped only
+  at about 1000–1100 px, where its framing moves down by at most 29 px. Below 1000 px the foreground already
+  overhung the floor (no seam); phones untouched. `src/components/venture/venture.module.css` (appended block
+  "Hero layer seam").
+- /clients navigation: "Previous works" → "Works" (owner request), same link (`#case-studies`).
+  `src/lib/narrative/clients.ts`. /community has no such item.
+- Checks: hero metrics at 393/768/1024/1440/1920 × both routes × both themes unchanged (heights, title lines,
+  CTAs, ticker), no horizontal overflow, no page errors; the luminance jump at the old seam row now sits below
+  the art's normal row-to-row texture at every desktop/tablet state; nav link checked at 1440 (bar) and
+  900/768/393 (menu), both themes, lands on `#case-studies`. `bun test tests/narrative.test.mjs` 39/39,
+  `tsc --noEmit` OK. Not compared against the October 23 reference (the hero has diverged from it by design).
 
 ## November 2 (Figma reference export, no code changes)
 
@@ -396,7 +446,7 @@ iteration. Promoting iteration 04 to production still needs approval.
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
 | Branch | `feat/venture-beyond-integration` (no upstream configured) |
-| HEAD | `1adb3273a34297b29dd718429ce89181ef1f5d0c` "docs: record Venture Beyond production release" (2026-10-30), on release `07031e2`. Uncommitted: the November 2 typography migration, hierarchy pass and mobile pass, and the owner's files. |
+| HEAD | `04da57f` "feat(venture): November 2 typography, mobile, hero, galleries and FAQ" (2026-11-02, not pushed), on `1adb327`. Uncommitted: this STATUS update and the owner's files (`package.json`, 21 deleted legacy images, `clients.pdf`), plus the unused `LastDuel-Ex2Retalic.otf`. |
 | Compared with `origin/main` (`b02d67b`) | 90 ahead, 1 behind |
 | Other worktrees | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
 | Local server | http://localhost:3017 (`bun run dev --port 3017`, restarted 2026-11-02 night; it served a stale server module); `/`, `/clients`, `/community` 200, serving `1adb327` plus the uncommitted November 2 work |
@@ -435,6 +485,19 @@ iteration. Promoting iteration 04 to production still needs approval.
   - Measure future comparisons at those scales.
 
 ### Deployed review
+
+**2026-11-02 23:38 -0300, preview only (latest):** commit `04da57f` (November 2 iteration) as a Vercel
+**Preview** deployment of `raidguild-venture-beyond-review`: `dpl_HvV74WQ9m3QJ2CmCTNJ61VrRJVYP`,
+https://raidguild-venture-beyond-review-pwdo8qke8.vercel.app (needs a Vercel login; review flags on, as on every
+preview). From a clean `git archive 04da57f` (`~/Projects/raidguild-backups/2026-11-02/deploy-04da57f`, plus the
+review project's `.vercel/project.json`; no `.env*`), Vercel CLI 65.8.0 (npx cache). The verified twin
+(`verify-04da57f`) passed `bun install --frozen-lockfile`, tsc, tests 88/88, lint 0 errors and
+`SHOW_REVIEW_FLAGS=false bun run build`. Checked through `vercel curl`: `/clients` and `/community` 200 with the
+galleries, FAQ and Last Duel files. **The review alias (https://raidguild-venture-beyond-review.vercel.app) was not
+changed** (owner: preview only); it still serves the October release. Hosting the Last Duel files on the preview
+follows the owner's decision of 2026-11-02 (open question 64). Note: `deploy-04da57f.log` in that folder.
+
+Earlier (October 28 release):
 
 Source: `~/Projects/raidguild-backups/2026-10-28/DEPLOY-vercel-review-2bf270d.md`, which
 follows the procedure in `DEPLOY-vercel-review-da9165b.md` (same folder).

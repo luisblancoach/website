@@ -401,3 +401,20 @@ describe("November 2 galleries and FAQs", () => {
     for (const item of communityFaq.items) assert.notEqual(item.answer.source, "draft", item.question.text);
   });
 });
+
+describe("November 3 community restructure", () => {
+  test("/community has its own capability gallery: the same six capabilities, builder framing, no client inquiry", () => {
+    const { communityCapabilities } = communityNarrative;
+    const { clientsServiceGallery } = clientsNarrative;
+    assert.equal(communityCapabilities.cards.length, clientsServiceGallery.cards.length);
+    assert.deepEqual(communityCapabilities.cards.map((card) => card.image.src), clientsServiceGallery.cards.map((card) => card.image.src));
+    const copy = collectCopy(communityCapabilities).map((item) => item.text).join(" ");
+    assert.doesNotMatch(copy, /inquiry|discuss your project|build for you/i);
+    assert.equal(communityCapabilities.cta.section, "guild");
+    for (const card of communityCapabilities.cards) {
+      assert.ok(card.link, card.title.lead.text);
+      assert.notEqual(card.title.lead.status, "approved", card.title.lead.text);
+    }
+  });
+});
+

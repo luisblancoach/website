@@ -202,7 +202,8 @@ export const clientsInquiry: InquiryContent = defineNarrative("clients.inquiry",
 
 export const clientsNav: NavContent = defineNarrative("clients.nav", {
   items: [
-    { label: oct23("Previous works"), section: "case-studies" },
+    // "Previous works" shortened to "Works" at the owner's request (November 3).
+    { label: approved("Works", "owner-approval"), section: "case-studies" },
     { label: oct23("Services"), section: "capabilities" },
     { label: oct23("Builders"), section: "team" },
   ],

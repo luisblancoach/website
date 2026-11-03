@@ -8,22 +8,21 @@ import JoinCTA from "@/components/venture/sections/JoinCTA";
 import ImmersiveFeature from "@/components/venture/sections/ImmersiveFeature";
 import HatsTree from "@/components/venture/sections/HatsTree";
 import FeatureGallery from "@/components/venture/sections/FeatureGallery";
+import MemberBenefits from "@/components/venture/sections/MemberBenefits";
 import Faq from "@/components/venture/sections/Faq";
 import Creed from "@/components/venture/sections/Creed";
 import {
-  communityActivity, communityBenefits, communityCreed, communityFaq, communityGuild, communityHats, communityHero, communityJoin, communityMoloch,
-  communityRaidaFeature,
+  communityActivity, communityBenefits, communityCapabilities, communityCreed, communityFaq, communityGuild, communityHats, communityHero, communityJoin,
+  communityMoloch, communityRaidaFeature,
 } from "@/lib/narrative/community";
-import { clientsCapabilities, clientsServiceGallery } from "@/lib/narrative/clients";
 import { buildersCommunity } from "@/lib/narrative/shared";
-import type { FeatureGalleryContent } from "@/lib/narrative/types";
 import { crewHorizontal, molochArtwork, queenRaidaArtwork } from "@/lib/data/illustrations";
 import { forAudience } from "@/lib/narrative/public";
 
 // Join the DAO architecture (October 29, final pass; November 2, owner order):
-// hero → ideas into working systems (services gallery) → About RaidGuild →
-// Queen Raida → About Moloch → Projects & Experiments → builders → Hats Tree →
-// member FAQ → join → member benefits gallery → creed. The hero uses the same curtain
+// hero → ideas into working systems (capability gallery, builder side) →
+// About RaidGuild → Queen Raida → About Moloch → Projects & Experiments →
+// builders → Hats Tree → member FAQ → join → member benefits → creed. The hero uses the same curtain
 // as /clients. Tae's tension, path and activity chapters
 // (Phase 2) return in the editorial batch. Unconfirmed claims are flagged in
 // review builds; keep the route out of search until they are resolved.
@@ -45,26 +44,16 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-// "Ideas into working systems" (November 2): the October 23 capabilities
-// heading, intro, inquiry and footnote over the shared service cards, in the
-// feature gallery that replaces the services accordion. The two practice cards
-// (Onchain, Applied AI) carry the links of the former practices disclosure.
-const capabilities = forAudience(clientsCapabilities);
-const ideas: FeatureGalleryContent = {
-  ...forAudience(clientsServiceGallery),
-  label: capabilities.label,
-  title: capabilities.title,
-  intro: capabilities.intro,
-  cta: capabilities.inquiry,
-  footnote: capabilities.footnote,
-};
+// November 3: /community has its own capability gallery (the same six
+// capabilities, framed for builders, with community links and no inquiry) and
+// a separate, compact member-benefits module; /clients keeps the client view.
 
 export default function CommunityPage() {
   return (
     <>
       <Hero content={forAudience(communityHero)} grouped curtain still />
       <GuildTicker />
-      <FeatureGallery id="spears" anchors={["services", "capabilities"]} content={ideas} tone="services" />
+      <FeatureGallery id="spears" anchors={["services", "capabilities"]} content={forAudience(communityCapabilities)} tone="services" />
       <GuildPrologue content={forAudience(communityGuild)} metrics={false} kitExpander />
       <ImmersiveFeature id="raida" content={forAudience(communityRaidaFeature)} artwork={queenRaidaArtwork} tone="raida" />
       <ImmersiveFeature id="moloch" content={forAudience(communityMoloch)} artwork={molochArtwork} tone="moloch" />
@@ -73,7 +62,7 @@ export default function CommunityPage() {
       <HatsTree content={forAudience(communityHats)} />
       <Faq id="faq" content={forAudience(communityFaq)} />
       <JoinCTA content={forAudience(communityJoin)} />
-      <FeatureGallery id="benefits" content={forAudience(communityBenefits)} tone="benefits" />
+      <MemberBenefits id="benefits" content={forAudience(communityBenefits)} />
       <Creed content={forAudience(communityCreed)} />
     </>
   );

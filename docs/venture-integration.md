@@ -702,3 +702,16 @@ November 2, 2026 — Galleries and FAQ (uncommitted):
 - Buyer FAQ before the /clients inquiry; member FAQ before the /community Join module, built only from
   existing community copy. Unknown values in the buyer answers are visible placeholders, not facts.
 - New copy (card labels, titles, benefit bodies, FAQ questions, gallery headings) is flagged for approval.
+
+November 3, 2026 — Hero layer seam and nav label (uncommitted):
+- Every hero scene layer ends at the same bottom edge, under the solid part of the floor, so no layer edge is
+  visible in the fade; the curtain foreground keeps its top edge, scale and framing (cropped, never stretched).
+- /clients navigation reads "Works" instead of "Previous works" (owner request); the section heading is unchanged.
+
+November 3, 2026 — /community restructure (uncommitted):
+- /clients and /community share the gallery system but not its content. /community's capability gallery shows
+  the same six capabilities from the builder side (where members raid, learn and help shape the work), with
+  community links and an "Explore the Guild" action; no inquiry.
+- Member benefits are a separate module with its own compact layout (numbered cards with small art, two
+  columns from 700 px, stacked on phones), answering why a builder would join; it is not a second gallery row.
+

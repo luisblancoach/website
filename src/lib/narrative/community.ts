@@ -1,5 +1,6 @@
 import { DISCORD_INVITE_URL, PORTAL_JOIN_URL } from "../data/constants";
 import { HATS_TREE_URL } from "../data/hats";
+import { activeSpears } from "../data/venture";
 import {
   approved, claim, defineNarrative, oct23, wording,
   type ActivityContent, type Copy, type CreedContent, type FaqContent, type FeatureGalleryContent, type GuildContent, type HeroContent, type JoinContent, type NavContent, type PathContent,
@@ -363,7 +364,9 @@ const benefitNote = "Member benefit from the November 2 brief; draft wording. Co
 const benefit = (text: string, note = benefitNote) => claim(text, "draft", note);
 export const communityBenefits: FeatureGalleryContent = defineNarrative("community.benefits", {
   label: wording("[ Membership ]"),
-  title: { lead: wording("What you can access", "Framing from the November 2 brief. Confirm as the heading."), em: wording("as a member", "Framing from the November 2 brief. Confirm as the heading.") },
+  // November 3: the heading says why to join (the module explains the reason
+  // to become a member; the capability gallery above covers the work itself).
+  title: { lead: wording("Why builders", "Benefits heading (November 3 restructure). Confirm."), em: wording("join the Guild", "Benefits heading (November 3 restructure). Confirm.") },
   intro: wording("Ways to learn, build and fund work with other members once you are in the Guild."),
   cards: [
     { label: wording("Learn and earn"), title: { lead: benefit("Cohorts, bounties"), em: benefit("and raids") }, body: benefit("Start in a cohort with other newcomers, then take on bounties and join raids alongside Guild members."), image: { src: "/images/neo/hero-landmarks-v1.png", width: 1919, height: 820 } },
@@ -391,8 +394,87 @@ export const communityFaq: FaqContent = defineNarrative("community.faq", {
   ],
 } satisfies FaqContent);
 
+// Services & capabilities, seen from the community side (November 3). The
+// same six capabilities and art as the /clients gallery, reframed for builders
+// and prospective members: where they raid, learn, contribute or help shape
+// the work. No client language and no inquiry. Bodies reuse copy already
+// published on this page or in the practices data (flags carry over); the two
+// new bodies are drafts built only from those sources and stay flagged. Titles,
+// labels, link labels and the intro are new wording for review. Links go to the
+// handbook, the practices, Portal field notes and this page's own sections.
+const capabilityNote = "Builder-side capability title (November 3 restructure); new wording. Confirm.";
+const capability = (lead: string, em: string) => ({ lead: wording(lead, capabilityNote), em: wording(em, capabilityNote) });
+const practice = (title: string) => {
+  const record = activeSpears.find((item) => item.title === title);
+  if (!record) throw new Error(`Unknown practice: ${title}`);
+  return record;
+};
+const onchainPractice = practice("Onchain Systems");
+const aiPractice = practice("Applied AI");
+const practiceNote = "Practice copy from lib/data/venture.ts, as published on the practices. Confirm the wording with the practice.";
+export const communityCapabilities: FeatureGalleryContent = defineNarrative("community.capabilities", {
+  label: oct23("[ Services & capabilities ]"),
+  title: { lead: oct23("Ideas into"), em: oct23("working systems") },
+  intro: wording("What the Guild builds, and where you come in: raid on real projects, learn from the practices, and help shape how the Guild works.", "Builder-side intro (November 3 restructure); new wording. Confirm."),
+  cards: [
+    {
+      label: wording("Engineering"),
+      title: capability("Ship on", "real raids"),
+      body: again(communityPath.steps[1].body),
+      image: { src: "/images/neo/project-ship-schematic-v1.webp", width: 2160, height: 912 },
+      link: { label: wording("How raids work"), href: `${HB}raids/intro-to-raiding` },
+    },
+    {
+      label: wording("Onchain"),
+      title: capability("The onchain", "practice"),
+      body: claim(onchainPractice.copy, "existing-site", practiceNote),
+      image: { src: onchainPractice.art, width: 1024, height: 768, fit: "contain" },
+      link: { label: existing(onchainPractice.cta), href: onchainPractice.href, destination: claim("Railway production URL", "existing-site", "The practice link points to a railway.app deployment. Confirm the public URL.") },
+    },
+    {
+      label: wording("Applied AI"),
+      title: capability("The applied AI", "practice"),
+      body: claim(aiPractice.copy, "existing-site", practiceNote),
+      image: { src: aiPractice.art, width: 1024, height: 768, fit: "contain" },
+      link: { label: existing(aiPractice.cta), href: aiPractice.href },
+    },
+    {
+      label: wording("Design"),
+      title: capability("Make it", "understandable"),
+      body: claim(
+        "Making complex technology understandable and usable, on raids, on internal Guild projects and in members’ own experiments.",
+        "draft",
+        "Draft (November 3): the design pillar line from /clients plus where members work (handbook: apprentices work on raids and internal guild projects; the Projects section shows members’ experiments). Confirm.",
+      ),
+      image: { src: "/images/neo/guild-builders-v1.png", width: 768, height: 1024, fit: "contain" },
+      link: { label: wording("See members’ experiments"), section: "work" },
+    },
+    {
+      label: wording("Growth"),
+      title: capability("Carry the", "Guild’s voice"),
+      body: again(communityStewardship.intro),
+      image: { src: "/images/neo/field-signal-commons.png", width: 1122, height: 1402 },
+      link: { label: wording("Read the field notes"), href: "https://portal.raidguild.org/posts" },
+    },
+    {
+      label: wording("Coordination"),
+      title: capability("Shape how", "the Guild runs"),
+      body: claim(
+        "Members sponsor and vote on proposals, and stewards take on the roles in the Hats Tree that keep the Guild moving.",
+        "handbook",
+        "Draft (November 3) built from the Guild module (members sponsor and vote on proposals) and the Hats Tree copy (stewards). Confirm.",
+        `${HB}dao-operations/`,
+      ),
+      image: { src: "/images/neo/field-autonomous-treasury.png", width: 1003, height: 1568 },
+      link: { label: wording("How the DAO works"), href: `${HB}dao-operations/` },
+    },
+  ],
+  cta: { label: existing("Explore the Guild"), section: "guild" },
+  footnote: { lead: wording("Not sure where you fit?"), link: { label: oct23("Ask our AI CTO"), href: "/chat" } },
+} satisfies FeatureGalleryContent);
+
 export const communityNarrative = {
   communityHero, communityTension, communityPath, communityGuild, communityActivity, communityJoin,
   communityQueenRaida, communityStewardship, communityNav, communityCreed,
-  communityRaidaFeature, communityMoloch, communityHats, communityBenefits, communityFaq,
+  communityRaidaFeature, communityMoloch, communityHats, communityBenefits, communityFaq, communityCapabilities,
 };
