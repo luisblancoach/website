@@ -206,8 +206,10 @@ export const communityActivity: ActivityContent = defineNarrative("community.act
   // October 29: heading and description from the owner (they replace the brand
   // steward's B3.4 lines). The section keeps its #work / #gallery anchors.
   collection: {
-    label: existing("[ EXPLORE ]"),
-    title: { lead: owner("What happens when builders"), em: owner("follow their curiosity.") },
+    // November 3 (owner): the Explore / "Follow your curiosity" module was replaced by the project explorer; its
+    // title went with it. "Projects and experiments" is the section name of the B3.4 rename (the nav's "Projects").
+    label: wording("[ PROJECTS ]"),
+    title: { lead: wording("Projects and", "Section name after the B3.4 rename (Projects and Experiments). Confirm as the heading."), em: wording("experiments", "Section name after the B3.4 rename. Confirm as the heading.") },
     intro: owner("Games, tools, digital experiences, and field notes from Guild members. Explore what they made, how they approached it, and what they learned."),
   },
 } satisfies ActivityContent);
@@ -421,7 +423,7 @@ export const communityCapabilities: FeatureGalleryContent = defineNarrative("com
       label: wording("Engineering"),
       title: capability("Ship on", "real raids"),
       body: again(communityPath.steps[1].body),
-      image: { src: "/images/neo/project-ship-schematic-v1.webp", width: 2160, height: 912 },
+      image: { src: "/images/neo/spear-edge-problem-v1.webp", width: 1024, height: 768, fit: "contain" },
       link: { label: wording("How raids work"), href: `${HB}raids/intro-to-raiding` },
     },
     {

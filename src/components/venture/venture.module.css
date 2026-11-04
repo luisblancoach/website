@@ -2787,10 +2787,10 @@
    bone panel, cream on the navy one). Hover and pressed tint the surface with
    the label colour (9% / 16%), as the chips; label, edge and glyph never
    change. Secondaries over artwork (the heroes, Moloch) keep the opaque fill. */
-.site[data-cta="semantic"] :is(.prologue, .contact) .pillOutline { background: transparent; }
-.site[data-cta="semantic"] :is(.prologue, .contact) .pillOutline .pillIcon { background: transparent; border-color: var(--cta-secondary-edge); color: var(--cta-secondary-fg); }
-@media (hover: hover) { .site[data-cta="semantic"] :is(.prologue, .contact) .pillOutline:not([aria-disabled="true"]):hover { background: var(--cta-chip-hover-bg); } }
-.site[data-cta="semantic"] :is(.prologue, .contact) .pillOutline:not([aria-disabled="true"]):active { background: var(--cta-chip-active-bg); }
+.site[data-cta="semantic"] :is(.prologue, .contact, .fieldNotes) .pillOutline { background: transparent; }
+.site[data-cta="semantic"] :is(.prologue, .contact, .fieldNotes) .pillOutline .pillIcon { background: transparent; border-color: var(--cta-secondary-edge); color: var(--cta-secondary-fg); }
+@media (hover: hover) { .site[data-cta="semantic"] :is(.prologue, .contact, .fieldNotes) .pillOutline:not([aria-disabled="true"]):hover { background: var(--cta-chip-hover-bg); } }
+.site[data-cta="semantic"] :is(.prologue, .contact, .fieldNotes) .pillOutline:not([aria-disabled="true"]):active { background: var(--cta-chip-active-bg); }
 .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child) { background: transparent !important; }
 @media (hover: hover) { .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child):hover:not(:disabled) { background: var(--cta-chip-hover-bg) !important; } }
 .site .contactCyan .contactFormShell :global(.hire-us-wizard) > div:has(> :global(.contact-btn-active)) > :global(.contact-btn-active):not(:last-child):active:not(:disabled) { background: var(--cta-chip-active-bg) !important; }
@@ -3239,3 +3239,252 @@
     object-position: 48% clamp(var(--fg-h) - max(var(--fg-cut), var(--fg-h)), .58 * (var(--fg-h0) - max(var(--fg-cut), var(--fg-h0))), 0px);
   }
 }
+
+/* ── November 3 Figma pass: hero (/clients and /community, both themes) ─────
+   Source: the owner's edit of the Figma pilot "Clients / Light / 1440×900"
+   (file PSwz2c6DpIpSr5pkcdO2u2), generalized to every width.
+   - Title: the second line takes the accent colour, as in every two-level
+     heading on the page (Day and Night); the first line, the dek, the marker
+     and the scroll cue keep the Light UI dark green in Day.
+   - From 1000 px the copy column starts at 10% (143 px at 1440, still clear of
+     the vertical scroll cue) and ends on the page's content edge
+     (--page-inline), like the modules below it.
+   - Dek: up to 600 px, two lines at 1440 instead of three (the first line,
+     with its bold run, is 586 px at 20 px, so the actions keep a 24 px gap).
+   - From 1360 px the dek and the actions share one row: the dek on the left,
+     the actions pushed to the content edge, centred on the dek. The floor
+     keeps the line the dek gave up (80 → 106 px below it), so the title stays
+     where it was (567 px at 1440 × 900, as on the artboard).
+   - TRANSMISSION 001 ends on the same content edge.
+   - Action labels never wrap, here and in every pill on the two routes
+     (phones already give them the full column). */
+:global(html) .site.site[data-audience] .hero h1 > em { color: var(--coral) !important; }
+:global(html) .site.site[data-audience] .pill > span { white-space: nowrap; }
+@media (min-width: 1000px) {
+  :global(html) .site.site[data-audience] .heroCopy { padding-left: max(var(--page-inline), 10%); }
+  :global(html) .site.site[data-audience] .heroDek { max-width: 600px; }
+  :global(html) .site.site[data-audience] .heroIndex { left: auto; right: var(--page-inline); }
+}
+@media (min-width: 1360px) {
+  :global(html) .site.site[data-audience] .hero { --hero-floor-pad: 106px; }
+  :global(html) .site.site[data-audience] .heroSupplement { column-gap: 24px; grid-template-columns: minmax(0, 600px) auto; justify-content: space-between; }
+}
+
+/* ── November 3 Figma pass: module spacing (from 761 px; phones keep the
+   approved composition). The owner's artboard closes the gaps between modules
+   by about 35 px at 1440 without changing the system's proportions:
+   - Previous works and the FAQ start at 0.7 × --section-space (80 px at 1440).
+   - The builder network starts at 0.18 × (its art now sits beside the title,
+     so the art's own whitespace is the top margin), and the wall and the
+     people module below it close to 0.33 × each (38 px).
+   Modules keep their minimum heights, so content stays anchored to the top. */
+@media (min-width: 761px) {
+  .site[data-audience] main > :is(:global(#case-studies), :global(#faq)) { padding-top: calc(var(--section-space) * .7); }
+  .site[data-audience] main > :global(#team) { padding-bottom: calc(var(--section-space) * .33); padding-top: calc(var(--section-space) * .18); }
+  .site[data-audience] main > :global(#team) + :is(:global(#stewards), :global(#hats)) { padding-top: calc(var(--section-space) * .33); }
+}
+
+/* ── Light UI dark contrast (November 3, owner): in Day every dark contrast
+   element is the RaidGuild dark green (--color-dark-green, #102D2C), the
+   colour of the Light typography, never the navy family (#12163B, #191E4E,
+   #303675) that belongs to Night. /clients and /community only ([data-audience];
+   "/" keeps its own palette). Night is untouched: these rules are scoped
+   to html:not([data-theme="dark"]) and its own tokens keep the navy.
+   - CTAs: the edge, the icon disc and the secondary label and edge, in every
+     state (hover, pressed and focus already reuse these tokens; the focus
+     ring was already dark green). The primary label stays the green-black ink
+     (--cta-fg #071C1D) because dark green on coral is 3.9:1, under the 4.5:1
+     the label needs.
+   - The Hire/Join and Day/Night switches, the builder tabs and the form
+     controls take the CTA edge, so they follow.
+   - Text that was set in navy in Day: the Guild prologue (/community), roster
+     and narrative headings, the navy outline pill.
+   - Builder and steward cards: the resting edge shadow and the selected edge,
+     name and mark.
+   - The creed's legibility scrim, and the phone hero floor (≤ 760 px; the
+     floor turns cream from 761 px), become dark green.
+   Coral surfaces (Moloch) use the existing on-pink ink (#071C1D, 4.7:1)
+   for the same contrast reason as the primary label. */
+:global(html:not([data-theme="dark"])) .site[data-audience] {
+  --cta-border: var(--color-dark-green);
+  --cta-icon-bg: var(--color-dark-green);
+  --cta-secondary-fg: var(--color-dark-green);
+  --cta-secondary-edge: var(--color-dark-green);
+}
+:global(html:not([data-theme="dark"])) .site[data-audience] :is(.prologue h2, .prologueCopy, .rosterHeading h3, .teamCopy h3, .narrativeHeading h2) { color: var(--color-dark-green); }
+:global(html:not([data-theme="dark"])) .site[data-audience] .pillOutlineNavy { border-color: var(--color-dark-green); color: var(--color-dark-green); }
+:global(html:not([data-theme="dark"])) .site[data-audience] :is(.teamNetwork :is(.memberRail > a, a.memberTile), .keepers .stewardCard) {
+  --card-edge: rgba(16, 45, 44, .18); --card-sel-edge: var(--color-dark-green); --card-sel-name: var(--color-dark-green); --card-sel-mark: var(--color-dark-green);
+}
+@media (min-width: 761px) {
+  :global(html:not([data-theme="dark"])) .site.site[data-audience] .creed::before { background: radial-gradient(ellipse 80% 42% at 50% 50%, rgba(16, 45, 44, .5), rgba(16, 45, 44, .22) 60%, rgba(16, 45, 44, 0) 100%); }
+}
+@media (max-width: 760px) {
+  :global(html:not([data-theme="dark"])) .site.site[data-audience] .hero { --hero-floor: #102d2c; --hero-floor-clear: rgba(16, 45, 44, 0); --hero-glow: rgba(184, 224, 223, .14); --hero-glow-clear: rgba(184, 224, 223, 0); }
+}
+
+/* ── November 3 Figma pass, second round (owner):
+   - "OUR CLIENTS" alone takes the artboard's larger second line, 1.19 × the
+     shared --head-bottom (44 px at 1440), capped on phones so it stays on
+     one line; every other section keeps the shared scale.
+   - The FAQ head sits close to the module's top (0.4 × --section-space,
+     46 px at 1440, from 761 px), as on the artboard. */
+:global(html) .site.site[data-audience] main > :global(#case-studies) h2 > em { font-size: min(calc(var(--head-bottom) * 1.19), (100vw - 48px) / 10.4) !important; }
+@media (min-width: 761px) {
+  .site[data-audience] main > :global(#faq) { padding-top: calc(var(--section-space) * .4); }
+}
+
+/* ── November 3, widows and Moloch (owner), /clients and /community ─────────
+   - /community hero: "BUILD SOMETHING TOGETHER." is the second line, all of
+     it in the second line's style (extended italic, coral), on one line. It
+     is 22.8 em of its own size, 1.4 × the first line's, so from 761 px the
+     title is sized to the copy column (a container; 32.6 × the first line
+     fills it). From 1300 px TRANSMISSION 001 stands beside the title, so the
+     line leaves it 260 px: second line 53 px at 1920, about 41 px at 1440,
+     37 px at 1024, 29 px at 768. Phones break before "TOGETHER." (one line
+     would need a 15 px second line under an 11 px first; the break is hidden
+     from 761 px), sized so "BUILD SOMETHING" fits the column (about 25 px,
+     the first line 18 px).
+   - Inquiry: from 761 to 1359 px the panel column widens (480 px at 768,
+     about 560 at 1024, at most 584), so the description stays on one line
+     from a 420 px column (14–16 px; it was 460 px) and the stepper fits.
+   - Stepper: titles never wrap. Columns take their content's width plus an
+     equal share of the rest; under a 400 px form (phones; the form shell is
+     the container) the number sits above its title so the three titles
+     still fit on one row.
+   - Section labels in the panel ("[ BEGIN A TRANSMISSION ]") stay on one line.
+   - MOLOCH: 1.5 × its size (37 → 55.5 px from 761 px; 36 → 52 px on phones,
+     capped to the column), so it holds its own beside Queen Raida's
+     title. "TOGETHER WE SLAY" keeps its size; the pair stays a two-level
+     heading. */
+@media (min-width: 761px) {
+  :global(html) .site.site[data-audience="community"] .heroCopy { container-type: inline-size; }
+  :global(html) .site.site[data-audience="community"] .hero .heroTitleStacked h1 { --hero-top: min(38px, 100cqi / 32.6); }
+}
+@media (min-width: 1300px) {
+  :global(html) .site.site[data-audience="community"] .hero .heroTitleStacked h1 { --hero-top: min(38px, (100cqi - 260px) / 32.6); }
+}
+@media (max-width: 760px) {
+  :global(html) .site.site[data-audience="community"] .hero .heroTitleStacked h1 { --hero-top: min(38px, (100vw - 48px) / 19.8); }
+}
+@media (min-width: 761px) and (max-width: 1359px) {
+  .site[data-audience] .contact:not(.joinContact) { grid-template-columns: minmax(0, 1fr) clamp(480px, 55vw, 584px); }
+}
+@container (min-width: 420px) {
+  .site[data-audience] .contact:not(.joinContact) .contactCopy .contactDek { font-size: min(16px, 100cqi / 30.8); max-width: none; white-space: nowrap; }
+}
+.site[data-audience] .contact .contactCopy .sectionLabel { white-space: nowrap; }
+.site[data-audience] .contactFormShell { container-type: inline-size; }
+/* The stepper sets equal columns inline (ui/wizard.tsx), hence !important. */
+.site[data-audience] .contactFormShell :global(.wizard-stepper) ol { grid-auto-columns: auto; grid-auto-flow: column; grid-template-columns: none !important; }
+.site[data-audience] .contactFormShell :global(.wizard-step-title) { white-space: nowrap; }
+@container (max-width: 399px) {
+  .site[data-audience] .contactFormShell :global(.wizard-stepper) li { align-items: flex-start; flex-direction: column; gap: 6px; }
+}
+:global(html) .site.site[data-audience] :global(#moloch) h2 > em { font-size: min(calc(var(--head-bottom) * 1.5), (100vw - 48px) / 6.7) !important; line-height: 1 !important; }
+@media (max-width: 760px) { :global(html) .site.site[data-audience] :global(#moloch) h2 > em { font-size: min(52px, (100vw - 48px) / 6.7) !important; } }
+/* The phone-only break before "TOGETHER." (Hero.tsx). */
+@media (min-width: 761px) { .heroTitleBreak { display: none; } }
+/* Widows (audience routes, both themes, every width): the line breaker avoids a single word alone on the last line
+   of any paragraph, heading, card or button label. Inherited; rules that set their own text-wrap or nowrap keep it. */
+.site[data-audience] { text-wrap-style: pretty; }
+/* Headings break into even lines: the pretty breaker skips two-level headings (a <br> and an inline-block <em>),
+   which left "TOGETHER WE / SLAY", "A SCRIBE FOR THE / GUILD." and "QUESTIONS BEFORE YOU / JOIN" at some widths.
+   Balance never adds a line; one-line and nowrap headings are unchanged. */
+.site[data-audience] main :is(h1, h2, h3, h4),
+.site[data-audience] main :is(h1, h2, h3, h4) > :is(em, span) { text-wrap-style: balance; }
+/* Selector controls (November 3, owner: the selected pill felt too heavy). On the audience routes the Hire / Join
+   switch and the Day / Night switch mark the current option with a thin outline on the control's own surface,
+   instead of a filled pink pill; the outline is the Moloch magenta (--coral) in both themes (owner, same night). The current label is full ink, the
+   other one muted (still ≥ 4.5:1); the current theme's icon is coral. Hover, focus ring, aria-current / aria-pressed
+   and the phone toggle's behaviour are unchanged; the phone toggle's knob becomes the same outlined ring. */
+.site[data-audience] .topBar { --switch-ink: var(--color-dark-green); --switch-muted: color-mix(in srgb, var(--color-dark-green) 70%, var(--paper)); --switch-edge-width: 1.5px; }
+:global(html[data-theme="dark"]) .site[data-audience] .topBar { --switch-ink: var(--color-cream); --switch-muted: color-mix(in srgb, var(--color-cream) 72%, var(--color-navy)); }
+:global(html) .site.site[data-audience] .topBar :is(.audienceSwitch a, .themeSwitch button) { border-width: var(--switch-edge-width); color: var(--switch-muted); }
+:global(html) .site.site[data-audience] .topBar :is(.audienceSwitch a[aria-current="page"], .themeSwitch button[aria-pressed="true"]) { background: transparent; border-color: var(--coral); color: var(--switch-ink); }
+:global(html) .site.site[data-audience] .topBar .themeSwitch button[aria-pressed="true"] i { color: var(--coral); }
+@media (max-width: 699px) {
+  :global(html) .site.site[data-audience] .topBar .themeToggle { color: var(--switch-muted); }
+  :global(html) .site.site[data-audience] .topBar .themeToggle::before { background: transparent; border: var(--switch-edge-width) solid var(--coral); }
+  :global(html) .site.site[data-audience] .topBar .themeToggle[aria-checked="false"] i:first-child,
+  :global(html) .site.site[data-audience] .topBar .themeToggle[aria-checked="true"] i:last-child { color: var(--coral); }
+}
+
+/* /community hero (November 3, owner): "FIND YOUR PEOPLE." larger, 1 / 1.15 of "BUILD SOMETHING TOGETHER." (was
+   1 / 1.4); the second line keeps its fitted size. Phones cap the first line to the column (17 characters). */
+:global(html) .site.site[data-audience="community"] .hero .heroTitleStacked h1 > span { font-size: calc(var(--hero-top) * 1.4 / 1.15) !important; }
+@media (max-width: 760px) {
+  :global(html) .site.site[data-audience="community"] .hero .heroTitleStacked h1 > span { font-size: min(calc(var(--hero-top) * 1.4 / 1.15), (100vw - 48px) / 17.6) !important; }
+}
+
+/* Builder names (November 3, owner; settles open question 65): Last Duel Bold, upright (LastDuel-BoldEx2; first
+   Regular, then Bold at the owner's request), instead of the Oblique, on both audience routes (the masonry rail on /community, the tiles on /clients). */
+:global(html) .site.site[data-audience] .teamNetwork :is(.memberRail > a, a.memberTile) strong { font-family: var(--font-display), sans-serif !important; font-style: normal !important; font-synthesis: none; font-weight: 700 !important; }
+
+/* Explore (/community, Day; November 3, owner): the dark-green module, swapping surfaces with the Hats tree (now
+   sky). Night is unchanged (navy raised). Cream ink, the Night-style card tokens on dark green
+   (ArtifactGallery.module.css), and the secondary CTA in cream so "Explore all" keeps its edge. */
+:global(html:not([data-theme="dark"])) .site[data-audience="community"] :global(#work) {
+  --cta-secondary-bg: var(--color-dark-green); --cta-secondary-hover-bg: #173b39; --cta-secondary-active-bg: #1d4644;
+  --cta-secondary-fg: var(--color-cream); --cta-secondary-edge: var(--color-cream);
+  --cta-focus-ring: var(--color-cream); --cta-focus-halo: var(--color-dark-green);
+  background-color: var(--color-dark-green); background-image: radial-gradient(circle at 14% 78%, rgba(184,224,223,.075) 0 1px, transparent 1.5px); color: var(--color-cream);
+}
+:global(html:not([data-theme="dark"])) .site[data-audience="community"] :global(#work)::before { background: repeating-linear-gradient(90deg, transparent 0, transparent calc(25% - 1px), rgba(184,224,223,.075) 25%); }
+:global(html:not([data-theme="dark"])) .site[data-audience="community"] :global(#work)::after { border-color: rgba(184,224,223,.16); }
+:global(html:not([data-theme="dark"])) .site.site[data-audience="community"] :global(#work) .collectionHeading h2 { color: var(--color-cream); }
+:global(html:not([data-theme="dark"])) .site.site[data-audience="community"] :global(#work) .collectionHeading h2 em { color: var(--coral); }
+
+/* Builder and steward cards (November 3, owner): light at rest (#F9F7E7 in Day), and when hovered or focused they
+   turn sky (#B8E0DF) with a 3 px Moloch magenta edge. Night keeps its card surfaces and takes the magenta edge too.
+   Name, profession and mark keep their selected colours (dark green name on sky 10.6:1). */
+:global(html:not([data-theme="dark"])) .site.site[data-audience] :is(.teamNetwork :is(.memberRail > a, a.memberTile), .keepers .stewardCard) { --card-bg: #f9f7e7; --card-sel-bg: var(--color-cyan); --card-sel-edge: var(--coral); }
+:global(html[data-theme="dark"]) .site.site[data-audience] :is(.teamNetwork :is(.memberRail > a, a.memberTile), .keepers .stewardCard) { --card-sel-edge: var(--coral); }
+
+/* UI icons (November 3, owner): the Day / Night icons are 20 px (were 16) in the top bar and in the phone toggle;
+   the toggle's icon boxes keep their 36 × 44 px size, so the knob still lands on each icon. */
+:global(html) .site.site[data-audience] .topBar :is(.iconSun, .iconMoon) { height: 20px; width: 20px; }
+@media (max-width: 699px) {
+  :global(html) .site.site[data-audience] .topBar .themeToggle i { padding: 12px 4px; }
+  :global(html) .site.site[data-audience] .topBar .themeToggle i:first-child { padding-left: 12px; }
+  :global(html) .site.site[data-audience] .topBar .themeToggle i:last-child { padding-right: 12px; }
+}
+
+/* Builder wall (November 3, owner): more coral under the last row (+32 px; +24 px on phones), and on /community,
+   where Explore follows, the wall runs edge to edge with square corners straight into it: no cream strip between
+   the two planes. /clients keeps its rounded plane on wide screens and the cream space before the stewards. */
+:global(html) .site.site[data-audience] .teamNetwork .teamWall:is(:has(.memberMasonry), :has(.memberGridFrame)) { --wall-extra: 32px; height: calc(var(--wall-h) + 2 * var(--wall-gap) + var(--wall-extra)); padding-bottom: calc(var(--wall-gap) + var(--wall-extra)); }
+@media (max-width: 760px) { :global(html) .site.site[data-audience] .teamNetwork .teamWall:is(:has(.memberMasonry), :has(.memberGridFrame)) { --wall-extra: 24px; } }
+:global(html) .site.site[data-audience] main > :global(#team):has(+ :global(#work)) { min-height: 0; padding-bottom: 0 !important; }
+/* (min-height: an earlier one-screen rule held the section at 960 px, leaving 33–81 px of cream under the wall.) */
+:global(html) .site.site[data-audience] main > :global(#team):has(+ :global(#work)) .teamWall { border-radius: 0; margin-inline: calc(50% - 50vw); width: 100vw; }
+
+/* Steward cards (November 3, owner): names as the builder cards (Last Duel Bold, upright), and the portrait turns
+   over to the hat the steward wears (lib/data/hats.ts, by role) on hover and keyboard focus; crossfade with
+   reduced motion. The hat face is decorative; the card's accessible name is unchanged. */
+:global(html) .site.site[data-audience] .keepers.keepers .stewardCard { container-type: inline-size; }
+/* One fitted size for the five names: the longest, "ECWireless", is 7.76 em in Last Duel Bold Extended. */
+:global(html) .site.site[data-audience] .keepers.keepers .stewardCard h4 { font-family: var(--font-display), sans-serif !important; font-size: min(24px, (100cqi - 8px) / 7.8) !important; font-style: normal !important; font-synthesis: none; font-weight: 700 !important; white-space: nowrap; }
+:global(html) .site[data-audience] .keepers .stewardPortrait.stewardFlips { overflow: visible; perspective: 700px; }
+.portraitFaces { display: block; inset: 0; position: absolute; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.2, .7, .2, 1); }
+.portraitFace { backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 50%; display: block; inset: 0; overflow: hidden; position: absolute; }
+.portraitBack { background: var(--color-cyan); transform: rotateY(180deg); }
+.stewardCard:is(:hover, :focus-visible) .stewardFlips .portraitFaces { transform: rotateY(180deg); }
+@media (prefers-reduced-motion: reduce) {
+  .portraitFaces, .stewardCard:is(:hover, :focus-visible) .stewardFlips .portraitFaces { transform: none; transition: none; }
+  .portraitFace { transition: opacity .15s linear; }
+  .portraitBack { opacity: 0; transform: none; }
+  .stewardCard:is(:hover, :focus-visible) .portraitBack { opacity: 1; }
+  .stewardCard:is(:hover, :focus-visible) .portraitFace:not(.portraitBack) { opacity: 0; }
+}
+/* Builder wall, vertical centring (November 3, owner): the rows sit in the middle of the coral band, with the same
+   space above and below, on both routes and at every width. The band keeps its height (rows + the extra coral);
+   padding is symmetric and the rail's own uneven padding (8 / 24 px) is removed. */
+:global(html) .site.site[data-audience] .teamNetwork .teamWall:is(:has(.memberMasonry), :has(.memberGridFrame)) { display: flex; flex-direction: column; justify-content: center; padding-block: calc(var(--wall-gap) + var(--wall-extra) / 2); }
+:global(html) .site.site[data-audience] .teamNetwork .teamWall:has(.memberMasonry) .memberMarquee { padding-block: 0; }
+/* /community #work (November 3, owner): the project explorer replaced the Explore gallery; the old module's
+   decorative layers go with it (the dot texture, the four column lines and the circle). Surfaces stay: dark green
+   in Day, raised navy in Night. */
+:global(html) .site.site[data-audience="community"] :global(#work) { background-image: none; }
+:global(html) .site.site[data-audience="community"] :global(#work)::before,
+:global(html) .site.site[data-audience="community"] :global(#work)::after { content: none; }

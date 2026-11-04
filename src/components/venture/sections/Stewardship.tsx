@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { mercenaries } from "@/lib/data/members";
 import { stewards } from "@/lib/data/venture";
+import { hatsRoles } from "@/lib/data/hats";
 import { PORTAL_MEMBERS_URL } from "@/lib/data/constants";
 import type { Illustration } from "@/lib/data/illustrations";
 import type { Copy, StewardshipContent } from "@/lib/narrative/types";
@@ -34,6 +35,8 @@ export default function Stewardship({ content, titles = "role", illustration }: 
 
         <div className={styles.stewardTrack}>
           {stewards.map((steward, index) => {
+            // November 3 (owner): the portrait turns over to the hat this steward wears (hats.ts, by role).
+            const hat = hatsRoles.find((role) => role.name === steward.role && role.image);
             const title = titles === "professional" ? mercenaries.find((member) => member.name === steward.name)?.title ?? steward.role : steward.role;
             const card = (
               <>
@@ -41,8 +44,11 @@ export default function Stewardship({ content, titles = "role", illustration }: 
                   <span>ST—{String(index + 1).padStart(2, "0")}</span>
                   <i aria-hidden="true"><b className={styles.iconLogo} /></i>
                 </div>
-                <div className={styles.stewardPortrait}>
-                  <Image src={steward.image} alt="" fill sizes="180px" />
+                <div className={`${styles.stewardPortrait} ${hat ? styles.stewardFlips : ""}`}>
+                  <span className={styles.portraitFaces}>
+                    <span className={styles.portraitFace}><Image src={steward.image} alt="" fill sizes="180px" /></span>
+                    {hat?.image && <span className={`${styles.portraitFace} ${styles.portraitBack}`}><Image src={hat.image} alt="" fill sizes="180px" /></span>}
+                  </span>
                 </div>
                 <p>{title}</p>
                 <h4>{steward.name}</h4>

@@ -16,7 +16,7 @@ import {
   communityMoloch, communityRaidaFeature,
 } from "@/lib/narrative/community";
 import { buildersCommunity } from "@/lib/narrative/shared";
-import { crewHorizontal, molochArtwork, queenRaidaArtwork } from "@/lib/data/illustrations";
+import { crewHorizontal, foundryPortrait, molochArtwork, queenRaidaArtwork } from "@/lib/data/illustrations";
 import { forAudience } from "@/lib/narrative/public";
 
 // Join the DAO architecture (October 29, final pass; November 2, owner order):
@@ -48,21 +48,25 @@ export const metadata: Metadata = {
 // capabilities, framed for builders, with community links and no inquiry) and
 // a separate, compact member-benefits module; /clients keeps the client view.
 
+// November 3 (owner): the Guild module now precedes the capabilities gallery, and the Hats tree and Explore
+// (Wall of curiosities) traded places. Later the same night: Membership (benefits) follows Stewardship (Hats),
+// and the FAQ ("Before you join") follows Join the Guild: … Moloch → Hats → benefits → builders → Explore →
+// Join → FAQ → creed.
 export default function CommunityPage() {
   return (
     <>
       <Hero content={forAudience(communityHero)} grouped curtain still />
       <GuildTicker />
-      <FeatureGallery id="spears" anchors={["services", "capabilities"]} content={forAudience(communityCapabilities)} tone="services" />
       <GuildPrologue content={forAudience(communityGuild)} metrics={false} kitExpander />
+      <FeatureGallery id="spears" anchors={["services", "capabilities"]} content={forAudience(communityCapabilities)} tone="services" />
       <ImmersiveFeature id="raida" content={forAudience(communityRaidaFeature)} artwork={queenRaidaArtwork} tone="raida" />
       <ImmersiveFeature id="moloch" content={forAudience(communityMoloch)} artwork={molochArtwork} tone="moloch" />
-      <WallOfCuriosities content={forAudience(communityActivity.collection)} />
-      <BuilderNetwork content={forAudience(buildersCommunity)} illustration={crewHorizontal} masonry />
       <HatsTree content={forAudience(communityHats)} />
-      <Faq id="faq" content={forAudience(communityFaq)} />
-      <JoinCTA content={forAudience(communityJoin)} />
       <MemberBenefits id="benefits" content={forAudience(communityBenefits)} />
+      <BuilderNetwork content={forAudience(buildersCommunity)} illustration={crewHorizontal} masonry />
+      <WallOfCuriosities content={forAudience(communityActivity.collection)} />
+      <JoinCTA content={forAudience(communityJoin)} />
+      <Faq id="faq" content={forAudience(communityFaq)} illustration={foundryPortrait} />
       <Creed content={forAudience(communityCreed)} />
     </>
   );

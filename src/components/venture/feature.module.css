@@ -32,6 +32,8 @@
    transparent with a navy border and label, like every outline CTA; hover,
    pressed and focus are the shared ones (venture.module.css). */
 .moloch { --on-coral: #12163b; background: var(--coral); color: var(--on-coral); }
+/* Day (November 3, Light UI dark contrast): the green-black on-pink ink (4.7:1). */
+:global(html:not([data-theme="dark"])) :global([data-audience]) .moloch { --on-coral: var(--on-pink, #071c1d); }
 .moloch .label, .moloch .title em { color: var(--on-coral); }
 .moloch { --cta-bg: var(--on-coral); --cta-fg: var(--color-white, #fafafa); --cta-border: var(--on-coral); }
 
@@ -80,3 +82,17 @@
   :global(html) :global([data-audience]) section.moloch.moloch h2.title { font-size: min(28.8px, (100vw - 48px) / 15.2) !important; }
   :global(html) :global([data-audience]) section.moloch.moloch h2.title > em { font-size: min(36px, (100vw - 48px) / 9.6) !important; }
 }
+
+/* Tablets, 761–899 px (November 3): two 316–374 px columns were too narrow for this copy: "MOLOCH" ran into the
+   body column, the top lines broke with a single word, and the Moloch CTA label escaped its pill. The copy
+   stacks as on phones (label, title, body, CTA) on the tablet padding; from 900 px the two columns return. */
+@media (min-width: 761px) and (max-width: 899px) {
+  :global([data-audience]) .copy { display: block; }
+  :global([data-audience]) .body { margin-top: 24px; }
+  :global([data-audience]) .cta { margin-top: 28px; }
+}
+/* The lead line is its own block, so the heading balance (venture.module.css) reaches it: Chrome balances neither
+   text before a <br> nor across it, which left "TOGETHER WE / SLAY" at 900–1100 px. The <br> stays in the markup
+   for the accessible name and is not rendered; the two lines keep their sizes and the em its margin. */
+:global([data-audience]) .feature .title { align-items: flex-start; display: flex; flex-direction: column; }
+:global([data-audience]) .feature .title > br { display: none; }

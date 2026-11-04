@@ -9,6 +9,9 @@ import PillIcon, { pathGlyph } from "../primitives/PillIcon";
 import { useVenture } from "../shell/VentureShell";
 import styles from "../venture.module.css";
 
+// Stacked titles (/community): "Build something" and the finale form the
+// second line together, in the second line's style (November 3, owner); the
+// break between them shows on phones only.
 // `grouped` is the October 23 composition used by the audience routes: the dek
 // and actions sit under the title in one column. "/" keeps them separate.
 // `curtain` restores the foreground curtain of 4ffb591 (2026-08-19, removed in
@@ -219,7 +222,7 @@ export default function Hero({ content, grouped = false, curtain = false, still 
           {content.eyebrow && <p className={styles.eyebrow}><span /><CopyText copy={content.eyebrow} before=" " /></p>}
           <div ref={titleRef} className={[styles.heroTitle, content.title.long ? styles.heroTitleLong : "", content.title.plain ? styles.heroTitlePlain : "", content.title.finale ? styles.heroTitleStacked : ""].filter(Boolean).join(" ")}>
             {content.title.finale ? (
-              <h1><span><CopyText copy={content.title.lead} /></span><br /><span><CopyText copy={content.title.em} /></span><br /><em><CopyText copy={content.title.finale} /></em></h1>
+              <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} />{" "}<br className={styles.heroTitleBreak} /><CopyText copy={content.title.finale} /></em></h1>
             ) : (
               <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} /></em></h1>
             )}

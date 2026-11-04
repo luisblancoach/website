@@ -122,3 +122,54 @@
   .children > li::before { left: -21px; width: 19px; }
   .snapshot { margin-top: 12px; }
 }
+
+/* Audience routes, 961–1199 px (November 3): beside the copy the five steward cards were 85–105 px wide, so
+   "Infrastructure" and "Participation" ran out of their cards. The tree stays under the copy, as at ≤ 960 px,
+   until the cards have room (≥ 108 px from 1200 px). */
+@media (min-width: 961px) and (max-width: 1199px) {
+  :global([data-audience]) .inner { display: block; }
+  :global([data-audience]) .tree { margin-top: 48px; }
+}
+
+/* Day surface (November 3, owner): the Hats tree takes the sky (#B8E0DF) with dark-green ink, swapping with the
+   Explore module (now dark green). Lines, edges, the selected / hover ring and the focus ring turn dark green;
+   card edges mix each hat's accent with dark green so the cyan hat keeps an edge on sky. Night is unchanged. */
+:global(html:not([data-theme="dark"])) :global([data-audience]) .hats { --hats-line: rgba(16, 45, 44, .45); background: var(--color-cyan, #b8e0df); color: var(--color-dark-green, #102d2c); }
+:global(html:not([data-theme="dark"])) :global([data-audience]) .card { --hat-edge: color-mix(in srgb, var(--hat-accent) 60%, var(--color-dark-green)); background: color-mix(in srgb, var(--hat-accent) 14%, var(--color-cream)); }
+:global(html:not([data-theme="dark"])) :global([data-audience]) .card:hover,
+:global(html:not([data-theme="dark"])) :global([data-audience]) .card[aria-pressed="true"] { background: color-mix(in srgb, var(--hat-accent) 14%, var(--color-cream)); box-shadow: inset 0 0 0 3px var(--color-dark-green); }
+:global(html:not([data-theme="dark"])) :global([data-audience]) .card:focus-visible { outline-color: var(--color-dark-green); }
+:global(html:not([data-theme="dark"])) :global([data-audience]) .parentArt { border-color: var(--color-dark-green); }
+
+/* The parent mark: dark-green swords in Day, the original navy in Night (HatsTree.tsx renders both). */
+.parentArt { position: relative; }
+.parentNight { display: none !important; }
+:global(html[data-theme="dark"]) .parentDay { display: none !important; }
+:global(html[data-theme="dark"]) .parentNight { display: block !important; }
+
+/* Hat → wearer (November 3, owner). The card's content turns over on hover (pointer devices) and while the card
+   is selected (keyboard focus or a tap), showing the steward who wears the hat: portrait, name (the role name's
+   Ubuntu bold: Last Duel at a card's 85–105 px fell to 11 px), "Wears 1822.x". Both faces share one grid cell, so the card keeps its
+   size; the frame, edge and rings stay put. Reduced motion crossfades the faces instead of turning them. */
+.card.flips { perspective: 900px; }
+.faces { display: grid; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.2, .7, .2, 1); width: 100%; }
+.face { backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; gap: 10px; grid-area: 1 / 1; min-width: 0; }
+.faceBack { transform: rotateY(180deg); }
+.flips[aria-pressed="true"] .faces { transform: rotateY(180deg); }
+@media (hover: hover) { .flips:hover .faces { transform: rotateY(180deg); } }
+.wearerArt { background: color-mix(in srgb, var(--hat-accent) 30%, var(--color-cream)); }
+
+@media (max-width: 760px) {
+  .face { align-items: center; flex-direction: row; gap: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .faces, .flips:hover .faces, .flips[aria-pressed="true"] .faces { transform: none !important; transition: none; }
+  .face { transition: opacity .15s linear; }
+  .faceBack { opacity: 0; transform: none; }
+  .flips[aria-pressed="true"] .faceBack { opacity: 1; }
+  .flips[aria-pressed="true"] .face:not(.faceBack) { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) and (hover: hover) {
+  .flips:hover .faceBack { opacity: 1; }
+  .flips:hover .face:not(.faceBack) { opacity: 0; }
+}

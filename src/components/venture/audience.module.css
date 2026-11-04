@@ -115,3 +115,33 @@
   .network .tabs { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .network .tabs button { align-items: center; display: flex; justify-content: center; min-height: 48px; padding: 10px 8px; white-space: nowrap; width: 100%; }
 }
+
+/* November 3 Figma pass: builder network heading. From 761 px the title and
+   the intro share the left column, centred on the art beside them (up to
+   440 px wide, 31% of the viewport from 1000 px, 34% on tablets, inset from
+   the content edge by up to 64 px); the intro is 18 px, its two sentences on
+   two lines (17 em); the
+   "Build with the Guild" link closes the skill tabs' row on the right (on
+   their last row when they wrap; under them on phones). Phones keep the
+   stacked title, art and intro. */
+.headingIntro { margin: 0; }
+.toolbar { align-items: center; display: flex; flex-wrap: wrap; gap: 8px 32px; justify-content: space-between; margin: 24px 0; }
+.toolbar .tabs { margin: 0; }
+.toolbar > a { margin-left: auto; }
+@media (min-width: 761px) {
+  :global([data-audience]) .network .heading {
+    --art: min(440px, 34vw);
+    align-items: start; column-gap: clamp(24px, 4vw, 48px); display: grid; margin-bottom: 0; row-gap: 0;
+    grid-template-areas: ". art" "title art" "intro art" ". art"; grid-template-columns: minmax(0, 1fr) calc(var(--art) + var(--art-inset, 0px)); grid-template-rows: 1fr auto auto 1fr;
+  }
+  :global([data-audience]) .network .heading > h2 { grid-area: title; }
+  :global([data-audience]) .network .heading > .headingArt { align-self: center; grid-area: art; justify-self: start; min-width: 0; width: var(--art); }
+  :global([data-audience]) .network .heading > .headingIntro { font-size: 18px; grid-area: intro; margin-top: 20px; max-width: 17em; }
+  .toolbar .tabs { flex: 0 1 auto; }
+}
+@media (min-width: 1000px) { :global([data-audience]) .network .heading { --art: min(440px, 31vw); --art-inset: clamp(0px, 4.5vw, 64px); } }
+@media (max-width: 760px) { .toolbar { align-items: start; flex-direction: column; gap: 16px; } .toolbar .tabs { width: 100%; } .toolbar > a { margin-left: 0; } }
+
+/* Category buttons, selected (November 3, owner: the filled pill was too heavy): no fill, a Moloch magenta edge
+   (2 px border + 1 px inset, so the size does not change), label in the surface's ink. Same in both themes. */
+:global(html) :global([data-cta="semantic"]) .tabs button[aria-selected="true"] { background: transparent; border-color: var(--coral); box-shadow: inset 0 0 0 1px var(--coral); color: inherit; }

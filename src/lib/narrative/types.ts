@@ -185,9 +185,20 @@ export type FeatureGalleryContent = {
 // (sections/Faq.tsx). Bracketed segments in an answer ("[$X–$Y]") are
 // unconfirmed values and render as marked placeholders, never as facts.
 export type FaqContent = {
-  label: Copy;
+  // Optional since November 3 (owner): the /clients FAQ has no section label.
+  label?: Copy;
   title: Title;
   items: { question: Copy; answer: Copy }[];
+};
+
+// Client reasons (November 3, /clients): "Why should I choose RaidGuild for
+// this project?" as expandable rows (sections/ClientReasons.tsx), each a
+// heading with a disclosure button, the RaidGuild sigil and a chevron.
+export type ReasonsContent = {
+  label: Copy;
+  title: Title;
+  intro: Copy;
+  items: { title: Copy; body: Copy }[];
 };
 
 export type InquiryContent = {

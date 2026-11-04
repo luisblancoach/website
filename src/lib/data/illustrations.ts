@@ -7,6 +7,7 @@
 export type Illustration = { src: string; width: number; height: number };
 
 // A foundry turning raw material into output: "Ideas into working systems".
+// Also beside the FAQ on both audience routes (November 3 Figma pass), once per page.
 export const foundryPortrait: Illustration = { src: "/images/illustrations/Ilus_03.png", width: 1536, height: 2048 };
 export const foundryHorizontal: Illustration = { src: "/images/illustrations/ilus_horiz_002.png", width: 1024, height: 768 };
 // A mixed crew repairing a vessel together: the builder network's range of skills.

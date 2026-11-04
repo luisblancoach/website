@@ -715,3 +715,49 @@ November 3, 2026 — /community restructure (uncommitted):
 - Member benefits are a separate module with its own compact layout (numbered cards with small art, two
   columns from 700 px, stacked on phones), answering why a builder would join; it is not a second gallery row.
 
+
+## 2026-11-03 — Figma pass from the owner's edit of "Clients / Light / 1440×900"
+
+- The owner's edited Figma artboard is the visual reference for this pass. Only deliberate edits were taken
+  (capture artifacts such as video posters and unrendered masks were not), and each became a responsive rule
+  for both audience routes and both themes rather than a 1440-only layout.
+- Hero titles use the accent colour on the second line in Day as well as Night, matching every other two-level
+  heading. This replaces the November 2 rule that set the whole Day hero title in dark green.
+- The builder network heading pairs title and intro beside the art; its link joins the skill tabs' row.
+- The FAQ carries the foundry portrait from 1000 px.
+- Kept the shared section-title scale where the artboard deviated in one place ("OUR CLIENTS"); see STATUS 75.
+- Light UI dark contrast (owner, same day): in Day every dark contrast element is the dark green
+  (`--color-dark-green`, #102D2C); the navy family is Night-only. Coral surfaces keep the existing green-black
+  on-pink ink (#071C1D) for contrast. "OUR CLIENTS" takes the artboard's larger second line (owner confirmed);
+  the FAQ head sits at 0.4 × the section space.
+- Widows (owner, same day): on /clients and /community the browser's line breaker avoids a single short word on
+  a last line: `text-wrap-style: pretty` for all text, `balance` for headings and their two-level lines. A
+  single word is accepted when it fills most of its line (three-word headings, the footer motto) or when the
+  engine's pretty breaker keeps it (a last word wider than a third of the line). No copy was rewritten for it.
+- Tablet layouts that could not hold their content were stacked rather than shrunk: the immersive features
+  (Queen Raida, Moloch) stack their copy at 761–899 px, as on phones, so "MOLOCH" keeps its 1.5 × size and the
+  CTA label its pill; the Hats tree stays under its copy up to 1199 px so steward names fit their cards.
+- Selectors (owner, night): the current audience and theme option is marked by an ink outline (dark green Day,
+  cream Night) with the other option muted and the current theme icon coral, not by a filled pink pill.
+- /clients speaks to buyers (owner brief): the services gallery keeps its Figma layout and titles but its intro
+  and card bodies answer what the client gets; a "Why build with RaidGuild" module of expandable reasons follows
+  it. Only facts already in approved or flagged copy are reused; no prices, durations, guarantees or new clients.
+- Expandable rows use one chevron (functional) on both routes; capability / reason rows also carry the full
+  RaidGuild sigil as a decorative brand mark. The bare crossed-swords glyph is not used as a row marker.
+- /community (owner, November 3 night): the Guild module precedes the capabilities gallery; the Hats tree and
+  Explore swapped places and surfaces in Day (Hats sky, Explore dark green; Night unchanged); the selector's
+  current option is outlined in Moloch magenta in both themes; builder names are Last Duel Regular (upright
+  Ex2; settles question 65); "FIND YOUR PEOPLE." is 1 / 1.15 of the second hero line; the Hats parent mark has
+  dark-green swords in Day.
+- Hat cards turn over to their wearer on hover and while selected. The wearer is the site's published steward
+  for that role (`lib/data/venture.ts`), not a live Hats Protocol read; the snapshot note stays.
+- Category buttons (builder tabs, Explore filters) mark the selection with a magenta outline, not a fill. Steward
+  cards share the builder cards' name style and turn over to the steward's hat. The /clients FAQ has no section
+  label. On /community the builder wall runs straight into Explore. The Full-stack card uses the crashed-pod crew
+  illustration (owner's choice), replacing the blueprint sketch that sat outside the illustration system.
+- /community Explore (owner, November 3): the "Follow your curiosity" gallery is replaced by a project explorer
+  (main media viewport, metadata, a selectable stack of horizontal cards, Explore all, a larger view). It reuses
+  the gallery's data and screenshots; "/" keeps the old gallery. The section heading becomes "Projects and
+  experiments" (the B3.4 name), pending confirmation.
+- 2026-11-04 (owner): the Last Duel OTFs may be published in the public repositories (luisblancoach/website and
+  the raid-guild/website PR); the baseline for Dekan's review goes up as a PR against raid-guild/website `main`.

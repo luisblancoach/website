@@ -154,3 +154,8 @@
 :global(html) :global([data-audience]) .workCopy.workCopy h3 {
   font-family: var(--font-last-duel), sans-serif !important; font-size: min(49px, 100cqi / 10.6); font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1.04;
 }
+
+/* November 3 Figma pass: the case-study name sits one step below the section
+   title (30 px at most, two thirds of its former 45 px at 1440), still fitted
+   to the copy column so "HYPERCERTS" stays on one line. */
+:global(html) :global([data-audience]) .workCopy.workCopy h3 { font-size: min(30px, 100cqi / 10.6); }

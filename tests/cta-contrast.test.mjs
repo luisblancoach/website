@@ -92,7 +92,16 @@ describe("shared CTA system (October 30): one behaviour in both themes", () => {
 
   test("the navy edge keeps 3:1 on the light surfaces it sits on (cream, light blue, coral)", () => {
     for (const name of ["cream", "sky", "coral"]) assert.ok(contrast(light("cta-border"), surfacesAll[name]) >= 3, `navy edge on ${name}`);
-    assert.doesNotMatch(css, /--cta-border: var\(--color-dark-green\)/, "no dark-green edge exception any more");
+  });
+
+  // November 3 (owner): in Light UI on /clients and /community every dark contrast element is the dark green,
+  // never navy. "/" keeps the navy edge above.
+  test("Light UI on the audience routes: the CTA edge, icon disc and secondary label are dark green and keep contrast", () => {
+    const day = block(':global(html:not([data-theme="dark"])) .site[data-audience] {');
+    const green = palette["color-dark-green"];
+    for (const name of ["cta-border", "cta-icon-bg", "cta-secondary-fg", "cta-secondary-edge"]) assert.equal(token(name, day), green, name);
+    for (const name of ["cream", "sky", "coral"]) assert.ok(contrast(green, surfacesAll[name]) >= 3, `dark-green edge on ${name}`);
+    assert.ok(contrast(green, surfacesAll.cream) >= 4.5, "dark-green secondary label on cream");
   });
 
   test("the two-tone focus ring contrasts on every surface (one of its two colours reaches 3:1)", () => {

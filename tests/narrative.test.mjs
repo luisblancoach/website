@@ -340,9 +340,13 @@ describe("steward-supplied copy", () => {
     assert.equal(communityNarrative.communityActivity.collection.intro.source, "owner-approval");
   });
 
-  test("the gallery heading is the owner's October 29 line; its anchor and nav label are unchanged", () => {
+  // November 3 (owner): the Explore / "Follow your curiosity" module was replaced by the project explorer and its
+  // title with it; the heading is the B3.4 section name, flagged until confirmed. Anchor and nav label unchanged.
+  test("the project explorer heading replaces the old gallery title; its anchor and nav label are unchanged", () => {
     const { collection } = communityNarrative.communityActivity;
-    assert.equal(`${collection.title.lead.text} ${collection.title.em.text}`, "What happens when builders follow their curiosity.");
+    assert.equal(`${collection.title.lead.text} ${collection.title.em.text}`, "Projects and experiments");
+    assert.notEqual(collection.title.lead.status, "approved");
+    assert.doesNotMatch(collectCopy(collection).map((copy) => copy.text).join(" "), /follow (your|their) curiosity/i);
     assert.equal(communityNarrative.communityNav.items.find((item) => item.section === "work")?.label.text, "Projects");
   });
 });
@@ -372,11 +376,16 @@ describe("community additions", () => {
 });
 
 describe("November 2 galleries and FAQs", () => {
+  // November 3 (owner brief): the cards speak to prospective clients, so the bodies are new client-facing drafts
+  // instead of the published service copy; each still maps to a published service and stays flagged.
   test("the clients services gallery covers the published services plus onchain systems, every body still flagged", () => {
     const { clientsServiceGallery } = clientsNarrative;
     assert.equal(clientsServiceGallery.cards.length, 6);
-    const bodies = clientsServiceGallery.cards.map((card) => card.body.text);
-    for (const record of services) assert.ok(bodies.includes(record.bodyText), `${record.title} keeps its published body`);
+    const titles = clientsServiceGallery.cards.map((card) => `${card.title.lead.text} ${card.title.em.text}`.toLowerCase());
+    for (const name of ["full-stack development", "smart contracts, onchain systems", "applied ai and automation", "product and system design", "marketing and content strategy", "dao consulting and governance"]) assert.ok(titles.includes(name), name);
+    assert.equal(services.length, 5, "five published services behind the cards");
+    const copy = [clientsServiceGallery.intro.text, ...clientsServiceGallery.cards.map((card) => card.body.text)].join(" ");
+    assert.doesNotMatch(copy, /\braids?\b|center of gravity/i, "client language, not Guild-internal terms");
     for (const card of clientsServiceGallery.cards) {
       assert.notEqual(card.body.status, "approved", card.title.lead.text);
       assert.ok(readFileSync(new URL(`../public${card.image.src}`, import.meta.url)), card.image.src);
@@ -398,7 +407,22 @@ describe("November 2 galleries and FAQs", () => {
     assert.equal(clientsFaq.items.length, 6);
     for (const item of clientsFaq.items) assert.equal(item.answer.reason, "claim", item.question.text);
     assert.ok(clientsFaq.items.some((item) => /\[\$X–\$Y\]/.test(item.answer.text)), "cost stays a placeholder");
+    assert.doesNotMatch(collectCopy(clientsFaq).map((item) => item.text).join(" "), /\braids?\b/i, "buyer FAQ speaks of projects, not raids");
     for (const item of communityFaq.items) assert.notEqual(item.answer.source, "draft", item.question.text);
+  });
+});
+
+describe("November 3 client reasons (/clients)", () => {
+  test("Why RaidGuild answers the buyer: seven flagged reasons, no prices, timelines, guarantees or raid jargon", () => {
+    const { clientsReasons } = clientsNarrative;
+    assert.equal(clientsReasons.items.length, 7);
+    for (const item of clientsReasons.items) {
+      assert.equal(item.body.reason, "claim", item.title.text);
+      assert.notEqual(item.title.status, "approved", item.title.text);
+    }
+    const copy = collectCopy(clientsReasons).map((item) => item.text).join(" ");
+    assert.doesNotMatch(copy, /\$|\bguarantee|\b\d+\s*(?:days?|weeks?|months?)\b|\braids?\b/i);
+    for (const point of [/applied AI|AI and blockchain/i, /smart contracts/i, /scope/i, /handoff/i, /weekly/i, /maintain/i, /senior/i]) assert.match(copy, point);
   });
 });
 

@@ -4,18 +4,20 @@ import GuildTicker from "@/components/venture/sections/GuildTicker";
 import PreviousWorks from "@/components/venture/sections/PreviousWorks";
 import FeatureGallery from "@/components/venture/sections/FeatureGallery";
 import Faq from "@/components/venture/sections/Faq";
+import ClientReasons from "@/components/venture/sections/ClientReasons";
 import BuilderNetwork from "@/components/venture/sections/BuilderNetwork";
 import Stewardship from "@/components/venture/sections/Stewardship";
 import GuildInquiry from "@/components/venture/sections/GuildInquiry";
 import Creed from "@/components/venture/sections/Creed";
-import { clientsCreed, clientsFaq, clientsHero, clientsInquiry, clientsPreviousWorks, clientsServiceGallery } from "@/lib/narrative/clients";
+import { clientsCreed, clientsFaq, clientsHero, clientsInquiry, clientsPreviousWorks, clientsReasons, clientsServiceGallery } from "@/lib/narrative/clients";
 import { buildersClients, peopleClients } from "@/lib/narrative/shared";
-import { crewHorizontal } from "@/lib/data/illustrations";
+import { crewHorizontal, foundryPortrait } from "@/lib/data/illustrations";
 import { forAudience } from "@/lib/narrative/public";
 
 // The October 23 Hire composition (40f3910), reordered November 2: hero →
 // services gallery (replaces the services accordion) → previous works →
-// builders → people → buyer FAQ → inquiry, with the October 27 hero and client
+// builders → people → buyer FAQ → inquiry (November 3: "Why RaidGuild"
+// reasons follow the services gallery), with the October 27 hero and client
 // showcase. Unconfirmed claims are flagged in review builds and
 // preview; keep the route out of search until they are resolved.
 // SEO copy (October 30, owner): the page title stands alone (no "| RaidGuild"
@@ -44,10 +46,11 @@ export default function ClientsPage() {
       <Hero content={forAudience(clientsHero)} grouped curtain still />
       <GuildTicker />
       <FeatureGallery id="spears" anchors={["services", "capabilities"]} content={forAudience(clientsServiceGallery)} tone="services" />
+      <ClientReasons id="why-raidguild" content={forAudience(clientsReasons)} />
       <PreviousWorks content={forAudience(clientsPreviousWorks)} rotate />
       <BuilderNetwork content={forAudience(buildersClients)} illustration={crewHorizontal} masonry />
       <Stewardship content={forAudience(peopleClients)} titles="professional" />
-      <Faq id="faq" content={forAudience(clientsFaq)} />
+      <Faq id="faq" content={forAudience(clientsFaq)} illustration={foundryPortrait} />
       <GuildInquiry content={forAudience(clientsInquiry)} surface="cyan" />
       <Creed content={forAudience(clientsCreed)} />
     </>

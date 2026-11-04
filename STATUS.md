@@ -1,14 +1,430 @@
 # STATUS
 
-Snapshot: 2026-11-02, night (-0300). HEAD `04da57f` (the November 2 work, committed, not pushed; deployed as a Vercel preview), on `1adb327` (the October 30 release `07031e2` plus its release
-record), with this session's **uncommitted November 2 work: the Grinder → Last Duel migration, the display
-hierarchy pass and the mobile pass** (sections "November 2" below) and the owner's files. Nothing committed,
-pushed or deployed. **Blocker before any commit or deploy: the Last Duel files' own licence field forbids web
+Snapshot: 2026-11-04 (-0300), baseline commit for Dekan's review (section "November 4"); earlier: see "November 3, late night", "November 3, night" and "November 3, evening" below for the latest uncommitted pass. HEAD `233777b` (November 3 iteration, owner-approved production deploy of
+the review project; not pushed; see "Deployed review"). Uncommitted: STATUS.md and the owner's files (`package.json`,
+21 deleted legacy images, `clients.pdf`, `LastDuel-Ex2Retalic.otf`). The Figma pilot below changed no repository
+file. **Blocker before any commit or deploy: the Last Duel files' own licence field forbids web
 hosting and redistribution** (open question 64).
+
+**Figma export (current task):** pilot `Clients / Light / 1440×900` built and awaiting owner review; the other 19
+compositions are not started (section "November 3 (Figma pilot)").
 
 **Next priority:** the owner reviews the galleries / FAQ (and supplies the FAQ placeholder values), the hero desktop pass and the hero experiment (70), the mobile pass and the hierarchy pass and decides 64 (licence), 65 (card
 names), 67 (bottom-line italic), 68 (creed on desktop) and 69 (Moloch mark); commit / deploy only once those are
 settled and approved. (69 is resolved: the Moloch mark was removed.)
+
+## November 4: baseline commit and PR for Dekan's review (owner request)
+
+- One baseline commit on `feat/venture-beyond-integration` with this iteration only (the November 3 work: Figma
+  pass rounds 1–3, widows and tablet fits, selectors, client reasons and FAQ, chevrons, /community order and
+  surfaces, Hats flip, steward flip, builder wall, category buttons, Projects Explorer replacing "Follow your
+  curiosity", tests and docs). Excluded: package.json, the 21 legacy image deletions, clients.pdf,
+  LastDuel-Ex2Retalic.otf, .DS_Store, .env*.
+- Owner decisions (2026-11-04): push with the five Last Duel font files (first push of 04da57f; the owner confirms
+  the right to publish them in the public repos; supersedes the "review preview only" scope of question 64), and
+  open the PR against raid-guild/website `main`. Push and PR only: no merge, deploy, promotion or alias change.
+
+## November 3, night: Vercel preview of the working tree (owner request), nothing committed
+
+- Preview: https://raidguild-venture-beyond-review-enve71f46.vercel.app, `dpl_DaWdfzxANbXHjSGXbDctk3ej2sk2`, target
+  preview, Ready (Vercel login required). Built from a clean copy: HEAD `233777b` + this iteration's uncommitted
+  files; excluded package.json, the 21 legacy deletions, clients.pdf, LastDuel-Ex2Retalic.otf, .DS_Store, .env*.
+  `--build-env SHOW_REVIEW_FLAGS=false` for this deployment only; project settings unchanged.
+- Pre-deploy (clean copy): tsc OK, tests 91/91, lint 0 errors, production build OK; on the built app (:3020) the
+  10-case set and the 24 explorer checks pass.
+- On the preview (`vercel curl`): /clients 200, /community 200, / 200 with the expected markers (/ keeps its old
+  Explore module). Review alias and production unchanged.
+- The deployed code is not in any commit. Record and patch: `~/Projects/raidguild-backups/2026-11-03/`
+  (`DEPLOY-vercel-preview-wt2.md`, `iteration-wt2.patch`, `iteration-wt2-new-files.tar`).
+- Local servers: :3018 (dev, current tree) and :3020 (`next start` of the clean copy) were started this session;
+  :3017 is stale.
+
+## November 3, late night, "Open the Portal" outline fix, uncommitted
+
+- The secondary pill on the Explore / Projects heading showed two dark fills (the navy secondary surface and the
+  navy icon disc). The section now joins the existing transparent-outline rule (`venture.module.css`, the
+  `:is(.prologue, .contact)` outline block → `:is(.prologue, .contact, .fieldNotes)`): transparent pill and disc,
+  cream edge, label and glyph; hover a 9 % cream tint. Verified Day / Night 1440 and Day 402 (computed + shots).
+  Tests 91/91; lint 0 errors.
+
+## November 3, late night, explorer caption over the media, uncommitted
+
+- Owner: category (eyebrow), one-line title and description now sit over the screenshot on a transparent shadow
+  rising from the window's foot (section colour: dark green Day, navy Night; .95 → .9 → .55 → 0), with "Explore
+  now" at the lower right. The shadow lets clicks through to the screenshot (larger view). Descriptions (≤ 177
+  characters) take two or three lines, never clipped. 640–899 px: the button drops under the text, right-aligned.
+  Phones (< 640 px, a ~200 px window): caption and button stay under the image; chevrons centre on the image.
+  This overrides the earlier "no gradients / text over images" rule for this window only, at the owner's request.
+- Checks (:3018): explorer set all pass (default, select, metadata, chevrons, Explore now, categories, Explore all,
+  lightbox, Escape, keyboard, phones no overflow, themes, reduced motion, "/" unchanged); light-screenshot
+  legibility reviewed in both themes. `tsc` OK; lint 0 errors (1 existing warning); tests 91/91.
+
+## November 3, late night, explorer action, uncommitted
+
+- The media window's two actions ("Play now here" / "Open new tab") are replaced by one primary pill without
+  icon, "Explore now": the artifact in a new tab (the Portal: its on-page experience). The in-place player
+  (iframe) is removed, so the framing limit noted below (question 92) no longer applies. Static screenshots
+  stay; per-artifact recordings are a possible later step (owner). Label centred at every width.
+- Checks (:3018): the explorer set incl. "one primary Explore now, new tab, no icon, no iframe": all pass.
+  `tsc` OK; lint 0 errors (1 existing warning); `bun run test` 91/91.
+
+## November 3, late night, project explorer round 2, uncommitted
+
+- Category buttons back (Everything, Experiences, Games, Tools & interfaces, Field notes; the old gallery's
+  labels and rules), above the explorer, shared category style (selected = magenta edge, no fill). Filtering
+  keeps the selection when it is in the category, else selects the category's first item.
+- "01 / 44 projects" eyebrow removed (the list keeps a visually hidden label with the count).
+- Media window: previous / next chevrons on its edges (wrap around, within the category); "Play now here"
+  (primary) loads the live artifact in the viewport (iframe, sandboxed), "Stop playing" returns to the
+  screenshot; "Open new tab" (secondary, ↗). The Portal: "Play now here" opens the on-page Portal. The actions sit
+  over the screenshot's lower left from 640 px, under the viewport while playing and on phones (full width).
+  Framing: the Railway-hosted artifacts' CSP frame-ancestors allow only portal.raidguild.org, *.up.railway.app and
+  localhost, so on the review / production domains those artifacts show "Open new tab" only; handbook,
+  portal.raidguild.org pages and livelive have no framing restriction. Adding the site's domains to the artifacts'
+  frame-ancestors (outside this repo) would enable playing them here everywhere (question 92).
+- "Open the Portal": secondary pill with the sword icon on the heading's row (right); full width under the intro
+  on phones (`WallOfCuriosities.tsx`). The metadata no longer carries an action.
+- Artifact title (metadata): technical, not display: Last Duel Bold upright, mixed case, one line, fitted to the
+  column by its length (16–28 px), ellipsis beyond. The list cards keep Ubuntu bold.
+- Checks (:3018): the ten explorer checks plus categories, chevrons, play / stop / new tab, header Portal button
+  (opens the Portal), no counter, technical title, no old-module remnants, 768 / 1920 layouts, "/" unchanged: all
+  pass. `tsc` OK; lint 0 errors (1 existing warning); `bun run test` 91/91.
+
+## November 3, late night, project explorer replaces Explore (/community), uncommitted
+
+- Old module identified: `sections/WallOfCuriosities.tsx` (section shell) + `components/ArtifactGallery.tsx` /
+  `ArtifactGallery.module.css` (filter pills, elastic zoom grid, "+" tiles, text-over-image captions, the
+  "Follow your curiosity." panel, footnote) and the `#work` decorative layers (dot texture, column lines, circle).
+  It rendered on /community and "/"; owner: replace on /community only, "/" untouched (verified it still shows
+  the old module).
+- New: `sections/ProjectExplorer.tsx` + `explorer.module.css`. Main media viewport (≈ 2/3 of the row at ≥ 1000 px;
+  966 px at 1920), metadata below (category, title, description, action: "Open the Portal" for the Portal,
+  "Explore the project" / "Read the post" ↗ for the others), a stack of horizontal cards (thumbnail, category,
+  title) on the right, six visible, "Explore all 44" (text action) reveals the rest (scrolls inside the column on
+  desktop), "Show fewer" returns. Default: The Portal. Cards: buttons with aria-current; Arrow Up / Down, Home,
+  End; Enter / Space. Metadata is a polite live region. Main media opens a Radix dialog (larger view, focus trap,
+  Escape, focus back to the media). Crossfade .28 s on change; none with reduced motion. Selected card: sky +
+  dark green ink in Day, #303674 + cream in Night, magenta edge (as the builder / steward cards).
+  Responsive: desktop two columns; tablet (640–999) viewport full width, stack in two columns below; phones one
+  column (viewport, metadata, stack).
+- Data and artwork reused: the Portal entry and fallback list (now exported from `ArtifactGallery.tsx`, no change
+  on "/"), /api/artifacts, /api/posts, `resolveArtifactPreview`. No new artwork.
+- Heading: "[ PROJECTS ] Projects and / experiments" (the B3.4 section name; the nav's "Projects" targets #work),
+  replacing "What happens when builders follow their curiosity." (owner: no old title). The owner's intro stays.
+  Flagged as wording (question 91). `community.ts`; `tests/narrative.test.mjs` updated (heading test).
+- Removed: the #work dot texture / lines / circle on /community (`venture.module.css`), and my earlier Day card
+  override for the old gallery in `ArtifactGallery.module.css`.
+- Checks (:3018): 1 default artifact; 2 card selection swaps the viewport; 3 metadata follows; 4 Explore all
+  6 → 44 and back; 5 lightbox opens (1280 px); 6 Escape closes, focus back on the media; 7 keyboard (Down, Enter,
+  End, Home, Space, focus ring); 8 phones light / dark 402: no overflow, no wrapped controls, no broken images;
+  9 theme tokens light / dark; 10 reduced motion (no animation, 0 s transitions; motion on otherwise). Also: no
+  old strings, "+" buttons, filters or decorative layers in #work; 768 / 1920 layouts; "/" unchanged; the
+  /community general set 0 failing. `tsc` OK; lint 0 errors (1 existing warning); `bun run test` 91/91.
+- Open question 91: confirm the "Projects and experiments" heading (or supply one).
+
+## November 3, late night, builder wall centring, uncommitted
+
+- `venture.module.css` (end): the builder rows sit vertically centred in the coral band (flex column, symmetric
+  padding `wall-gap + wall-extra / 2`, the rail's 8 / 24 px padding removed); band heights unchanged. Measured
+  space above / below the rows: /community 58 / 58 (1920–1024), 46 / 47 (768), 42 / 43 (402); /clients 40 / 40,
+  32 / 32, 28 / 28 (was 24 above and 56–92 below). The /community band is taller than its rows, hence the larger
+  equal margins there. Band still meets Explore with no gap.
+- Checks (on :3018): the 10-case set 0 failing; `tsc` OK; lint 0 errors (1 existing warning); `bun run test` 91/91.
+
+## November 3, late night, owner round 2 (category buttons, stewards, FAQ label, builder wall), uncommitted
+
+- Category buttons, selected (builder skill tabs `audience.module.css`; Explore filters `ArtifactGallery.module.css`):
+  no fill; Moloch magenta 2 px border + 1 px inset (no size change), label in the surface's ink; both themes.
+- Steward cards (/clients): names Last Duel Bold upright as the builder cards, one fitted size for all five
+  (`min(24px, (100cqi - 8px) / 7.8)`, the card a size container; ECWireless 7.76 em): 24 px desktop, 17 px at
+  1024 and 402, 14.6 px at 360, all inside the card on one line. The portrait turns over to the steward's hat
+  (lib/data/hats.ts by role) on hover and keyboard focus; crossfade with reduced motion (`Stewardship.tsx`).
+- /clients FAQ: the "[ Before you start ]" label removed (read as the section label, which repeated "before"
+  from the title); `FaqContent.label` is optional; /community keeps "[ Before you join ]".
+- Builder wall: +32 px coral under the last row (+24 px phones). On /community the wall runs edge to edge with
+  square corners straight into Explore: #team bottom padding and its 960 px min-height (an older one-screen
+  rule that left 33–81 px of cream) removed there. /clients keeps its plane and the cream before the stewards.
+- Checks: 10-case set 0 failing (after fitting the steward names: the first run failed "escape" at 1024 / 402);
+  steward flip by hover, keyboard and reduced motion; wall-to-Explore seam measured at 1920 / 1440 / 1024 / 768 /
+  402 and screenshotted. `tsc` OK; lint 0 errors (1 existing warning); `bun run test` 91/91.
+- Full-stack card art (both routes' galleries, `clients.ts`, `community.ts`): the blueprint sketch
+  (`project-ship-schematic-v1.webp`, outside the illustration system) is replaced by the crashed-pod crew
+  (`spear-edge-problem-v1.webp`, existing asset, contain fit). Owner's choice among the options offered; it repeats
+  the scene of the builders module art on the same page. No unused illustration in the style existed.
+- Local server: http://localhost:3017 kept serving a stale `clients.ts` (old card art) after the edit; stopping it
+  was not permitted in this session, so a fresh `bun run dev --port 3018` was started to verify (both routes
+  render the new art there). Restart 3017 (or use 3018) to see the current /clients.
+
+## November 3, late night, owner round (cards, Membership, names, icons), uncommitted
+
+- Gallery cards (`gallery.module.css`, supersedes the previous card state): in Day the image area is the sky at
+  rest; the copy area keeps its light surface in every state; hover / focus-within adds the magenta edge (both
+  themes). Shared by /clients services and /community capabilities.
+- Membership (`.benefits`): back to the sky in Day (owner); Night keeps the raised navy. In Day it now continues
+  the Hats tree's sky with no boundary between the two modules (owner's choice; see 88).
+- Builder and steward cards (`venture.module.css`, end): light #F9F7E7 at rest in Day; hover / focus turns them sky
+  with a 3 px magenta edge; Night keeps its surfaces and takes the magenta edge. On the builder band (itself
+  magenta) the edge does not read: the hovered tile shows as sky only (see 89). The /clients steward cards sit
+  on cream, where the edge shows.
+- Builder names: Last Duel Bold upright (BoldEx2, 700) instead of Regular (owner). All names fit their tiles and
+  clear the mark at 1920–360 on both routes.
+- UI icons: Day / Night icons 20 px (were 16) in the top bar and the phone toggle (icon boxes unchanged, so the
+  knob still lands on each).
+- Checks: the 10-case set (incl. bold names): 0 failing; tile and card states by computed style and
+  screenshots in both themes. `tsc` OK; lint 0 errors (1 existing warning); `bun run test` 91/91.
+- Open questions: 88. Hats and Membership share the sky in Day with no seam; add a divider or spacing cue?
+  89. On the magenta builder band, use a different active edge (dark green or cream) so the selection reads?
+
+## November 3, late night, gallery card state, uncommitted
+
+- `gallery.module.css` (end): a gallery card that is hovered or holds focus (its link) takes the sky #B8E0DF as
+  its surface in Day (copy and art area) and the Moloch magenta edge in both themes; Night keeps the navy card.
+  Shared by the /clients services and /community capabilities galleries. The link's 3 px focus ring stays dark
+  green / cream (magenta on sky is 2.6:1, under 3:1). Instant with reduced motion.
+- Checked (computed styles + screenshots): /community light 1440 and dark 1440, /clients light 1024 (reduced
+  motion) and dark 402 (focus only, touch): rest / hover / focus surface, edge and link ring as above.
+  `bun run test` 91/91; lint 0 errors.
+- Note (87): in the active Day state the pink card label and second title line sit on sky at about 2.5:1, as on
+  the Membership cards' celeste; acceptable for a transient state, or darken the accent there?
+
+## November 3, late night, follow-up (/community order), uncommitted
+
+- Order (`community/page.tsx`): Membership (benefits, "[ Membership ]") now follows Stewardship (the Hats tree,
+  "[ STEWARDSHIP ]"), and the FAQ ("[ Before you join ]") follows Join the Guild ("[ JOIN THE GUILD ]"):
+  hero → ticker → Guild → capabilities → Raida → Moloch → Hats → Membership → builders → Explore → Join → FAQ →
+  creed. Modules identified by their own labels.
+- Membership surface (`gallery.module.css`): next to the Hats tree it shared its surface in both themes (sky /
+  #12163B) and the two read as one block; it now takes the light parchment #F9F7E7 in Day and the raised navy
+  #252A61 in Night, distinct from Hats above and the builders below. Join → FAQ stay cream / navy (the Join
+  scene fades into the FAQ, as before the swap in reverse).
+- Checks: /community 4 cases of the focused set (light 1920, dark 1440 reduced motion, light 402, dark 402
+  reduced motion) incl. the full order: 0 failing; section surfaces listed per theme; seams reviewed in
+  screenshots. `tsc` OK; lint 0 errors (1 existing warning); `bun run test` 91/91.
+- Open question 86: the nav item "Membership" still targets #guild (the Guild module), while the module labelled
+  "[ Membership ]" is the benefits; point it at #benefits, or rename one of them?
+
+## November 3, late night (/community owner list), uncommitted
+
+- Hero: "FIND YOUR PEOPLE." enlarged to 1 / 1.15 of "BUILD SOMETHING TOGETHER." (was 1 / 1.4) from 761 px; phones
+  cap it to the column (second line and its break unchanged). `venture.module.css` (end).
+- Selector: the current option's outline (and the phone knob ring) is Moloch magenta (#EE3C78) in Day and Night;
+  labels unchanged.
+- Builder names (both routes; the /community masonry rail and the /clients tiles): Last Duel Regular upright
+  (Ex2, 400) instead of the Oblique; settles question 65. Every name fits its tile and clears the sword mark at
+  1920 / 1440 / 1024 / 768 / 402 / 360.
+- Hats: a featured hat card turns over to its wearer on hover (pointer devices) and while selected (keyboard
+  focus, tap): portrait, name, "Wears 1822.x"; crossfade with reduced motion; the wearer's name is in the
+  button's accessible name, the back face is aria-hidden. Wearers come from the published `stewards` list
+  (`lib/data/venture.ts`: Dekan, ECWireless, Takekek, Pupcakes, Louchi), not live Hats Protocol data. Wearer
+  names are Ubuntu bold (Last Duel fitted to an 85–105 px card fell to 11 px). `HatsTree.tsx`, `hats.module.css`.
+- Hats parent mark: Day shows `raidguild-green.png` (swords recoloured navy → #102D2C, new file; provenance row
+  added); Night keeps `raidguild.png`. `lib/data/hats.ts` gains `imageDay`.
+- Surfaces in Day: Hats tree sky (#B8E0DF) with dark-green ink, lines, rings and edges; Explore (#work) dark green
+  with cream ink, Night-style card tokens on dark green (`ArtifactGallery.module.css`) and cream secondary CTA.
+  Night unchanged for both.
+- Order (`community/page.tsx`): hero → ticker → Guild → capabilities gallery → Raida → Moloch → Hats → builders
+  → Explore → FAQ → Join → benefits → creed. The gallery's "Explore the Guild" CTA now points up to #guild.
+- Checks: the 10-case set (selector magenta / muted / focus / theme flip, rows, Light navy audit, overflow,
+  images, errors) plus /community order, Day surfaces, hero ratio, parent image per theme, builder name style,
+  hat flip by hover (desktop), tap (phones) and crossfade (reduced motion): 0 failing. `tsc` OK; lint 0 errors
+  (1 existing warning); `bun run test` 91/91. Not compared with Figma or October 23; Safari / Firefox not run.
+- Open questions: 83. The hero ratio 1 / 1.15 is a judgement ("enlarge"); adjust? 84. Wearer pairing comes from
+  the site's steward list (October); confirm it matches the live tree. 85. Should the "Explore the Guild" CTA in
+  the capabilities gallery change now that the Guild sits above it?
+
+## November 3, night (selector, client-facing /clients copy, reason rows, chevrons), uncommitted
+
+- Selectors (both audience routes, both themes, all widths; `venture.module.css`, last block): the current Hire /
+  Join and Day / Night option is a 1.5 px outline in the ink colour (Day #102D2C, Night cream) on the control's own
+  surface, no fill; the other label muted (5.1:1 Day, 7.3:1 Night); the current theme icon coral. Phones: the
+  toggle knob is the same outlined ring, current icon coral. Hover, focus ring (3 px), aria-current /
+  aria-pressed / role=switch unchanged. "/" untouched (rules scoped to `.site[data-audience] .topBar`).
+- /clients copy (owner brief: answer "Why should I choose RaidGuild for this project?"), `lib/narrative/clients.ts`:
+  - Services gallery: intro and the six card bodies rewritten for buyers (were the published service copy and
+    the internal "The Guild is the center of gravity … raids"). Titles, labels, art, links unchanged. Reused
+    facts only: onchain since 2019 (practice copy), client names (showcase), handoff with docs (showcase / FAQ).
+    No prices, timelines or guarantees. All bodies flagged (claim, draft).
+  - New module "Why build with RaidGuild" (`sections/ClientReasons.tsx`, `id="why-raidguild"`) right after the
+    gallery, same surface, reduced top padding: seven expandable reasons covering the brief's points (senior
+    accountable teams; AI and blockchain where they earn their place; smart contracts / dApps; strategy to
+    handoff; focused scope and ownership; weekly progress; maintainable systems with named clients). Bodies
+    flagged as claims; process facts come from the (still flagged) buyer FAQ.
+  - Buyer FAQ: "Questions before a raid" → "before we build"; "raids" → "projects" / "the build" in the
+    answers. Placeholders kept.
+- Expandable rows: each reason row = the full RaidGuild sigil (CTA icon disc #102D2C Day / #12163B Night, cream
+  ring, coral swords, as `sigil-logo.svg`; decorative) + label + lucide chevron (down closed, turned 180° open;
+  instant with reduced motion); heading > button with aria-expanded / aria-controls, region labelled by the
+  button. The FAQ rows (both routes, shared `Faq.tsx`) swap the plus / minus for the same chevron; no sigil
+  there (questions, not capabilities; see 80). Bug caught and fixed during the pass: removing the plus-sign CSS
+  also removed `.faqAnswer p` and `.placeholder`; restored.
+- Tests: `tests/narrative.test.mjs` gallery test now checks the six service titles, flagged client-facing bodies
+  and no internal terms (it required the published bodies); new test for the seven reasons (flagged, no prices
+  / durations / guarantees / "raid"); FAQ test adds "no raid". A reason title naming "ownership" is a claim
+  (sensitive-statement rule).
+- Validation (10 cases: /clients light 1440, dark 1920, light 768, dark 1024 reduced motion, light 402 reduced
+  motion, dark 402; /community light 1920, dark 1440 reduced motion, light 402, dark 402 reduced motion): selector
+  selected / unselected styles and contrast, phone knob, focus ring via Tab, theme flip with ARIA; 13 / 5 rows
+  with aria wiring, chevrons, Enter / Space / click open and close, chevron turn and its transition (0 s with
+  reduced motion); 7 sigils on one left edge and chevrons on one right edge, centred on their rows; overflow,
+  broken images, console / page errors, text escaping controls, wrapped labels, Light navy audit: all pass.
+  Gallery cards unclipped at 1920–360. `tsc` OK; lint 0 errors (1 existing warning); `bun run test` 91/91.
+- Audit note: the navy audit now parses `color(srgb …)` (color-mix results), which the earlier script skipped;
+  it found only the Sync Steward hat card's own indigo accent (`lib/data/hats.ts`), the documented exception
+  above, so it is excluded, not changed.
+- Not done: Figma or October 23 comparison (no artboard for these modules); Safari / Firefox; production build.
+- Open questions: 80. Should the FAQ rows carry the sigil too, or keep chevron-only? 81. Approve the client
+  copy (gallery intro and bodies, seven reasons, FAQ wording). 82. Muted unselected label strength (70 % ink).
+
+## November 3, evening (re-orientation after a lost session; widows and tablet fits), uncommitted
+
+- Re-oriented from the files and localhost only (the previous chat was lost): location, branch, HEAD `233777b`
+  and the October 23 baseline (`40f3910`) match; the Figma-pass rounds one to three below are in the working tree
+  and were re-verified, not re-implemented.
+- Already correct (verified, unchanged): /community "BUILD SOMETHING TOGETHER." on one line from 761 px (phones
+  keep the deliberate break before "TOGETHER." at 18 / 25 px); /clients inquiry subtitle on one line from 761
+  px; stepper titles ("Scope & timing") on one line; MOLOCH 55.5 px (52 px phones), one line; "OUR CLIENTS"
+  44 px; FAQ art and head spacing; Light CTA edge and disc #102D2C, Night cream / #12163B; Light navy audit
+  0 elements on both routes at 1440, 768 and 402.
+- Fixed:
+  - Widows: `.site[data-audience] { text-wrap-style: pretty }` and `balance` on headings and their two-level
+    lines (end of `venture.module.css`). Widow flags in the 10 cases 99 → 15; the rest are three-word headings
+    already balanced (65–81 % last line), the footer motto in its narrow column, one /clients card body at 402
+    ("…activate their / communities.", 36 %, kept by Chrome's pretty breaker), and hover captions hidden behind
+    a 2-line clamp. Line counts elsewhere unchanged; "/" unchanged (measured).
+  - Immersive features (Queen Raida, Moloch), 761–899 px: the copy stacks as on phones (`feature.module.css`).
+    Before, at 761–880 "MOLOCH" (361 px) overran its 316–357 px column into the body, "TOGETHER WE / SLAY"
+    broke with a widow, and at 761–768 the CTA label "FIND YOUR PATH INTO THE GUILD" escaped its pill (missed
+    by the round-three check, which tested the pill box, not its text). The title is a flex column so the
+    balance reaches the lead line ("TOGETHER / WE SLAY" at 900–1099; one line elsewhere).
+  - Hats tree, 961–1199 px (audience routes): stays under the copy as at ≤ 960 (`hats.module.css`); beside it
+    the cards were 85–105 px and "Infrastructure" / "Participation" ran out of them (pre-existing). Hats
+    section at 1024: 775 → 1090 px tall.
+  - `tests/cta-contrast.test.mjs`: the October 30 assertion "no dark-green edge exception" contradicted the
+    November 3 Light UI rule and failed since round two (only the narrative tests were run then); replaced
+    with a test that the audience Day block sets edge, disc and secondary label to #102D2C with ≥ 3:1 on
+    cream / sky / coral and ≥ 4.5:1 label on cream. "/" keeps the navy-edge test.
+- Checks: 10 focused cases (/clients light 1920, dark 1440, light 1024, dark 768, light 402; /community light
+  1440, dark 1920, light 768, dark 402, light 1024): overflow, hero lines, inquiry subtitle, stepper, wrapped
+  buttons, text escaping its button/link (new), Moloch, "OUR CLIENTS", Light/Night CTA colours, broken images,
+  page errors: all pass (see final run below). Width probes 761–1920 for the immersive titles and the Hats
+  cards. Screenshots reviewed: Moloch 768 light / 900 dark, Raida 768 dark / 1000 light, Hats 1024.
+  `tsc --noEmit` OK; `bun run lint` 0 errors (1 existing warning, `HeaderJoin.tsx`); `bun run test` 90/90.
+  Scripts and shots: `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/90979759-8989-45c7-a420-daa2409cc027/scratchpad/pw/`.
+- Not done: Figma comparison (no 768 / 1024 artboards exist yet); October 23 comparison; Safari / Firefox
+  (`text-wrap-style` pretty is Chromium and Safari 26+; Firefox falls back to normal wrapping, so widows may
+  return there); production build.
+- Open question 79: the tablet stacks (immersive copy at 761–899, Hats at 961–1199) are layout decisions made
+  to fix collisions; confirm, or supply 768 / 1024 artboards to follow instead.
+
+## November 3 (Figma pass: the owner's edit of "Clients / Light / 1440×900"), uncommitted
+
+- Reference: the owner's export of the edited Figma pilot (`~/Downloads/Clients/Light/1440×900.png`, 2880 × 15214,
+  full page). Compared with a 2× capture of localhost at 1440 × 900, light, section by section. Capture artifacts
+  ignored (the hero video poster, frozen marquees, alpha masks that did not render: the inquiry scene fade and the
+  people card edges); deliberate edits generalized to both routes, both themes, every width:
+  - Hero: second title line in the accent pink (Day and Night, both routes); /clients dek reworded with bold runs
+    ("**A decentralized collective of builders**, engineers and designers **building onchain products**, …",
+    flagged claim, source draft); from 1000 px the copy starts at 10% and ends on the content edge, the dek is up to
+    600 px, TRANSMISSION 001 ends on the content edge; from 1360 px the actions sit on the dek's row pushed right
+    (24 px gap) and the floor padding is 106 px so the title stays at 567 px; action labels never wrap.
+  - Builder network (shared): title and intro (18 px, 17 em) in a column centred on the art (440 px, 31vw from
+    1000 px, 34vw on tablets, inset ≤ 64 px); the "Build with the Guild" / "Meet the Guild on Portal" link moved to
+    the skill tabs' row (right; its own row, right-aligned, when the tabs wrap; under them on phones). Markup change
+    in `BuilderNetwork.tsx`; keyboard order tabs → link.
+  - FAQ (both routes): the approved, previously unused foundry portrait (`Ilus_03.png`) beside the list from 1000 px
+    (list 690 px at 1440, art ≤ 500 px, decorative, aria-hidden); hidden below 1000 px.
+  - Case-study name: 30 px max (was ~45 at 1440), still fitted to the copy column.
+  - Spacing from 761 px: case studies and FAQ top 0.7 × `--section-space`; builder network top 0.18 ×, its bottom
+    and the next module's top 0.33 × each. Phones unchanged.
+  - Services & capabilities: already the horizontal card gallery on both routes; unchanged (matches the artboard).
+- Files: `venture.module.css` (hero and spacing blocks appended), `audience.module.css`, `gallery.module.css`,
+  `showcase.module.css` (appended blocks), `sections/BuilderNetwork.tsx`, `sections/Faq.tsx`, both audience pages,
+  `lib/narrative/clients.ts`, `lib/data/illustrations.ts` (comment).
+- Checks: 20 states (2 routes × 2 themes × 1920/1440/1024/768/402): no horizontal overflow, broken images or page
+  errors; hero title lines, action labels, FAQ questions and the network link each on one line; actions inside the
+  viewport; no overlap between the network title/intro and its art; FAQ art loaded from 1000 px; keyboard (tabs
+  arrows → Tab to the link; FAQ Enter opens) with reduced motion. `bun test tests/narrative.test.mjs` 40/40,
+  `tsc --noEmit` OK, eslint on the changed TS/TSX OK. Visual comparison against the artboard at 1440 light only
+  (/clients); other states checked for layout, not compared to a reference (none exists). Not compared against the
+  October 23 reference.
+- Round two (owner, same session): questions 75–78 settled. "OUR CLIENTS" alone at 1.19 × `--head-bottom` (44 px at
+  1440; 28.6 px on phones, one line); FAQ head at 0.4 × `--section-space` from 761 px (46 px at 1440; the art's top
+  overhang matched to it); foundry portrait retouched (stray mark removed, `docs/asset-provenance.md`); the new
+  /clients dek approved by the owner (now `approved(…, "owner-approval")`, no review flag).
+- Light UI dark contrast (owner): every dark contrast element in Day uses `--color-dark-green` (#102D2C), never the
+  navy family. Day-scoped block at the end of `venture.module.css`: CTA edge, icon disc, secondary label and edge
+  (so the switches, builder tabs and form controls follow, in every state); the Guild prologue, roster and
+  narrative headings, the navy outline pill; builder/steward card edge shadow and selected edge, name and mark;
+  the creed scrim; the phone hero floor (≤ 760 px, was navy). Coral surfaces (Moloch, `feature.module.css`) and the
+  primary CTA label keep the green-black on-pink ink #071C1D (dark green on coral is 3.9:1). `globals.css`: the
+  Discord channel menu edge. Night unchanged (its tokens keep navy; the icon disc stays #12163B).
+  Scoped to the audience routes (`.site[data-audience]`, `[data-audience] .moloch`, `html:has([data-audience])` for the
+  menu portal): "/" keeps its navy (checked: its prologue title and outline pill still #191E4E).
+- Checks (round two): navy audit (computed colour, background, border, outline, fill, stroke and shadows of every
+  rendered element) in Day at 1440 and 402 on both routes: 0 navy elements (was 20 kinds on /clients, 48 on
+  /community). The 20-state matrix again: all pass; CTA edge/disc dark green in Day, cream/navy in Night. Night
+  hero and builder screenshots diffed against the previous run: differences only in animated rows (video, ticker,
+  member wall); copy and CTA rows identical. `tsc --noEmit` OK; `bun run lint` 0 errors (1 existing warning,
+  `HeaderJoin.tsx`, untouched); narrative tests 40/40.
+- Round three (owner): widows and Moloch, `/clients` and `/community`, both themes (end of `venture.module.css`;
+  `sections/Hero.tsx`):
+  - /community hero (owner, follow-up): the whole second line "BUILD SOMETHING TOGETHER." in the second line's
+    style (extended italic bold, coral), one line from 761 px; "FIND YOUR PEOPLE." stays the smaller first line
+    (1 : 1.4). Sized to the copy column, leaving TRANSMISSION 001 room from 1300 px: second line 53 px at 1920,
+    ~40 at 1440, ~37 at 1024, ~29 at 768. Phones: 18 / 25 px with a break before "TOGETHER." (a phone-only
+    `<br>`; one line would need a 15 px second line).
+  - Inquiry: from 761 to 1359 px the panel column is clamp(480px, 55vw, 584px) (was half the row), so the
+    description stays on one line from a 420 px column (14–16 px). Phones keep two lines.
+  - Stepper: titles never wrap; columns sized to content (the wizard's inline equal columns overridden with
+    !important); under a 400 px form the number sits above its title (phones). "[ BEGIN A TRANSMISSION ]" no
+    longer wraps.
+  - Every pill label on the two routes is nowrap ("Create your Portal profile" at 1024 and "Find your path into
+    the Guild" at 768 used to wrap); each still fits its container.
+  - MOLOCH 1.5 ×: 37 → 55.5 px from 761 px, 36 → 52 px on phones (capped to the column), one line.
+- Checks (round three): 20 states, 10 checks each (overflow; hero lines and the joined /community line; inquiry
+  description; stepper titles one line and inside the stepper; no wrapped or escaping buttons; Moloch size, one
+  line, inside the viewport; "OUR CLIENTS" and FAQ top; panel label; Light CTA dark green / Night cream + navy;
+  broken images and page errors): 0 failing. `tsc` OK, `bun run lint` 0 errors (1 existing warning), narrative
+  tests 40/40.
+- Not changed: the Sync Steward hat's indigo (`lib/data/hats.ts`, a hat colour in the tree, not a contrast
+  element); `/chat` (PrismChat, navy page, outside the two routes).
+
+## November 3 (Figma pilot: Clients / Light / 1440×900), no repository changes
+
+- File https://www.figma.com/design/PSwz2c6DpIpSr5pkcdO2u2/Untitled?node-id=7-2 (page "adaptatations"). Frame
+  `7:2` "Clients / Light / 1440×900", 1440 × 7607, at x 47 y 1400 under the 1440 template; section `15:2`
+  "Components" at x -4600. The five corrected template frames (`1:2`–`1:14`) were not touched.
+- Method: Figma's HTML capture (`generate_figma_design`, script injected through headless Chrome; no source edit)
+  of http://localhost:3017/clients at 1440 × 900, light, lazy images forced, dev badge hidden, then repaired
+  with `use_figma`: 108 Last Duel runs → outlines; 89 CSS-mask icons → 8 icon components; 79 rasters → originals
+  from `public/` (3 WebP converted losslessly to PNG: Figma's renderer showed WebP fills blank); 36 logo tiles →
+  9 vector components from the SVG originals; Ubuntu Mono italic → upright (the site loads no italic, synthesis
+  off); scroll cue rebuilt vertical; hero foreground crop (object-position) applied; ↗ → glyphs set to
+  JetBrains Mono (Ubuntu Mono lacks them; Figma fell back to emoji); 3 CSS gradient masks rebuilt as alpha
+  masks; layers renamed from the CSS-module class names.
+- Result: 671 frames, 322 instances, 186 live text layers, 661 vectors, 84 image fills (no full-page raster),
+  0 missing fonts. 82 components: 8 icons, 53 outlined display-type runs, Card / Service (Art=Contain|Cover),
+  Card / Builder, Card / Steward, FAQ / Item, Filter / Skill tab, Button / CTA pill (Context=Default|Hero),
+  Button / Carousel arrow, Link / Footer, Link / Nav, Ticker / Item, Form / Step, Form / Text field, 9 client logos.
+  Each instance was checked against its original layer before the swap (≤ 0.6 px; text positions ≤ 2 px).
+- Comparison (Figma render vs the browser at 1440 × 900, light, `/clients`, client audience, same session):
+  share of pixels differing by > 64/255 per section: hero 1.9 %, ticker 5.8 %, services 0.8 %, works 2.8 %,
+  builders 1.9 %, people 1.0 %, FAQ 0.3 %, inquiry 3.8 %, creed 0.6 %, footer 1.5 % (raw capture: 1.4–9.4 %).
+  Remaining differences: the three marquees are frozen at a different animation offset; the hero and creed use
+  the video posters; Ubuntu Mono labels measure up to ~2–4 px wider in Figma; noise texture/dot pattern subtle;
+  **the alpha masks (logo marquee edges, inquiry scene fade, profession figure fade) do not render in the MCP
+  renderers at all, even a solid test mask: not verified, check in the Figma app.** Not compared against the
+  October 23 reference (the page has diverged from it by design).
+- Not componentized (single use or different structure): header switches, works step buttons, the works
+  "Discuss your project" pill, textarea and Discord field. Scratch files (not versioned):
+  `/private/tmp/claude-501/-Users-louchi-Projects-raidguild-integration/b5016376-01ac-4b01-a709-c89b0124fdcc/scratchpad/fx/`.
+- Open questions:
+  72. **Display type in Figma:** the MCP runtime only has Google Fonts (no local fonts), so Last Duel is outlined
+      (vector, not editable text). Keep outlines, or enable Figma font access / upload Last Duel to a team (licence,
+      question 64) so the runs can be rebuilt as live text?
+  73. Approve the pilot (structure, naming, components, Components section placement) before the other 19
+      compositions (1920, 1024, 768, 402 × light/dark × /clients, /community).
+  74. Marquee/ticker frames: keep the captured animation offset or reset every track to its start position?
 
 ## November 3 (preview deploy of the working tree)
 
@@ -446,10 +862,10 @@ iteration. Promoting iteration 04 to production still needs approval.
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
 | Branch | `feat/venture-beyond-integration` (no upstream configured) |
-| HEAD | `04da57f` "feat(venture): November 2 typography, mobile, hero, galleries and FAQ" (2026-11-02, not pushed), on `1adb327`. Uncommitted: this STATUS update and the owner's files (`package.json`, 21 deleted legacy images, `clients.pdf`), plus the unused `LastDuel-Ex2Retalic.otf`. |
+| HEAD | `233777b` "feat(venture): community restructure, hero seam, Works label, review domain root" (2026-11-03, not pushed), on `04da57f`. Uncommitted: STATUS.md and the owner's files (`package.json`, 21 deleted legacy images, `clients.pdf`), plus the unused `LastDuel-Ex2Retalic.otf`. |
 | Compared with `origin/main` (`b02d67b`) | 90 ahead, 1 behind |
 | Other worktrees | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
-| Local server | http://localhost:3017 (`bun run dev --port 3017`, restarted 2026-11-02 night; it served a stale server module); `/`, `/clients`, `/community` 200, serving `1adb327` plus the uncommitted November 2 work |
+| Local server | http://localhost:3017 (`bun run dev --port 3017`) is stale for /clients since 2026-11-03 late night; http://localhost:3018 (`bun run dev --port 3018`, started 2026-11-03) serves the current working tree |
 
 ## References (keep them separate)
 
@@ -485,6 +901,15 @@ iteration. Promoting iteration 04 to production still needs approval.
   - Measure future comparisons at those scales.
 
 ### Deployed review
+
+**2026-11-03, Production of the review project (latest):** commit `233777b` (the November 3 iteration Tae
+reviewed as preview `dpl_Di9vK5qe5LQAgzu4aALNtYd6U8iK`, plus a redirect of `/` to `/clients` scoped to
+raidguild.estudioblanco.org), owner-approved, not pushed. `dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD`, Ready, aliased to
+https://raidguild-venture-beyond-review.vercel.app (public; `/`, `/clients`, `/community` 200). Clean copy checks:
+frozen install, tsc, tests 89/89, lint 0 errors, build; the host redirect tested locally. Domain
+`raidguild.estudioblanco.org` added to the project (ownership verified); **pending the owner's Cloudflare change**
+(remove the redirect to Railway; `raidguild` CNAME to Vercel, DNS only). raidguild.org not touched. Rollback:
+promote `dpl_HqkPYA55qh5V9QHFQpUxwWZ1xjko`. Record: `~/Projects/raidguild-backups/2026-11-03/`.
 
 **2026-11-02 23:38 -0300, preview only (latest):** commit `04da57f` (November 2 iteration) as a Vercel
 **Preview** deployment of `raidguild-venture-beyond-review`: `dpl_HvV74WQ9m3QJ2CmCTNJ61VrRJVYP`,

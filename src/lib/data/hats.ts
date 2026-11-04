@@ -1,7 +1,8 @@
 // RaidGuild's Hats Protocol tree (Gnosis chain, tree 1822), as a reference
 // snapshot taken on October 29, 2026 from the Hats app and the owner's
-// screenshot. It lists roles only: wearers are not shown, and the diagram does
-// not claim live status. Live roles: HATS_TREE_URL.
+// screenshot. It lists roles only, and the diagram does not claim live status.
+// (November 3: the cards flip to the site's published steward for each role,
+// from lib/data/venture.ts, not to live wearers.) Live roles: HATS_TREE_URL.
 //
 // Featured roles carry the owner's illustration (docs/asset-provenance.md):
 // 600 × 600 PNGs at /images/venture/hats/<slug>.png, shown at about 76–176 px.
@@ -21,7 +22,8 @@ export type HatRole = {
   accent?: string;
 };
 
-export const hatsParent = { id: "1822", name: "RaidGuild Steward Admin", image: "/images/venture/hats/raidguild.png", width: 800, height: 800 };
+// `imageDay` (November 3, owner): the same mark with dark-green swords for Day (docs/asset-provenance.md).
+export const hatsParent = { id: "1822", name: "RaidGuild Steward Admin", image: "/images/venture/hats/raidguild.png", imageDay: "/images/venture/hats/raidguild-green.png", width: 800, height: 800 };
 
 const featured = (id: string, name: string, slug: string, accent: string): HatRole =>
   ({ id, name, slug, image: `/images/venture/hats/${slug}.png`, accent });

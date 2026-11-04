@@ -745,6 +745,8 @@ html {
 .contact-channel-menu [role="option"] { border-radius: 10px; cursor: pointer; font: 600 15px/1.2 var(--font-ubuntu), sans-serif; min-height: 44px; padding-left: 36px; padding-right: 14px; }
 .contact-channel-menu [role="option"][data-highlighted] { background: #e6dfc9; color: #102d2c; outline: none; }
 .contact-channel-menu [role="option"] svg { color: #ce1252; }
+/* Light UI dark contrast (November 3): dark green on the audience routes; "/" keeps navy. */
+html:not([data-theme="dark"]):has([data-audience]) .contact-channel-menu { border-color: #102d2c; }
 html[data-theme="dark"] .contact-channel-menu { background: #191e4e; border-color: #efe9d7; box-shadow: 0 12px 28px rgba(0, 0, 0, .45); color: #efe9d7; }
 html[data-theme="dark"] .contact-channel-menu [role="option"][data-highlighted] { background: #262d69; color: #efe9d7; }
 html[data-theme="dark"] .contact-channel-menu [role="option"] svg { color: #ee3c78; }

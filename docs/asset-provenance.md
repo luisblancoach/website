@@ -93,6 +93,7 @@ with iteration 02 (without `.DS_Store` files), together with the deletion of `qu
 | `public/images/venture/entities/moloch/moloch-rectangle.png` | 2508 × 1412 | 16:9 | PNG RGBA | tablets and squarer monitors | `002f2958b406b4ae54d91571709c5bad` |
 | `public/images/venture/entities/moloch/moloch-mobile.png` | 1536 × 2304 | 2:3 | PNG RGBA | phones | `5a50b07449f84d2c678add21a476d322` |
 | `public/images/venture/hats/raidguild.png` | 800 × 800 | 1:1 | PNG RGBA | Hats Tree parent node (1822), 132 px desktop, 64 px phone | `c077e8ec73708f758923919cac0e447c` |
+| `public/images/venture/hats/raidguild-green.png` | 800 × 800 | 1:1 | PNG RGBA | Hats Tree parent node in Day (November 3, owner request): `raidguild.png` with the navy swords (#191E4E) recoloured to dark green (#102D2C); antialiased edges remapped by blend share, pink and cream untouched. Night keeps the original | `572a666ee9d019d2c2680f4fd7f4d26c` |
 | `public/images/venture/hats/knowledge-steward.png` | 600 × 600 | 1:1 | PNG RGBA | role card, about 176 px desktop, 76 px phone | `7c631ba0254b08c7b35b327a0b1b8fd0` |
 | `public/images/venture/hats/infrastructure-steward.png` | 600 × 600 | 1:1 | PNG RGBA | same | `5b9ea78f7a2846e1828db2c802bdbdfb` |
 | `public/images/venture/hats/sync-steward.png` | 600 × 600 | 1:1 | PNG RGBA | same | `aa8bbaecefcf5a0b05b0901ce3fb5bfb` |
@@ -211,3 +212,14 @@ Removed the same day: the six Grinder WOFF2 files (`Grinder-{Regular,Italic,Reta
 (`arrow-right-flat`, `arrow-left-flat`, `arrow-down`, `arrow-right-down`, `arrow-right-up`) wrapped in a 180°
 rotation, so the hilt leads in the action's direction. Generated from the originals, which stay on disk; the
 pill icon masks (`venture.module.css`) use the new files. Untracked until committed with that CSS.
+
+## 2026-11-03 — `public/images/illustrations/Ilus_03.png` (foundry portrait) retouched
+
+- Change: a stray vertical mark (an isolated sliver of opaque pixels at x 1262–1270, y 1256–1342 of the
+  1536 × 2048 file, clear of the machine) made fully transparent, at the owner's request (visible beside the
+  FAQ). The 871 pixels in the box x 1250–1300 × y 1230–1370 had their alpha set to 0; nothing else changed
+  (same size, RGBA, PNG re-encoded).
+- Before: sha256 `78d1d2056a45618faf2db80df34da0e7277a77824ef0351dabc86e267288a682` (2,316,352 bytes), kept at
+  `~/Projects/raidguild-backups/2026-11-03/Ilus_03.original.png`.
+- After: sha256 `b6492c83b6e714d8e9a143f9117e53360a0577aeba8bcdf96413cb9d7382d362` (2,186,205 bytes).
+- Use: decorative, beside the FAQ on /clients and /community from 1000 px (empty alt, aria-hidden).
