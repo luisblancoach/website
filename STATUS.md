@@ -8,11 +8,16 @@ below "Session log" is history; the sections in this first part are the source o
 - **Latest integrated implementation:** commit `7417113` "feat(venture): baseline for Dekan review" on
   `feat/venture-beyond-integration`, pushed to `fork`. PR raid-guild/website#106 was **merged by dekanbro on 2026-11-04**
   into `origin/review/venture-beyond-redesign` as squash commit `7d0e878`, whose tree is identical to `7417113`.
-- **Latest local implementation:** `7417113` plus the Night (dark theme) colour fixes the owner requested on 2026-11-06
-  (CTA edge and disc, Moloch CTA, gallery cards), implemented locally. Not committed, not pushed, not published.
+- **Latest local implementation:** `1b86fd6` "feat(routes): move Hire the DAO from /clients to /agency" (owner-approved,
+  2026-11-07), tagged **`checkpoint/agency-baseline`**. Its tree is identical to the verified clean archive. A docs
+  commit follows it. Not pushed, not deployed.
+  - Still uncommitted on top: the Night (dark theme) colour fixes of 2026-11-06 (CSS only), kept **out** of the
+    baseline, and the owner's files listed below.
 - **Latest published content:** the Railway host (below) serves content identical to `7417113`.
 - **Not done:**
-  - `/clients` → `/agency` rename: proposed only; `/agency` returns 404 locally, on Railway and on Vercel.
+  - `/agency` exists only locally (worktree and the clean build on :3022). Railway and Vercel still serve `/clients`.
+  - The independent deployment on `raidguild.estudioblanco.org`: Cloudflare Workers chosen by the owner (2026-11-07);
+    the plan is being prepared. Nothing deployed; DNS and the Railway redirect are unchanged.
   - The SEO / AEO audit items: none implemented yet.
   - Tae's copy extraction: on hold until the editorial format is approved.
 
@@ -21,7 +26,8 @@ below "Session log" is history; the sections in this first part are the source o
 | Item | Value (verified 2026-11-07) |
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
-| Branch / HEAD | `feat/venture-beyond-integration` @ `7417113` (2026-11-04 12:59 -0300); no upstream configured |
+| Branch / HEAD | `feat/venture-beyond-integration` @ the docs commit "docs: record the agency baseline and Cloudflare hosting decision" on top of `1b86fd6` (2026-11-07); no upstream configured |
+| Baseline tag | `checkpoint/agency-baseline` (annotated) → `1b86fd6`, local only, not pushed |
 | `fork` (luisblancoach/website) | `fork/feat/venture-beyond-integration` = `7417113` (pushed 2026-11-04) |
 | `origin` (raid-guild/website) | `main` = `b02d67b` (unchanged). Integration lands on **`review/venture-beyond-redesign`** = `7d0e878` (PR #106, squash of `7417113`, parent `a6418ea`). `feat/venture-beyond-redesign` = `7d25ae2` (PR #100, open, older parallel work) |
 | Other worktrees (clean) | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
@@ -36,7 +42,7 @@ below "Session log" is history; the sections in this first part are the source o
 | Nov 3 restructure (community, hero seam, Works, review-domain redirect) | yes | `233777b` | fork, 2026-11-04 | in `7d0e878` | **Vercel production alias** (`dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD`) | 2026-11-03 checks; alias content re-checked 2026-11-07 |
 | Nov 3–4 iteration (Figma pass, widows / tablet, selectors, client reasons, FAQ, chevrons, /community order and surfaces, Hats and steward flips, builder wall, category buttons, Projects Explorer) | yes | `7417113` | fork | `7d0e878` | Railway (content match); Vercel preview `dpl_DaWdfzxANbXHjSGXbDctk3ej2sk2` | 2026-11-04 clean archive: tsc, lint 0 errors, tests 91/91, build, 10-case browser set + 24 explorer checks. 2026-11-07: Railway text identical to the `7417113` build (all 276 copy strings, 0 line differences) |
 | Nov 6 Night (dark theme) colour fixes, requested by the owner | yes, locally | no | no | no | no (Railway still shows the previous state, verified 2026-11-07) | 2026-11-06: tsc, lint, tests 91/91, 10-case set on :3018 |
-| `/clients` → `/agency` rename | **no** (proposal only) | — | — | — | — | `/agency` 404 everywhere |
+| `/clients` → `/agency` route migration (owner, 2026-11-07) | yes | `1b86fd6`, tag `checkpoint/agency-baseline` | no | no | no | 2026-11-07 clean archive: tests 93/93, tsc, lint 0 errors, build; 8-case pixel comparison vs `7417113` = 0 px; 16 behaviour checks pass |
 | SEO / AEO audit (Tae, v2, 6 Nov) | **no** (analysis only) | — | — | — | — | response written (see Records) |
 
 ## Hosts and routes (verified 2026-11-07)
@@ -49,7 +55,7 @@ below "Session log" is history; the sections in this first part are the source o
 | https://raidguild.estudioblanco.org | Cloudflare 302 to the Railway host (the planned CNAME to Vercel was never configured) | — | — | — |
 | https://www.raidguild.org | Old site; the redesign is not there (`/clients` 404) | 404 | — | — |
 
-Routes in code: `/` (entry, unchanged), `/clients` (Hire the DAO, light by default), `/community` (Join the DAO), `/chat`, `/witch`. `/clients` page order: hero, ticker, services gallery, Why build with RaidGuild, previous works, builder network, people (stewards), FAQ, inquiry, creed. `/community` page order: hero, ticker, Guild, capabilities gallery, Queen Raida, Moloch, Hats tree, Membership, builder network, Projects Explorer, Join, FAQ, creed.
+Routes in code (working tree, 2026-11-07): `/` (entry, unchanged), `/agency` (Hire the DAO, light by default; `/clients/*` 308 → `/agency/*`), `/community` (Join the DAO), `/chat`, `/witch`. `/agency` page order: hero, ticker, services gallery, Why build with RaidGuild, previous works, builder network, people (stewards), FAQ, inquiry, creed. `/community` page order: hero, ticker, Guild, capabilities gallery, Queen Raida, Moloch, Hats tree, Membership, builder network, Projects Explorer, Join, FAQ, creed.
 
 ## Uncommitted in this worktree
 
@@ -76,6 +82,7 @@ Routes in code: `/` (entry, unchanged), `/clients` (Hire the DAO, light by defau
 | :3018 | `bun run dev` of this worktree (current, incl. Night fixes) |
 | :3021 | `next start` of `7417113` (`~/Projects/raidguild-backups/2026-11-04/verify-7417113`) |
 | :3020 | `next start` of the Nov 3 preview copy (same content as `7417113`) |
+| :3022 | `next start` of the clean `/agency` baseline (`~/Projects/raidguild-backups/2026-11-07/verify-agency`; tree identical to `1b86fd6`, no Night CSS, no owner files) |
 | :3017 | Stale dev server (mixed old content); do not use. Stopping it was not permitted to Claude; the owner can run `kill 83540` |
 
 The scratch Playwright scripts live in the session scratchpad and are not versioned.
@@ -91,7 +98,14 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 
 ## Open questions and pending decisions (current)
 
-1. **Route rename** `/clients` → `/agency`, nav "Agency / Community", and a `/clients` 308 redirect: proposed, not decided, not implemented. Impact analysis: session of 2026-11-06.
+1. **Route rename:** decided by the owner on 2026-11-07 and implemented locally (308 included). Not committed. The nav labels stay "Hire the DAO / Join the DAO": the "Agency / Community" labels were not requested.
+1a. **Independent deployment on `raidguild.estudioblanco.org`** (November 7 entry):
+   - hosting: **Cloudflare Workers, chosen by the owner** on 2026-11-07. Owner constraints: review flags off by
+     default; the host stays out of search indexing; no production lead submission yet; no change to DNS, the
+     redirect rules, Railway or raidguild.org until the Worker is deployed and verified;
+   - Workers Paid plan (the Worker is 4.2 MB gzip);
+   - forms: **not configured** for now (owner); `noindex` for the whole host: **yes** (owner); review flags: **off** (owner);
+   - which Cloudflare account holds the zone, and which rule redirects to Railway (a Redirect Rule, a Page Rule or a Bulk Redirect).
 2. **Editorial format for Tae's copy round:** proposal of 2026-11-07, awaiting approval. It covers two page documents plus a shared one, hidden IDs, layout notes and status tags. Copy extraction is on hold. The interim one-line export is on `~/Desktop/raidguild-copy-for-tae.md`; whether it was sent to Tae is not verified.
 3. **SEO / AEO audit decisions D-1 to D-7** (`~/Projects/raidguild-backups/2026-11-06/raidguild-seo-aeo-audit-response.md`). Nothing is implemented. The decisions cover:
    - real FAQ values (price, timelines, payment method, contracting entity, maintenance);
@@ -142,6 +156,12 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 
 ## Next priorities
 
+0. (2026-11-07, owner order) Establish the `/agency` baseline before Editorial Mode:
+   1. done: the baseline commit `1b86fd6` and the tag `checkpoint/agency-baseline`;
+   2. done: Cloudflare Workers chosen;
+   3. next: approve the Cloudflare deployment (the plan and its exact commands); cut over after verification.
+
+   Editorial Mode (the Phase 01 proposal of 2026-11-07) waits for that baseline.
 1. The owner approves the editorial format (2), then the copy round with Tae.
 2. Decide the route rename (1) and the SEO / AEO decisions (3); then implement in the proposed order (bugs, sitemap and llms.txt, FAQ, JSON-LD) with about 10 focused checks.
 3. Approve committing and shipping the Night fixes (4).
@@ -154,6 +174,7 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
   - `2026-11-03/DEPLOY-vercel-preview-wt2.md`
   - `2026-11-04/verify-7417113/`
 - SEO response: `2026-11-06/raidguild-seo-aeo-audit-response.md`.
+- `/agency` baseline verification: `2026-11-07/verify-agency/` (clean archive, `build.log`). Cloudflare spike: `2026-11-07/spike-cloudflare/` (adapter build and `wrangler deploy --dry-run`; nothing deployed).
 - Copy export and its generator: `2026-11-07/` (`export-copy.ts`, `raidguild-copy-for-tae.md`, and `.ORIGINAL.md` for diffing returned edits).
 
 ---
@@ -161,6 +182,74 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 # Session log (newest first; history, not current state)
 
 Entries marked "uncommitted" were committed later: the November 2 work in `04da57f`, the November 3 work in `233777b` and `7417113`. Their verification notes describe the state at the time.
+
+## November 7: `/agency` route migration and independent baseline (owner request), uncommitted
+
+- Order changed by the owner: no Editorial Mode until the baseline under `raidguild.estudioblanco.org` exists. The
+  Editorial Mode Phase 01 proposal (audit, a draft layer on the narrative IDs) was delivered earlier the same day,
+  with no code.
+- Migration: `/agency` is the canonical client route. `/clients/:path*` → `/agency/:path*` permanent (308). The
+  review-domain root goes to `/agency`, and so does `?audience=hire`. Also changed: the theme default and boot
+  script, section routing, the nav map, canonical and `og:url`, and the `review:claims` label. The audience id
+  stays `clients`, so `data-audience` and the CSS are untouched. Sitemap unchanged (`/` only; the audience routes
+  are `noindex`). `metadataBase` unchanged (SEO D-2). `/community` unchanged.
+- Checks:
+  - Worktree: tests 93/93 (2 new redirect-config tests), tsc OK, lint 0 errors (1 existing warning).
+  - Clean archive (`9be9060` + the 9 paths): the same, plus a production build; `/agency` 22.1 / 284 kB and
+    `/community` 27.5 / 176 kB, identical to the `7417113` build.
+- HTTP on `next start` (:3022):
+  - `/agency` and `/community`: 200.
+  - `/clients`: 308 to `/agency`. The query is kept and `/clients/x` goes to `/agency/x`; `/clients/` takes 2 hops,
+    via Next's trailing-slash rule.
+  - `/?audience=hire`: 307 to `/agency`. Host `raidguild.estudioblanco.org` `/`: 307 to `/agency`.
+  - `/join`: 308 to the Portal.
+  - No `href="/clients"` remains; the audience switch links to `/agency`.
+- Visual comparison against the current verified implementation (`7417113`, :3021 `/clients`) on :3022:
+  - Cases: `/agency` and `/community` × Day / Night (stored preference) × 1440×900 / 390×844, reduced motion,
+    full page.
+  - Result: **0 differing pixels in all 8 cases**, identical visible text, identical heights, no page errors.
+  - This compares against `7417113`, not against the October 23 reference; parity with October 23 is not
+    re-verified.
+- Behaviour, 16 checks, all pass:
+  - route default themes ignore the system preference;
+  - `/clients?utm_source=x#project-inquiry` lands on `/agency?utm_source=x#project-inquiry` in a single hop,
+    scrolled to the inquiry;
+  - the audience switch works both ways (client-side);
+  - the `/agency` nav uses in-page anchors;
+  - the route default theme is not stored, and the Night switch persists across a reload;
+  - the phone menu opens;
+  - no page errors.
+- Kept out of the baseline: the Night CSS (3 files), `package.json`, `member-louchi.png`, the 21 legacy
+  deletions, `LastDuel-Ex2Retalic.otf` and `clients.pdf`. A `diff -rq` of the worktree against the clean archive
+  shows only these.
+- Domain, read-only checks:
+  - `estudioblanco.org` is on Cloudflare (`jacob` / `mimi`), and `raidguild` is proxied.
+  - Every path answers 302 to the Railway root: the path is dropped and the query kept. `/community` therefore
+    lands on Railway's `/` today.
+  - The rule type and the origin record are not visible without dashboard access.
+  - Vercel: `estudioblanco.org` is registered in the `luisblancoachs-projects` team (2026-11-03), nameservers at
+    Cloudflare; the CLI reports it as not configured. While checking, `vercel project inspect` printed the
+    project ID to the session output (not copied anywhere).
+- Wrangler (installed in the spike copy only): the OAuth login has `workers:write`, `workers_routes:write` and
+  `zone:read`, but no DNS-record or rules scope.
+- Cloudflare spike (`2026-11-07/spike-cloudflare`, local only, nothing deployed, no account calls):
+  - Setup: `@opennextjs/cloudflare` 1.20.16 and `wrangler` 4.158.0.
+  - Build: OK with Turbopack.
+  - Size: `wrangler deploy --dry-run` = 10,558 KiB, **4,200 KiB gzip**. Over the 3 MB free limit, so it needs
+    Workers Paid. Assets: 547 files, 257 MB, none over 25 MiB.
+  - Behaviour in `wrangler dev` (workerd): the same routes, redirects and host redirect, `/_next/image` and fonts.
+    Same API answers: Portal posts and artifacts, form validation, 410 for applications.
+  - Pixels against `7417113`: identical text and heights. Pixel differences only inside `<img>`: with images
+    hidden, **0 px in all 8 cases**. The cause is Cloudflare's WebP encoder: 95 KB against sharp's 87 KB for the
+    hero foreground. Visually identical in the hero at 1440 px.
+- Not done at the time of the report: no commit, tag, push, deployment, DNS or rule change. Railway, raidguild.org,
+  the Vercel project and `origin/review/venture-beyond-redesign` are untouched.
+- Owner approval (same day):
+  - Commit `1b86fd6` "feat(routes): move Hire the DAO from /clients to /agency", made of exactly the 9 paths. Before
+    committing, the staged tree was compared with `verify-agency` and found byte-identical.
+  - Annotated tag `checkpoint/agency-baseline` → `1b86fd6`.
+  - A separate docs commit for this record.
+  - No push, no deploy. The owner chose Cloudflare Workers as the hosting.
 
 ## November 6: Night CTAs and gallery cards (owner), uncommitted on top of `7417113`
 
