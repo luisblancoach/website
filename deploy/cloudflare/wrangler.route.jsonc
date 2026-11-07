@@ -1,0 +1,20 @@
+// Cutover configuration: identical to wrangler.jsonc plus the route on the
+// existing proxied record. Used only at cutover (`wrangler deploy -c
+// wrangler.route.jsonc`), after the workers.dev deployment has been verified and
+// the owner has approved the cutover. Keep the two files in step
+// (build.sh checks that they differ only by "routes").
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "raidguild-estudioblanco",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "raidguild-estudioblanco" }],
+  "images": { "binding": "IMAGES" },
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  "vars": { "SHOW_REVIEW_FLAGS": "false" },
+  "routes": [{ "pattern": "raidguild.estudioblanco.org/*", "zone_name": "estudioblanco.org" }]
+}

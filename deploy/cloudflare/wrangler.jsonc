@@ -1,0 +1,25 @@
+// Cloudflare Workers configuration for the independent review deployment
+// (raidguild.estudioblanco.org). build.sh copies it to the root of a clean
+// build directory; it is never used from the repository itself.
+//
+// This file deploys to workers.dev only (no route). wrangler.route.jsonc adds
+// the route on raidguild.estudioblanco.org and is used only at cutover.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "raidguild-estudioblanco",
+  // Deployment wrapper: noindex on every response, lead endpoints disabled.
+  "main": "worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "raidguild-estudioblanco" }],
+  // next/image optimisation through the Images binding (5,000 unique
+  // transformations a month included, then billed).
+  "images": { "binding": "IMAGES" },
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  // Runtime environment. The audience pages are prerendered, so build.sh sets
+  // the same value at build time; review flags stay off on this host.
+  "vars": { "SHOW_REVIEW_FLAGS": "false" }
+}
