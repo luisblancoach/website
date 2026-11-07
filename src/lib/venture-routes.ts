@@ -3,7 +3,9 @@
 // route navigate to the route that owns it.
 
 export const AUDIENCES = [
-  { id: "clients", label: "Hire the DAO", href: "/clients" },
+  // The id "clients" is internal (data-audience, CSS, narrative); the route is
+  // /agency since November 7, 2026, and /clients redirects to it (next.config.ts).
+  { id: "clients", label: "Hire the DAO", href: "/agency" },
   { id: "community", label: "Join the DAO", href: "/community" },
 ] as const;
 
@@ -23,21 +25,21 @@ const sectionHome: Record<SectionId, string> = {
   path: "/community",
   join: "/community",
   raida: "/community",
-  spears: "/clients",
-  capabilities: "/clients",
-  "case-studies": "/clients",
-  contact: "/clients",
-  "project-inquiry": "/clients",
+  spears: "/agency",
+  capabilities: "/agency",
+  "case-studies": "/agency",
+  contact: "/agency",
+  "project-inquiry": "/agency",
 };
 
 const routeSections: Record<string, readonly SectionId[]> = {
   "/": ["guild", "team", "work", "gallery", "uncharted", "spears", "contact", "project-inquiry"],
   "/community": ["guild", "raida", "work", "gallery", "uncharted", "team", "join", "spears", "capabilities"],
-  "/clients": ["case-studies", "spears", "capabilities", "team", "contact", "project-inquiry"],
+  "/agency": ["case-studies", "spears", "capabilities", "team", "contact", "project-inquiry"],
 };
 
 export function routeHasSection(pathname: string, section: SectionId) {
-  return routeSections[pathname === "/agency" ? "/clients" : pathname]?.includes(section) ?? false;
+  return routeSections[pathname]?.includes(section) ?? false;
 }
 
 export function sectionHref(pathname: string, section: SectionId) {
@@ -45,14 +47,13 @@ export function sectionHref(pathname: string, section: SectionId) {
 }
 
 export function audienceForPath(pathname: string): AudienceId | null {
-  const audiencePath = pathname === "/agency" ? "/clients" : pathname;
-  return AUDIENCES.find((audience) => audiencePath === audience.href || audiencePath.startsWith(`${audience.href}/`))?.id ?? null;
+  return AUDIENCES.find((audience) => pathname === audience.href || pathname.startsWith(`${audience.href}/`))?.id ?? null;
 }
 
 // The October 23 review build switched audiences with "/?audience=hire|join".
 // Those links now land on the audience routes. Other query parameters and the
 // hash survive; the audience parameter is dropped, so the target never redirects.
-const legacyAudienceRoutes: Record<string, string> = { hire: "/clients", join: "/community" };
+const legacyAudienceRoutes: Record<string, string> = { hire: "/agency", join: "/community" };
 
 export function legacyAudienceRedirect(url: URL): URL | null {
   if (url.pathname !== "/") return null;
