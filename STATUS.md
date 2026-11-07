@@ -1,17 +1,181 @@
 # STATUS
 
-Snapshot: 2026-11-04 (-0300), baseline commit for Dekan's review (section "November 4"); earlier: see "November 3, late night", "November 3, night" and "November 3, evening" below for the latest uncommitted pass. HEAD `233777b` (November 3 iteration, owner-approved production deploy of
-the review project; not pushed; see "Deployed review"). Uncommitted: STATUS.md and the owner's files (`package.json`,
-21 deleted legacy images, `clients.pdf`, `LastDuel-Ex2Retalic.otf`). The Figma pilot below changed no repository
-file. **Blocker before any commit or deploy: the Last Duel files' own licence field forbids web
-hosting and redistribution** (open question 64).
+Current state verified on **2026-11-07 (-0300)** from the repository, the remotes, GitHub and the live hosts. Everything
+below "Session log" is history; the sections in this first part are the source of truth.
 
-**Figma export (current task):** pilot `Clients / Light / 1440×900` built and awaiting owner review; the other 19
-compositions are not started (section "November 3 (Figma pilot)").
+## Snapshot
 
-**Next priority:** the owner reviews the galleries / FAQ (and supplies the FAQ placeholder values), the hero desktop pass and the hero experiment (70), the mobile pass and the hierarchy pass and decides 64 (licence), 65 (card
-names), 67 (bottom-line italic), 68 (creed on desktop) and 69 (Moloch mark); commit / deploy only once those are
-settled and approved. (69 is resolved: the Moloch mark was removed.)
+- **Latest integrated implementation:** commit `7417113` "feat(venture): baseline for Dekan review" on
+  `feat/venture-beyond-integration`, pushed to `fork`. PR raid-guild/website#106 was **merged by dekanbro on 2026-11-04**
+  into `origin/review/venture-beyond-redesign` as squash commit `7d0e878`, whose tree is identical to `7417113`.
+- **Latest local implementation:** `7417113` plus the Night (dark theme) colour fixes the owner requested on 2026-11-06
+  (CTA edge and disc, Moloch CTA, gallery cards), implemented locally. Not committed, not pushed, not published.
+- **Latest published content:** the Railway host (below) serves content identical to `7417113`.
+- **Not done:**
+  - `/clients` → `/agency` rename: proposed only; `/agency` returns 404 locally, on Railway and on Vercel.
+  - The SEO / AEO audit items: none implemented yet.
+  - Tae's copy extraction: on hold until the editorial format is approved.
+
+## Expected environment
+
+| Item | Value (verified 2026-11-07) |
+|---|---|
+| Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
+| Branch / HEAD | `feat/venture-beyond-integration` @ `7417113` (2026-11-04 12:59 -0300); no upstream configured |
+| `fork` (luisblancoach/website) | `fork/feat/venture-beyond-integration` = `7417113` (pushed 2026-11-04) |
+| `origin` (raid-guild/website) | `main` = `b02d67b` (unchanged). Integration lands on **`review/venture-beyond-redesign`** = `7d0e878` (PR #106, squash of `7417113`, parent `a6418ea`). `feat/venture-beyond-redesign` = `7d25ae2` (PR #100, open, older parallel work) |
+| Other worktrees (clean) | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
+| Approved visual baseline | `checkpoint/oct23-iteration` = `40f3910`; `~/Projects/raid-guild/website` on `design/venture-beyond-iteration` @ `40f3910` (verified) |
+| Stash | empty |
+
+## Work status (what is implemented vs committed vs published)
+
+| Work | Implemented | Committed | Pushed | Merged upstream | Deployed | Verified |
+|---|---|---|---|---|---|---|
+| Nov 2 iteration (Last Duel, hierarchy, mobile, hero, galleries, FAQ) | yes | `04da57f` | fork, 2026-11-04 | in `7d0e878` | Vercel preview `dpl_HvV74…`; in all later builds | tests and build at the time; superseded |
+| Nov 3 restructure (community, hero seam, Works, review-domain redirect) | yes | `233777b` | fork, 2026-11-04 | in `7d0e878` | **Vercel production alias** (`dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD`) | 2026-11-03 checks; alias content re-checked 2026-11-07 |
+| Nov 3–4 iteration (Figma pass, widows / tablet, selectors, client reasons, FAQ, chevrons, /community order and surfaces, Hats and steward flips, builder wall, category buttons, Projects Explorer) | yes | `7417113` | fork | `7d0e878` | Railway (content match); Vercel preview `dpl_DaWdfzxANbXHjSGXbDctk3ej2sk2` | 2026-11-04 clean archive: tsc, lint 0 errors, tests 91/91, build, 10-case browser set + 24 explorer checks. 2026-11-07: Railway text identical to the `7417113` build (all 276 copy strings, 0 line differences) |
+| Nov 6 Night (dark theme) colour fixes, requested by the owner | yes, locally | no | no | no | no (Railway still shows the previous state, verified 2026-11-07) | 2026-11-06: tsc, lint, tests 91/91, 10-case set on :3018 |
+| `/clients` → `/agency` rename | **no** (proposal only) | — | — | — | — | `/agency` 404 everywhere |
+| SEO / AEO audit (Tae, v2, 6 Nov) | **no** (analysis only) | — | — | — | — | response written (see Records) |
+
+## Hosts and routes (verified 2026-11-07)
+
+| Host | Serves | `/clients` | `/community` | `/agency` |
+|---|---|---|---|---|
+| https://raidguild-website-redesign-production.up.railway.app (Railway; the host Tae and Dekan review and audit) | Content identical to `7417113`; Night CTA edge still cream, i.e. before the Nov 6 fixes. Deploy source assumed to be `origin/review/venture-beyond-redesign` (not verified: no Railway access) | 200 | 200, Projects Explorer | 404 |
+| https://raidguild-venture-beyond-review.vercel.app (Vercel production alias, project `raidguild-venture-beyond-review`) | `233777b` (`dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD`, 2026-11-03): **older**, no Explorer, no client reasons | 200 | 200, old "Follow your curiosity" | 404 |
+| Vercel preview `dpl_DaWdfzxANbXHjSGXbDctk3ej2sk2` (https://raidguild-venture-beyond-review-enve71f46.vercel.app, login required) | Working tree of 2026-11-03 night = `7417113` content | 200 | 200 | — |
+| https://raidguild.estudioblanco.org | Cloudflare 302 to the Railway host (the planned CNAME to Vercel was never configured) | — | — | — |
+| https://www.raidguild.org | Old site; the redesign is not there (`/clients` 404) | 404 | — | — |
+
+Routes in code: `/` (entry, unchanged), `/clients` (Hire the DAO, light by default), `/community` (Join the DAO), `/chat`, `/witch`. `/clients` page order: hero, ticker, services gallery, Why build with RaidGuild, previous works, builder network, people (stewards), FAQ, inquiry, creed. `/community` page order: hero, ticker, Guild, capabilities gallery, Queen Raida, Moloch, Hats tree, Membership, builder network, Projects Explorer, Join, FAQ, creed.
+
+## Uncommitted in this worktree
+
+- **Night (dark theme) colour fixes:** owner-requested on 2026-11-06, implemented locally in `src/components/venture/{venture,feature,gallery}.module.css`, not committed and not published. The documentation of this synchronization is committed separately (`docs: reconcile continuity with November 7 verified state`).
+- **Owner's files, never committed on purpose:**
+  - `package.json` (`packageManager: yarn` line);
+  - 21 deleted legacy images (`public/images/{cohort,expect,hire,home}-*`);
+  - `public/images/casestudies/clients.pdf`;
+  - `public/fonts/LastDuel-Ex2Retalic.otf`;
+  - `.DS_Store` files.
+- **`public/images/member-louchi.png`, modified, origin unknown.**
+  - Verified on 2026-11-07:
+    - the working-tree file was written on 2026-11-04 17:47 -0300, after `7417113`;
+    - it is 800 × 800 px, 834,321 bytes, a square photo; HEAD has 507 × 504 px, 354,450 bytes, circle-cropped on cream;
+    - its macOS download metadata names a LinkedIn profile-photo URL;
+    - no command in the investigated Claude session modified it.
+  - Its author and intention are unknown. Railway serves the HEAD version.
+  - Do not commit or revert it without the owner's decision.
+
+## Local servers (2026-11-07)
+
+| Port | Serves |
+|---|---|
+| :3018 | `bun run dev` of this worktree (current, incl. Night fixes) |
+| :3021 | `next start` of `7417113` (`~/Projects/raidguild-backups/2026-11-04/verify-7417113`) |
+| :3020 | `next start` of the Nov 3 preview copy (same content as `7417113`) |
+| :3017 | Stale dev server (mixed old content); do not use. Stopping it was not permitted to Claude; the owner can run `kill 83540` |
+
+The scratch Playwright scripts live in the session scratchpad and are not versioned.
+
+## Approved decisions since the October 30 release (details in `docs/venture-integration.md`)
+
+- Last Duel replaces Grinder. The five wired OTFs are committed and, by the owner's decision of 2026-11-04, published in the public repos (the `LastDuel-Ex2Retalic.otf` file stays untracked).
+- Light UI contrast elements use dark green #102D2C; Night keeps navy and cream. Selected states and category buttons are outlined in Moloch magenta (#EE3C78), not filled.
+- The /community Projects Explorer replaces "Follow your curiosity" on /community only; `/` keeps the old gallery.
+- /community order and surfaces as listed above; Hats on sky and Explore on dark green in Day.
+- Builder and steward names in Last Duel Bold upright. The Full-stack card uses the crashed-pod crew art.
+- Night theme (dark), 2026-11-06, requested by the owner, implemented locally, not committed and not published: filled CTAs get a dark-navy edge and a transparent disc; the Moloch CTA gets a dark-navy edge; gallery cards are #303674 / #3A4182 with #FF7AA6 accents.
+
+## Open questions and pending decisions (current)
+
+1. **Route rename** `/clients` → `/agency`, nav "Agency / Community", and a `/clients` 308 redirect: proposed, not decided, not implemented. Impact analysis: session of 2026-11-06.
+2. **Editorial format for Tae's copy round:** proposal of 2026-11-07, awaiting approval. It covers two page documents plus a shared one, hidden IDs, layout notes and status tags. Copy extraction is on hold. The interim one-line export is on `~/Desktop/raidguild-copy-for-tae.md`; whether it was sent to Tae is not verified.
+3. **SEO / AEO audit decisions D-1 to D-7** (`~/Projects/raidguild-backups/2026-11-06/raidguild-seo-aeo-audit-response.md`). Nothing is implemented. The decisions cover:
+   - real FAQ values (price, timelines, payment method, contracting entity, maintenance);
+   - go-live: canonical origin, `noindex` removal, logo URL;
+   - the membership-path wording;
+   - niche AEO content;
+   - home-page items;
+   - approved copy Tae proposes to replace;
+   - legal brand marks.
+
+   Known bugs listed there (B-1 to B-6) are ready to fix once approved.
+4. **Shipping the Night fixes:** commit, push, and a follow-up PR to `review/venture-beyond-redesign`. The fork branch history differs from the squash commit; the tree diff will show only the new changes.
+5. **Review hosts:**
+   - Railway is the de facto review host. Confirm who deploys it and from which branch.
+   - Retire or update the Vercel production alias, which still serves `233777b`.
+   - Decide where `raidguild.estudioblanco.org` should point.
+6. **Local files awaiting a decision:** `package.json` yarn line (October question 4), the legacy deletions, `member-louchi.png` (origin unknown).
+7. **Design confirmations still open (numbers from the session log):**
+   - 66: 320 px on `/`
+   - 67: bottom-line italic
+   - 68: creed on desktop
+   - 70: hero experiment
+   - 71: builder-side card copy
+   - 72: Figma display type
+   - 73: Figma pilot approval and the other 19 compositions
+   - 74: marquee offsets
+   - 79: tablet stacks
+   - 80: FAQ sigil
+   - 81: client copy approval
+   - 82: muted selector label
+   - 83: hero ratio 1 / 1.15
+   - 84: hat wearers
+   - 85: "Explore the Guild" CTA direction
+   - 86: nav "Membership" target
+   - 88: Hats / Membership seam in Day
+   - 89: magenta edge on the magenta builder band
+   - 91: "Projects and experiments" heading
+8. **Resolved since the last snapshot:**
+   - 64: fonts published with the owner's confirmation, 2026-11-04
+   - 65: names in Bold upright
+   - 69
+   - 75 to 78
+   - 87: superseded, the sky now applies only to the image area
+   - 90: pod art
+   - 92: play-in-place removed
+   - The PR #106 conflict and Vercel-authorization blockers: Dekan merged into the review branch
+9. **October questions 1 to 63:** carried over below, not re-verified.
+
+## Next priorities
+
+1. The owner approves the editorial format (2), then the copy round with Tae.
+2. Decide the route rename (1) and the SEO / AEO decisions (3); then implement in the proposed order (bugs, sitemap and llms.txt, FAQ, JSON-LD) with about 10 focused checks.
+3. Approve committing and shipping the Night fixes (4).
+4. Clarify the review hosts (5).
+
+## Records
+
+- Deploy and verification records: `~/Projects/raidguild-backups/<date>/`:
+  - `2026-11-03/DEPLOY-vercel-production-233777b.md`
+  - `2026-11-03/DEPLOY-vercel-preview-wt2.md`
+  - `2026-11-04/verify-7417113/`
+- SEO response: `2026-11-06/raidguild-seo-aeo-audit-response.md`.
+- Copy export and its generator: `2026-11-07/` (`export-copy.ts`, `raidguild-copy-for-tae.md`, and `.ORIGINAL.md` for diffing returned edits).
+
+---
+
+# Session log (newest first; history, not current state)
+
+Entries marked "uncommitted" were committed later: the November 2 work in `04da57f`, the November 3 work in `233777b` and `7417113`. Their verification notes describe the state at the time.
+
+## November 6: Night CTAs and gallery cards (owner), uncommitted on top of `7417113`
+
+- Night filled (pink) CTAs: dark-navy edge (#12163B) instead of cream; icon disc transparent, glyph in the
+  label's navy (4.6:1 on pink). Tokens scoped to `.pillFilled` (`venture.module.css`), so hover / active follow.
+- Night Moloch CTA: dark-navy edge; transparent disc with the cream ring and glyph (`feature.module.css`; the
+  `.moloch` class lives there).
+- Night gallery cards (/clients services, /community capabilities): card #303674 and art area #3A4182, lighter
+  than the section (were #12163B / #0D1030); label and second title line in the light coral #FF7AA6 (4.2:1)
+  instead of pink (2.7:1 on that surface). Membership keeps its tokens (`gallery.module.css`).
+- Day unchanged (verified: hero, Moloch and card colours identical). Checks: computed colours both themes,
+  screenshots (hero, Moloch, cards); tsc OK; lint 0 errors; tests 91/91; the 10-case set 0 failing (:3018).
+- Not touched: `public/images/member-louchi.png` changed in the working tree since the last session (not part of
+  this work; author and intention unknown, see "Uncommitted in this worktree"). PR #106 not updated (no commit / push
+  requested).
 
 ## November 4: baseline commit and PR for Dekan's review (owner request)
 
@@ -23,6 +187,24 @@ settled and approved. (69 is resolved: the Moloch mark was removed.)
 - Owner decisions (2026-11-04): push with the five Last Duel font files (first push of 04da57f; the owner confirms
   the right to publish them in the public repos; supersedes the "review preview only" scope of question 64), and
   open the PR against raid-guild/website `main`. Push and PR only: no merge, deploy, promotion or alias change.
+- Done: commit `7417113` "feat(venture): baseline for Dekan review" (32 files: 28 modified, 4 new), pushed to
+  `fork/feat/venture-beyond-integration` (fast-forward 1adb327..7417113; first push of 04da57f and 233777b).
+  PR https://github.com/raid-guild/website/pull/106 (base `main`, head luisblancoach:feat/venture-beyond-integration,
+  93 commits), open, not draft.
+- Validation of `7417113` (clean `git archive`, `~/Projects/raidguild-backups/2026-11-04/verify-7417113/`):
+  tsc OK; lint 0 errors (1 existing warning); tests 91/91; production build OK; on `next start` (:3021) the
+  10-case set and the 24 explorer checks pass (Vercel Analytics 404 ignored: Vercel-only script).
+- PR blockers (not resolved; need the owner's decision):
+  - GitHub reports CONFLICTING with `main`: upstream `b02d67b` (#102, AI agent readiness) conflicts in
+    `package.json`, `src/middleware.ts` (add/add) and `tests/agent-readiness.test.mjs` (add/add). Pre-existing
+    (the branch has been 1 behind `main` since before this iteration); needs a merge or rebase of `main`.
+  - The raid-guild Vercel check fails: "Authorization required to deploy" (a Raid Guild team member must
+    authorize deployments from the fork). Not authorized, by design (no deploy requested).
+- Outcome (verified 2026-11-07): dekanbro changed the PR base to `review/venture-beyond-redesign` and merged it on
+  2026-11-04 17:15 UTC as squash commit `7d0e878` (tree identical to `7417113`); the conflict and Vercel blockers
+  above no longer apply.
+- After the commit, still uncommitted: this STATUS entry, `package.json`, the 21 legacy deletions,
+  `clients.pdf`, `LastDuel-Ex2Retalic.otf` (all excluded on purpose).
 
 ## November 3, night: Vercel preview of the working tree (owner request), nothing committed
 
@@ -856,7 +1038,7 @@ Vercel publish once approved; the owner's new files it references must be commit
 `public/images/icons/favicon-moloch.png`, the new `public/images/icons/*.svg` incl. `ico_telegram.svg`). Section reordering uses the numbered inventory below, in a later
 iteration. Promoting iteration 04 to production still needs approval.
 
-## Environment
+## Environment (as of 2026-11-04; superseded by "Expected environment" at the top)
 
 | Item | Value |
 |---|---|
@@ -867,7 +1049,7 @@ iteration. Promoting iteration 04 to production still needs approval.
 | Other worktrees | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
 | Local server | http://localhost:3017 (`bun run dev --port 3017`) is stale for /clients since 2026-11-03 late night; http://localhost:3018 (`bun run dev --port 3018`, started 2026-11-03) serves the current working tree |
 
-## References (keep them separate)
+## References (keep them separate; the deployment history below predates 2026-11-04, see "Hosts and routes" at the top)
 
 | | Approved visual baseline | Integrated release | Deployed review |
 |---|---|---|---|
@@ -2053,7 +2235,7 @@ the session scratchpad
 7. **Services intro** is about 8% narrower (544 vs about 592 px), and the desktop foundry
    illustration is about 10% smaller.
 
-## Working tree
+## Working tree (October 29; historical)
 
 - HEAD: the iteration 04 commit (parent `6ecb1c7`, iteration 03; then `a8ff16c`, iteration 02; then
   `2bf270d`), pushed to `fork/feat/venture-beyond-integration`. `a8ff16c`
@@ -2069,7 +2251,7 @@ the session scratchpad
 - Do not run `bun run build` in this worktree while `bun run dev` is running; build in a copy
   (the dev server and the build share `.next`).
 
-## Next actions
+## Next actions (October 29; historical, superseded by "Next priorities" at the top)
 
 1. **Owner review** of iteration 04 at http://localhost:3017 (no Git preview exists for the fork). Any
    deploy needs explicit approval (AGENTS.md).
@@ -2080,7 +2262,7 @@ the session scratchpad
 4. Physical-device checks: trackpad momentum, iOS and Android, Safari and Firefox, a screen reader.
 5. Optional: rerun the Frame 122/123 suite on production for 1024, 393 and 375 px.
 
-## Open questions
+## Open questions 1–63 (October; carried over, not re-verified on 2026-11-07)
 
 1. **Case-study titles.** The archive titles ("Automated protocol maintenance", "Social identity
    systems", "Tools for public goods funding") were removed with their summaries, so all nine

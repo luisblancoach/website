@@ -6,6 +6,48 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
+- 2026-11-06 · Night (dark theme) colour fixes, owner-requested, implemented locally and uncommitted on top of
+  `7417113` (`venture.module.css`, `feature.module.css`, `gallery.module.css`):
+  - filled CTAs get a dark-navy edge and a transparent icon disc;
+  - the Moloch CTA gets a dark-navy edge;
+  - gallery cards are #303674 / #3A4182 with #FF7AA6 accents.
+
+  Verified locally: tsc, lint 0 errors, tests 91/91, 10-case browser set. Not committed, pushed or deployed.
+
+## 2026-11-04 · Baseline `7417113` merged upstream for Dekan's review
+
+- Commit `7417113` "feat(venture): baseline for Dekan review" (32 files) on `feat/venture-beyond-integration`. It
+  contains the November 3 iteration:
+  - Figma pass, widows and tablet fits, outlined selectors;
+  - client-facing /clients copy and "Why build with RaidGuild", chevron rows;
+  - /community order and surfaces, Hats and steward flips, builder wall, category buttons;
+  - the Projects Explorer replacing "Follow your curiosity" on /community.
+- Pushed to `fork/feat/venture-beyond-integration` (first push of `04da57f` and `233777b`, including the Last Duel
+  OTFs, owner-approved for the public repos).
+- PR raid-guild/website#106 merged by dekanbro into `review/venture-beyond-redesign` as squash commit `7d0e878`
+  (tree identical to `7417113`).
+- Verified before push, on a clean archive: tsc, lint 0 errors, tests 91/91, production build, 10-case browser set
+  and 24 Projects Explorer checks. Verified 2026-11-07: the Railway host
+  (`raidguild-website-redesign-production.up.railway.app`) serves text identical to the `7417113` build.
+
+## 2026-11-03 · `233777b` on the review project's Vercel Production
+
+- Commit `233777b`: /community restructure, hero layer seam, "Works" nav label, and a host-scoped redirect of `/` to
+  `/clients` for `raidguild.estudioblanco.org`.
+- Deployed to Vercel Production of `raidguild-venture-beyond-review` as `dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD`, aliased
+  to https://raidguild-venture-beyond-review.vercel.app. This replaced release `07031e2`. Still the alias on 2026-11-07.
+- Verified at the time: clean-copy tsc, tests 89/89, lint 0 errors, build, host redirect.
+  `raidguild.estudioblanco.org` was added to the project, but its DNS still redirects to Railway.
+- The same day, previews of uncommitted working trees: `dpl_Di9vK5qe5LQAgzu4aALNtYd6U8iK`, and
+  `dpl_DaWdfzxANbXHjSGXbDctk3ej2sk2` (content later committed as `7417113`).
+
+## 2026-11-02 · November 2 iteration `04da57f` (Vercel preview)
+
+- Typography migration from Grinder to Last Duel, two-level display hierarchy, mobile pass, hero passes, services
+  and member-benefit galleries, buyer and member FAQ.
+- Vercel Preview `dpl_HvV74WQ9m3QJ2CmCTNJ61VrRJVYP` (review alias unchanged). Verified at the time: tsc, tests
+  88/88, lint 0 errors, build.
+
 ## 2026-10-30 · Approved Venture Beyond release `07031e2`
 
 - Published to Vercel Production in `raidguild-venture-beyond-review`, deployment

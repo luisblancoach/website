@@ -20,6 +20,21 @@ Refer to these documents; do not copy them here or rewrite them.
 `.gitignore` ignores `docs/`. The files above were force-added. A new file under `docs/` needs
 `git add -f` and the user's approval before it can be versioned.
 
+## Remotes and review flow (since 2026-11-04)
+
+- Work happens on `feat/venture-beyond-integration` in this worktree and is pushed to `fork`
+  (luisblancoach/website).
+- Integration reaches upstream through a PR to **`origin/review/venture-beyond-redesign`**
+  (raid-guild/website). It is not `main`. PR #106 was merged there by a maintainer as a squash
+  commit, so the fork branch history differs from the upstream one; compare trees, not commit
+  hashes.
+- **Railway:** the host the team reviews and audits
+  (`raidguild-website-redesign-production.up.railway.app`). It serves the upstream review branch's
+  content. Claude has no Railway access: verify it by fetching the pages.
+- **Vercel project `raidguild-venture-beyond-review`:** our own review deployments. Its production
+  alias can lag behind (see `STATUS.md`, "Hosts and routes").
+- Opening a PR, pushing or deploying still needs explicit approval in the current session.
+
 ## Session start (mandatory, before any edit)
 
 1. **Verify the location.** Run the commands below and compare the output with the
