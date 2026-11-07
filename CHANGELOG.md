@@ -14,6 +14,21 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
   Verified locally: tsc, lint 0 errors, tests 91/91, 10-case browser set. Not committed, pushed or deployed.
 
+## 2026-11-07 · Agency baseline `1b86fd6` (`checkpoint/agency-baseline`)
+
+- Commit `1b86fd6` "feat(routes): move Hire the DAO from /clients to /agency" on `feat/venture-beyond-integration`
+  (8 files, one of them the moved page), owner-approved:
+  - `/agency` is the canonical Hire the DAO route;
+  - `/clients/*` answers a permanent 308 to `/agency/*`;
+  - the review-domain root and `?audience=hire` open `/agency`;
+  - `/community`, the copy and the CSS are unchanged.
+- Annotated tag `checkpoint/agency-baseline` → `1b86fd6`. Local only: not pushed, not deployed.
+- Verified on a clean archive whose tree is identical to the commit: tests 93/93, tsc, lint 0 errors, build. The
+  8-case pixel comparison against `7417113` (`/agency` and `/community`, Day and Night, 1440 and 390 px) shows
+  0 differing pixels, and 16 behaviour checks pass.
+- Owner hosting decision: an independent deployment on Cloudflare Workers for `raidguild.estudioblanco.org`
+  (not deployed yet).
+
 ## 2026-11-04 · Baseline `7417113` merged upstream for Dekan's review
 
 - Commit `7417113` "feat(venture): baseline for Dekan review" (32 files) on `feat/venture-beyond-integration`. It

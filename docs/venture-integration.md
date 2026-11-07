@@ -762,6 +762,29 @@ November 3, 2026 — /community restructure (uncommitted):
 - 2026-11-04 (owner): the Last Duel OTFs may be published in the public repositories (luisblancoach/website and
   the raid-guild/website PR); the baseline for Dekan's review goes up as a PR against raid-guild/website `main`.
 
-## Social previews — 2026-11-11
+## 2026-11-07 — /agency route and an independent baseline on estudioblanco.org
 
-The home page uses Venture Beyond; `/clients` and `/agency` use Hire the DAO; `/community` uses Join the DAO. `/agency` renders the existing client experience without redirecting and retains its own canonical URL. Moving the root file-based Open Graph image into `public` allows explicit route metadata to select the intended image. Existing audience navigation still targets `/clients`.
+- Owner decision: Hire the DAO moves from `/clients` to `/agency`, the canonical client route. `/clients` and
+  anything below it answer a permanent 308 to the same path under `/agency`; the query string is kept and the
+  browser keeps the `#section`. `/community` is unchanged. The review-domain root (`raidguild.estudioblanco.org/`)
+  opens `/agency` directly, and legacy `/?audience=hire` links land on `/agency`.
+- The audience id stays `clients` (`data-audience="clients"`, the CSS scoped to it, the narrative ids
+  `clients.*`, `lib/narrative/clients.ts`). Only the URL changed, so no stylesheet and no copy was touched.
+- Canonical and Open Graph URLs resolve against the unchanged `metadataBase` (`https://www.raidguild.org`), so
+  the page declares `https://www.raidguild.org/agency`. The route stays `noindex`; choosing the canonical origin
+  is SEO decision D-2. The sitemap still lists only `/` (the audience routes are `noindex`).
+- Owner decision: before Editorial Mode, establish a baseline under `raidguild.estudioblanco.org` that we deploy
+  and control ourselves, without touching raidguild.org, Dekan's Railway service or the upstream review branch.
+  Hosting proposal: Cloudflare Workers through the OpenNext adapter, attached as a Workers route on the existing
+  proxied record, with the current Cloudflare redirect to Railway as the instant rollback. Evidence and
+  procedure: `STATUS.md`, November 7 entry.
+- Owner approval, 2026-11-07:
+  - the migration is committed as `1b86fd6` and tagged `checkpoint/agency-baseline`;
+  - **Cloudflare Workers is the chosen host** for the independent baseline.
+- Owner constraints for that host:
+  - review flags off by default;
+  - the whole host stays out of search indexing;
+  - no production lead submission (no form secrets) for now;
+  - Railway, raidguild.org, DNS and the Cloudflare redirect rules stay as they are until the Worker has been
+    deployed and verified;
+  - the owner's uncommitted `package.json` change is not overwritten.
