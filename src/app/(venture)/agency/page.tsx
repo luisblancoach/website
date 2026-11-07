@@ -32,10 +32,10 @@ const SEO_DESCRIPTION =
   "Small senior teams for smart contracts, dApps, product design and applied AI. We've shipped work for Livepeer, Pokt Network, DAOHaus, Gitcoin and more. Start your project brief.";
 const SHARE_IMAGE = { url: "/images/venture/og/clients-queen-raida.webp", width: 1200, height: 630, type: "image/webp", alt: "Queen Raida, RaidGuild's AI agent, rising from the clouds above a group of Guild builders" };
 export const metadata: Metadata = {
-  alternates: { canonical: "/clients" },
+  alternates: { canonical: "/agency" },
   title: { absolute: SEO_TITLE },
   description: SEO_DESCRIPTION,
-  openGraph: { siteName: "RaidGuild", type: "website", url: "/clients", title: SHARE_TITLE, description: SEO_DESCRIPTION, images: [SHARE_IMAGE] },
+  openGraph: { siteName: "RaidGuild", type: "website", url: "/agency", title: SHARE_TITLE, description: SEO_DESCRIPTION, images: [SHARE_IMAGE] },
   twitter: { card: "summary_large_image", title: SHARE_TITLE, description: SEO_DESCRIPTION, images: [SHARE_IMAGE.url] },
   robots: { index: false, follow: true },
 };
