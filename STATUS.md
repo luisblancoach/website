@@ -16,8 +16,16 @@ below "Session log" is history; the sections in this first part are the source o
 - **Latest published content:** the Railway host (below) serves content identical to `7417113`.
 - **Not done:**
   - `/agency` exists only locally (worktree and the clean build on :3022). Railway and Vercel still serve `/clients`.
-  - The independent deployment on `raidguild.estudioblanco.org`: Cloudflare Workers chosen by the owner (2026-11-07);
-    the plan is being prepared. Nothing deployed; DNS and the Railway redirect are unchanged.
+  - The independent deployment on `raidguild.estudioblanco.org`: Cloudflare Workers chosen by the owner (2026-11-07).
+    The kit is committed (`8469c95`) and a **test deployment is live on workers.dev only**
+    (https://raidguild-estudioblanco.luisblancoach.workers.dev, version `0176ba2e-d759-4fd1-b6b6-9ee3578542b5`,
+    owner-approved 2026-11-07). First verification failed on the Free plan's CPU limit (83–233 ms per page against
+    10 ms: 1102 errors, hung requests). The owner now treats it as the reference deployment; a read-only sample at
+    the close of the evening session answered 12/12 pages and 3/3 images. Plan status not verified (no billing
+    scope). No route; DNS and the Railway redirect are unchanged.
+  - **Editorial Mode v0.1:** owner-approved and committed as `d1b6fa4`, tagged **`release/editorial-v0.1`**
+    (2026-11-07). Local development only; production output byte-identical to the agency baseline. A protected
+    remote editorial deployment for Tae is being prepared (November 8 entry).
   - The SEO / AEO audit items: none implemented yet.
   - Tae's copy extraction: on hold until the editorial format is approved.
 
@@ -26,8 +34,8 @@ below "Session log" is history; the sections in this first part are the source o
 | Item | Value (verified 2026-11-07) |
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
-| Branch / HEAD | `feat/venture-beyond-integration` @ the docs commit "docs: record the agency baseline and Cloudflare hosting decision" on top of `1b86fd6` (2026-11-07); no upstream configured |
-| Baseline tag | `checkpoint/agency-baseline` (annotated) → `1b86fd6`, local only, not pushed |
+| Branch / HEAD | `feat/venture-beyond-integration` @ the docs commit "docs: record Editorial Mode v0.1 and the Cloudflare test deployment" on top of `d1b6fa4` (Editorial Mode v0.1), `8469c95` (Cloudflare kit), `134f24b` and `1b86fd6` (2026-11-07); no upstream configured |
+| Tags | `checkpoint/agency-baseline` (annotated) → `1b86fd6`; `release/editorial-v0.1` (annotated) → `d1b6fa4`. Push to `fork` approved 2026-11-07 (see the November 8 entry for the result) |
 | `fork` (luisblancoach/website) | `fork/feat/venture-beyond-integration` = `7417113` (pushed 2026-11-04) |
 | `origin` (raid-guild/website) | `main` = `b02d67b` (unchanged). Integration lands on **`review/venture-beyond-redesign`** = `7d0e878` (PR #106, squash of `7417113`, parent `a6418ea`). `feat/venture-beyond-redesign` = `7d25ae2` (PR #100, open, older parallel work) |
 | Other worktrees (clean) | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
@@ -44,6 +52,7 @@ below "Session log" is history; the sections in this first part are the source o
 | Nov 6 Night (dark theme) colour fixes, requested by the owner | yes, locally | no | no | no | no (Railway still shows the previous state, verified 2026-11-07) | 2026-11-06: tsc, lint, tests 91/91, 10-case set on :3018 |
 | `/clients` → `/agency` route migration (owner, 2026-11-07) | yes | `1b86fd6`, tag `checkpoint/agency-baseline` | no | no | no | 2026-11-07 clean archive: tests 93/93, tsc, lint 0 errors, build; 8-case pixel comparison vs `7417113` = 0 px; 16 behaviour checks pass |
 | SEO / AEO audit (Tae, v2, 6 Nov) | **no** (analysis only) | — | — | — | — | response written (see Records) |
+| Editorial Mode v0.1 (owner, 2026-11-07) | yes (dev only) | `d1b6fa4`, tag `release/editorial-v0.1` | see November 8 entry | no | no (local only by design) | 2026-11-07 isolated copy: tests 105/105, tsc, lint 0 errors, build; production byte-identical to the baseline; 8-case pixel comparison 0 px; 26 behaviour checks with the mode off; 78 editor checks on :3031 |
 
 ## Hosts and routes (verified 2026-11-07)
 
@@ -52,13 +61,17 @@ below "Session log" is history; the sections in this first part are the source o
 | https://raidguild-website-redesign-production.up.railway.app (Railway; the host Tae and Dekan review and audit) | Content identical to `7417113`; Night CTA edge still cream, i.e. before the Nov 6 fixes. Deploy source assumed to be `origin/review/venture-beyond-redesign` (not verified: no Railway access) | 200 | 200, Projects Explorer | 404 |
 | https://raidguild-venture-beyond-review.vercel.app (Vercel production alias, project `raidguild-venture-beyond-review`) | `233777b` (`dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD`, 2026-11-03): **older**, no Explorer, no client reasons | 200 | 200, old "Follow your curiosity" | 404 |
 | Vercel preview `dpl_DaWdfzxANbXHjSGXbDctk3ej2sk2` (https://raidguild-venture-beyond-review-enve71f46.vercel.app, login required) | Working tree of 2026-11-03 night = `7417113` content | 200 | 200 | — |
-| https://raidguild.estudioblanco.org | Cloudflare 302 to the Railway host (the planned CNAME to Vercel was never configured) | — | — | — |
+| https://raidguild.estudioblanco.org | Cloudflare 302 to the Railway host (the planned CNAME to Vercel was never configured); unchanged after the test deploy, re-checked 2026-11-07 | — | — | — |
+| https://raidguild-estudioblanco.luisblancoach.workers.dev (Cloudflare Worker test deploy of `8469c95` = app tree `1b86fd6`, noindex, lead POSTs 503) | `/agency` baseline, intermittently failing on the Free CPU limit | 308 → `/agency` | 200 (intermittent hangs) | 200 (intermittent hangs) |
 | https://www.raidguild.org | Old site; the redesign is not there (`/clients` 404) | 404 | — | — |
 
 Routes in code (working tree, 2026-11-07): `/` (entry, unchanged), `/agency` (Hire the DAO, light by default; `/clients/*` 308 → `/agency/*`), `/community` (Join the DAO), `/chat`, `/witch`. `/agency` page order: hero, ticker, services gallery, Why build with RaidGuild, previous works, builder network, people (stewards), FAQ, inquiry, creed. `/community` page order: hero, ticker, Guild, capabilities gallery, Queen Raida, Moloch, Hats tree, Membership, builder network, Projects Explorer, Join, FAQ, creed.
 
 ## Uncommitted in this worktree
 
+- The Editorial Mode v0.1 files are committed (`d1b6fa4`, owner-approved 2026-11-07); the docs that record them are
+  committed separately.
+- The Cloudflare build kit `deploy/cloudflare/` is committed (`8469c95`, owner-approved 2026-11-07).
 - **Night (dark theme) colour fixes:** owner-requested on 2026-11-06, implemented locally in `src/components/venture/{venture,feature,gallery}.module.css`, not committed and not published. The documentation of this synchronization is committed separately (`docs: reconcile continuity with November 7 verified state`).
 - **Owner's files, never committed on purpose:**
   - `package.json` (`packageManager: yarn` line);
@@ -66,7 +79,9 @@ Routes in code (working tree, 2026-11-07): `/` (entry, unchanged), `/agency` (Hi
   - `public/images/casestudies/clients.pdf`;
   - `public/fonts/LastDuel-Ex2Retalic.otf`;
   - `.DS_Store` files.
-- **`public/images/member-louchi.png`, modified, origin unknown.**
+- **`public/images/member-louchi.png`, modified: confirmed by the owner on 2026-11-07** as the photo for the Louchi /
+  Brand Steward cards (Hats back face on /community, ST-05 on /agency). No code change needed; checked on :3018
+  (Night/Day 1440, Night 390). Not committed yet (awaiting approval); the notes below are the earlier investigation.
   - Verified on 2026-11-07:
     - the working-tree file was written on 2026-11-04 17:47 -0300, after `7417113`;
     - it is 800 × 800 px, 834,321 bytes, a square photo; HEAD has 507 × 504 px, 354,450 bytes, circle-cropped on cream;
@@ -84,6 +99,10 @@ Routes in code (working tree, 2026-11-07): `/` (entry, unchanged), `/agency` (Hi
 | :3020 | `next start` of the Nov 3 preview copy (same content as `7417113`) |
 | :3022 | `next start` of the clean `/agency` baseline (`~/Projects/raidguild-backups/2026-11-07/verify-agency`; tree identical to `1b86fd6`, no Night CSS, no owner files) |
 | :3017 | Stale dev server (mixed old content); do not use. Stopping it was not permitted to Claude; the owner can run `kill 83540` |
+| :3031 | **Editorial Mode review:** `next dev` of the isolated copy `~/Projects/raidguild-backups/2026-11-07/editorial-proto-dev` (HEAD `8469c95` + the editorial files; no Night CSS; since 2026-11-07 21:30 also the owner-confirmed `member-louchi.png`, at the owner's request). Open http://localhost:3031/agency and press "✎ Edit copy" |
+| :3032 | `next start` of the isolated production build `~/Projects/raidguild-backups/2026-11-07/editorial-proto` (same files; byte-identical to the baseline) |
+
+:3018 (this worktree) also hot-reloaded the editor; it includes the Night CSS and the owner's files.
 
 The scratch Playwright scripts live in the session scratchpad and are not versioned.
 
@@ -103,7 +122,10 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
    - hosting: **Cloudflare Workers, chosen by the owner** on 2026-11-07. Owner constraints: review flags off by
      default; the host stays out of search indexing; no production lead submission yet; no change to DNS, the
      redirect rules, Railway or raidguild.org until the Worker is deployed and verified;
-   - Workers Paid plan (the Worker is 4.2 MB gzip);
+   - plan: the upload is within Free limits (10.31 MiB uncompressed of 64 MiB; Cloudflare's limits page of
+     2026-10-29 has no compressed limit), but the **runtime needs Workers Paid**: 83–233 ms CPU per page against the
+     Free 10 ms, measured with `wrangler tail` on 2026-11-07. Owner decision needed: Workers Paid ($5/month) or
+     another approach. The account's plan cannot be read with the Wrangler token (no billing scope);
    - forms: **not configured** for now (owner); `noindex` for the whole host: **yes** (owner); review flags: **off** (owner);
    - which Cloudflare account holds the zone, and which rule redirects to Railway (a Redirect Rule, a Page Rule or a Bulk Redirect).
 2. **Editorial format for Tae's copy round:** proposal of 2026-11-07, awaiting approval. It covers two page documents plus a shared one, hidden IDs, layout notes and status tags. Copy extraction is on hold. The interim one-line export is on `~/Desktop/raidguild-copy-for-tae.md`; whether it was sent to Tae is not verified.
@@ -159,9 +181,14 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 0. (2026-11-07, owner order) Establish the `/agency` baseline before Editorial Mode:
    1. done: the baseline commit `1b86fd6` and the tag `checkpoint/agency-baseline`;
    2. done: Cloudflare Workers chosen;
-   3. next: approve the Cloudflare deployment (the plan and its exact commands); cut over after verification.
+   3. done: kit commit `8469c95`, build `cf-build-8469c95`, test deploy to workers.dev (no route);
+   4. the owner treats the workers.dev deployment as the reference (CPU-limit question above); the custom-domain
+      cutover is a separate approval. Details: November 7 entry, "Cloudflare test deployment".
+   5. done: Editorial Mode v0.1 approved, committed (`d1b6fa4`) and tagged `release/editorial-v0.1`;
+   6. **now:** a protected editorial deployment for Tae (build-time flag, Cloudflare Access, Workers plan): November 8
+      entry.
 
-   Editorial Mode (the Phase 01 proposal of 2026-11-07) waits for that baseline.
+   Editorial Mode: local prototype done (November 7 evening entry), awaiting the owner's review.
 1. The owner approves the editorial format (2), then the copy round with Tae.
 2. Decide the route rename (1) and the SEO / AEO decisions (3); then implement in the proposed order (bugs, sitemap and llms.txt, FAQ, JSON-LD) with about 10 focused checks.
 3. Approve committing and shipping the Night fixes (4).
@@ -174,12 +201,124 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
   - `2026-11-03/DEPLOY-vercel-preview-wt2.md`
   - `2026-11-04/verify-7417113/`
 - SEO response: `2026-11-06/raidguild-seo-aeo-audit-response.md`.
-- `/agency` baseline verification: `2026-11-07/verify-agency/` (clean archive, `build.log`). Cloudflare spike: `2026-11-07/spike-cloudflare/` (adapter build and `wrangler deploy --dry-run`; nothing deployed).
+- Editorial Mode: isolated copies `2026-11-07/editorial-proto/` (production build, `build.log`, `EDITORIAL_FILES`) and
+  `2026-11-07/editorial-proto-dev/` (dev server); evidence `2026-11-07/editorial-proto-evidence/` (screenshots,
+  test scripts, results, sample `export.json` / `export.md`).
+- Cloudflare test deployment: `2026-11-07/cf-build-8469c95/` (`BUILD_INFO`, `dry-run.log`, `deploy.log`); the deployed build.
+- `/agency` baseline verification: `2026-11-07/verify-agency/` (clean archive, `build.log`). Cloudflare kit test build: `2026-11-07/cf-build-test/` (`BUILD_INFO`; built with the uncommitted kit, NOT FOR DEPLOYMENT). Cloudflare spike: `2026-11-07/spike-cloudflare/` (adapter build and `wrangler deploy --dry-run`; nothing deployed).
 - Copy export and its generator: `2026-11-07/` (`export-copy.ts`, `raidguild-copy-for-tae.md`, and `.ORIGINAL.md` for diffing returned edits).
 
 ---
 
 # Session log (newest first; history, not current state)
+
+## November 7, late evening: Editorial Mode, local prototype (owner request); committed as v0.1 the same night
+
+- Owner approval (after reviewing :3031): commit `d1b6fa4` "feat(editorial): introduce inline visual copy editing
+  v0.1" (the 11 files below; staged blobs checked identical to the tested isolated copy, and the committed tree
+  identical to `editorial-proto`), annotated tag `release/editorial-v0.1`, a separate docs commit, push to `fork`.
+- The owner also asked for the new `member-louchi.png` on :3031: copied into `editorial-proto-dev` only (not
+  committed).
+
+- Owner request: implement the visual editorial system for Tae on top of the narrative data layer and its stable
+  copy ids; six sections; drafts apart from the published data; local development only; no commit, push, deploy,
+  DNS or Worker change; `package.json` untouched; the workers.dev deployment is a reference only.
+- Start: location, branch, HEAD `8469c95`, tags `checkpoint/oct23-iteration` (`40f3910`) and
+  `checkpoint/agency-baseline` (`1b86fd6`) and the reference checkout verified; uncommitted owner work left as is.
+- Implementation (files: "Uncommitted in this worktree"):
+  - `lib/editorial/config.ts`: section registry by id prefix (`clients.hero`, `clients.serviceGallery`,
+    `clients.reasons`, `community.hero`, `community.capabilities`, `community.join`) and plain-language field names
+    ("Agency · Services gallery · Card 2 (“Smart contracts, onchain systems”) · Text"). Link destinations are not
+    editable (review notes, never page text).
+  - `lib/editorial/drafts.ts` (pure): drafts keyed by id with the source text they were made against; comments;
+    revert; conflicts (`source-changed`, `unknown-id`) and "keep my proposal"; JSON export (`format:
+    raidguild-editorial-changes`, `status: proposed`) and import (validated, merges, counts conflicts); Markdown
+    export for review. Nothing is ever marked approved.
+  - `lib/editorial/catalog.ts`: the source text of the six sections, in page order.
+  - `components/venture/editorial/`: `store.ts` (localStorage; typing autosaves without re-rendering, React sees
+    the text on commit), `EditableCopy.tsx` (`<rg-copy>` custom element, so no site `span` rule applies),
+    `EditorialMode.tsx` (toolbar, Original / Draft, Changes panel, guards, focus label, export / import; client-only
+    chrome).
+  - Guards while the mode is on: a click on editable text edits it and activates nothing; links do not navigate (a
+    notice says so); Enter saves, Escape restores, no line breaks, paste as plain text, Cmd/Ctrl+B for the existing
+    **bold** format. Gallery arrows and a row's chevron keep working.
+  - Production exclusion: `Review.tsx` and `VentureShell.tsx` `require` the editor inside
+    `process.env.NODE_ENV === "development"` (a ternary in VentureShell, so the folded production children equal the
+    original). A first version with static imports added ~15 kB to both pages in production and was replaced.
+- Bugs found and fixed during verification: Space in an editable title inside a disclosure button expanded the row
+  (the button's own key-up activation): key-up Space is cancelled and keyboard-made clicks on the control holding
+  the text are blocked. JSON export was ordered by id instead of page order. A dev-server hydration mismatch in the
+  editor chrome after hot reload: the chrome now renders on the client only.
+- Checks, on an isolated copy (`git archive HEAD` + the 11 editorial files; no Night CSS, no owner files):
+  - tests 105/105 (93 + 12 new), `tsc`, lint 0 errors (1 existing warning, `ThemeAnchor`), build. Same results in
+    the worktree.
+  - Production output vs `verify-agency` (the clean baseline): all 34 static JS/CSS files byte-identical,
+    `/agency` and `/community` prerendered HTML identical apart from Next's random build id, route sizes identical
+    (22.1 / 284 kB, 27.5 / 176 kB), no editor string in `.next/static` or `.next/server`.
+  - Visual, `next start` :3032 vs :3022 (`/agency`, `/community` × Day, Night × 1440, 390): 8/8 cases 0 px, text and
+    heights identical. Two earlier runs showed noise in `community-dark-1440` (67 px, moving rows) and once in
+    `community-light-390`; the baseline compared with itself shows the same 67 px (the Projects Explorer "BD Thread
+    Journeys" thumbnail), so it is pre-existing nondeterminism.
+  - Behaviour with the mode off: the 16 route / theme / nav checks pass on :3032; 10 more (Why RaidGuild
+    expand / collapse, gallery arrow, FAQ, hero CTA, inquiry form, Join Portal link in a new tab, no errors) pass on
+    :3032 and on the dev server :3031. Dev (mode off) vs production: same text, 0 of 224–254 text blocks moved, same
+    heights, all 8 cases.
+  - Editor on the dev server :3031: `/agency` 1440 Day, 38/38 (entry, labels, autosave while typing, Enter commit,
+    CTA in a link without navigation, **bold** kept, gallery card, reason title without expanding, chevron,
+    expandable text, Escape, links paused, Original / Draft, panel, comment, JSON and Markdown export, individual
+    revert, revert all, import, reload persistence, injected conflict and "keep my proposal", exit, normal behaviour
+    after exit, no errors); matrix 39/39 (`/community` 1440 Night and Day, `/community` 390 Day, `/agency` 390 Night,
+    touch on phones: theme, no text block moves when entering, no horizontal overflow, three edits per page, Join
+    editable, panel fits); cross-page "Show on page" opens the collapsed row on `/agency`.
+  - Not done: real devices, Safari and Firefox (headless Chromium with touch emulation only); visual review of the
+    editor chrome by the owner.
+- Known limitations: drafts live in one browser (export to share or back up; clearing site data deletes them); only
+  bold formatting; no line breaks; link URLs, images and alt text are not editable; links are paused while the mode
+  is on; headings show their CSS uppercase while edited; Next's dev badge overlaps the toolbar's left corner on
+  phones (dev overlay); two tabs editing the same item: last commit wins.
+- Recommendation for Tae's access (not implemented): a separate, protected review Worker built with an explicit
+  editor flag (replace the `NODE_ENV` gate by a build-time `EDITORIAL` flag that defaults off), behind Cloudflare
+  Access (one-time email code, allow-list Tae and the owner), never on the public route; drafts stay in Tae's
+  browser at first and reach the repository as exported JSON applied through a reviewed commit; shared server-side
+  drafts (D1 or KV) and an approval step only if the round trip needs them. Requires Workers Paid in practice
+  (CPU limit).
+- Nothing committed, pushed or deployed. Cloudflare Worker, DNS and redirect rules untouched (one read-only
+  sample of the workers.dev URL).
+
+## November 7, evening: Cloudflare test deployment on workers.dev (owner-approved), stopped on the Free CPU limit
+
+- Approved by the owner: the kit commit, a clean build, the dry run, and a deploy to workers.dev only if the Free plan
+  supports it without billing changes. Not approved: route, DNS, redirect rules, billing, push, Railway, Vercel,
+  raidguild.org, Editorial Mode.
+- Limits rechecked: Cloudflare's limits page (last updated 2026-10-29) lists Worker size as 64 MiB uncompressed on
+  Free and Paid, "There is no compressed size limit". Free also has 10 ms CPU per request, 100,000 requests a day,
+  50 subrequests, 20,000 asset files, 25 MiB per file. Wrangler 4.158.0 has no client-side size check (it reports only).
+- Commit `8469c95` "build(cloudflare): reproducible OpenNext/Wrangler kit for the review host" (`deploy/cloudflare/`
+  only, 7 files; one comment in `wrangler.route.jsonc` corrected to name the cutover command).
+- Build `deploy/cloudflare/build.sh HEAD` → `~/Projects/raidguild-backups/2026-11-07/cf-build-8469c95`: app tree
+  identical to `checkpoint/agency-baseline`; 10,559.10 KiB (10.31 MiB) / gzip 4,200.79 KiB; 548 asset files, largest
+  9.72 MiB; dry run OK. Assets byte-identical to `cf-build-test` except Next's random build ID files.
+- Preflight: Workers on the account unchanged (no name collision); the domain still 302s every path to Railway.
+- Deploy `wrangler deploy` (no routes): accepted, startup 16 ms, version `0176ba2e-d759-4fd1-b6b6-9ee3578542b5`,
+  https://raidguild-estudioblanco.luisblancoach.workers.dev. `route.sh status` afterwards: zone routes and the domain
+  302 unchanged.
+- Checks on the public URL:
+  - HTTP: `/agency`, `/community` 200; `/clients` and `/clients/x?utm=1` 308 → `/agency…` (query kept); `/agency/`
+    308 → `/agency`; 404 page; `/robots.txt`, `/sitemap.xml`, favicon, a 10 MB PNG 200. `X-Robots-Tag: noindex,
+    nofollow` on pages, redirects, 404, API, static files, CSS, JS and `/_next/image`. Lead POSTs (`/api/consultations`,
+    `/api/contact`, `/api/email-referrals`, with trailing slash) 503 with the JSON message. `/api/posts`,
+    `/api/artifacts` 200. 0 `data-review-id`. The page meta (`noindex, follow`, canonical to www.raidguild.org) is the app's.
+  - Behaviour (`behave-pub.mjs`): 16/16 pass.
+  - Visual, images masked (`cmp-pub-masked.mjs`, vs :3022): 8/8 cases 0 px, text and heights identical.
+  - Visual, unmasked: **not completed**; the page load timed out.
+  - Differences from the local baseline: `/_next/static/*` is served `max-age=0, must-revalidate` (next start: immutable);
+    `/` answers 200 on workers.dev (the root redirect is scoped to the review host, as designed).
+- **Failure:** intermittent hangs on HTML (several `curl` requests to `/agency` and `/community` got no response in 15–25 s;
+  static files never hung) and intermittent `503 error code: 1102` on `/_next/image`. `wrangler tail`: page renders use
+  83–233 ms CPU (robots.txt 7–86 ms) against the Free 10 ms limit; one `/agency` request ran 44.9 s and ended
+  `canceled`. Conclusion: the Worker needs Workers Paid (or a much lighter request path) to be usable. Stopped and
+  reported per the owner's instruction; no billing change made. The test Worker stays deployed on workers.dev.
+- Rollback for this step: `wrangler delete --name raidguild-estudioblanco` (no route exists, nothing else to undo).
 
 Entries marked "uncommitted" were committed later: the November 2 work in `04da57f`, the November 3 work in `233777b` and `7417113`. Their verification notes describe the state at the time.
 
@@ -250,6 +389,52 @@ Entries marked "uncommitted" were committed later: the November 2 work in `04da5
   - Annotated tag `checkpoint/agency-baseline` → `1b86fd6`.
   - A separate docs commit for this record.
   - No push, no deploy. The owner chose Cloudflare Workers as the hosting.
+- Cloudflare plan (prepared after the docs commit `134f24b`; nothing deployed, no DNS or rule change):
+  - Account (read-only checks): the Wrangler login has one account, "Luisblancoach@gmail.com's Account".
+    - The zone `estudioblanco.org` is in it: active, Free website plan.
+    - `workers.dev` subdomain `luisblancoach`.
+    - Workers Paid status is not readable with this token (no billing scope); the owner confirms it in the dashboard.
+  - Existing routes on the zone: `estudioblanco.org/*` → `estudioblanco-app`, `coema.estudioblanco.org/*` →
+    `estudioblanco-links`, `estudioblanco.org/coema*` → `coema`.
+    - None matches `raidguild.`, so the Railway redirect is a rule (Redirect, Page or Bulk), not a Worker.
+    - The new Worker `raidguild-estudioblanco` touches none of them.
+  - Limits and cost (current Cloudflare docs):
+    - The Worker is 4.2 MB gzip: over the Free limit (3 MB), within Paid (10 MB). 64 MB uncompressed and 1 s
+      startup on both plans.
+    - Assets: 548 files (100,000 on Paid), none over 25 MiB.
+    - Workers Paid: $5 a month, including 10 M requests and 30 M CPU-ms; static-asset requests are free.
+    - Images binding: 5,000 unique transformations a month free, then $0.50 per 1,000. The pages carry 653
+      srcset URLs (75 sources, WebP only).
+    - Expected total: $5 a month.
+  - Kit `deploy/cloudflare/` (uncommitted):
+    - `build.sh` builds from `git archive <ref>` only.
+    - It refuses if the app tree differs from `checkpoint/agency-baseline` (outside `deploy/`, `docs/` and the
+      root `*.md`), if the output directory exists, or if the overlay has drifted.
+    - It never edits the repository `package.json`: the adapter comes from a frozen overlay (the app's
+      package.json and lock plus `@opennextjs/cloudflare` 1.20.16 and `wrangler` 4.158.0). The app's locked
+      versions are unchanged; bun re-hoists four transitive packages and keeps the app's versions nested.
+    - It builds in an empty environment with `SHOW_REVIEW_FLAGS=false` and writes `BUILD_INFO` and a dry run.
+    - `worker.js` adds `X-Robots-Tag: noindex, nofollow` to every Worker response. `_headers` does the same for
+      static files.
+    - `worker.js` answers 503 on POST to `/api/consultations`, `/api/contact` and `/api/email-referrals`, so lead
+      submission is off and needs no secrets.
+    - `wrangler.jsonc` is `workers.dev` only. `wrangler.route.jsonc` adds `raidguild.estudioblanco.org/*`.
+    - `route.sh status|remove` is needed because Wrangler never removes a route when a config has none; it
+      touches only our exact route.
+  - Kit test (`cf-build-test`, HEAD `134f24b` with the uncommitted kit), on `wrangler dev`:
+    - all route, redirect and host checks pass, and `X-Robots-Tag` is on pages, redirects, `robots.txt`, images
+      and chunks;
+    - lead POSTs answer 503, and the Portal reads answer 200;
+    - no review flags render;
+    - against :3022, with images hidden: 0 px in all 8 cases. With images shown, the only difference is the image
+      encoder;
+    - 16/16 behaviour checks pass.
+  - Guards tested: a pre-migration ref, an existing output directory and a drifted overlay are all refused.
+    `route.sh remove` is a no-op while the route is absent.
+  - Rule order: Cloudflare does not document whether Single Redirects run before Workers. The first deploy is
+    therefore `workers.dev` only. The route is attached only at cutover, which shows the order.
+  - Rollback order: (1) re-enable the redirect rule, then (2) `route.sh remove`. Removing the route alone would
+    send traffic to the record's unknown origin.
 
 ## November 6: Night CTAs and gallery cards (owner), uncommitted on top of `7417113`
 
