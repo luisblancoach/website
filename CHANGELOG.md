@@ -6,13 +6,35 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
-- 2026-11-06 · Night (dark theme) colour fixes, owner-requested, implemented locally and uncommitted on top of
-  `7417113` (`venture.module.css`, `feature.module.css`, `gallery.module.css`):
-  - filled CTAs get a dark-navy edge and a transparent icon disc;
-  - the Moloch CTA gets a dark-navy edge;
-  - gallery cards are #303674 / #3A4182 with #FF7AA6 accents.
+## 2026-11-08 · Editorial Mode v0.2 `bb37620` (`release/editorial-v0.2`), live as Worker version `f8fd6838`
 
-  Verified locally: tsc, lint 0 errors, tests 91/91, 10-case browser set. Not committed, pushed or deployed.
+- `5e04f1a` "feat(editorial): operations, Preview and two-file export (v0.2)": REPLACE, SHORTEN, REMOVE (text,
+  item or section; never an empty string) and KEEP, all reversible; structural removals flagged for separate
+  approval; Preview; synchronized `raidguild-tae-editorial.md` / `.json` export (version 2, fingerprints, source
+  revision, deterministic). `bb37620` "feat(editorial): apply-editorial CLI, dry run by default". Owner-approved.
+  Live: v0.2 acceptance 36/36, ordinary visitors 8/8 at 0 px, 0 errors under load, static paths CPU p99 11 ms.
+  Annotated tag `release/editorial-v0.2` → `bb37620`, pushed to `fork` only. Guide: `docs/editorial-guide-tae.md`.
+
+## 2026-11-08 · Opt-in Editorial Mode `64d16d6`, live as Worker version `f57739de`
+
+- Commit `64d16d6` "feat(editorial): opt-in Editorial Mode for production builds (?editorial=1)", owner-approved,
+  deployed to the review Worker on workers.dev. `?editorial=1` is an interface switch, not authentication, and
+  provides no privacy or access restriction; editing is browser-local. Live: editorial QA 36/36, ordinary visitors
+  8/8 at 0 px against the approved build, 0 errors under load, static paths CPU p99 12 ms. Not pushed.
+
+## 2026-11-08 · Static-first Cloudflare host `0ad287e`, live as Worker version `0c37e331`
+
+- Commit `0ad287e` "build(cloudflare): static-first assets for the Workers Free CPU limit" (deploy kit only),
+  owner-approved, built with the app tree of `8456bdb` (Night `a1114f0`, Louchi photo `8456bdb`) and deployed to the
+  existing `raidguild-estudioblanco` Worker on workers.dev. Live: static paths at CPU p50 0 ms / p99 14 ms, 0 errors
+  in 3 load rounds, `/agency` and `/community` 8/8 at 0 px against the approved build. Not pushed.
+
+## 2026-11-07 · Night refinements `a1114f0` and Louchi photo `8456bdb`
+
+- `a1114f0` "fix(night): dark-navy CTA edges and lighter gallery cards" (the November 6 owner request, until now
+  under "Unreleased") and `8456bdb` "feat(people): new photo for Louchi, Brand Steward", owner-approved. Verified on
+  isolated builds: Day unchanged (0 px), Night changes only the CTAs and gallery cards, the photo changes only its own
+  boxes; text identical. Not pushed, not deployed.
 
 ## 2026-11-07 · Editorial Mode v0.1 `d1b6fa4` (`release/editorial-v0.1`)
 

@@ -817,3 +817,68 @@ November 3, 2026 — /community restructure (uncommitted):
   deployment for Tae on our own Cloudflare Worker, with an explicit build-time flag (off by default), access
   restricted by Cloudflare Access rather than by any URL or client-side switch, and no billing or account-level
   change without the owner.
+
+## 2026-11-08 — Static-first review host; Editorial Mode opt-in for Tae (owner request)
+
+- **Static-first Cloudflare host** (owner approval 2026-11-08; kit `0ad287e`, Worker version `0c37e331`). The
+  review Worker answers the prerendered pages, their RSC payloads, the optimised images those pages use and the
+  `/api/posts`, `/api/artifacts` snapshots from static assets, without loading Next.js, so the public pages stay
+  within the Workers Free CPU limit. Deploy kit only; app tree identical to `8456bdb` (Night `a1114f0`, Louchi
+  photo `8456bdb`). Rollback target: version `0176ba2e`.
+- **Editorial Mode: no Cloudflare Access.** Access is unavailable on this account and plan, so the owner chose
+  an explicit opt-in instead: `?editorial=1` opens the editor on `/agency` and `/community`. The parameter is an
+  interface switch, **not authentication**: anyone with the URL can open the editor. This is acceptable only
+  because editing is entirely local to the browser (drafts in localStorage, exported as files); nothing is
+  written to a server, shared or published, and the client bundle holds no secret. This version is **not a
+  private editor**.
+- **Build flag `NEXT_PUBLIC_EDITORIAL_MODE`**: `disabled` (default, every build including raidguild.org: no editor
+  code in the bundle) or `opt-in` (set by `deploy/cloudflare/build.sh` for the review host only). In an opt-in
+  build the editor's chrome is a lazy chunk loaded only after `?editorial=1`; ordinary visitors get the published
+  HTML, no editor control and no editor styles. The mode is remembered in that browser until Exit or
+  `?editorial=0`. Local development keeps the "Edit copy" button and Alt+Shift+E.
+- The bar always shows "Local draft — not published".
+- Owner approval, 2026-11-08: the opt-in editor shipped as `64d16d6` (Worker version `f57739de`).
+
+## 2026-11-08, evening — Editorial Mode v0.2: operations, structured export, integration CLI (owner request)
+
+- **Four explicit operations** per copy item: REPLACE (new wording), SHORTEN (a shorter version), REMOVE (this
+  text, the whole item, or the whole section) and KEEP (reviewed, no change). REPLACE and SHORTEN keep the exact
+  typed text; SHORTEN that is not shorter is flagged in the editor and refused by the CLI. Emptying a text becomes
+  REMOVE: a removal is never an empty string. Every decision is reversible (Undo, Restore, Undo all).
+- **Structural removals need separate approval** (`structuralReason` in `lib/editorial/config.ts`): a whole item or
+  section, a button or link label, a heading or section label, or text serving accessibility.
+- **Preview** shows the page with the decisions applied: removed text and whatever only held it (its paragraph,
+  its button), whole items and whole sections are folded away, in the editor only.
+- **Export version 2**: `raidguild-tae-editorial.json` (authoritative: copy id, operation, base text, SHA-256
+  fingerprint, proposed text for REPLACE/SHORTEN only, source revision, review status "proposed", structural
+  flag, comment, conflict) and `raidguild-tae-editorial.md` (the review document), from one snapshot with the same
+  change set id (SHA-256 of the change list). Deterministic (no export timestamp), ordered by page and section.
+  Version 1 exports and stored drafts are migrated on import.
+- **`scripts/apply-editorial.mjs`**: dry run by default. Validates schema, change set id and fingerprints; resolves
+  every id in the current narrative; detects stale and unknown items; locates the single string literal holding
+  each text (refuses when absent or repeated); rehearses the patch on a throwaway copy and verifies that only the
+  planned copy items changed. `--apply --confirm <change-set-id>` writes REPLACE/SHORTEN only, refuses any
+  conflict and uncommitted target files, and re-verifies (restoring on failure). REMOVE is never applied
+  automatically (it needs a reviewed component and type change); KEEP is recorded only. No network code.
+- Owner approval, 2026-11-08: v0.2 released as `5e04f1a` (operations and export) and `bb37620` (CLI), annotated tag
+  `release/editorial-v0.2` → `bb37620`, deployed as Worker version `f8fd6838` (rollback target `f57739de`).
+
+### Reviewing and integrating Tae's proposals (process, 2026-11-08)
+
+1. **Receive** both files from Tae, `raidguild-tae-editorial.md` and `raidguild-tae-editorial.json`, by any channel
+   (email, Slack, a shared folder). They hold only page copy and her comments, no secrets. Keep the pair together
+   and do not edit the JSON: the CLI rejects a change set whose list no longer matches its id. Store them outside
+   the repository (e.g. `~/Projects/raidguild-backups/<date>/editorial/`) unless the owner approves versioning them.
+2. **Review** the Markdown. Decide per decision: approve, reject or discuss. ⚠ items (structural) and ⚡ items
+   (made against older text) need explicit attention. To approve only some, import the JSON in the editor
+   (Changes → Import), undo the rejected decisions and export again: the new pair gets a new change set id.
+3. **Dry run** (Claude): `bun scripts/apply-editorial.mjs raidguild-tae-editorial.json --report dry-run.json`. It
+   validates, flags conflicts, shows the exact source diff, and proves on a throwaway copy that only the intended
+   copy changes. Nothing is written.
+4. **Approve** the change set id explicitly (owner). Then, and only then, Claude runs
+   `--apply --confirm <change-set-id>` on this branch (target files must be clean): REPLACE and SHORTEN only,
+   exactly as written. Removals and structural decisions are separate, reviewed code changes with their own
+   approval; KEEP decisions are recorded, not written. Applying a text does not mark it approved in the narrative
+   (`status`, review flags): that is a separate editorial decision.
+5. **Verify and ship**: `bun run test`, `bun run review:claims`, lint, side-by-side visual comparison, then a commit
+   and a deployment, each with the owner's approval. Never write to the deployed Worker directly.
