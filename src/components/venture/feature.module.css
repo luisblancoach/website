@@ -96,3 +96,8 @@
    for the accessible name and is not rendered; the two lines keep their sizes and the em its margin. */
 :global([data-audience]) .feature .title { align-items: flex-start; display: flex; flex-direction: column; }
 :global([data-audience]) .feature .title > br { display: none; }
+
+/* Night (November 6, owner): the Moloch CTA (outline on coral) takes a dark-navy edge (#12163B) instead of the cream
+   one; its icon disc is transparent with the cream ring and glyph. Day is unchanged. */
+:global(html[data-theme="dark"]) .moloch .cta { border-color: #12163b; }
+:global(html[data-theme="dark"]) .moloch .cta > :last-child { background: transparent; border-color: var(--color-cream); color: var(--color-cream); }

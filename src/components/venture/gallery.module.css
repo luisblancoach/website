@@ -156,3 +156,12 @@
 :global(html:not([data-theme="dark"])) .card .art { background: var(--color-cyan, #b8e0df); }
 .card:focus-within { border-color: var(--color-pink, #ee3c78); }
 @media (hover: hover) { .card:hover { border-color: var(--color-pink, #ee3c78); } }
+
+/* Night gallery cards (November 6, owner: "too dark for no reason"): the card is the card navy (#303674) and its
+   art area a lighter navy (#3A4182), both lighter than the section (#191E4E / #252A61). On that surface the pink
+   accent drops under contrast, so the label and the second title line use the light coral (#FF7AA6: 4.2:1, as the
+   Night builder names). Membership keeps its own tokens. */
+:global(html[data-theme="dark"]) .gallery:not(.benefits) { --gal-card: #303674; --gal-art: #3a4182; }
+:global(html[data-theme="dark"]) .gallery:not(.benefits) .card .cardLabel { color: #ff7aa6; }
+:global(html) :global(html[data-theme="dark"]) .gallery:not(.benefits) .card .cardTitle em,
+:global(html[data-theme="dark"]) .gallery:not(.benefits) .card .cardTitle em { color: #ff7aa6; }
