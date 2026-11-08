@@ -788,3 +788,32 @@ November 3, 2026 — /community restructure (uncommitted):
   - Railway, raidguild.org, DNS and the Cloudflare redirect rules stay as they are until the Worker has been
     deployed and verified;
   - the owner's uncommitted `package.json` change is not overwritten.
+
+## 2026-11-07 — Editorial Mode, local prototype (owner request)
+
+- Owner request: Tae edits the copy on the rendered pages, in context, with drafts kept apart from the
+  published narrative data, an Original / Draft preview, a Changes panel (comments, individual revert), JSON
+  export and import, a Markdown export for review and conflict detection. Nothing is approved automatically.
+  First scope: Agency hero, services gallery and Why RaidGuild; Community hero, capabilities gallery and Join.
+- Decisions in the prototype (uncommitted):
+  - **Local development only.** Both entry points (`CopyText` in `primitives/Review.tsx`, the mount in
+    `shell/VentureShell.tsx`) `require` the editor inside `process.env.NODE_ENV === "development"`, so production
+    builds drop it at build time. The isolated production build is byte-identical to the agency baseline (JS, CSS
+    and prerendered HTML, apart from Next's random build id).
+  - **The stable copy ids are the editing keys.** `lib/editorial/config.ts` lists the editable sections by id
+    prefix and names the fields in plain words ("Card 2 · Text"); enabling another section is one registry entry
+    plus its tree in `lib/editorial/catalog.ts`.
+  - **Drafts live in the browser** (localStorage), never in source files or on a server. A draft keeps the source
+    text it was made against; a later change to the source shows as a conflict until someone reviews it.
+  - **Edited text sits in an `<rg-copy>` custom element** while the mode is on, so no `span` rule of the site's
+    CSS applies to it; entering the mode moves no text block (measured on both pages, Day and Night, 1440 and
+    390 px).
+  - While the mode is on, a click on editable text edits it and activates nothing (links, disclosure buttons);
+    links do not navigate; other controls (gallery arrows, a row's chevron) work as usual.
+- Not decided yet: how Tae reaches the editor (a protected URL), where shared drafts are stored, and the review
+  and approval workflow. Recommendation: `STATUS.md`, November 7 entry "Editorial Mode".
+- Owner approval, 2026-11-07: the prototype is released as **Editorial Mode v0.1**, commit `d1b6fa4`, annotated tag
+  `release/editorial-v0.1`, pushed to the fork only (never upstream). Next owner goal: a protected remote editorial
+  deployment for Tae on our own Cloudflare Worker, with an explicit build-time flag (off by default), access
+  restricted by Cloudflare Access rather than by any URL or client-side switch, and no billing or account-level
+  change without the owner.

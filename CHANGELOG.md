@@ -14,6 +14,22 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
   Verified locally: tsc, lint 0 errors, tests 91/91, 10-case browser set. Not committed, pushed or deployed.
 
+## 2026-11-07 · Editorial Mode v0.1 `d1b6fa4` (`release/editorial-v0.1`)
+
+- Commit `d1b6fa4` "feat(editorial): introduce inline visual copy editing v0.1", owner-approved after reviewing the
+  local prototype; annotated tag `release/editorial-v0.1`. On top of `8469c95` (the Cloudflare kit). Inline editing of
+  the copy of six sections (Agency hero, services gallery, Why RaidGuild; Community hero, capabilities gallery,
+  Join) in local development only, with drafts in the browser, Original / Draft preview, a Changes panel
+  (comments, individual revert, conflicts), JSON export and import and a Markdown export. New:
+  `src/lib/editorial/`, `src/components/venture/editorial/`, `src/types/editorial.d.ts`,
+  `tests/editorial.test.mjs`; changed: `primitives/Review.tsx`, `shell/VentureShell.tsx`,
+  `tests/narrative.test.mjs` (imports the new tests).
+
+  Verified on an isolated copy (HEAD plus these files only): tests 105/105, tsc, lint 0 errors, build. Production
+  output byte-identical to the agency baseline; the 8-case pixel comparison against the clean baseline shows
+  0 differing pixels; 16 + 10 behaviour checks pass with the mode off; 38 + 39 + 1 editor checks pass on the dev
+  server. Not deployed (local development only by design).
+
 ## 2026-11-07 · Agency baseline `1b86fd6` (`checkpoint/agency-baseline`)
 
 - Commit `1b86fd6` "feat(routes): move Hire the DAO from /clients to /agency" on `feat/venture-beyond-integration`
