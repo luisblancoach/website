@@ -1,6 +1,6 @@
 # STATUS
 
-Current state verified on **2026-11-07 (-0300)** from the repository, the remotes, GitHub and the live hosts. Everything
+Current state verified on **2026-11-08 (-0300)** from the repository, the remotes, GitHub and the live hosts. Everything
 below "Session log" is history; the sections in this first part are the source of truth.
 
 ## Snapshot
@@ -17,25 +17,31 @@ below "Session log" is history; the sections in this first part are the source o
 - **Not done:**
   - `/agency` exists only locally (worktree and the clean build on :3022). Railway and Vercel still serve `/clients`.
   - The independent deployment on `raidguild.estudioblanco.org`: Cloudflare Workers chosen by the owner (2026-11-07).
-    The kit is committed (`8469c95`) and a **test deployment is live on workers.dev only**
-    (https://raidguild-estudioblanco.luisblancoach.workers.dev, version `0176ba2e-d759-4fd1-b6b6-9ee3578542b5`,
-    owner-approved 2026-11-07). First verification failed on the Free plan's CPU limit (83–233 ms per page against
-    10 ms: 1102 errors, hung requests). The owner now treats it as the reference deployment; a read-only sample at
-    the close of the evening session answered 12/12 pages and 3/3 images. Plan status not verified (no billing
-    scope). No route; DNS and the Railway redirect are unchanged.
+    **Live on workers.dev only: static-first hosting with Editorial Mode v0.2** (2026-11-08, owner-approved):
+    release tag `release/editorial-v0.2` → `bb37620`, Worker version `f8fd6838-2211-42f2-938d-f4fff03967a7`
+    (https://raidguild-estudioblanco.luisblancoach.workers.dev; editor at `/agency?editorial=1`,
+    `/community?editorial=1`, opt-in, public, browser-local, not private). Live: v0.2 acceptance 36/36, ordinary
+    visitors 8/8 at 0 px against the approved build, static paths CPU p50 0 ms / p99 11 ms, 0 errors in 3 load
+    rounds, no non-GET request. Rollback target: `f57739de` (opt-in v0.1 feature set), then `0c37e331`. No route;
+    DNS and the Railway redirect are unchanged.
   - **Editorial Mode v0.1:** owner-approved and committed as `d1b6fa4`, tagged **`release/editorial-v0.1`**
-    (2026-11-07). Local development only; production output byte-identical to the agency baseline. A protected
-    remote editorial deployment for Tae is being prepared (November 8 entry).
+    (2026-11-07), pushed to `fork` with its docs commit `c58e5a8`. Local development only; production output
+    byte-identical to the agency baseline.
+  - **Editorial Mode v0.2 for Tae: live** (operations REPLACE / SHORTEN / REMOVE / KEEP, Preview, two-file export;
+    `scripts/apply-editorial.mjs`, dry run by default). Guide: `docs/editorial-guide-tae.md` and the shareable doc
+    https://claude.ai/artifact/Xmhy49kfgYYqx3zrKiT6x5 (private until the owner shares it). Review and integration
+    process: `docs/venture-integration.md`, 2026-11-08 evening. No proposal of Tae's has been applied.
   - The SEO / AEO audit items: none implemented yet.
   - Tae's copy extraction: on hold until the editorial format is approved.
 
 ## Expected environment
 
-| Item | Value (verified 2026-11-07) |
+| Item | Value (verified 2026-11-07; HEAD updated 2026-11-08) |
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
-| Branch / HEAD | `feat/venture-beyond-integration` @ the docs commit "docs: record Editorial Mode v0.1 and the Cloudflare test deployment" on top of `d1b6fa4` (Editorial Mode v0.1), `8469c95` (Cloudflare kit), `134f24b` and `1b86fd6` (2026-11-07); no upstream configured |
-| Tags | `checkpoint/agency-baseline` (annotated) → `1b86fd6`; `release/editorial-v0.1` (annotated) → `d1b6fa4`. Push to `fork` approved 2026-11-07 (see the November 8 entry for the result) |
+| Branch / HEAD | `feat/venture-beyond-integration` @ `64d16d6` (opt-in Editorial Mode, 2026-11-08) on top of `0ad287e` (static-first kit), `8456bdb` (Louchi photo), `a1114f0` (Night) and `c58e5a8`, the docs commit "docs: record Editorial Mode v0.1 and the Cloudflare test deployment" on top of `d1b6fa4` (Editorial Mode v0.1), `8469c95` (Cloudflare kit), `134f24b` and `1b86fd6` (2026-11-07); no upstream configured |
+| Tags | `checkpoint/agency-baseline` (annotated) → `1b86fd6`, local only; `release/editorial-v0.1` (annotated, tag object `45c9377`) → `d1b6fa4`, **pushed to `fork`** 2026-11-07 |
+| `fork` branch | `fork/feat/venture-beyond-integration` = `c58e5a8` (pushed 2026-11-07, fast-forward from `7417113`) |
 | `fork` (luisblancoach/website) | `fork/feat/venture-beyond-integration` = `7417113` (pushed 2026-11-04) |
 | `origin` (raid-guild/website) | `main` = `b02d67b` (unchanged). Integration lands on **`review/venture-beyond-redesign`** = `7d0e878` (PR #106, squash of `7417113`, parent `a6418ea`). `feat/venture-beyond-redesign` = `7d25ae2` (PR #100, open, older parallel work) |
 | Other worktrees (clean) | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
@@ -52,7 +58,8 @@ below "Session log" is history; the sections in this first part are the source o
 | Nov 6 Night (dark theme) colour fixes, requested by the owner | yes, locally | no | no | no | no (Railway still shows the previous state, verified 2026-11-07) | 2026-11-06: tsc, lint, tests 91/91, 10-case set on :3018 |
 | `/clients` → `/agency` route migration (owner, 2026-11-07) | yes | `1b86fd6`, tag `checkpoint/agency-baseline` | no | no | no | 2026-11-07 clean archive: tests 93/93, tsc, lint 0 errors, build; 8-case pixel comparison vs `7417113` = 0 px; 16 behaviour checks pass |
 | SEO / AEO audit (Tae, v2, 6 Nov) | **no** (analysis only) | — | — | — | — | response written (see Records) |
-| Editorial Mode v0.1 (owner, 2026-11-07) | yes (dev only) | `d1b6fa4`, tag `release/editorial-v0.1` | see November 8 entry | no | no (local only by design) | 2026-11-07 isolated copy: tests 105/105, tsc, lint 0 errors, build; production byte-identical to the baseline; 8-case pixel comparison 0 px; 26 behaviour checks with the mode off; 78 editor checks on :3031 |
+| Editorial Mode v0.1 (owner, 2026-11-07) | yes (dev only) | `d1b6fa4`, tag `release/editorial-v0.1` | fork, 2026-11-07 | no | no (local only by design) |
+| Editorial build flag `NEXT_PUBLIC_EDITORIAL_MODE` (2026-11-07) | yes, locally | **no** (awaiting approval) | no | no | no (blocked: Access, Workers plan) | isolated builds: tests 106/106, tsc, lint 0 errors; public build byte-identical to the baseline; editorial build: 16 checks | 2026-11-07 isolated copy: tests 105/105, tsc, lint 0 errors, build; production byte-identical to the baseline; 8-case pixel comparison 0 px; 26 behaviour checks with the mode off; 78 editor checks on :3031 |
 
 ## Hosts and routes (verified 2026-11-07)
 
@@ -70,7 +77,12 @@ Routes in code (working tree, 2026-11-07): `/` (entry, unchanged), `/agency` (Hi
 ## Uncommitted in this worktree
 
 - The Editorial Mode v0.1 files are committed (`d1b6fa4`, owner-approved 2026-11-07); the docs that record them are
-  committed separately.
+  committed separately (`c58e5a8`).
+- **Editorial build flag (2026-11-07, after v0.1), uncommitted, awaiting approval:** `next.config.ts` (`env`:
+  `NEXT_PUBLIC_EDITORIAL_MODE` is always a literal, "disabled" unless a build sets it to "enabled"),
+  `src/components/venture/primitives/Review.tsx` and `src/components/venture/shell/VentureShell.tsx` (the editor's
+  entry condition also accepts the flag), `src/lib/editorial/config.ts`, `tests/editorial.test.mjs` (13 tests).
+- **`STATUS.md`**: the "Editorial Mode v0.1 release" entry is not committed.
 - The Cloudflare build kit `deploy/cloudflare/` is committed (`8469c95`, owner-approved 2026-11-07).
 - **Night (dark theme) colour fixes:** owner-requested on 2026-11-06, implemented locally in `src/components/venture/{venture,feature,gallery}.module.css`, not committed and not published. The documentation of this synchronization is committed separately (`docs: reconcile continuity with November 7 verified state`).
 - **Owner's files, never committed on purpose:**
@@ -185,8 +197,14 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
    4. the owner treats the workers.dev deployment as the reference (CPU-limit question above); the custom-domain
       cutover is a separate approval. Details: November 7 entry, "Cloudflare test deployment".
    5. done: Editorial Mode v0.1 approved, committed (`d1b6fa4`) and tagged `release/editorial-v0.1`;
-   6. **now:** a protected editorial deployment for Tae (build-time flag, Cloudflare Access, Workers plan): November 8
-      entry.
+   6. **blocked on the owner:** enable Cloudflare Zero Trust / Access (dashboard) and Workers Paid; then approve the
+      flag commit, the editorial Worker plan and its deployment (entry "Editorial Mode v0.1 release").
+   7. done (2026-11-08): static-first kit `0ad287e` deployed as Worker version `0c37e331`, verified live.
+   8. done (2026-11-08): opt-in Editorial Mode `64d16d6` live as Worker version `f57739de`, live QA passed.
+   9. done (2026-11-08): Editorial Mode v0.2 `5e04f1a` + `bb37620`, tag `release/editorial-v0.2`, live as
+      `f8fd6838`, pushed to `fork` with the docs commit.
+   10. **next:** the owner shares the guide and the two links with Tae; her exported pair goes through the review
+      process (dry run → owner approval of the change set id → apply → tests → commit → deploy).
 
    Editorial Mode: local prototype done (November 7 evening entry), awaiting the owner's review.
 1. The owner approves the editorial format (2), then the copy round with Tae.
@@ -204,6 +222,9 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 - Editorial Mode: isolated copies `2026-11-07/editorial-proto/` (production build, `build.log`, `EDITORIAL_FILES`) and
   `2026-11-07/editorial-proto-dev/` (dev server); evidence `2026-11-07/editorial-proto-evidence/` (screenshots,
   test scripts, results, sample `export.json` / `export.md`).
+- Static-first deployment: `2026-11-08/cf-build-0ad287e/` (deployed as `0c37e331`). Editorial opt-in candidate:
+  `2026-11-08/cf-editorial-test/` (not deployed). Load and QA scripts and results: session scratchpad, copied to
+  `2026-11-08/evidence/` at close.
 - Cloudflare test deployment: `2026-11-07/cf-build-8469c95/` (`BUILD_INFO`, `dry-run.log`, `deploy.log`); the deployed build.
 - `/agency` baseline verification: `2026-11-07/verify-agency/` (clean archive, `build.log`). Cloudflare kit test build: `2026-11-07/cf-build-test/` (`BUILD_INFO`; built with the uncommitted kit, NOT FOR DEPLOYMENT). Cloudflare spike: `2026-11-07/spike-cloudflare/` (adapter build and `wrangler deploy --dry-run`; nothing deployed).
 - Copy export and its generator: `2026-11-07/` (`export-copy.ts`, `raidguild-copy-for-tae.md`, and `.ORIGINAL.md` for diffing returned edits).
@@ -211,6 +232,199 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 ---
 
 # Session log (newest first; history, not current state)
+
+## November 8, evening: opt-in Editorial Mode live; Editorial Mode v0.2 built and verified locally
+
+- Owner request "Complete Live Editorial Mode v0.2": Phase 1 (commit, build, deploy, live QA of the opt-in editor)
+  approved; Phases 2–6 local only, presented for approval before any further commit, push or deployment.
+- **Phase 1, done.** Commit `64d16d6` "feat(editorial): opt-in Editorial Mode for production builds
+  (?editorial=1)" (the 8 files of the November 8 entry; `config.ts` comment now also says the parameter provides no
+  privacy or access restriction). Build `2026-11-08/cf-build-64d16d6` (`BASELINE=64d16d6`), deployed as Worker
+  version `f57739de`.
+  - Live editorial QA (Tae's 12 steps, Exit, `?editorial=0`, no writes, no page errors): 36/36.
+  - Live ordinary visitor vs the approved build (:3042), `/agency` and `/community`, Day/Night, 1440/390: 8/8 at
+    0 px, text identical, no editor element.
+  - Load, 3 rounds × 336 requests: 0 errors. `wrangler tail`: 487 events, 483 `ok`, 4 `canceled` (images the test
+    browser abandoned when closing tabs; CPU 0–8 ms). Static paths CPU p50 0 / p90 7 / p99 12 / max 16 ms.
+- **Phases 2–5, uncommitted.** Files: `src/lib/editorial/{config,drafts}.ts`,
+  `src/components/venture/editorial/{store.ts,EditableCopy.tsx,EditorialMode.tsx}`, `next.config.ts` (source
+  revision), `deploy/cloudflare/build.sh` (passes the commit), new `scripts/apply-editorial.mjs`,
+  `tests/editorial-apply.test.mjs`, `tests/editorial.test.mjs`; guide `docs/editorial-guide-tae.md` (new, needs
+  `git add -f`). Decisions: `docs/venture-integration.md`, 2026-11-08 evening.
+  - Checks: tests 117/117 (incl. 6 CLI tests on throwaway copies), tsc clean, lint 0 errors.
+  - Flag-unset public build of the v0.2 source vs the approved build: JS/CSS identical (34 files), `/agency` and
+    `/community` HTML identical apart from the build id, no editor strings.
+  - Opt-in candidate `2026-11-08/cf-v02-test` (source `2026-11-08/v02-src`, throwaway repo; NOT FOR DEPLOYMENT) in
+    the local Workers runtime (:8793): v0.2 acceptance 36/36 (operations, Preview, persistence, comments, two-file
+    export, determinism, CLI dry run on the browser's export, re-import, changed-source conflict, other visitors,
+    Day/Night, phone, Undo all, no writes, no errors).
+  - Ordinary visitor on the v0.2 opt-in candidate vs the approved build: 8/8 at 0 px, text identical, no editor
+    element.
+  - The real narrative source was never written: `--apply` ran only on throwaway copies.
+- **Release (owner approval "Editorial Mode v0.2 Release Approval").** Commits `5e04f1a` "feat(editorial):
+  operations, Preview and two-file export (v0.2)" (tests 111/111 on the staged tree alone) and `bb37620`
+  "feat(editorial): apply-editorial CLI, dry run by default" (117/117). The committed tree equals the tested
+  candidate source. Build `2026-11-08/cf-build-bb37620` (`BASELINE=bb37620`; the editor embeds `bb37620` as its source
+  revision), deployed as Worker version `f8fd6838`; rollback target `f57739de` kept.
+  - Live v0.2 acceptance: 36/36 (all operations, Preview / Original / Draft, Undo / Restore / Undo all, persistence,
+    JSON + Markdown export, determinism, CLI dry run on the live export, import, conflict detection, other visitors,
+    Day/Night, desktop/phone, no writes, no page errors).
+  - Live ordinary visitor vs the approved build: 8/8 at 0 px, text identical, no editor element.
+  - Load 3 rounds: 0 errors. `wrangler tail`: 148 events, all `ok`; static paths CPU p50 0 / p90 8 / p99 11 / max
+    12 ms; 0 non-GET requests.
+  - Docs commit, annotated tag `release/editorial-v0.2` → `bb37620`, pushed to `fork` only.
+  - Guide published as a doc: https://claude.ai/artifact/Xmhy49kfgYYqx3zrKiT6x5 (private until shared).
+
+## November 8: static-first host deployed; Editorial Mode opt-in for Tae built and verified (not deployed)
+
+- Owner request: Phase 1 approved (commit the kit, deploy to the existing Worker with the Night and photo commits,
+  live tests, rollback on failure); Phase 2: Editorial Mode in a production build behind `?editorial=1`; Phase 3:
+  Tae's full workflow on the live Worker. The editorial deployment needs a separate approval.
+- **Phase 1, done.** Commit `0ad287e` "build(cloudflare): static-first assets for the Workers Free CPU limit"
+  (`deploy/cloudflare/{static-first.mjs,worker.js,build.sh}`). Build `2026-11-08/cf-build-0ad287e` (app tree =
+  `8456bdb`; 627/627 images; no editor code). Deployed to `raidguild-estudioblanco`: version `0c37e331`.
+  - Live routes: `/agency`, `/community`, images, `/api/posts` (snapshot) from static assets (`X-Static-First`);
+    `/clients` and `/agency/` → 308 `/agency`; lead POSTs → 503; `X-Robots-Tag: noindex, nofollow` everywhere.
+  - Load: 3 rounds × 336 requests, 8 concurrent, from Argentina: 0 errors; p50 about 190–225 ms (network).
+  - `wrangler tail`: 875 events, 874 `ok`, 1 `canceled` (a browser-aborted prefetch of `/`, 13 ms wall). Static
+    paths: CPU p50 0 ms, p90 1 ms, p99 14 ms, max 16 ms (8 of 239 above 10 ms, all on new isolates). Dynamic `/`:
+    353–711 ms CPU, still `ok`; its prefetch from every page view: about 200 ms CPU.
+  - Visual, live vs the approved `next start` build (:3042): `/agency` and `/community`, Day/Night, 1440/390: 8/8 at
+    0 px, text identical (one first-run difference on `/community` Day 1440 was the lazy Join background still
+    loading; 0 px on rerun with image waits).
+- **Phase 2, implemented, uncommitted.** Flag `NEXT_PUBLIC_EDITORIAL_MODE`: `disabled` (default) or `opt-in`
+  (set by `build.sh` for this host). Files: `next.config.ts`, `src/lib/editorial/config.ts`,
+  `src/components/venture/primitives/Review.tsx`, `src/components/venture/shell/VentureShell.tsx`,
+  `src/components/venture/editorial/EditorialEntry.tsx` (new: lazy entry), `.../EditorialMode.tsx` (no "Edit copy"
+  button outside development; "Local draft — not published" badge), `tests/editorial.test.mjs`,
+  `deploy/cloudflare/build.sh`. Decision record: `docs/venture-integration.md`, 2026-11-08.
+  - Checks: tests 107/107, tsc clean, lint 0 errors (1 existing warning in `HeaderJoin.tsx`).
+  - Isolated build `2026-11-08/cf-editorial-test` (source `2026-11-08/editorial-src`, a throwaway repo; NOT FOR
+    DEPLOYMENT). Prerendered HTML identical to `cf-build-0ad287e` except chunk names and the build id. Visitor JS:
+    +4.1–4.4 kB gzip per page; the editor chunk (57 kB, 18 kB gzip) loads only after `?editorial=1`.
+  - Local Workers runtime (:8792): the 12-step workflow plus Exit / `?editorial=0`, no writes, no page errors:
+    36/36.
+  - Ordinary visitor on the candidate vs the approved build (:3042): `/agency`, `/community`, Day/Night, 1440/390:
+    8/8 at 0 px, text identical.
+- Not done: the editorial deployment and the live QA (Phase 3 on the live Worker), the docs commit, any push.
+
+## November 7–8, night: Night and photo commits; static-first Cloudflare candidate (not deployed)
+
+- Owner request: separate commits for the November 6 Night CSS and the new `member-louchi.png`; then a static-first
+  deployment that stays inside the Workers Free CPU limit, built and load-tested in isolation; no deployment without
+  approval; no billing, DNS, rules, Railway, raidguild.org or upstream change.
+- Verified before committing, on isolated `next start` builds (A = HEAD + the 3 CSS files on :3041, B = A + the photo
+  on :3042) against the clean baseline (:3022), `/agency`, `/community`, `/` × Day, Night × 1440, 390, remote
+  thumbnails hidden:
+  - Night CSS: every rule under `html[data-theme="dark"]`; Day 0 px on all three pages; Night changes only the filled
+    and Moloch CTAs (dark-navy edge, transparent disc) and the gallery cards (#303674 / #3A4182, #FF7AA6); text
+    identical. `/` Night 390 showed 34,068 px in both comparisons: the lazy crew illustration not yet loaded in one
+    capture (timing). Note: one selector in gallery.module.css (`:global(html) :global(html[data-theme="dark"]) …`)
+    can never match; its duplicate does the work; left as the owner wrote it.
+  - Photo: the only changes are the photo boxes (132 × 132 on `/agency` and `/`, 106 × 106 on the hat card), Day and
+    Night, 1440 and 390; text identical.
+- Commits (not pushed): **`a1114f0`** "fix(night): dark-navy CTA edges and lighter gallery cards" (the 3 CSS files),
+  **`8456bdb`** "feat(people): new photo for Louchi, Brand Steward" (`public/images/member-louchi.png`).
+- Static-first kit (uncommitted: `deploy/cloudflare/static-first.mjs` new, `worker.js` and `build.sh` changed):
+  - `static-first.mjs` (build step after the OpenNext build): copies the prerendered routes (`/agency`, `/community`,
+    `/chat`, `robots.txt`, `sitemap.xml`, `favicon.ico`, `opengraph-image.png`: HTML + RSC payload + stored headers, or
+    route bodies) into `.open-next/assets/_static/`; starts this build's `next start` locally and stores every
+    `/_next/image` URL found in those pages (627, WebP, Next.js's own optimiser) and snapshots of `/api/posts` and
+    `/api/artifacts`; writes `static-manifest.js`.
+  - `worker.js`: GET/HEAD for those routes (RSC when `RSC: 1`, as `next start` does), those images (when the browser
+    accepts WebP), the snapshots and `/_vercel/*` (404, as before) are answered from the assets without loading
+    Next.js (`X-Static-First: hit`); everything else goes to Next.js as before; lead POSTs 503 and noindex unchanged.
+- Test build `KIT_DIR=… BASELINE=8456bdb deploy/cloudflare/build.sh 8456bdb …/cf-static-test` (NOT FOR DEPLOYMENT):
+  10,692.33 KiB / gzip 4,214.77 KiB; 1,187 asset files (639 under `_static`, 38 MB); dry run OK; no editor string,
+  no `data-review-id`.
+- Checks on `wrangler dev` :8790 (local Workers runtime):
+  - HTTP: fast path on pages, RSC, prefetch, HEAD, robots, sitemap, OG image, snapshots, WebP images; served bodies
+    identical to the prerendered files; WebP bytes identical to `next start`; `/clients?x=1` 308 → `/agency?x=1`;
+    `/agency/` 308; `/` dynamic via Next.js; lead POST 503; `X-Robots-Tag` on every response.
+  - Visual vs :3042 (`next start`, same commit), **images shown**, remote thumbnails hidden: 8/8 cases 0 px, text
+    identical, no editorial or review elements, no errors. Behaviour 16/16 and 10/10. Client-side navigation
+    `/agency` → `/community` without a reload, RSC from the fast path.
+  - Per page view, requests still reaching Next.js: the RSC prefetch of `/` (the header logo links to `/`, a dynamic
+    page). `/_vercel/insights/script.js` did too; now answered by the fast path.
+  - Local load, 3 rounds × 820 requests, 8 concurrent, candidate vs the current approach (:8791): candidate p50
+    19–33 ms for every class (the local proxy floor, ~17–20 ms), current pages p50 61 / p95 128 ms, data 378 / 648,
+    images 145 / 766; 0 errors on both (no CPU limit locally). The real CPU check needs the deployment with
+    `wrangler tail`.
+- Not deployed. Deployment and rollback steps: the report to the owner (and below in "Next priorities").
+
+## November 7, late night: update of the existing Worker requested; stopped before deploying
+
+- Owner request: update `raidguild-estudioblanco` (same URLs, no new Worker) to the latest approved release with
+  Editorial Mode v0.1, the editor disabled for visitors unless access protection is enforced; stop before changing
+  the deployment if access protection or runtime limits make the update unsafe.
+- Deployed now: version `0176ba2e-d759-4fd1-b6b6-9ee3578542b5` (2026-11-07 21:49 UTC, the only deployment), the kit
+  build of `8469c95`, app tree = `1b86fd6`. Live CSS byte-identical to the clean baseline build; live
+  `member-louchi.png` = the committed photo.
+- What the latest release would add: `release/editorial-v0.1` (`d1b6fa4`) differs from the deployed app only by the
+  11 editorial files, which public builds exclude. Kit build `BASELINE=release/editorial-v0.1
+  deploy/cloudflare/build.sh release/editorial-v0.1` → `2026-11-07/cf-build-d1b6fa4` (10,559.10 KiB / gzip
+  4,200.76 KiB, dry run OK): all 548 static assets identical to the deployed build except `BUILD_ID`; the Worker
+  bundle differs only in server chunk names and manifests; no editor code. **Deploying it changes nothing a visitor
+  sees.** What looks outdated on the Worker (the old photo, the Night colours) is uncommitted and excluded by the
+  owner's instructions.
+- Editorial build flag (uncommitted): safe for public builds (byte-identical, verified); not enabled anywhere, as
+  Cloudflare Access is not enabled on the account.
+- Runtime: the last load test (same evening) failed 12.5 % of requests on Workers Free (page CPU median 34 ms, max
+  520 ms, 16 of 42 page renders canceled). A redeploy of the same rendering would not be stable. **Not deployed.**
+- Options for the owner: (a) Workers Paid, then deploy `cf-build-d1b6fa4` and load-test; (b) on Free, try the
+  OpenNext static-assets incremental cache with cache interception (a kit change in `open-next.config.ts`, so
+  prerendered pages are served without rendering), deploy once and load-test, rolling back to `0176ba2e` if any
+  request fails; (c) commit the Night fixes and/or the new photo first if they should be live.
+
+## November 7, night: Editorial Mode v0.1 release; protected deployment blocked
+
+- Owner request: commit and tag the approved Editorial Mode, a separate docs commit, push to the fork only; then a
+  production-compatible editorial build behind access protection on our Cloudflare Worker, deployed only if the
+  Workers plan, Cloudflare Access and the checks allow it; no billing or account-level change.
+- Start checks: location, branch, HEAD `8469c95`, both tags, the reference checkout, empty stash; remotes `fork` =
+  luisblancoach/website, `origin` = raid-guild/website.
+- **Commit `d1b6fa4`** "feat(editorial): introduce inline visual copy editing v0.1": exactly the 11 editorial files;
+  each staged blob identical to the tested isolated copy, and the committed tree identical to `editorial-proto`.
+  **Annotated tag `release/editorial-v0.1`** → `d1b6fa4`. **Docs commit `c58e5a8`** (STATUS.md, CHANGELOG.md,
+  docs/venture-integration.md; history unchanged).
+- **Push to `fork`** (fast-forward `7417113..c58e5a8`: `9be9060`, `1b86fd6`, `134f24b`, `8469c95`, `d1b6fa4`,
+  `c58e5a8`) and the tag `release/editorial-v0.1` only. Not pushed: `checkpoint/agency-baseline`. `origin`
+  untouched (`main` `b02d67b`, `review/venture-beyond-redesign` `7d0e878`).
+- **Cloudflare Access: not available.** `GET /accounts/…/access/apps` answers "Access is not enabled. Visit the
+  Access dashboard … and click the 'Enable Access' button"; `access/organizations` answers "Authentication error";
+  the Wrangler login has no Access scope. Enabling Zero Trust and creating an Access application is an
+  account-level change for the owner. No editor was deployed.
+- **Workers plan: the Free CPU limit is still hit.** Sustained load on the current Worker (version `0176ba2e…`): 160
+  mixed requests, 4 at a time → 110 × 200, 30 × 308, **2 × 503, 18 × no response in 30 s** (12.5 % failed).
+  `wrangler tail` (103 events): page renders CPU median 34 ms, p90 167 ms, max 520 ms (Free allows 10 ms); **16 of
+  42 page requests `canceled`**; redirects median 1 ms; images median 8 ms. The earlier clean sample was luck.
+  Billing cannot be read with this login; the behaviour is that of Workers Free. No deployment, no change to the
+  Worker.
+- **Editorial build flag** (uncommitted, files in "Uncommitted in this worktree"): the editor loads in development
+  or when `NEXT_PUBLIC_EDITORIAL_MODE=enabled` at build time. First attempt (the flag read straight from
+  `process.env`) put the editor into a public build (14 static files changed, +22 kB) because Next does not inline
+  an unset variable; fixed with `next.config.ts` `env`, which always inlines a literal ("disabled" by default).
+  Isolated copies of `c58e5a8` + the 5 files (`2026-11-07/flag-public`, `flag-editorial`):
+  - tests 106/106, tsc, lint 0 errors (1 existing warning);
+  - **public build (flag unset): byte-identical to the agency baseline** (34 static JS/CSS files, both pages' HTML
+    apart from the build id; no editor string in `.next`);
+  - editorial build: the editor is bundled (`/agency` 305 kB, `/community` 198 kB first load); with the mode off,
+    `/agency` and `/community` × Day, Night × 1440, 390 match the baseline at 0 px (on `/community` only the Projects
+    Explorer's remote `https:` thumbnails are hidden in both captures: they load from external hosts at the
+    network's pace; with them shown the editorial and baseline captures differed only in that column);
+    `/clients?x=1` → `/agency?x=1`; editing, reload persistence, JSON export (same format, `status: proposed`),
+    Markdown export, revert all and import work; the server still serves the published copy, a second visitor
+    sees no change, and the editor sent no non-GET request.
+- Not done: the OpenNext / Wrangler build of the editorial variant (the kit builds committed refs only, and its
+  baseline guard would need `BASELINE=` the new release); any deployment.
+- Recommended next steps (owner):
+  1. Cloudflare dashboard: enable Zero Trust (Free plan, up to 50 users), create an Access application for the
+     editorial host with an allow-list (Tae's and the owner's emails, one-time PIN login).
+  2. Activate Workers Paid ($5/month) or accept that the Worker is not stable.
+  3. Approve the flag commit and a separate editorial Worker (`raidguild-editorial`, workers.dev, built with
+     `NEXT_PUBLIC_EDITORIAL_MODE=enabled`, noindex, lead endpoints disabled) so the public reference Worker stays
+     editor-free and remains the rollback; or decide to replace the existing Worker and put its whole host behind
+     Access.
 
 ## November 7, late evening: Editorial Mode, local prototype (owner request); committed as v0.1 the same night
 
