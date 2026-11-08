@@ -5,6 +5,7 @@ import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import nextConfig from "../next.config.ts";
+import "./editorial-apply.test.mjs";
 import { EDITORIAL_SECTIONS, componentOf, fieldLabel, isEditableId, removalTarget, sectionFor, structuralReason } from "../src/lib/editorial/config.ts";
 import { itemContext, originals, sourceOrder } from "../src/lib/editorial/catalog.ts";
 import {
