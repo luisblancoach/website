@@ -15,6 +15,9 @@
 #   tools), installed with --frozen-lockfile in the build directory.
 # - Builds with an empty environment plus SHOW_REVIEW_FLAGS=false, so review
 #   flags stay off and no local variable leaks into the prerendered pages.
+# - Static first (static-first.mjs): prerendered pages, their RSC payloads, the
+#   optimised images they use and the data snapshots go into the static assets,
+#   so the Worker answers them without loading Next.js (Workers Free CPU limit).
 # - Ends with `wrangler deploy --dry-run` (no account call) and BUILD_INFO.
 #
 # KIT_DIR=<dir> takes the kit files from <dir> instead of <ref>: for testing an
@@ -41,7 +44,7 @@ git -C "$ROOT" archive "$SHA" | tar -x -C "$OUT"
 KIT_SOURCE="$REF ($SHA)"
 if [ -n "${KIT_DIR:-}" ]; then
   mkdir -p "$OUT/deploy/cloudflare"
-  cp "$KIT_DIR"/{package.cloudflare.json,bun.cloudflare.lock,wrangler.jsonc,wrangler.route.jsonc,worker.js} "$OUT/deploy/cloudflare/"
+  cp "$KIT_DIR"/{package.cloudflare.json,bun.cloudflare.lock,wrangler.jsonc,wrangler.route.jsonc,worker.js,static-first.mjs} "$OUT/deploy/cloudflare/"
   KIT_SOURCE="$KIT_DIR (uncommitted; NOT FOR DEPLOYMENT)"
 fi
 KIT="$OUT/deploy/cloudflare"
@@ -73,7 +76,7 @@ NODE
 cp "$KIT/package.cloudflare.json" package.json
 cp "$KIT/bun.cloudflare.lock" bun.lock
 rm -f bun.lockb
-cp "$KIT/wrangler.jsonc" "$KIT/wrangler.route.jsonc" "$KIT/worker.js" .
+cp "$KIT/wrangler.jsonc" "$KIT/wrangler.route.jsonc" "$KIT/worker.js" "$KIT/static-first.mjs" .
 cat > open-next.config.ts <<'TS'
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 
@@ -84,6 +87,7 @@ CLEAN_ENV=(env -i "PATH=$PATH" "HOME=$HOME" "TMPDIR=${TMPDIR:-/tmp}" CI=1 NEXT_T
 "${CLEAN_ENV[@]}" bun install --frozen-lockfile
 "${CLEAN_ENV[@]}" ./node_modules/.bin/opennextjs-cloudflare build 2>&1 | tee opennext-build.log
 printf '/*\n  X-Robots-Tag: noindex, nofollow\n' > .open-next/assets/_headers
+"${CLEAN_ENV[@]}" node static-first.mjs 2>&1 | tee static-first.log
 "${CLEAN_ENV[@]}" ./node_modules/.bin/wrangler deploy --dry-run --outdir .wrangler-dry 2>&1 | tee dry-run.log
 
 {
@@ -96,6 +100,7 @@ printf '/*\n  X-Robots-Tag: noindex, nofollow\n' > .open-next/assets/_headers
   echo "@opennextjs/cloudflare: $(node -p 'require("./node_modules/@opennextjs/cloudflare/package.json").version'); wrangler: $(./node_modules/.bin/wrangler --version | tail -1)"
   echo "next: $(node -p 'require("./node_modules/next/package.json").version')"
   grep -E 'Total Upload' dry-run.log || true
+  grep -E '^static-first:' static-first.log || true
   echo "static assets: $(find .open-next/assets -type f | wc -l | tr -d ' ') files, $(du -sh .open-next/assets | cut -f1)"
 } | tee BUILD_INFO
 echo "build.sh: done in $OUT"
