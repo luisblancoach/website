@@ -13,6 +13,12 @@ import PortalOverlay from "./PortalOverlay";
 import { ReviewFlagsProvider, ReviewPanel, SurfaceExperiment } from "../primitives/Review";
 import styles from "../venture.module.css";
 
+// Editorial Mode: local development only. Required inside the NODE_ENV check so
+// production builds drop it at build time and never bundle the editor.
+const EditorialMode: typeof import("../editorial/EditorialMode").default | null =
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  process.env.NODE_ENV === "development" ? require("../editorial/EditorialMode").default : null;
+
 type VentureState = {
   pathname: string;
   portalOpen: boolean;
@@ -250,7 +256,8 @@ export default function VentureShell({ children, reviewFlags = false, nav }: { c
       <ReviewFlagsProvider enabled={reviewFlags}>
         <Shell nav={nav}>{children}</Shell>
         <ReviewPanel />
-        <SurfaceExperiment />
+        {/* A ternary, not `&&`: production folds it to the original children exactly. */}
+        {EditorialMode ? <><SurfaceExperiment /><EditorialMode /></> : <SurfaceExperiment />}
       </ReviewFlagsProvider>
     </ThemeProvider>
   );

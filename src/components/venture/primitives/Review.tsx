@@ -5,6 +5,13 @@ import { usePathname } from "next/navigation";
 import type { Copy, ReviewReason } from "@/lib/narrative/types";
 import styles from "../venture.module.css";
 
+// Editorial Mode (local development only). Loaded inside the NODE_ENV check:
+// production builds evaluate the condition at build time, drop the branch and
+// never bundle the editor.
+const editable: typeof import("../editorial/EditableCopy") | null =
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  process.env.NODE_ENV === "development" ? require("../editorial/EditableCopy") : null;
+
 const ReviewFlagsContext = createContext(false);
 
 // True on previews and with SHOW_REVIEW_FLAGS=true, where unresolved content may be shown.
@@ -42,8 +49,15 @@ export function ReviewFlag({ id, reason, note, children, block = false }: FlagPr
 
 // `before` / `after` join adjacent literal spacing into the same text node.
 export function CopyText({ copy, before = "", after = "" }: { copy: Copy; before?: string; after?: string }) {
-  if (copy.status === "approved") return <>{rich(before + copy.text + after)}</>;
-  return <>{before}<ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{rich(copy.text)}</ReviewFlag>{after}</>;
+  const rendered = copy.status === "approved"
+    ? <>{rich(before + copy.text + after)}</>
+    : <>{before}<ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{rich(copy.text)}</ReviewFlag>{after}</>;
+  // Editorial Mode (local development only; `editable` is null in production).
+  if (editable && editable.isEditableId(copy.id)) {
+    const flag = (children: ReactNode) => copy.status === "approved" ? children : <ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{children}</ReviewFlag>;
+    return <editable.default copy={copy} before={before} after={after} fallback={rendered} rich={rich} flag={flag} />;
+  }
+  return rendered;
 }
 
 type Entry = { id: string; reason: ReviewReason; note: string; text: string };
