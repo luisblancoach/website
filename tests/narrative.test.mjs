@@ -442,3 +442,6 @@ describe("November 3 community restructure", () => {
   });
 });
 
+
+// Editorial Mode tests run with this suite (package.json lists the test files).
+import "./editorial.test.mjs";
