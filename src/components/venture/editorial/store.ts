@@ -6,9 +6,11 @@
 // directly, and React sees the text when the edit is committed (blur, Enter).
 // Re-rendering an element while it is being edited would move the caret.
 import { useSyncExternalStore } from "react";
-import { applyEdit, parseStored, serializeStored, type Drafts } from "@/lib/editorial/drafts";
+import { applyEdit, parseStored, serializeStored, setOperation, type Drafts, type Operation, type RemoveScope } from "@/lib/editorial/drafts";
 
-export type View = "draft" | "original";
+// Original: the published copy. Draft: the decisions, editable. Preview: the page as
+// it would read with every decision applied (removals taken out), not editable.
+export type View = "draft" | "original" | "preview";
 export type EditorialState = {
   active: boolean;
   view: View;
@@ -42,7 +44,7 @@ function load(): EditorialState {
   const active = requested === "1" ? true : requested === "0" ? false : mode.active === true;
   let storage = true;
   try { window.localStorage.setItem(`${DRAFTS_KEY}:probe`, "1"); window.localStorage.removeItem(`${DRAFTS_KEY}:probe`); } catch { storage = false; }
-  return { active, view: mode.view === "original" ? "original" : "draft", drafts: parseStored(read(DRAFTS_KEY)), epoch: 1, revs: {}, storage };
+  return { active, view: mode.view === "original" || mode.view === "preview" ? mode.view : "draft", drafts: parseStored(read(DRAFTS_KEY)), epoch: 1, revs: {}, storage };
 }
 
 function current(): EditorialState {
@@ -110,6 +112,11 @@ export const editorial = {
   cancel(id: string, startText: string, source: string) {
     pending.delete(id);
     set((s) => ({ ...s, drafts: applyEdit(s.drafts, id, startText, source) }), id);
+  },
+  // Keep as is, Remove (with its scope), Rewrite or Shorten for one item.
+  operate(id: string, op: Operation, source: string, scope?: RemoveScope) {
+    this.commitAll();
+    set((s) => ({ ...s, drafts: setOperation(s.drafts, id, op, source, { scope }) }), true);
   },
   replaceDrafts(update: (drafts: Drafts) => Drafts) {
     this.commitAll();

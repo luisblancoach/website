@@ -86,7 +86,7 @@ import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 export default defineCloudflareConfig({});
 TS
 
-CLEAN_ENV=(env -i "PATH=$PATH" "HOME=$HOME" "TMPDIR=${TMPDIR:-/tmp}" CI=1 NEXT_TELEMETRY_DISABLED=1 SHOW_REVIEW_FLAGS=false NEXT_PUBLIC_EDITORIAL_MODE=opt-in)
+CLEAN_ENV=(env -i "PATH=$PATH" "HOME=$HOME" "TMPDIR=${TMPDIR:-/tmp}" CI=1 NEXT_TELEMETRY_DISABLED=1 SHOW_REVIEW_FLAGS=false NEXT_PUBLIC_EDITORIAL_MODE=opt-in "NEXT_PUBLIC_EDITORIAL_SOURCE_REVISION=$SHA")
 "${CLEAN_ENV[@]}" bun install --frozen-lockfile
 "${CLEAN_ENV[@]}" ./node_modules/.bin/opennextjs-cloudflare build 2>&1 | tee opennext-build.log
 printf '/*\n  X-Robots-Tag: noindex, nofollow\n' > .open-next/assets/_headers

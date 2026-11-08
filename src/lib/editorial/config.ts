@@ -96,3 +96,42 @@ export function fieldLabel(id: string, context?: (itemPath: string) => string | 
 }
 
 export const sectionTitle = (section: EditorialSection) => `${section.pageLabel} · ${section.label}`;
+
+// Editorial operations (v0.2). Plain-language names for the editor and the review document.
+export type Operation = "REPLACE" | "SHORTEN" | "REMOVE" | "KEEP";
+export type RemoveScope = "item" | "component" | "section";
+export const OPERATION_LABEL: Record<Operation, string> = { REPLACE: "Rewrite", SHORTEN: "Shorten", REMOVE: "Remove", KEEP: "Keep as is" };
+export const SCOPE_LABEL: Record<RemoveScope, string> = { item: "this text", component: "the whole item", section: "the whole section" };
+
+// The array item a copy id belongs to ("clients.serviceGallery.cards.2.body" →
+// "clients.serviceGallery.cards.2"), or undefined for section-level copy.
+export function componentOf(id: string) {
+  const section = sectionFor(id);
+  if (!section) return undefined;
+  const parts = id.slice(section.prefix.length + 1).split(".");
+  const index = parts.findIndex((part) => /^\d+$/.test(part));
+  return index > 0 ? `${section.prefix}.${parts.slice(0, index + 1).join(".")}` : undefined;
+}
+
+// What a removal takes away. `target` is the id prefix that disappears.
+export function removalTarget(id: string, scope: RemoveScope) {
+  if (scope === "section") return sectionFor(id)?.prefix ?? id;
+  if (scope === "component") return componentOf(id) ?? id;
+  return id;
+}
+
+// A removal that changes the page's structure, not just its copy, needs its own
+// approval: a whole item or section, a button or link label (navigation), a
+// heading or section label, or text that serves accessibility.
+export function structuralReason(id: string, operation: Operation, scope: RemoveScope = "item"): string | null {
+  if (operation !== "REMOVE") return null;
+  if (scope === "section") return "Removes a whole section of the page.";
+  if (scope === "component") return "Removes a whole item (card, button, row or link), not only its text.";
+  const section = sectionFor(id);
+  const rest = section ? id.slice(section.prefix.length + 1) : id;
+  if (/(^|\.)(paths|actions|links)\.\d+\.label$|(^|\.)cta(\.label)?$|(^|\.)link\.label$/.test(rest)) return "Removes the label of a button or link, which would leave an empty control.";
+  if (/(^|\.)title(\.(lead|em|finale))?$|(^|\.)heading$/.test(rest)) return "Removes (part of) a heading, which the page structure and screen readers rely on.";
+  if (/^label$/.test(rest)) return "Removes the section label.";
+  if (/(^|\.)(alt|ariaLabel|summary)$/.test(rest)) return "Removes text that serves accessibility.";
+  return null;
+}

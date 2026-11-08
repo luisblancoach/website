@@ -11,14 +11,16 @@
 // button and Alt+Shift+E. Leave: Exit, Alt+Shift+E or ?editorial=0.
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { EDITORIAL_DEV, EDITORIAL_SECTIONS, fieldLabel, sectionFor, sectionTitle, type EditorialPage } from "@/lib/editorial/config";
+import { EDITORIAL_DEV, EDITORIAL_SECTIONS, OPERATION_LABEL, SCOPE_LABEL, componentOf, fieldLabel, removalTarget, sectionFor, sectionTitle, structuralReason, type EditorialPage, type Operation, type RemoveScope } from "@/lib/editorial/config";
 import { itemContext, originals, sourceOrder } from "@/lib/editorial/catalog";
-import { conflictOf, fromExport, normalizeText, rebase, revert, setComment, sortedDrafts, toExport, toMarkdown, type Draft } from "@/lib/editorial/drafts";
+import { EXPORT_FILES, conflictOf, fromExport, normalizeText, rebase, revert, setComment, sortedDrafts, toExport, toMarkdown, warningsOf, type Draft, type Drafts } from "@/lib/editorial/drafts";
 import { editorial, useEditorial } from "./store";
 
 const PAGES = new Set<string>(EDITORIAL_SECTIONS.map((section) => section.page));
 const FOCUS_KEY = "raidguild-editorial-focus";
 const SELECTOR = "rg-copy[data-editable]";
+// The commit the site was built from, for the export (next.config.ts).
+const SOURCE_REVISION = process.env.NEXT_PUBLIC_EDITORIAL_SOURCE_REVISION || "unknown";
 
 // The page text of an editable element, back in the narrative format:
 // <strong>/<b> become "**…**" (Cmd/Ctrl+B adds bold), everything else is text.
@@ -34,6 +36,8 @@ function serialize(element: HTMLElement) {
 }
 
 const editableOf = (target: EventTarget | null) => (target instanceof Element ? target.closest<HTMLElement>(SELECTOR) : null);
+// Any item in the Draft view, editable or not (a removed item is chosen, not typed into).
+const selectableOf = (target: EventTarget | null) => (target instanceof Element ? target.closest<HTMLElement>("rg-copy[data-selectable]") : null);
 const inEditorUi = (target: EventTarget | null) => target instanceof Element && target.closest("[data-editorial-ui]") !== null;
 const plain = (text: string) => text.replace(/\*\*/g, "");
 
@@ -77,6 +81,93 @@ function reveal(id: string) {
   return true;
 }
 
+// Preview of removals. A removed text leaves a hidden, empty <rg-copy> marker
+// (EditableCopy); here each marker folds away the elements that held nothing
+// else (its paragraph, its button), a whole item folds from the smallest element
+// holding all its texts, and a whole section hides its <section>. Folding stops
+// at page landmarks. Returns what was hidden, to restore it.
+const LANDMARKS = "section, main, header, footer, nav, body, [data-editorial-ui]";
+const isEmpty = (element: Element) => (element.textContent ?? "").trim() === "";
+function foldRemovals(drafts: Drafts): HTMLElement[] {
+  const folded: HTMLElement[] = [];
+  const hide = (element: Element | null | undefined) => {
+    if (!(element instanceof HTMLElement) || element.hasAttribute("data-rgx-folded")) return;
+    element.setAttribute("data-rgx-folded", "");
+    folded.push(element);
+  };
+  const fold = (start: Element) => {
+    let element = start;
+    while (element.parentElement && !element.parentElement.matches(LANDMARKS) && isEmpty(element.parentElement)) element = element.parentElement;
+    if (element !== start) hide(element);
+  };
+  const inside = (target: string) => [...document.querySelectorAll<HTMLElement>(`rg-copy[data-copy-id^="${CSS.escape(target)}."], rg-copy[data-copy-id="${CSS.escape(target)}"]`)];
+  for (const draft of Object.values(drafts)) {
+    if (draft.op !== "REMOVE" || !draft.scope || draft.scope === "item") continue;
+    const items = inside(removalTarget(draft.id, draft.scope));
+    if (!items.length) continue;
+    if (draft.scope === "section") { hide(items[0].closest("section") ?? common(items)); continue; }
+    const holder = common(items);
+    if (holder) { hide(holder); fold(holder); }
+  }
+  document.querySelectorAll("rg-copy[data-removed][hidden]").forEach(fold);
+  return folded;
+}
+function common(elements: Element[]): Element | null {
+  let candidate: Element | null = elements[0] ?? null;
+  while (candidate && !elements.every((element) => candidate!.contains(element))) candidate = candidate.parentElement;
+  return candidate;
+}
+
+const STATE_LABEL: Record<Operation, string> = { REPLACE: "Rewritten", SHORTEN: "Shortened", REMOVE: "Removed", KEEP: "Kept as is" };
+
+// The decisions for the chosen item, in plain words. Buttons keep the focus in
+// the text being edited (pointer-down is cancelled), so typed text is saved first.
+function ItemActions({ item, draft, notify }: { item: { id: string; label: string }; draft: Draft | undefined; notify: (message: string) => void }) {
+  const [removing, setRemoving] = useState(false);
+  const source = originals.get(item.id) ?? draft?.base ?? "";
+  const hold = (event: { preventDefault: () => void }) => event.preventDefault();
+  const component = componentOf(item.id);
+  const operate = (op: Operation, scope?: RemoveScope) => {
+    editorial.operate(item.id, op, source, scope);
+    setRemoving(false);
+    const after = editorial.getSnapshot().drafts[item.id];
+    if ((op === "REPLACE" || op === "SHORTEN") && after?.op !== op) { notify(`Edit the text first, then mark it as “${OPERATION_LABEL[op]}”.`); return; }
+    const structural = structuralReason(item.id, op, scope);
+    if (op === "REMOVE") notify(structural ? `Marked for removal. ${structural} This needs separate approval.` : "Marked for removal. Restore brings it back.");
+    if (op === "KEEP") notify("Marked as reviewed: keep as is.");
+  };
+  const removed = draft?.op === "REMOVE";
+  const status = draft ? (removed ? `Removed: ${SCOPE_LABEL[draft.scope ?? "item"]}` : STATE_LABEL[draft.op]) : "Unchanged";
+  return (
+    <div className="rgx-item" role="group" aria-label={`Decision for ${item.label}`}>
+      <span className="rgx-item-name"><b>{item.label}</b> · {status}</span>
+      {!removed && (
+        <span className="rgx-segment" role="group" aria-label="Kind of change">
+          <button type="button" aria-pressed={draft?.op === "REPLACE"} onPointerDown={hold} onMouseDown={hold} onClick={() => operate("REPLACE")} title="New wording">Rewrite</button>
+          <button type="button" aria-pressed={draft?.op === "SHORTEN"} onPointerDown={hold} onMouseDown={hold} onClick={() => operate("SHORTEN")} title="A shorter version">Shorten</button>
+        </span>
+      )}
+      {!removed && draft?.op !== "KEEP" && <button type="button" onPointerDown={hold} onMouseDown={hold} onClick={() => operate("KEEP")}>Keep as is</button>}
+      {!removed && (removing ? (
+        <span className="rgx-remove" role="group" aria-label="Remove">
+          <span>Remove:</span>
+          <button type="button" onPointerDown={hold} onMouseDown={hold} onClick={() => operate("REMOVE", "item")}>This text</button>
+          {component && <button type="button" onPointerDown={hold} onMouseDown={hold} onClick={() => operate("REMOVE", "component")}>Whole item</button>}
+          <button type="button" onPointerDown={hold} onMouseDown={hold} onClick={() => operate("REMOVE", "section")}>Whole section</button>
+          <button type="button" onPointerDown={hold} onMouseDown={hold} onClick={() => setRemoving(false)}>Cancel</button>
+        </span>
+      ) : (
+        <button type="button" onPointerDown={hold} onMouseDown={hold} onClick={() => setRemoving(true)}>Remove…</button>
+      ))}
+      {draft && (
+        <button type="button" onPointerDown={hold} onMouseDown={hold} onClick={() => { editorial.replaceDrafts((drafts) => revert(drafts, item.id)); notify(removed ? "Restored." : "Back to the published text."); }}>
+          {removed ? "Restore" : "Undo"}
+        </button>
+      )}
+    </div>
+  );
+}
+
 // The editor's chrome renders in the browser only: nothing of it is in the
 // server HTML, so it can never cause a hydration mismatch.
 const noSubscription = () => () => {};
@@ -88,6 +179,8 @@ export default function EditorialMode() {
   const onEditorialPage = PAGES.has(pathname);
   const [panelOpen, setPanelOpen] = useState(false);
   const [focused, setFocused] = useState<{ label: string; rect: DOMRect } | null>(null);
+  // The item the operations apply to: the last text clicked or edited.
+  const [selected, setSelected] = useState<{ id: string; label: string } | null>(null);
   const [notice, setNotice] = useState("");
   const noticeTimer = useRef(0);
   const notify = useCallback((message: string) => {
@@ -134,7 +227,9 @@ export default function EditorialMode() {
     };
     const onClick = (event: MouseEvent) => {
       if (inEditorUi(event.target)) return;
-      if (editableOf(event.target)) { event.preventDefault(); event.stopPropagation(); return; }
+      const chosen = selectableOf(event.target);
+      if (chosen) setSelected({ id: chosen.dataset.copyId!, label: chosen.dataset.copyLabel ?? "" });
+      if (editableOf(event.target) || chosen) { event.preventDefault(); event.stopPropagation(); return; }
       // A keyboard-made click (detail 0) on the control that holds the text being
       // edited: the browser's own activation of a <button> or <summary> while typing.
       const editing = editableOf(document.activeElement);
@@ -145,7 +240,7 @@ export default function EditorialMode() {
         notify("Links are paused in Editorial Mode. Exit the mode to follow them.");
       }
     };
-    const onPress = (event: Event) => { if (!inEditorUi(event.target) && editableOf(event.target)) event.stopPropagation(); };
+    const onPress = (event: Event) => { if (!inEditorUi(event.target) && selectableOf(event.target)) event.stopPropagation(); };
     const onKey = (event: KeyboardEvent) => {
       const element = editableOf(event.target);
       if (!element) return;
@@ -181,6 +276,7 @@ export default function EditorialMode() {
       const element = editableOf(event.target);
       if (!element) return;
       starts.set(element, serialize(element));
+      setSelected({ id: element.dataset.copyId!, label: element.dataset.copyLabel ?? "" });
       element.spellcheck = true;
       track(element);
     };
@@ -218,6 +314,17 @@ export default function EditorialMode() {
     return () => window.clearTimeout(timer);
   }, [active, pathname]);
 
+  // Preview: fold away what only held removed text (a paragraph, a button), whole
+  // items and whole sections, so the page reads as it would with the decisions applied.
+  useEffect(() => {
+    if (!active || state.view !== "preview") return;
+    const folded = foldRemovals(state.drafts);
+    return () => folded.forEach((element) => element.removeAttribute("data-rgx-folded"));
+  }, [active, state.view, state.drafts, pathname]);
+
+  // A new page or view: the chosen item is no longer on screen.
+  useEffect(() => { setSelected(null); }, [pathname, state.view]);
+
   const changes = useMemo(() => sortedDrafts(state.drafts, sourceOrder), [state.drafts]);
   const conflicts = changes.filter((draft) => conflictOf(draft, originals)).length;
 
@@ -240,8 +347,9 @@ export default function EditorialMode() {
             <span className="rgx-title">Editorial Mode</span>
             <span className="rgx-status" title="Drafts are saved in this browser only. Export them to share; nothing changes the website.">Local draft — not published</span>
             <span className="rgx-segment" role="group" aria-label="Preview">
-              <button type="button" aria-pressed={state.view === "original"} onClick={() => editorial.setView("original")}>Original</button>
-              <button type="button" aria-pressed={state.view === "draft"} onClick={() => editorial.setView("draft")}>Draft</button>
+              <button type="button" aria-pressed={state.view === "original"} onClick={() => editorial.setView("original")} title="The published copy">Original</button>
+              <button type="button" aria-pressed={state.view === "draft"} onClick={() => editorial.setView("draft")} title="Your decisions, editable">Draft</button>
+              <button type="button" aria-pressed={state.view === "preview"} onClick={() => editorial.setView("preview")} title="The page as it would read with your decisions">Preview</button>
             </span>
             <button type="button" className="rgx-changes" aria-expanded={panelOpen} onClick={() => setPanelOpen((open) => !open)}>
               Changes <b>{changes.length}</b>{conflicts > 0 && <i title="Conflicts"> · {conflicts} ⚠</i>}
@@ -250,9 +358,11 @@ export default function EditorialMode() {
             <p className="rgx-hint" aria-live="polite">
               {notice || (!state.storage ? "This browser blocks local storage: drafts will be lost on reload. Export them."
                 : state.view === "original" ? "Showing the published copy. Switch to Draft to edit."
+                : state.view === "preview" ? "Preview: the page with your decisions applied, removals taken out. Switch to Draft to edit."
                 : focused ? <>Editing <b>{focused.label}</b> · Enter saves · Esc undoes</>
-                : "Click outlined text to edit. Drafts save in this browser automatically.")}
+                : "Click outlined text to edit it, keep it or remove it. Drafts save in this browser automatically.")}
             </p>
+            {state.view === "draft" && selected && <ItemActions key={selected.id} item={selected} draft={state.drafts[selected.id]} notify={notify} />}
           </>
         )}
       </div>
@@ -265,8 +375,15 @@ function ChangesPanel({ changes, conflicts, pathname, onClose, notify }: { chang
   const fileRef = useRef<HTMLInputElement>(null);
   const [confirmAll, setConfirmAll] = useState(false);
   const [message, setMessage] = useState("");
-  const stamp = () => new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
-  const exported = () => toExport(Object.fromEntries(changes.map((draft) => [draft.id, draft])), originals, { context: itemContext, order: sourceOrder });
+  // One snapshot gives both files the same change set id.
+  const exported = () => toExport(Object.fromEntries(changes.map((draft) => [draft.id, draft])), originals, { context: itemContext, order: sourceOrder, revision: SOURCE_REVISION });
+  const save = async (which: "both" | "json" | "markdown") => {
+    const data = await exported();
+    if (which !== "markdown") download(EXPORT_FILES.json, `${JSON.stringify(data, null, 2)}\n`, "application/json");
+    if (which === "both") await new Promise((resolve) => window.setTimeout(resolve, 400));
+    if (which !== "json") download(EXPORT_FILES.markdown, toMarkdown(data), "text/markdown");
+    setMessage(which === "both" ? `Exported ${EXPORT_FILES.markdown} (to read) and ${EXPORT_FILES.json} (for integration). Send both.` : "Exported.");
+  };
 
   const show = (draft: Draft) => {
     const page = sectionFor(draft.id)?.page as EditorialPage | undefined;
@@ -284,7 +401,7 @@ function ChangesPanel({ changes, conflicts, pathname, onClose, notify }: { chang
     try {
       const result = fromExport(await file.text(), editorial.getSnapshot().drafts, originals);
       editorial.replaceDrafts(() => result.drafts);
-      setMessage(`Imported ${result.added + result.replaced} ${result.added + result.replaced === 1 ? "change" : "changes"}: ${result.added} new, ${result.replaced} replaced${result.conflicts ? `, ${result.conflicts} with conflicts` : ""}${result.skipped ? `, ${result.skipped} skipped (malformed)` : ""}.`);
+      setMessage(`Imported ${result.added + result.replaced} ${result.added + result.replaced === 1 ? "decision" : "decisions"}: ${result.added} new, ${result.replaced} replaced${result.conflicts ? `, ${result.conflicts} with conflicts` : ""}${result.skipped ? `, ${result.skipped} skipped (malformed)` : ""}.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "The file could not be imported.");
     }
@@ -297,18 +414,19 @@ function ChangesPanel({ changes, conflicts, pathname, onClose, notify }: { chang
       <header>
         <div>
           <h2>Changes</h2>
-          <p>{changes.length} proposed{conflicts > 0 ? ` · ${conflicts} in conflict` : ""} · saved in this browser · not approved, not published</p>
+          <p>{changes.length} {changes.length === 1 ? "decision" : "decisions"}{conflicts > 0 ? ` · ${conflicts} in conflict` : ""} · saved in this browser · not approved, not published</p>
         </div>
         <button type="button" className="rgx-close" onClick={onClose} aria-label="Close changes">×</button>
       </header>
       <div className="rgx-actions">
-        <button type="button" disabled={!changes.length} onClick={() => download(`raidguild-editorial-${stamp()}.json`, `${JSON.stringify(exported(), null, 2)}\n`, "application/json")}>Export JSON</button>
-        <button type="button" disabled={!changes.length} onClick={() => download(`raidguild-editorial-${stamp()}.md`, toMarkdown(exported()), "text/markdown")}>Export Markdown</button>
-        <button type="button" onClick={() => fileRef.current?.click()}>Import JSON</button>
+        <button type="button" className="rgx-primary" disabled={!changes.length} onClick={() => save("both")}>Export for review</button>
+        <button type="button" disabled={!changes.length} onClick={() => save("markdown")} title={EXPORT_FILES.markdown}>Review document</button>
+        <button type="button" disabled={!changes.length} onClick={() => save("json")} title={EXPORT_FILES.json}>Change set</button>
+        <button type="button" onClick={() => fileRef.current?.click()}>Import</button>
         <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(event) => importFile(event.target.files?.[0])} />
       </div>
       {message && <p className="rgx-message" role="status">{message}</p>}
-      {changes.length === 0 && <p className="rgx-empty">No changes yet. Click outlined text on the page to edit it; your drafts appear here.</p>}
+      {changes.length === 0 && <p className="rgx-empty">No decisions yet. Click outlined text on the page to rewrite, shorten, remove or keep it; your decisions appear here.</p>}
       <ol>
         {changes.map((draft) => {
           const meta = sectionFor(draft.id);
@@ -326,9 +444,9 @@ function ChangesPanel({ changes, conflicts, pathname, onClose, notify }: { chang
       {changes.length > 0 && (
         <footer>
           {confirmAll ? (
-            <><span>Revert all {changes.length} changes?</span><button type="button" className="rgx-danger" onClick={() => { editorial.replaceDrafts(() => ({})); setConfirmAll(false); setMessage("All changes reverted."); }}>Revert all</button><button type="button" onClick={() => setConfirmAll(false)}>Keep</button></>
+            <><span>Undo all {changes.length} decisions?</span><button type="button" className="rgx-danger" onClick={() => { editorial.replaceDrafts(() => ({})); setConfirmAll(false); setMessage("All decisions undone."); }}>Undo all</button><button type="button" onClick={() => setConfirmAll(false)}>Keep</button></>
           ) : (
-            <button type="button" onClick={() => setConfirmAll(true)}>Revert all…</button>
+            <button type="button" onClick={() => setConfirmAll(true)}>Undo all…</button>
           )}
         </footer>
       )}
@@ -344,32 +462,46 @@ function ChangeRow({ draft, onShow }: { draft: Draft; onShow: () => void }) {
   const saveComment = () => {
     if ((draft.comment ?? "") !== comment) editorial.replaceDrafts((drafts) => setComment(drafts, draft.id, comment, source ?? draft.base));
   };
+  const rewritten = draft.op === "REPLACE" || draft.op === "SHORTEN";
   const diff = wordDiff(draft.base, draft.text);
-  const unchanged = draft.text === draft.base;
+  const structural = structuralReason(draft.id, draft.op, draft.scope);
+  const warnings = warningsOf(draft);
+  const operation = draft.op === "REMOVE" ? `Remove ${SCOPE_LABEL[draft.scope ?? "item"]}` : OPERATION_LABEL[draft.op];
   return (
-    <article className="rgx-change" data-conflict={conflict ?? undefined}>
+    <article className="rgx-change" data-conflict={conflict ?? undefined} data-op={draft.op}>
       <div className="rgx-field">
         <b>{fieldLabel(draft.id, itemContext(draft.id))}</b>
-        <span>{sectionFor(draft.id)?.page ?? ""}</span>
+        <span className="rgx-badge" data-op={draft.op}>{operation}</span>
       </div>
+      {structural && <div className="rgx-conflict"><b>⚠ Structural decision:</b> {structural} It needs separate approval.</div>}
       {conflict === "source-changed" && (
         <div className="rgx-conflict">
-          <b>Source changed since this edit.</b> The site now reads: “{plain(source ?? "")}”
-          <span><button type="button" onClick={() => editorial.replaceDrafts((drafts) => rebase(drafts, draft.id, source ?? draft.base))}>Keep my proposal</button></span>
+          <b>Source changed since this decision.</b> The site now reads: “{plain(source ?? "")}”
+          <span><button type="button" onClick={() => editorial.replaceDrafts((drafts) => rebase(drafts, draft.id, source ?? draft.base))}>Keep my decision</button></span>
         </div>
       )}
-      {conflict === "unknown-id" && <div className="rgx-conflict"><b>This text is no longer editable on the site.</b> Keep it for the record, or revert it.</div>}
+      {conflict === "unknown-id" && <div className="rgx-conflict"><b>This text is no longer editable on the site.</b> Keep it for the record, or undo it.</div>}
+      {warnings.map((warning) => <div key={warning} className="rgx-conflict">{warning}</div>)}
       <dl>
-        <dt>Original</dt><dd className="rgx-original">{diff.removed}</dd>
-        <dt>Proposed</dt><dd className="rgx-proposed">{unchanged ? <em>No change (comment only)</em> : diff.added}</dd>
+        <dt>Current</dt><dd className="rgx-original">{rewritten ? diff.removed : plain(draft.base)}</dd>
+        <dt>Proposed</dt>
+        <dd className="rgx-proposed">
+          {rewritten ? diff.added : draft.op === "REMOVE" ? <em>Remove {SCOPE_LABEL[draft.scope ?? "item"]} from the page</em> : <em>Keep as is (reviewed)</em>}
+        </dd>
       </dl>
+      {rewritten && (
+        <div className="rgx-segment rgx-kind" role="group" aria-label="Kind of change">
+          <button type="button" aria-pressed={draft.op === "REPLACE"} onClick={() => editorial.operate(draft.id, "REPLACE", source ?? draft.base)}>Rewrite</button>
+          <button type="button" aria-pressed={draft.op === "SHORTEN"} onClick={() => editorial.operate(draft.id, "SHORTEN", source ?? draft.base)}>Shorten</button>
+        </div>
+      )}
       <label className="rgx-comment">
         <span>Comment</span>
-        <textarea rows={2} value={comment} placeholder="Why this change, or a question for review" onChange={(event) => setCommentText(event.target.value)} onBlur={saveComment} />
+        <textarea rows={2} value={comment} placeholder="Why this decision, or a question for review" onChange={(event) => setCommentText(event.target.value)} onBlur={saveComment} />
       </label>
       <div className="rgx-row-actions">
         <button type="button" onClick={onShow}>Show on page</button>
-        <button type="button" onClick={() => editorial.replaceDrafts((drafts) => revert(drafts, draft.id))}>Revert</button>
+        <button type="button" onClick={() => editorial.replaceDrafts((drafts) => revert(drafts, draft.id))}>{draft.op === "REMOVE" ? "Restore" : "Undo"}</button>
       </div>
     </article>
   );
@@ -389,6 +521,12 @@ html[data-editorial="draft"] rg-copy[data-changed] {
 }
 html[data-editorial="draft"] rg-copy[data-commented]:not([data-changed]) { background: color-mix(in srgb, #3aa0ff 14%, transparent); }
 html[data-editorial="draft"] rg-copy[data-conflict] { outline: 2px dotted #f5a524; }
+html[data-editorial="draft"] rg-copy[data-selectable] { cursor: pointer; }
+html[data-editorial="draft"] rg-copy[data-removed] { opacity: .45; text-decoration: line-through; text-decoration-color: #ee3c78; text-decoration-thickness: 2px; }
+html[data-editorial="draft"] rg-copy[data-removed="inside"] { opacity: .3; }
+html[data-editorial="draft"] rg-copy[data-kept] { box-shadow: inset 0 -2px 0 #3ec27f; }
+html[data-editorial="draft"] rg-copy[data-warning] { outline: 2px dotted #f5a524; }
+html[data-editorial] [data-rgx-folded] { display: none !important; }
 html[data-editorial="draft"] rg-copy[data-editable]:empty::before { content: "(empty: type to add text)"; opacity: .55; }
 html[data-editorial] rg-copy[data-flash] { animation: rgx-flash 1.6s ease-out; }
 @keyframes rgx-flash { 0%, 30% { background: color-mix(in srgb, #ee3c78 40%, transparent); } }
@@ -413,6 +551,20 @@ html[data-editorial] rg-copy[data-flash] { animation: rgx-flash 1.6s ease-out; }
 .rgx-changes b { color: #ff8fb5; }
 .rgx-changes i { color: #f5a524; font-style: normal; }
 .rgx-hint { color: #b9bcc6; flex-basis: 100%; font-size: 12px; margin: 0; padding: 0 6px 2px; }
+.rgx-item { align-items: center; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-basis: 100%; flex-wrap: wrap; gap: 6px; padding: 8px 2px 2px; }
+.rgx-item-name { color: #b9bcc6; flex-basis: 100%; font-size: 12px; padding: 0 4px; }
+.rgx-item-name b { color: #f4f4f5; }
+.rgx-remove { align-items: center; display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.rgx-remove > span { color: #b9bcc6; font-size: 12px; padding: 0 2px; }
+.rgx-panel .rgx-primary { background: #ee3c78; border-color: #ee3c78; color: #fff; font-weight: 600; }
+.rgx-panel .rgx-primary:hover:not(:disabled) { background: #d72f69; }
+.rgx-badge { border-radius: 999px; font-size: 11px; padding: 1px 8px; white-space: nowrap; }
+.rgx-field .rgx-badge { color: #fff; }
+.rgx-badge[data-op="REPLACE"] { background: #7a2a52; }
+.rgx-badge[data-op="SHORTEN"] { background: #2f4f7a; }
+.rgx-badge[data-op="REMOVE"] { background: #8f1d3f; }
+.rgx-badge[data-op="KEEP"] { background: #1f6b47; }
+.rgx-kind { margin: 6px 0; }
 .rgx-hint b { color: #f4f4f5; font-weight: 600; }
 .rgx-chip {
   background: #15171c; border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,.35); font-size: 12px; max-width: 320px; overflow: hidden; padding: 5px 9px;
