@@ -3488,3 +3488,10 @@
 :global(html) .site.site[data-audience="community"] :global(#work) { background-image: none; }
 :global(html) .site.site[data-audience="community"] :global(#work)::before,
 :global(html) .site.site[data-audience="community"] :global(#work)::after { content: none; }
+
+/* Night CTAs (November 6, owner):
+   - Filled (pink) CTAs take a dark-navy edge (#12163B) instead of the cream one, and their icon disc is transparent:
+     the glyph is drawn in the label's navy on the pink (4.6:1).
+   - The Moloch CTA: see feature.module.css (its class lives there).
+   Day is unchanged. Tokens are scoped to the pills, so hover / active keep working. */
+:global(html[data-theme="dark"]) .site[data-cta="semantic"] .pillFilled { --cta-border: #12163b; --cta-icon-bg: transparent; --cta-icon-fg: var(--cta-fg); }
