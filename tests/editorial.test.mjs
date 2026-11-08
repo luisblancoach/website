@@ -4,6 +4,7 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import nextConfig from "../next.config.ts";
 import { EDITORIAL_SECTIONS, fieldLabel, isEditableId, sectionFor } from "../src/lib/editorial/config.ts";
 import { itemContext, originals, sourceOrder } from "../src/lib/editorial/catalog.ts";
 import {
@@ -134,13 +135,39 @@ describe("editorial drafts", () => {
   });
 });
 
-describe("editorial mode stays out of production", () => {
-  test("every mount point is behind NODE_ENV === development", () => {
+describe("editorial mode stays out of production unless opted in", () => {
+  test("the build flag is a literal that defaults to disabled", () => {
+    // Loaded with the test environment, where the flag is not set.
+    assert.equal(process.env.NEXT_PUBLIC_EDITORIAL_MODE, undefined);
+    assert.equal(nextConfig.env.NEXT_PUBLIC_EDITORIAL_MODE, "disabled");
+    // Only the exact value "opt-in" turns it on; anything else is "disabled".
+    const source = readFileSync(new URL("../next.config.ts", import.meta.url), "utf8");
+    assert.match(source, /NEXT_PUBLIC_EDITORIAL_MODE: process\.env\.NEXT_PUBLIC_EDITORIAL_MODE === "opt-in" \? "opt-in" : "disabled"/);
+  });
+
+  test("every mount point is behind the build-time editorial check", () => {
     const review = readFileSync(new URL("../src/components/venture/primitives/Review.tsx", import.meta.url), "utf8");
     const shell = readFileSync(new URL("../src/components/venture/shell/VentureShell.tsx", import.meta.url), "utf8");
-    // The editor is only ever required inside the check, never imported statically.
-    assert.match(review, /process\.env\.NODE_ENV === "development" \? require\("\.\.\/editorial\/EditableCopy"\) : null/);
-    assert.match(shell, /process\.env\.NODE_ENV === "development" \? require\("\.\.\/editorial\/EditorialMode"\)\.default : null/);
+    // The editor is only ever required inside the build-time check, never imported statically.
+    const gate = String.raw`process\.env\.NODE_ENV === "development" \|\| process\.env\.NEXT_PUBLIC_EDITORIAL_MODE === "opt-in"\s*(\/\/[^\n]*\s*)?\? require`;
+    assert.match(review, new RegExp(`${gate}\\("\\.\\./editorial/EditableCopy"\\) : null`));
+    assert.match(shell, new RegExp(`${gate}\\("\\.\\./editorial/EditorialEntry"\\)\\.default : null`));
     for (const source of [review, shell]) assert.doesNotMatch(source, /^import .*editorial/m);
+  });
+
+  test("an opt-in build loads the editor only after ?editorial=1, and shows no entry button", () => {
+    const entry = readFileSync(new URL("../src/components/venture/editorial/EditorialEntry.tsx", import.meta.url), "utf8");
+    const mode = readFileSync(new URL("../src/components/venture/editorial/EditorialMode.tsx", import.meta.url), "utf8");
+    const store = readFileSync(new URL("../src/components/venture/editorial/store.ts", import.meta.url), "utf8");
+    // The chrome is a lazy chunk, rendered only in the browser and only when active (or in development).
+    assert.match(entry, /lazy\(\(\) => import\("\.\/EditorialMode"\)\)/);
+    assert.match(entry, /if \(!mounted \|\| !\(active \|\| EDITORIAL_DEV\)\) return null;/);
+    assert.doesNotMatch(entry, /^import (?!type).*["']\.\/EditorialMode["']/m);
+    // No "Edit copy" button outside development; the bar says the drafts are local.
+    assert.match(mode, /\(!state\.active && !EDITORIAL_DEV\)\) return null;/);
+    assert.match(mode, /Local draft — not published/);
+    // The mode starts only from the URL or a previous opt-in in this browser; it never calls a server.
+    assert.match(store, /get\("editorial"\)/);
+    for (const source of [entry, mode, store]) assert.doesNotMatch(source, /\bfetch\(|XMLHttpRequest|sendBeacon|WebSocket/);
   });
 });

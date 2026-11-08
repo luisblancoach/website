@@ -13,11 +13,15 @@ import PortalOverlay from "./PortalOverlay";
 import { ReviewFlagsProvider, ReviewPanel, SurfaceExperiment } from "../primitives/Review";
 import styles from "../venture.module.css";
 
-// Editorial Mode: local development only. Required inside the NODE_ENV check so
-// production builds drop it at build time and never bundle the editor.
-const EditorialMode: typeof import("../editorial/EditorialMode").default | null =
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  process.env.NODE_ENV === "development" ? require("../editorial/EditorialMode").default : null;
+// Editorial Mode: local development, or an opt-in build
+// (NEXT_PUBLIC_EDITORIAL_MODE=opt-in; see lib/editorial/config.ts). Required
+// inside the check so other production builds drop it at build time and never
+// bundle the editor. The entry is small: it loads the editor's chunk only when
+// the mode is on.
+const EditorialMode: typeof import("../editorial/EditorialEntry").default | null =
+  process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_EDITORIAL_MODE === "opt-in"
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    ? require("../editorial/EditorialEntry").default : null;
 
 type VentureState = {
   pathname: string;

@@ -15,6 +15,9 @@
 #   tools), installed with --frozen-lockfile in the build directory.
 # - Builds with an empty environment plus SHOW_REVIEW_FLAGS=false, so review
 #   flags stay off and no local variable leaks into the prerendered pages.
+# - NEXT_PUBLIC_EDITORIAL_MODE=opt-in: Editorial Mode ships with the review host,
+#   hidden until a visitor opens a page with ?editorial=1 (browser-local drafts
+#   only; the parameter is not authentication). See src/lib/editorial/config.ts.
 # - Static first (static-first.mjs): prerendered pages, their RSC payloads, the
 #   optimised images they use and the data snapshots go into the static assets,
 #   so the Worker answers them without loading Next.js (Workers Free CPU limit).
@@ -83,7 +86,7 @@ import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 export default defineCloudflareConfig({});
 TS
 
-CLEAN_ENV=(env -i "PATH=$PATH" "HOME=$HOME" "TMPDIR=${TMPDIR:-/tmp}" CI=1 NEXT_TELEMETRY_DISABLED=1 SHOW_REVIEW_FLAGS=false)
+CLEAN_ENV=(env -i "PATH=$PATH" "HOME=$HOME" "TMPDIR=${TMPDIR:-/tmp}" CI=1 NEXT_TELEMETRY_DISABLED=1 SHOW_REVIEW_FLAGS=false NEXT_PUBLIC_EDITORIAL_MODE=opt-in)
 "${CLEAN_ENV[@]}" bun install --frozen-lockfile
 "${CLEAN_ENV[@]}" ./node_modules/.bin/opennextjs-cloudflare build 2>&1 | tee opennext-build.log
 printf '/*\n  X-Robots-Tag: noindex, nofollow\n' > .open-next/assets/_headers

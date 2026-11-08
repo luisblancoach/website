@@ -1,15 +1,17 @@
 "use client";
 
-// Editorial Mode (local prototype, 2026-11-07): edit the narrative copy of
-// the enabled sections directly on the rendered page. Local development only:
-// VentureShell mounts this component only when NODE_ENV is "development", and
-// it never writes source files or calls a server. Drafts stay in this
-// browser (store.ts) until exported for review; nothing is approved here.
+// Editorial Mode (v0.1, 2026-11-07; opt-in production build 2026-11-08): edit
+// the narrative copy of the enabled sections directly on the rendered page.
+// Loaded by EditorialEntry in local development and in opt-in builds (see
+// lib/editorial/config.ts). It never writes source files or calls a server:
+// drafts stay in this browser (store.ts) until exported for review; nothing is
+// approved or published here.
 //
-// Enter: the "Edit copy" button, Alt+Shift+E, or ?editorial=1.
+// Enter: ?editorial=1 (any build); in local development also the "Edit copy"
+// button and Alt+Shift+E. Leave: Exit, Alt+Shift+E or ?editorial=0.
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { EDITORIAL_SECTIONS, fieldLabel, sectionFor, sectionTitle, type EditorialPage } from "@/lib/editorial/config";
+import { EDITORIAL_DEV, EDITORIAL_SECTIONS, fieldLabel, sectionFor, sectionTitle, type EditorialPage } from "@/lib/editorial/config";
 import { itemContext, originals, sourceOrder } from "@/lib/editorial/catalog";
 import { conflictOf, fromExport, normalizeText, rebase, revert, setComment, sortedDrafts, toExport, toMarkdown, type Draft } from "@/lib/editorial/drafts";
 import { editorial, useEditorial } from "./store";
@@ -219,7 +221,8 @@ export default function EditorialMode() {
   const changes = useMemo(() => sortedDrafts(state.drafts, sourceOrder), [state.drafts]);
   const conflicts = changes.filter((draft) => conflictOf(draft, originals)).length;
 
-  if (!mounted || !onEditorialPage) return null;
+  // Opt-in builds show nothing until the mode is on: no "Edit copy" button for visitors.
+  if (!mounted || !onEditorialPage || (!state.active && !EDITORIAL_DEV)) return null;
 
   return (
     <>
@@ -235,6 +238,7 @@ export default function EditorialMode() {
         ) : (
           <>
             <span className="rgx-title">Editorial Mode</span>
+            <span className="rgx-status" title="Drafts are saved in this browser only. Export them to share; nothing changes the website.">Local draft — not published</span>
             <span className="rgx-segment" role="group" aria-label="Preview">
               <button type="button" aria-pressed={state.view === "original"} onClick={() => editorial.setView("original")}>Original</button>
               <button type="button" aria-pressed={state.view === "draft"} onClick={() => editorial.setView("draft")}>Draft</button>
@@ -402,6 +406,7 @@ html[data-editorial] rg-copy[data-flash] { animation: rgx-flash 1.6s ease-out; }
 .rgx-bar:has(.rgx-enter) { background: transparent; border: 0; box-shadow: none; padding: 0; }
 .rgx-bar .rgx-enter { background: #15171c; box-shadow: 0 6px 20px rgba(0,0,0,.3); font-weight: 600; padding: 8px 14px; }
 .rgx-title { font-weight: 700; padding: 0 4px 0 6px; }
+.rgx-status { border: 1px solid #f4c152; border-radius: 999px; color: #f4c152; font-size: 12px; padding: 3px 10px; white-space: nowrap; }
 .rgx-segment { background: #262a33; border-radius: 999px; display: inline-flex; padding: 2px; }
 .rgx-segment button { background: transparent; border: 0; padding: 4px 10px; }
 .rgx-segment button[aria-pressed="true"] { background: #ee3c78; color: #fff; }
