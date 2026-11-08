@@ -2,10 +2,24 @@
 // the human-readable names the editor shows for it. Pure data and functions, no
 // React or DOM, so the draft logic and the tests can use it too.
 //
-// Local development only. `EDITORIAL_AVAILABLE` is the build-time switch: Next
-// inlines `process.env.NODE_ENV`, so in a production build every branch that
-// checks it is removed and the editor never reaches the bundle.
-export const EDITORIAL_AVAILABLE = process.env.NODE_ENV === "development";
+// Where it exists:
+// - Local development: always, with an "Edit copy" button on the editable pages.
+// - A production build made with NEXT_PUBLIC_EDITORIAL_MODE=opt-in (the
+//   Cloudflare review host): the editor ships in a chunk that loads only after a
+//   visitor opens a page with ?editorial=1 (store.ts), and leaves with Exit or
+//   ?editorial=0. Visitors without the parameter get the normal site: the server
+//   HTML is the published copy, and no editor control or style is loaded.
+//   The parameter is an interface switch, NOT authentication, and provides no
+//   privacy or access restriction: anyone with the URL can open the editor. That is acceptable only because editing is entirely
+//   local to the browser (drafts in localStorage, exported as files): nothing is
+//   written to a server, shared or published, and the bundle holds no secret.
+//   This is not a private editor.
+// - Every other build (flag unset, raidguild.org): Next inlines both values at
+//   build time, removes every branch that checks them, and the editor never
+//   reaches the bundle. The entry points (primitives/Review.tsx,
+//   shell/VentureShell.tsx) repeat this condition inline for that reason.
+export const EDITORIAL_DEV = process.env.NODE_ENV === "development";
+export const EDITORIAL_AVAILABLE = EDITORIAL_DEV || process.env.NEXT_PUBLIC_EDITORIAL_MODE === "opt-in";
 
 export type EditorialPage = "/agency" | "/community";
 

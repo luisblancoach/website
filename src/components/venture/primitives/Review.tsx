@@ -5,12 +5,14 @@ import { usePathname } from "next/navigation";
 import type { Copy, ReviewReason } from "@/lib/narrative/types";
 import styles from "../venture.module.css";
 
-// Editorial Mode (local development only). Loaded inside the NODE_ENV check:
-// production builds evaluate the condition at build time, drop the branch and
+// Editorial Mode: local development, or an opt-in build
+// (NEXT_PUBLIC_EDITORIAL_MODE=opt-in; see lib/editorial/config.ts). Both values
+// are inlined at build time, so other production builds drop this branch and
 // never bundle the editor.
 const editable: typeof import("../editorial/EditableCopy") | null =
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  process.env.NODE_ENV === "development" ? require("../editorial/EditableCopy") : null;
+  process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_EDITORIAL_MODE === "opt-in"
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    ? require("../editorial/EditableCopy") : null;
 
 const ReviewFlagsContext = createContext(false);
 
@@ -52,7 +54,7 @@ export function CopyText({ copy, before = "", after = "" }: { copy: Copy; before
   const rendered = copy.status === "approved"
     ? <>{rich(before + copy.text + after)}</>
     : <>{before}<ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{rich(copy.text)}</ReviewFlag>{after}</>;
-  // Editorial Mode (local development only; `editable` is null in production).
+  // Editorial Mode (`editable` is null in public production builds).
   if (editable && editable.isEditableId(copy.id)) {
     const flag = (children: ReactNode) => copy.status === "approved" ? children : <ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{children}</ReviewFlag>;
     return <editable.default copy={copy} before={before} after={after} fallback={rendered} rich={rich} flag={flag} />;

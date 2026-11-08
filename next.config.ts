@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Editorial Mode build flag (lib/editorial/config.ts). Always a literal, so the
+  // build folds the editor's entry points away: "opt-in" only when a build sets
+  // NEXT_PUBLIC_EDITORIAL_MODE=opt-in (the Cloudflare review host); every other
+  // build, raidguild.org included, gets "disabled" and no editor in its bundle.
+  env: {
+    NEXT_PUBLIC_EDITORIAL_MODE: process.env.NEXT_PUBLIC_EDITORIAL_MODE === "opt-in" ? "opt-in" : "disabled",
+  },
   async redirects() {
     return [
       {
