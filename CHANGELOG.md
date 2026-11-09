@@ -6,6 +6,19 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
+## 2026-11-09 · Tae's review applied `055cbb0` and Editorial Mode v0.3 `5f93262`, live as Worker version `8d6c86ce`
+
+- `055cbb0` "content(agency): apply Tae's approved editorial review (change set 1f3373b71bc5)": the hero
+  introduction and services card 5 rewritten exactly as Tae wrote them (KEEP recorded for reason 6), applied with
+  `scripts/apply-editorial.mjs`. Owner-approved.
+- `5f93262` "feat(editorial): full coverage of /agency and /community (v0.3)": 295 editable copy fields (274 on the
+  page, 21 in the new Hidden text tab: alt text, screen-reader names, metadata); site chrome and page metadata
+  moved verbatim into the narrative source; price changes and navigation/heading/accessibility removals are
+  structural; CLI resolves repeated and shared texts by probing. Owner-approved.
+- Live on workers.dev: Phase 4 checks 19/19, v0.3 acceptance 36/36, v0.2 regression 36/36, visitors 0 px
+  against the public build, 0 errors in 984 load requests, static paths CPU max 19 ms. Pushed to `fork` only.
+  `raidguild.estudioblanco.org` still redirects to Railway (route change pending approval).
+
 ## 2026-11-08 · Editorial Mode v0.2 `bb37620` (`release/editorial-v0.2`), live as Worker version `f8fd6838`
 
 - `5e04f1a` "feat(editorial): operations, Preview and two-file export (v0.2)": REPLACE, SHORTEN, REMOVE (text,
