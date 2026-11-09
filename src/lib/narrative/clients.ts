@@ -21,11 +21,11 @@ const design = (text: string) => approved(text, "oct27-design");
 export const clientsHero: HeroContent = defineNarrative("clients.hero", {
   // No eyebrow (November 2, hero experiment): "Venture Beyond · Hire the DAO" and its dot were removed.
   title: { lead: design("Hard problems,"), em: design("working products"), long: true, plain: true },
-  // November 3 Figma artboard (Clients / Light / 1440×900, the owner's edit,
-  // approved by the owner the same day): "builders" leads the list, and the
-  // two key phrases are set in bold.
+  // November 9: Tae's editorial review (change set sha256:1f3373b71bc5…, made on
+  // bb37620, approved by the owner) replaced the November 3 artboard wording; the
+  // whole line is set in bold, as she wrote it.
   dek: approved(
-    "**A decentralized collective of builders**, engineers and designers **building onchain products**, digital experiences and applied AI.",
+    "**Senior designers and engineers, building your onchain product, digital experience, or AI workflow**",
     "owner-approval",
   ),
   paths: [
@@ -183,7 +183,7 @@ export const clientsServiceGallery: FeatureGalleryContent = defineNarrative("cli
       "Complex ideas turned into products people can use: research, flows, interfaces and design systems, carried through to the shipped product.",
       { src: "/images/neo/guild-builders-v1.png", width: 768, height: 1024, fit: "contain" }),
     serviceCard("Marketing & Content Strategy", "Marketing and", "content strategy", "Growth",
-      "Positioning, launch content and documentation that explain what you built to the people you need to reach.",
+      "Positioning, launch content and documentation that explains what you built to the people you need to reach.",
       { src: "/images/neo/field-signal-commons.png", width: 1122, height: 1402 }),
     serviceCard("DAO Consulting & Governance", "DAO consulting", "and governance", "Coordination",
       "Governance, treasury and token design for organizations that coordinate onchain, from people who have built and run that tooling themselves.",
