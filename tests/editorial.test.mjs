@@ -6,8 +6,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import nextConfig from "../next.config.ts";
 import "./editorial-apply.test.mjs";
-import { EDITORIAL_SECTIONS, componentOf, fieldLabel, isEditableId, removalTarget, sectionFor, structuralReason } from "../src/lib/editorial/config.ts";
-import { itemContext, originals, sourceOrder } from "../src/lib/editorial/catalog.ts";
+import { EDITORIAL_SECTIONS, componentOf, exclusionReason, fieldLabel, isEditableId, kindOf, removalTarget, sectionFor, structuralReason } from "../src/lib/editorial/config.ts";
+import { TREES, hiddenIds, itemContext, originals, sourceOrder } from "../src/lib/editorial/catalog.ts";
+import { collectCopy } from "../src/lib/narrative/types.ts";
 import {
   applyEdit, conflictOf, fingerprint, fromExport, normalizeText, parseStored, rebase, removedBy, revert, serializeStored, setComment, setOperation, toExport, toMarkdown, warningsOf,
 } from "../src/lib/editorial/drafts.ts";
@@ -16,16 +17,52 @@ const NOW = "2026-11-07T22:00:00.000Z";
 const HERO = "clients.hero.title.lead";
 
 describe("editorial sections", () => {
-  test("the six prototype sections are editable, nothing else", () => {
+  test("v0.3 registers every narrative tree the two pages render, in page order, then the shared chrome", () => {
     assert.deepEqual(EDITORIAL_SECTIONS.map((section) => section.prefix), [
-      "clients.hero", "clients.serviceGallery", "clients.reasons", "community.hero", "community.capabilities", "community.join",
+      "clients.nav", "clients.hero", "clients.serviceGallery", "clients.reasons", "clients.previousWorks", "shared.builders.clients", "shared.people.clients",
+      "clients.faq", "clients.inquiry", "clients.creed", "clients.meta",
+      "community.nav", "community.hero", "community.guild", "community.capabilities", "community.raidaFeature", "community.moloch", "community.hats",
+      "community.benefits", "shared.builders.community", "community.activity.collection", "community.join", "community.faq", "community.creed", "community.meta",
+      "site.header", "site.hero", "site.ticker", "site.creed", "site.footer",
     ]);
+    for (const section of EDITORIAL_SECTIONS) assert.ok(TREES[section.prefix], `${section.prefix} has its narrative tree in catalog.ts`);
+    // No prefix contains another, so every id belongs to exactly one section.
+    for (const a of EDITORIAL_SECTIONS) for (const b of EDITORIAL_SECTIONS) if (a !== b) assert.ok(!b.prefix.startsWith(`${a.prefix}.`), `${b.prefix} is inside ${a.prefix}`);
     assert.ok(isEditableId(HERO));
-    assert.ok(isEditableId("community.join.actions.0.label"));
-    assert.ok(!isEditableId("clients.faq.items.0.answer"), "FAQ is not in the prototype");
+    assert.ok(isEditableId("clients.faq.items.0.answer"), "the FAQ is covered since v0.3");
+    assert.ok(isEditableId("site.footer.copyright"));
     assert.ok(!isEditableId("clients.heroic.x"), "prefix match is by whole segment");
     assert.ok(!isEditableId("community.capabilities.cards.1.link.destination"), "destinations are review notes, not page text");
+    assert.ok(!isEditableId("clients.capabilities.title.lead"), "a tree the pages do not render is not registered");
     assert.ok(!isEditableId(""));
+  });
+
+  test("every copy item of a registered tree is editable or excluded with a reason", () => {
+    const excluded = [];
+    for (const section of EDITORIAL_SECTIONS) {
+      for (const copy of collectCopy(TREES[section.prefix])) {
+        assert.equal(sectionFor(copy.id), section, `${copy.id} belongs to ${section.prefix}`);
+        if (isEditableId(copy.id)) assert.equal(originals.get(copy.id), copy.text, `${copy.id} is in the catalog`);
+        else { const reason = exclusionReason(copy.id); assert.ok(reason && reason.length > 20, `${copy.id} is excluded with a reason`); excluded.push(copy.id); }
+      }
+    }
+    // The exclusions are review notes (link destinations) and copy these pages do not render.
+    assert.ok(excluded.every((id) => /\.destination$|^clients\.inquiry\.(summary\.hint|summary\.hintOpen|coordinates\.\d|image\.alt)|^community\.guild\.metrics\./.test(id)), excluded.join(", "));
+    assert.equal(originals.size, 295);
+    const pages = { "/agency": 0, "/community": 0, shared: 0 };
+    for (const id of originals.keys()) pages[sectionFor(id).page]++;
+    assert.deepEqual(pages, { "/agency": 130, "/community": 143, shared: 22 });
+  });
+
+  test("copy that is not shown as text is classified: alt text, screen-reader names, metadata", () => {
+    assert.equal(kindOf("community.moloch.artwork.alt"), "alt");
+    assert.equal(kindOf("clients.previousWorks.works.3.snapshot.alt"), "alt");
+    assert.equal(kindOf("clients.inquiry.summary.label"), "accessible-name");
+    assert.equal(kindOf("site.ticker.label"), "accessible-name");
+    assert.equal(kindOf("clients.meta.description"), "metadata");
+    assert.equal(kindOf(HERO), "visible");
+    assert.equal(hiddenIds.length, 21);
+    assert.ok(hiddenIds.every((id) => kindOf(id) !== "visible"));
   });
 
   test("labels are human-readable", () => {
@@ -39,17 +76,35 @@ describe("editorial sections", () => {
     assert.equal(fieldLabel("clients.serviceGallery.cards.1.link.label"), "Card 2 · Link");
     assert.equal(fieldLabel("clients.reasons.items.0.body"), "Reason 1 · Expanded text");
     assert.equal(fieldLabel("community.join.links.0.label"), "Link 1");
-    for (const id of originals.keys()) assert.doesNotMatch(fieldLabel(id), /\b(lead|em|dek|paths|cards|items)\b/, `${id} → ${fieldLabel(id)}`);
+    assert.equal(fieldLabel("clients.faq.items.2.answer", itemContext("clients.faq.items.2.answer")), `Question 3 (“${originals.get("clients.faq.items.2.question").replace(/\*\*/g, "")}”) · Answer`);
+    assert.equal(fieldLabel("site.creed.statement.em"), "Statement, line 2");
+    assert.equal(fieldLabel("site.footer.socials.1.label"), "Social link 2");
+    assert.equal(fieldLabel("clients.meta.title"), "Page title (browser tab, search results)");
+    assert.equal(fieldLabel("community.moloch.artwork.alt"), "Artwork · Image description");
+    for (const id of originals.keys()) assert.doesNotMatch(fieldLabel(id), /\b(lead|em|dek|paths|cards|items|works|socials|shareTitle)\b/, `${id} → ${fieldLabel(id)}`);
   });
 
-  test("the catalog holds every visible copy item of each section, in order", () => {
+  test("the catalog holds every copy item of each section, in order", () => {
     for (const section of EDITORIAL_SECTIONS) {
       const ids = [...originals.keys()].filter((id) => sectionFor(id) === section);
-      assert.ok(ids.length >= 4, `${section.prefix}: ${ids.length} items`);
+      assert.ok(ids.length >= 1, `${section.prefix}: ${ids.length} items`);
     }
     assert.equal(originals.get(HERO), "Hard problems,");
     assert.equal(originals.get("community.hero.title.finale"), "together.");
+    assert.equal(originals.get("site.hero.scrollCue"), "<<< SCROLL TO DESCEND");
     assert.ok([...originals.keys()].every(isEditableId));
+    const order = [...sourceOrder.values()];
+    assert.deepEqual(order, order.map((_, index) => index));
+  });
+
+  test("v0.2 ids keep working: the six v0.2 sections are unchanged in id, label and page", () => {
+    const v02 = { "clients.hero": "Hero", "clients.serviceGallery": "Services gallery", "clients.reasons": "Why RaidGuild", "community.hero": "Hero", "community.capabilities": "Capabilities gallery", "community.join": "Join" };
+    for (const [prefix, label] of Object.entries(v02)) {
+      const section = EDITORIAL_SECTIONS.find((entry) => entry.prefix === prefix);
+      assert.equal(section.label, label);
+      assert.equal(section.page, prefix.startsWith("clients") ? "/agency" : "/community");
+      for (const copy of collectCopy(TREES[prefix])) if (!/\.destination$/.test(copy.id)) assert.ok(isEditableId(copy.id), copy.id);
+    }
   });
 });
 
@@ -106,6 +161,24 @@ describe("editorial drafts (v0.2 operations)", () => {
     assert.match(structuralReason(HERO, "REMOVE"), /heading/);
     assert.match(structuralReason("clients.serviceGallery.label", "REMOVE"), /section label/);
     assert.equal(structuralReason(CTA, "REPLACE"), null);
+    // v0.3: navigation, more calls to action and headings, hidden text, prices.
+    assert.match(structuralReason("clients.nav.items.0.label", "REMOVE"), /navigation label/);
+    assert.match(structuralReason("site.header.audiences.community", "REMOVE"), /navigation label/);
+    assert.match(structuralReason("site.footer.socials.0.label", "REMOVE"), /button or link/);
+    assert.match(structuralReason("community.activity.collection.actions.portal", "REMOVE"), /button or link/);
+    assert.match(structuralReason("community.guild.more.summary", "REMOVE"), /button or link/);
+    assert.match(structuralReason("clients.faq.items.0.question", "REMOVE"), /heading/);
+    assert.equal(structuralReason("site.creed.statement.lead", "REMOVE"), null, "the creed's statement is copy, not a heading");
+    assert.match(structuralReason("community.moloch.artwork.alt", "REMOVE"), /accessibility/);
+    assert.match(structuralReason("site.ticker.label", "REMOVE"), /accessibility/);
+    assert.match(structuralReason("clients.meta.description", "REMOVE"), /search or sharing/);
+    assert.equal(structuralReason("clients.faq.items.0.answer", "REMOVE"), null, "an answer's text is copy");
+    const PRICE = "community.benefits.cards.3.body";
+    const base = originals.get(PRICE);
+    assert.match(base, /\$20/);
+    assert.match(structuralReason(PRICE, "REPLACE", "item", { base, proposed: base.replace("$20", "$25") }), /price/);
+    assert.equal(structuralReason(PRICE, "REPLACE", "item", { base, proposed: `Now: ${base}` }), null, "rewording around an unchanged price is copy");
+    assert.match(structuralReason(PRICE, "SHORTEN", "item", { base, proposed: "Guild email." }), /price/, "dropping a price is a price change");
     assert.equal(componentOf(DEK), undefined);
   });
 

@@ -29,7 +29,7 @@ const CURTAIN_REACH = 0.45;
 // sky, landscape, title and copy no longer move with the pointer or the scroll,
 // and the copy no longer fades. The curtain is a separate effect and stays.
 export default function Hero({ content, grouped = false, curtain = false, still = false }: { content: HeroContent; grouped?: boolean; curtain?: boolean; still?: boolean }) {
-  const { portalOpen } = useVenture();
+  const { portalOpen, site } = useVenture();
   const heroRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
@@ -231,10 +231,10 @@ export default function Hero({ content, grouped = false, curtain = false, still 
         </div>
         {!grouped && supplement}
         <div className={styles.heroIndex}>
-          <span>TRANSMISSION</span>
-          <strong>001</strong>
+          <span><CopyText copy={site.hero.index.label} /></span>
+          <strong><CopyText copy={site.hero.index.number} /></strong>
         </div>
-        <p className={styles.heroScrollCue} aria-hidden="true">&lt;&lt;&lt; SCROLL TO DESCEND</p>
+        <p className={styles.heroScrollCue} aria-hidden="true"><CopyText copy={site.hero.scrollCue} /></p>
         <div className={`${styles.heroForeground} ${styles.heroForegroundLeft}`} aria-hidden="true">
           <Image
             src="/images/neo/hero-foreground.png"

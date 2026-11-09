@@ -6,6 +6,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { UnchartedHunt } from "@/components/UnchartedHunt";
 import { PORTAL_JOIN_URL } from "@/lib/data/constants";
 import { audienceForPath, routeHasSection, sectionHref, type SectionId } from "@/lib/venture-routes";
+import type { SiteContent } from "@/lib/narrative/site";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
 import SiteHeader, { type AudienceNav } from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
@@ -33,6 +34,8 @@ type VentureState = {
   followSectionLink: (event: MouseEvent<HTMLAnchorElement>, destination: SectionId) => void;
   followInquiryLink: (event: MouseEvent<HTMLAnchorElement>) => void;
   openPortal: () => void;
+  // The shared chrome copy (lib/narrative/site.ts), passed in from the server.
+  site: SiteContent;
 };
 
 const VentureContext = createContext<VentureState | null>(null);
@@ -45,7 +48,7 @@ export function useVenture() {
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function Shell({ children, nav }: { children: ReactNode; nav?: AudienceNav }) {
+function Shell({ children, nav, site }: { children: ReactNode; nav?: AudienceNav; site: SiteContent }) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme } = useTheme();
@@ -221,6 +224,7 @@ function Shell({ children, nav }: { children: ReactNode; nav?: AudienceNav }) {
     followSectionLink,
     followInquiryLink,
     openPortal,
+    site,
   };
 
   return (
@@ -254,11 +258,11 @@ function Shell({ children, nav }: { children: ReactNode; nav?: AudienceNav }) {
   );
 }
 
-export default function VentureShell({ children, reviewFlags = false, nav }: { children: ReactNode; reviewFlags?: boolean; nav?: AudienceNav }) {
+export default function VentureShell({ children, reviewFlags = false, nav, site }: { children: ReactNode; reviewFlags?: boolean; nav?: AudienceNav; site: SiteContent }) {
   return (
     <ThemeProvider>
       <ReviewFlagsProvider enabled={reviewFlags}>
-        <Shell nav={nav}>{children}</Shell>
+        <Shell nav={nav} site={site}>{children}</Shell>
         <ReviewPanel />
         {/* A ternary, not `&&`: production folds it to the original children exactly. */}
         {EditorialMode ? <><SurfaceExperiment /><EditorialMode /></> : <SurfaceExperiment />}

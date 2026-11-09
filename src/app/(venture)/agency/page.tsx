@@ -9,7 +9,7 @@ import BuilderNetwork from "@/components/venture/sections/BuilderNetwork";
 import Stewardship from "@/components/venture/sections/Stewardship";
 import GuildInquiry from "@/components/venture/sections/GuildInquiry";
 import Creed from "@/components/venture/sections/Creed";
-import { clientsCreed, clientsFaq, clientsHero, clientsInquiry, clientsPreviousWorks, clientsReasons, clientsServiceGallery } from "@/lib/narrative/clients";
+import { clientsCreed, clientsFaq, clientsHero, clientsInquiry, clientsMeta, clientsPreviousWorks, clientsReasons, clientsServiceGallery } from "@/lib/narrative/clients";
 import { buildersClients, peopleClients } from "@/lib/narrative/shared";
 import { crewHorizontal, foundryPortrait } from "@/lib/data/illustrations";
 import { forAudience } from "@/lib/narrative/public";
@@ -23,13 +23,14 @@ import { forAudience } from "@/lib/narrative/public";
 // SEO copy (October 30, owner): the page title stands alone (no "| RaidGuild"
 // template); Open Graph and Twitter carry the Hire title and the same
 // description. A page's openGraph replaces the root's, so the site name, type
-// and this route's URL are restated. The owner-supplied November 2026 Hire card
-// is shared by /clients and its /agency alias.
-const SEO_TITLE = "RaidGuild | Smart Contracts, dApp & AI Development Studio";
-const SHARE_TITLE = "Hire RaidGuild: senior teams for hard onchain and AI builds";
-const SEO_DESCRIPTION =
-  "Small senior teams for smart contracts, dApps, product design and applied AI. We've shipped work for Livepeer, Pokt Network, DAOHaus, Gitcoin and more. Start your project brief.";
-const SHARE_IMAGE = { url: "/images/venture/og/hire-dao-2026.png", width: 1731, height: 909, type: "image/png", alt: "Hire the DAO: RaidGuild builders and AI companions at work" };
+// and this route's URL are restated. Share image (October 30): a 1200 × 630
+// WebP cut of the Queen Raida rectangle artwork (public/images/venture/og/,
+// 150 KB; the 6 MB original is untouched).
+// Copy (November 9): the strings are narrative copy (clientsMeta), with stable ids for Editorial Mode.
+const SEO_TITLE = clientsMeta.title.text;
+const SHARE_TITLE = clientsMeta.shareTitle.text;
+const SEO_DESCRIPTION = clientsMeta.description.text;
+const SHARE_IMAGE = { url: "/images/venture/og/hire-dao-2026.png", width: 1731, height: 909, type: "image/png", alt: clientsMeta.shareImageAlt.text };
 export const metadata: Metadata = {
   alternates: { canonical: "/agency" },
   title: { absolute: SEO_TITLE },

@@ -27,7 +27,7 @@ export default function WallOfCuriosities({ content }: { content?: ActivityConte
           </div>
           {/* November 3 (owner): the Portal as a secondary action on the heading's row. */}
           <Dialog.Trigger asChild>
-            <button type="button" className={`${styles.pill} ${styles.pillOutline} ${explorer.portalButton}`} onClick={openPortal}><span>Open the Portal</span><PillIcon glyph="logo" /></button>
+            <button type="button" className={`${styles.pill} ${styles.pillOutline} ${explorer.portalButton}`} onClick={openPortal}><span><CopyText copy={content.actions.portal} /></span><PillIcon glyph="logo" /></button>
           </Dialog.Trigger>
         </> : <>
           <p className={styles.sectionLabel}>[ EXPLORE ]</p>
@@ -36,7 +36,7 @@ export default function WallOfCuriosities({ content }: { content?: ActivityConte
       </header>
       <div id="uncharted" className={styles.collectionAnchor}>
         <div id="gallery" className={styles.collectionAnchor}>
-          {content ? <ProjectExplorer onOpenPortal={openPortal} /> : <ArtifactGallery showFeatured={false} onOpenPortal={openPortal} collaborators={networkLogos.map(logo => ({
+          {content ? <ProjectExplorer onOpenPortal={openPortal} explore={content.actions.explore} /> : <ArtifactGallery showFeatured={false} onOpenPortal={openPortal} collaborators={networkLogos.map(logo => ({
           id: `network-${logo.file.replace(/\.(svg|png)$/, "")}`, title: logo.name,
           category: "Across the network", kind: "collaborator" as const,
           description: logo.description, href: logo.href,

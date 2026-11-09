@@ -3,7 +3,7 @@ import { services } from "../data/content";
 import { activeSpears } from "../data/venture";
 import {
   approved, claim, defineNarrative, oct23, wording,
-  type CapabilitiesContent, type CreedContent, type FaqContent, type FeatureGalleryContent, type GalleryCard, type HeroContent,
+  type CapabilitiesContent, type CreedContent, type FaqContent, type FeatureGalleryContent, type GalleryCard, type HeroContent, type PageMetaContent,
   type InquiryContent, type NavContent, type PreviousWorksContent, type ReasonsContent, type ServicesContent, type ShowcaseWork,
 } from "./types";
 
@@ -263,4 +263,18 @@ export const clientsCreed: CreedContent = defineNarrative("clients.creed", {
   cta: { label: tae("Tell us what you're building"), section: "project-inquiry" },
 } satisfies CreedContent);
 
-export const clientsNarrative = { clientsHero, clientsCapabilities, clientsServices, clientsServiceGallery, clientsReasons, clientsPreviousWorks, clientsFaq, clientsInquiry, clientsNav, clientsCreed };
+// Search and sharing (app/(venture)/agency/page.tsx), moved here verbatim on
+// November 9 (Editorial Mode v0.3). October 30 (owner): the page title stands
+// alone (no "| RaidGuild" template); Open Graph and Twitter carry the share title
+// and the same description.
+export const clientsMeta: PageMetaContent = defineNarrative("clients.meta", {
+  title: approved("RaidGuild | Smart Contracts, dApp & AI Development Studio", "owner-approval"),
+  description: approved(
+    "Small senior teams for smart contracts, dApps, product design and applied AI. We've shipped work for Livepeer, Pokt Network, DAOHaus, Gitcoin and more. Start your project brief.",
+    "owner-approval",
+  ),
+  shareTitle: approved("Hire RaidGuild: senior teams for hard onchain and AI builds", "owner-approval"),
+  shareImageAlt: approved("Queen Raida, RaidGuild's AI agent, rising from the clouds above a group of Guild builders", "owner-approval"),
+} satisfies PageMetaContent);
+
+export const clientsNarrative = { clientsHero, clientsCapabilities, clientsServices, clientsServiceGallery, clientsReasons, clientsPreviousWorks, clientsFaq, clientsInquiry, clientsNav, clientsCreed, clientsMeta };

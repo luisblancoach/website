@@ -11,7 +11,7 @@
 //            section): an explicit operation, never an empty string;
 //   KEEP     reviewed, keep as is: no content change.
 // Every operation is reversible: reverting a draft restores the published copy.
-import { EDITORIAL_SECTIONS, componentOf, fieldLabel, removalTarget, sectionFor, structuralReason, OPERATION_LABEL, SCOPE_LABEL, type Operation, type RemoveScope } from "./config";
+import { EDITORIAL_SECTIONS, KIND_LABEL, componentOf, fieldLabel, kindOf, removalTarget, sectionFor, structuralReason, OPERATION_LABEL, SCOPE_LABEL, type CopyKind, type Operation, type RemoveScope } from "./config";
 
 export type { Operation, RemoveScope } from "./config";
 
@@ -48,6 +48,10 @@ export type ExportedChange = {
   pageLabel: string;
   section: string;
   field: string;
+  // v0.3: only for copy that is not shown as text (alt text, screen-reader
+  // names, search and sharing metadata); absent for page text, so exports of
+  // page text keep the v0.2 shape.
+  kind?: Exclude<CopyKind, "visible">;
   operation: Operation;
   // REMOVE: what disappears ("item" = this text) and its id prefix.
   removeScope?: RemoveScope;
@@ -213,13 +217,15 @@ export async function toExport(drafts: Drafts, originals: Originals, { context, 
   for (const draft of sortedDrafts(drafts, order)) {
     const section = sectionFor(draft.id);
     const scope = draft.op === "REMOVE" ? draft.scope ?? "item" : undefined;
-    const reason = structuralReason(draft.id, draft.op, scope);
+    const reason = structuralReason(draft.id, draft.op, scope, { base: draft.base, proposed: draft.text });
+    const kind = kindOf(draft.id);
     changes.push({
       id: draft.id,
       page: section?.page ?? "",
       pageLabel: section?.pageLabel ?? "",
       section: section?.label ?? "",
       field: fieldLabel(draft.id, context?.(draft.id)),
+      ...(kind !== "visible" ? { kind } : {}),
       operation: draft.op,
       ...(scope ? { removeScope: scope, removeTarget: removalTarget(draft.id, scope) } : {}),
       base: draft.base,
@@ -275,7 +281,9 @@ export function toMarkdown(data: ChangesExport): string {
     if (change.section !== section) { lines.push("", `### ${change.section || "Other"}`); section = change.section; }
     lines.push("", `#### ${change.structural ? "⚠ " : ""}${change.conflict ? "⚡ " : ""}${change.field}`, "");
     const operation = change.operation === "REMOVE" ? `Remove ${SCOPE_LABEL[change.removeScope ?? "item"]}` : OPERATION_LABEL[change.operation];
-    lines.push(`- Page: ${change.pageLabel} (${change.page})`, `- Section: ${change.section}`, `- Field: ${change.field}`, `- Operation: **${operation}** (${change.operation})`, `- Review status: ${change.structural ? "proposed, structural: needs separate approval" : "proposed"}`, "");
+    lines.push(`- Page: ${change.pageLabel} (${change.page})`, `- Section: ${change.section}`, `- Field: ${change.field}`);
+    if (change.kind) lines.push(`- Not shown as text: ${KIND_LABEL[change.kind]}`);
+    lines.push(`- Operation: **${operation}** (${change.operation})`, `- Review status: ${change.structural ? "proposed, structural: needs separate approval" : "proposed"}`, "");
     if (change.structural) lines.push(`**Structural decision:** ${change.structural.reason}`, "");
     if (change.conflict === "source-changed") lines.push("**Conflict:** the site's text changed after this decision; the current text below is the one Tae saw.", "");
     if (change.conflict === "unknown-id") lines.push("**Conflict:** this text is no longer on the site.", "");

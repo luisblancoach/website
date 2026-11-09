@@ -3,7 +3,7 @@ import { HATS_TREE_URL } from "../data/hats";
 import { activeSpears } from "../data/venture";
 import {
   approved, claim, defineNarrative, oct23, wording,
-  type ActivityContent, type Copy, type CreedContent, type FaqContent, type FeatureGalleryContent, type GuildContent, type HeroContent, type JoinContent, type NavContent, type PathContent,
+  type ActivityContent, type Copy, type CreedContent, type FaqContent, type FeatureGalleryContent, type GuildContent, type HeroContent, type JoinContent, type NavContent, type PageMetaContent, type PathContent,
   type HatsContent, type ImmersiveContent, type QueenRaidaContent, type StewardshipContent, type TensionContent,
 } from "./types";
 
@@ -211,6 +211,9 @@ export const communityActivity: ActivityContent = defineNarrative("community.act
     label: wording("[ PROJECTS ]"),
     title: { lead: wording("Projects and", "Section name after the B3.4 rename (Projects and Experiments). Confirm as the heading."), em: wording("experiments", "Section name after the B3.4 rename. Confirm as the heading.") },
     intro: owner("Games, tools, digital experiences, and field notes from Guild members. Explore what they made, how they approached it, and what they learned."),
+    // November 3 (owner), moved here verbatim on November 9: the heading's Portal
+    // button and the explorer's one primary action.
+    actions: { portal: existing("Open the Portal"), explore: existing("Explore now") },
   },
 } satisfies ActivityContent);
 
@@ -352,6 +355,15 @@ export const communityNav: NavContent = defineNarrative("community.nav", {
   cta: { label: approved("Join our community", "owner-approval"), href: PORTAL_JOIN_URL, destination: joinDestination() },
 } satisfies NavContent);
 
+// Search and sharing (app/(venture)/community/page.tsx), moved here verbatim on
+// November 9 (Editorial Mode v0.3). Drafted October 30 for review.
+export const communityMeta: PageMetaContent = defineNarrative("community.meta", {
+  title: wording("Join the DAO", "Page title (October 30 metadata draft); the root layout's template shows it as “Join the DAO | RaidGuild”."),
+  description: wording("RaidGuild is a builder-owned community. Meet Guild members, explore their experiments, and find people to build and contribute with.", "October 30 metadata draft; needs editorial approval."),
+  shareTitle: wording("Join the DAO: find your people at RaidGuild", "October 30 metadata draft; needs editorial approval."),
+  shareImageAlt: wording("Guild builders facing Moloch, a horned colossus, in a coral city", "Describes the share image (Moloch rectangle artwork)."),
+} satisfies PageMetaContent);
+
 export const communityCreed: CreedContent = defineNarrative("community.creed", {
   cta: { label: approved("Join our community", "owner-approval"), href: PORTAL_JOIN_URL, destination: joinDestination() },
 } satisfies CreedContent);
@@ -477,6 +489,6 @@ export const communityCapabilities: FeatureGalleryContent = defineNarrative("com
 
 export const communityNarrative = {
   communityHero, communityTension, communityPath, communityGuild, communityActivity, communityJoin,
-  communityQueenRaida, communityStewardship, communityNav, communityCreed,
+  communityQueenRaida, communityStewardship, communityNav, communityCreed, communityMeta,
   communityRaidaFeature, communityMoloch, communityHats, communityBenefits, communityFaq, communityCapabilities,
 };

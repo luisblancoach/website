@@ -27,7 +27,8 @@ export const peopleClients: StewardshipContent = defineNarrative("shared.people.
   label: oct23("[ People behind the work ]"),
   title: { lead: approved("The Guild runs on owners,", "owner-approval"), em: approved("not employees.", "owner-approval") },
   intro: wording("These are some of the builders shipping the work. The full network is deeper.", "Transcribed from the owner's October 28 annotated references; confirm the wording."),
-  roster: { label: existing("Explore all members ↗"), href: portalMembers },
+  // The arrow is drawn by Stewardship.tsx as its own glyph, so it is not part of the copy (November 9).
+  roster: { label: existing("Explore all members"), href: portalMembers },
 } satisfies StewardshipContent);
 
 export const sharedCtas = defineNarrative("shared.cta", {
