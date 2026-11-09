@@ -1,6 +1,6 @@
 # STATUS
 
-Current state verified on **2026-11-08 (-0300)** from the repository, the remotes, GitHub and the live hosts. Everything
+Current state verified on **2026-11-09 (-0300)** from the repository, the remotes, GitHub and the live hosts. Everything
 below "Session log" is history; the sections in this first part are the source of truth.
 
 ## Snapshot
@@ -17,20 +17,22 @@ below "Session log" is history; the sections in this first part are the source o
 - **Not done:**
   - `/agency` exists only locally (worktree and the clean build on :3022). Railway and Vercel still serve `/clients`.
   - The independent deployment on `raidguild.estudioblanco.org`: Cloudflare Workers chosen by the owner (2026-11-07).
-    **Live on workers.dev only: static-first hosting with Editorial Mode v0.2** (2026-11-08, owner-approved):
-    release tag `release/editorial-v0.2` → `bb37620`, Worker version `f8fd6838-2211-42f2-938d-f4fff03967a7`
-    (https://raidguild-estudioblanco.luisblancoach.workers.dev; editor at `/agency?editorial=1`,
-    `/community?editorial=1`, opt-in, public, browser-local, not private). Live: v0.2 acceptance 36/36, ordinary
-    visitors 8/8 at 0 px against the approved build, static paths CPU p50 0 ms / p99 11 ms, 0 errors in 3 load
-    rounds, no non-GET request. Rollback target: `f57739de` (opt-in v0.1 feature set), then `0c37e331`. No route;
-    DNS and the Railway redirect are unchanged.
+    **Live on workers.dev only: Tae's first review applied and Editorial Mode v0.3 (full coverage)** (2026-11-09,
+    owner-approved): commits `055cbb0` (content) and `5f93262` (v0.3), Worker version
+    `8d6c86ce-e4bb-4ba3-8185-26434d87cde4` (https://raidguild-estudioblanco.luisblancoach.workers.dev; editor at
+    `/agency?editorial=1`, `/community?editorial=1`, opt-in, public, browser-local, not private). Live: Phase 4
+    checks 19/19, v0.3 acceptance 36/36 (295/295 fields), v0.2 regression 36/36, 0 errors in 984 load requests,
+    static paths CPU max 19 ms. Rollback target: `f8fd6838` (v0.2, `release/editorial-v0.2` → `bb37620`), then
+    `f57739de`. **`raidguild.estudioblanco.org` still 302s to Railway**: route and redirect-rule change proposed,
+    not approved (see `docs/venture-integration.md`, 2026-11-09).
   - **Editorial Mode v0.1:** owner-approved and committed as `d1b6fa4`, tagged **`release/editorial-v0.1`**
     (2026-11-07), pushed to `fork` with its docs commit `c58e5a8`. Local development only; production output
     byte-identical to the agency baseline.
   - **Editorial Mode v0.2 for Tae: live** (operations REPLACE / SHORTEN / REMOVE / KEEP, Preview, two-file export;
     `scripts/apply-editorial.mjs`, dry run by default). Guide: `docs/editorial-guide-tae.md` and the shareable doc
     https://claude.ai/artifact/Xmhy49kfgYYqx3zrKiT6x5 (private until the owner shares it). Review and integration
-    process: `docs/venture-integration.md`, 2026-11-08 evening. No proposal of Tae's has been applied.
+    process: `docs/venture-integration.md`, 2026-11-08 evening. Tae's first review (change set `1f3373b71bc5`)
+    was applied on 2026-11-09 (`055cbb0`); v0.3 covers every copy field of both pages.
   - The SEO / AEO audit items: none implemented yet.
   - Tae's copy extraction: on hold until the editorial format is approved.
 
@@ -39,7 +41,7 @@ below "Session log" is history; the sections in this first part are the source o
 | Item | Value (verified 2026-11-07; HEAD updated 2026-11-08) |
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
-| Branch / HEAD | `feat/venture-beyond-integration` @ `64d16d6` (opt-in Editorial Mode, 2026-11-08) on top of `0ad287e` (static-first kit), `8456bdb` (Louchi photo), `a1114f0` (Night) and `c58e5a8`, the docs commit "docs: record Editorial Mode v0.1 and the Cloudflare test deployment" on top of `d1b6fa4` (Editorial Mode v0.1), `8469c95` (Cloudflare kit), `134f24b` and `1b86fd6` (2026-11-07); no upstream configured |
+| Branch / HEAD | `feat/venture-beyond-integration` @ the 2026-11-09 docs commit on top of `5f93262` (Editorial Mode v0.3), `055cbb0` (Tae's review applied), `ff5bc92` (v0.2 docs), `bb37620`, `5e04f1a` (v0.2), then `64d16d6` (opt-in Editorial Mode, 2026-11-08) on top of `0ad287e` (static-first kit), `8456bdb` (Louchi photo), `a1114f0` (Night) and `c58e5a8`, the docs commit "docs: record Editorial Mode v0.1 and the Cloudflare test deployment" on top of `d1b6fa4` (Editorial Mode v0.1), `8469c95` (Cloudflare kit), `134f24b` and `1b86fd6` (2026-11-07); no upstream configured |
 | Tags | `checkpoint/agency-baseline` (annotated) → `1b86fd6`, local only; `release/editorial-v0.1` (annotated, tag object `45c9377`) → `d1b6fa4`, **pushed to `fork`** 2026-11-07 |
 | `fork` branch | `fork/feat/venture-beyond-integration` = `c58e5a8` (pushed 2026-11-07, fast-forward from `7417113`) |
 | `fork` (luisblancoach/website) | `fork/feat/venture-beyond-integration` = `7417113` (pushed 2026-11-04) |
@@ -232,6 +234,36 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 ---
 
 # Session log (newest first; history, not current state)
+
+## November 9: Tae's review applied; Editorial Mode v0.3 (full coverage) live on workers.dev
+
+- Owner request "Apply Tae's Editorial Review + Full Editorial Coverage v0.3", approved to implement, commit and
+  deploy to the existing Worker after acceptance, push to the fork only; DNS, routing, billing or infrastructure
+  changes need separate approval.
+- **Phase 1** (`055cbb0`): Tae's review (`~/Downloads/raidguild-tae-editorial.md`, change set `1f3373b71bc5`). The
+  JSON beside it was the earlier "asdasdasdasd" test export, not applied. The matching JSON was rebuilt from the
+  Markdown with the editor's export code (byte-identical Markdown, same change set id), then dry-run and applied
+  with the CLI: `clients.hero.dek` and `clients.serviceGallery.cards.4.body` rewritten exactly; reason 6 KEEP.
+  Flag for the owner: "documentation that explains" (Tae's wording, kept). Hero checked at 1440/1024/390/320 px,
+  Day and Night. Evidence and files: `~/Projects/raidguild-backups/2026-11-09/editorial/`, `…/qa/`.
+- **Phase 2** (`5f93262`): v0.3 registry of 30 sections, 295 editable fields (Agency 130, Community 143, Both
+  pages 22; 274 on the page, 21 in Hidden text), structural and price rules, chrome and metadata moved into
+  `lib/narrative/site.ts` / `clients.meta` / `community.meta`, CLI probing and `--map`. Coverage report and
+  exclusions: `docs/venture-integration.md`, 2026-11-09.
+- Checks: `bun run test` 124/124, `tsc --noEmit` clean, `bun run lint` 0 errors (1 old warning). Public build of
+  `5f93262`: markup identical to the Phase 1 build except the build-id comment, no editor code in public bundles,
+  8/8 at 0 px against the Phase 1 build. Opt-in build (local workerd): v0.3 acceptance 36/36, v0.2 regression
+  36/36, Phase 4 checks 19/19, visitors 8/8 at 0 px against the public build.
+- **Phase 3**: deployed `8d6c86ce` (workers.dev only) at 22:35 UTC during Cloudflare's open Workers incident; the
+  previous version answered until 22:46 UTC, then the new one (confirmed by snapshot time, build id and new files).
+  Live: Phase 4 checks 19/19, v0.3 acceptance 36/36, v0.2 regression 36/36, visitors 8/8 at 0 px against the public build,
+  984 load requests 0 errors, tail 348 events all `ok`, static paths CPU p50 0 ms / max 19 ms.
+- `raidguild.estudioblanco.org`: unchanged, 302 to the Railway root (path dropped, query kept); no Worker route.
+  Proposal recorded; not applied.
+- Compared against the October 23 reference: not this session (comparisons were against the approved Phase 1 /
+  v0.2 builds; the only intended visual change is Tae's hero introduction).
+- Next: owner approval of the `raidguild.estudioblanco.org` cutover; send Tae the v0.3 guide; optional
+  `release/editorial-v0.3` tag (not created: not requested).
 
 ## November 8, evening: opt-in Editorial Mode live; Editorial Mode v0.2 built and verified locally
 

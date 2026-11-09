@@ -882,3 +882,114 @@ November 3, 2026 — /community restructure (uncommitted):
    (`status`, review flags): that is a separate editorial decision.
 5. **Verify and ship**: `bun run test`, `bun run review:claims`, lint, side-by-side visual comparison, then a commit
    and a deployment, each with the owner's approval. Never write to the deployed Worker directly.
+
+## 2026-11-09 — Tae's first editorial review applied (owner-approved)
+
+- Source of truth: Tae's review document `raidguild-tae-editorial.md` (change set `sha256:1f3373b71bc5…`, made on
+  `bb37620`; three decisions). The `raidguild-tae-editorial.json` next to it in Downloads was an earlier **test**
+  export (one REPLACE "asdasdasdasd", change set `sha256:e994eec4…`) and was **not** applied; it is kept as
+  `~/Projects/raidguild-backups/2026-11-09/editorial/test-export-asdasd-DO-NOT-APPLY.json`.
+- Why the structured path was still used: the matching JSON was rebuilt from the Markdown with the editor's own
+  export code (`toExport`/`toMarkdown`, the decisions, base texts and edit times in the Markdown). The rebuilt pair
+  reproduces Tae's Markdown **byte for byte** and the change set id `1f3373b71bc5`, so it is the same change set.
+  The CLI dry run resolved both texts to `src/lib/narrative/clients.ts` and verified on a copy that the other 442
+  copy items were unchanged; `--apply --confirm 1f3373b71bc5b44e` wrote exactly the two literals.
+- Applied (`055cbb0`): `clients.hero.dek` (REPLACE) "**Senior designers and engineers, building your onchain
+  product, digital experience, or AI workflow**" (the whole line bold, as written) and
+  `clients.serviceGallery.cards.4.body` (REPLACE) "…documentation that explains what you built…". Recorded, no
+  change: `clients.reasons.items.5.body` (KEEP).
+- Editorial flag for the owner: in card 5, "explains" agrees with "documentation" but the subject is a list
+  ("Positioning, launch content and documentation"), which reads more naturally with "explain". Kept exactly as
+  Tae wrote and the owner approved; raise it with Tae if wanted.
+- Verified: tests, tsc, lint; hero typography, wrapping and responsive behaviour at 1440 / 1024 / 390 / 320 px in
+  Day and Night (bold 700, same line count except one line fewer at 320 px, no overflow); card 5 gains a line only
+  at 320 px. Pixel comparison against the approved build (2026-11-07, the v0.2 visitor reference): only the hero
+  introduction band differs on /agency; /community 0 px. Not compared against the October 23 reference.
+
+## 2026-11-09 — Editorial Mode v0.3: full coverage (owner request)
+
+- **One registry, no second editor.** `lib/editorial/config.ts` registers every narrative tree that /agency and
+  /community render (30 sections, in page order, then "Both pages"); `catalog.ts` holds their trees. Every copy
+  item of a registered tree is editable unless an exclusion names it with a reason. A test enforces that every
+  item is classified, and the e2e coverage audit checks the rendered page against the registry.
+- **Copy moved into the narrative, verbatim** (stable ids for strings that lived in components):
+  `lib/narrative/site.ts` (`site.header` page switch, `site.hero` index and scroll cue, `site.ticker`, `site.creed`,
+  `site.footer`), `clients.meta` / `community.meta` (page title, description, share title, share image alt) and
+  `community.activity.collection.actions` (the explorer's "Open the Portal" and "Explore now"). The chrome copy
+  reaches the client through `VentureLayout → VentureShell` props, like the navigation, so the narrative modules
+  never ship to the browser on their own. Visitors' pages are identical (see verification).
+- **Kinds of copy.** Page text is edited in place. Copy not shown as text is edited from the Changes panel's new
+  **Hidden text** tab: image descriptions (alt), screen-reader names, and search/sharing metadata. Exports keep
+  version 2: page-text changes have exactly the v0.2 shape; hidden items add `kind`. v0.2 change sets import
+  unchanged; items whose source has moved show as conflicts ("source changed").
+- **Structural decisions** (separate approval, never applied by the CLI): removal of a whole item or section, of
+  navigation (menu items, the page switch), a button or link label, a heading (titles, FAQ questions, project
+  names), a section label, accessibility text or metadata; and any rewrite or shortening that **changes a stated
+  price or amount** (copy may state "$20 a month"; the amount is the owner's decision).
+- **Not editable, on purpose** (no live records, no behaviour): member names, roles and profile links (builders,
+  stewards, Hats tree: data records), the Portal projects list (runtime snapshot from the Portal), the inquiry
+  form (labels, placeholders, validation: application behaviour), the Portal overlay and the discovery-trail
+  puzzle (interactive experience), interface controls (Day/Night, menu toggle, carousel arrows, filters, skip
+  link, counters, generated screen-reader templates) and the RaidGuild wordmark. Links' destinations and hrefs
+  are data, never copy. Within registered trees: 7 link-destination review notes and 13 items these pages do not
+  render (the inquiry's hints, coordinates and illustration alt; the Guild statistics) are excluded.
+- **FAQ placeholders**: answers with "[X–Y weeks]" are edited as plain text, brackets included; visitors still see
+  the marked placeholders (`CopyText` gained a `display` renderer for visitors).
+- **CLI source mapping** (`scripts/apply-editorial.mjs`): every candidate literal is probed on a scratch copy of the
+  source to learn exactly which copy ids it produces, so repeated texts resolve to the right literal instead of
+  being refused. A literal that feeds several items (a shared constant, a helper called twice) is applied only
+  when the change set gives all of them the same new text; texts assembled from a literal ("<name> website
+  homepage") follow it and are verified. `--map` reports the source of every editable id.
+
+### Editorial coverage report (v0.3, `5f93262`)
+
+| | Count |
+|---|---|
+| Eligible copy fields (registered, editable) | **295**: Agency 130, Community 143, Both pages 22 |
+| Editable in place on the page | 274 (e2e: /agency 137/137, /community 158/158 including the shared chrome) |
+| Editable from Hidden text | 21: 11 image descriptions, 2 screen-reader names, 8 metadata fields |
+| Successfully editable | **295 / 295** |
+| Structural if removed (separate approval) | 191: headings 99, buttons and links 47, section labels 14, accessibility 13, navigation 10, metadata 8 |
+| Structural if the amount changes | every item stating a price (today: the Guild kit card, "$20 a month") |
+| Source map | 260 in their own literal · 26 in a literal shared with other items (applied together or not at all) · 9 assembled in code (the screenshot descriptions, "<name> website homepage": integrated by hand) |
+| Excluded inside registered trees | 20 (7 link-destination notes; 13 not rendered on these pages) |
+
+Remaining gaps (proposed for a later pass, not started): the inquiry form's labels, placeholders and messages;
+the Portal overlay and hunt clue texts; the explorer's category filter names and "Explore all N" / "Show fewer";
+the profession gallery's labels; "PROFILE FORTHCOMING"; Day/Night labels. Previous works shows one project at a
+time: its texts are edited after selecting the project's logo, as visitors see them.
+
+### Release: v0.3 live on workers.dev (2026-11-09)
+
+- Commits: `055cbb0` (Tae's content), `5f93262` (v0.3 full coverage, with its tests), and the docs commit. Built
+  with `BASELINE=5f93262 deploy/cloudflare/build.sh 5f93262` (`~/Projects/raidguild-backups/2026-11-09/cf-build-5f93262`,
+  build id `_BOBdnwXmxKffNv4ktiiq`, editor revision `5f93262`); deployed to the existing Worker
+  `raidguild-estudioblanco` as version **`8d6c86ce-e4bb-4ba3-8185-26434d87cde4`** (workers.dev only, no route).
+  Rollback target: `f8fd6838` (v0.2), then `f57739de`.
+- Propagation: deployed 22:35 UTC during Cloudflare's open incident "Changes made to Workers may be delayed or
+  disrupted"; the previous version kept answering until 22:46 UTC. Serving was confirmed from the responses
+  themselves (data snapshot time, build id, the new build's files), not from the deployment record.
+- Live verification (after 22:46 UTC): Phase 4 checks 19/19 (Tae's two texts and the Keep text in the server HTML
+  and the RSC payload, client navigation, routes, redirects with query strings, noindex, lead POST 503); v0.3
+  acceptance 36/36 (all 295 fields: 274 in place, Hidden text, structural and price flags, export, CLI, v0.2
+  import); v0.2 regression 36/36; ordinary visitors 8/8 at 0 px (Agency and Community, Day and Night, 1440 and 390 px)
+  against the public build of `5f93262`, no editor element; 3 load rounds, 984 requests, 0 errors; tail 348 events, all `ok` on
+  `8d6c86ce`, static paths CPU p50 0 ms, max 19 ms (the dynamic `/` unchanged from v0.2).
+
+### `raidguild.estudioblanco.org` (investigation 2026-11-09; change NOT made, needs approval)
+
+- Current behaviour (read-only checks): the record is proxied by Cloudflare (zone `estudioblanco.org`, same
+  account as the Worker) and every request answers **302 to `https://raidguild-website-redesign-production.up.railway.app/`**:
+  the path is dropped, the query string is kept (`/agency?editorial=1` → `/?editorial=1`). Workers routes on
+  the zone: `estudioblanco.org/*` → `estudioblanco-app`, `coema.estudioblanco.org/*`, `estudioblanco.org/coema*`;
+  none for this host. The Wrangler token cannot read zone rules, so the rule type (Single Redirect, Page Rule or
+  Bulk Redirect) must be read in the dashboard.
+- Proposed change (two steps, owner approval required for each; no DNS record change, no new Worker, no billing):
+  1. Attach the prepared route `raidguild.estudioblanco.org/*` → `raidguild-estudioblanco` with
+     `wrangler deploy -c wrangler.route.jsonc` from the release build directory (same code, adds only the route).
+     While the redirect rule is active it keeps answering first; the check shows the order.
+  2. The owner disables (does not delete) the redirect rule for `raidguild.estudioblanco.org` in Cloudflare →
+     estudioblanco.org → Rules. The Worker then serves the host: `/` → 307 `/agency`, `/agency`, `/community`,
+     `?editorial=1`, `/clients…` → 308 with path and query kept. The main `estudioblanco.org` site is a different
+     route and Worker and is not touched.
+- Rollback: re-enable the redirect rule (instant), then `deploy/cloudflare/route.sh remove` (removes only this route).
