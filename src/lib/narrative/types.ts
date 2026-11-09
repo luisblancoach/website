@@ -101,7 +101,9 @@ export type ActivityContent = {
   postsHeading: Copy;
   postsUnavailable: Copy;
   allPosts: NarrativeLink;
-  collection: { label: Copy; title: Title; intro?: Copy };
+  // `actions` (November 9, moved from ProjectExplorer / WallOfCuriosities): the
+  // heading's Portal button and the explorer's primary action.
+  collection: { label: Copy; title: Title; intro?: Copy; actions: { portal: Copy; explore: Copy } };
 };
 
 export type JoinContent = {
@@ -257,6 +259,11 @@ export type BuilderNetworkContent = {
   intro: Copy;
   link: NarrativeLink;
 };
+
+// Search and sharing for one route (the page's Next.js metadata): the document
+// title, the description, the Open Graph / Twitter title and the share image's
+// alt text. Moved verbatim from the page files on November 9 (Editorial Mode v0.3).
+export type PageMetaContent = { title: Copy; description: Copy; shareTitle: Copy; shareImageAlt: Copy };
 
 export type NavContent = { items: (NarrativeLink & { section: import("@/lib/venture-routes").SectionId })[]; cta: NarrativeLink };
 

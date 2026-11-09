@@ -50,10 +50,12 @@ export function ReviewFlag({ id, reason, note, children, block = false }: FlagPr
 }
 
 // `before` / `after` join adjacent literal spacing into the same text node.
-export function CopyText({ copy, before = "", after = "" }: { copy: Copy; before?: string; after?: string }) {
+// `display` replaces the default rendering for visitors (the FAQ's marked
+// placeholders); Editorial Mode always edits the plain text.
+export function CopyText({ copy, before = "", after = "", display = rich }: { copy: Copy; before?: string; after?: string; display?: (text: string) => ReactNode }) {
   const rendered = copy.status === "approved"
-    ? <>{rich(before + copy.text + after)}</>
-    : <>{before}<ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{rich(copy.text)}</ReviewFlag>{after}</>;
+    ? <>{display(before + copy.text + after)}</>
+    : <>{before}<ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{display(copy.text)}</ReviewFlag>{after}</>;
   // Editorial Mode (`editable` is null in public production builds).
   if (editable && editable.isEditableId(copy.id)) {
     const flag = (children: ReactNode) => copy.status === "approved" ? children : <ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{children}</ReviewFlag>;

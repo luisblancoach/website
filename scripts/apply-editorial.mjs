@@ -4,6 +4,7 @@
 //   bun scripts/apply-editorial.mjs <raidguild-tae-editorial.json>            dry run (default)
 //   bun scripts/apply-editorial.mjs <file> --report <out.json>               dry run, plus a machine report
 //   bun scripts/apply-editorial.mjs <file> --apply --confirm <change-set-id>  write the source (after approval)
+//   bun scripts/apply-editorial.mjs --map [--report <out.json>]              source of every editable copy id (v0.3)
 //
 // Workflow: editorial export → validation → dry run → review → source changes →
 // tests → commit → deployment. This tool covers validation, the dry run and,
@@ -19,6 +20,15 @@
 //                      with its source location for a reviewed code change;
 //                      structural removals are flagged for separate approval;
 //   KEEP               recorded in the report, no change.
+//   any decision that changes a stated price, or removes navigation, a call to
+//   action, a heading or accessibility text, is structural: reported, never applied.
+// Source mapping (v0.3): an id's text is found as a string literal in the
+// narrative and data source. When the same text is in several literals, or one
+// literal feeds several copy items (a shared constant, a helper called twice),
+// each candidate is probed on a scratch copy of the source to learn exactly
+// which ids it produces. A literal that feeds several items is applied only
+// when the change set gives all of them the same new text; otherwise the
+// decision is blocked with the list of items that share it.
 // Refuses to write when anything is invalid, stale, ambiguous or in conflict.
 // Every patch is first rehearsed on a throwaway copy of the source and verified:
 // the planned copy items must read exactly the proposed text and every other
@@ -55,17 +65,50 @@ const args = process.argv.slice(2);
 const flag = (name) => args.includes(name);
 const option = (name) => { const index = args.indexOf(name); return index >= 0 ? args[index + 1] : undefined; };
 const file = args.find((arg, index) => !arg.startsWith("--") && !["--confirm", "--root", "--report"].includes(args[index - 1]));
-if (!file || flag("--help")) {
-  console.log("usage: bun scripts/apply-editorial.mjs <change-set.json> [--dry-run] [--report out.json] [--apply --confirm <change-set-id>] [--root <repo>] [--allow-dirty]");
-  process.exit(file ? 0 : 1);
+const MAP = flag("--map");
+if ((!file && !MAP) || flag("--help")) {
+  console.log("usage: bun scripts/apply-editorial.mjs <change-set.json> [--dry-run] [--report out.json] [--apply --confirm <change-set-id>] [--root <repo>] [--allow-dirty]\n       bun scripts/apply-editorial.mjs --map [--report out.json] [--root <repo>]");
+  process.exit(file || MAP ? 0 : 1);
 }
 const APPLY = flag("--apply");
 const ROOT = resolve(option("--root") ?? process.cwd());
 const fail = (message) => { console.error(`apply-editorial: ${message}`); process.exit(1); };
 
+// --- source probing (shared by the dry run and --map) ---
+const dump = (root) => JSON.parse(execFileSync(process.execPath, [SELF, "--dump-copy", root], { cwd: root, stdio: ["ignore", "pipe", "pipe"] }).toString());
+const scratch = () => {
+  const temp = mkdtempSync(join(tmpdir(), "raidguild-editorial-"));
+  cpSync(join(ROOT, "src"), join(temp, "src"), { recursive: true });
+  for (const name of ["tsconfig.json", "package.json"]) cpSync(join(ROOT, name), join(temp, name));
+  symlinkSync(join(ROOT, "node_modules"), join(temp, "node_modules"));
+  return temp;
+};
+let probeRoot = null;
+const probes = new Map();
+const SENTINEL = "\u2063editorial-probe\u2063";
+// The copy ids a literal produces: replace it with a sentinel on the scratch copy and dump.
+const probe = (literal) => {
+  const key = `${literal.path}:${literal.start}`;
+  if (probes.has(key)) return probes.get(key);
+  probeRoot ??= scratch();
+  const original = readFileSync(join(ROOT, literal.path), "utf8");
+  writeFileSync(join(probeRoot, literal.path), original.slice(0, literal.start) + JSON.stringify(SENTINEL) + original.slice(literal.end));
+  // exact: items whose whole text is this literal; derived: items assembled from it ("<name> website homepage").
+  let ids = null;
+  try {
+    const entries = Object.entries(dump(probeRoot));
+    ids = { exact: entries.filter(([, text]) => text === SENTINEL).map(([id]) => id).sort(), derived: entries.filter(([, text]) => text !== SENTINEL && text.includes(SENTINEL)).map(([id]) => id).sort() };
+  } catch { ids = null; }
+  finally { writeFileSync(join(probeRoot, literal.path), original); }
+  probes.set(key, ids);
+  return ids;
+};
+process.on("exit", () => { if (probeRoot) rmSync(probeRoot, { recursive: true, force: true }); });
+
 // --- 1. validate the file ---
 let data;
-try { data = JSON.parse(readFileSync(file, "utf8")); } catch (error) { fail(`cannot read ${file}: ${error.message}`); }
+if (MAP) data = { format: FORMAT, version: 2, changes: [] };
+else try { data = JSON.parse(readFileSync(file, "utf8")); } catch (error) { fail(`cannot read ${file}: ${error.message}`); }
 if (data?.format !== FORMAT || !Array.isArray(data.changes)) fail("not a RaidGuild editorial change set");
 if (data.version !== 1 && data.version !== 2) fail(`unsupported version ${data.version}`);
 const errors = [];
@@ -77,7 +120,7 @@ if (data.version === 1) {
   changes = changes.map((change) => ({ id: change.id, operation: typeof change.proposed === "string" && change.proposed === change.original ? "KEEP" : "REPLACE", base: change.original, proposed: change.proposed === change.original ? undefined : change.proposed, comment: change.comment ?? "", reviewStatus: "proposed" }));
 } else {
   // The change set id is the SHA-256 of the change list: an edited file no longer matches.
-  if (data.exportId !== sha256(JSON.stringify(data.changes))) errors.push("The change list does not match its change set id: the file was edited after export. Export it again from the editor.");
+  if (!MAP && data.exportId !== sha256(JSON.stringify(data.changes))) errors.push("The change list does not match its change set id: the file was edited after export. Export it again from the editor.");
 }
 const seen = new Set();
 changes.forEach((change, index) => {
@@ -133,6 +176,36 @@ const encode = (raw, value) => {
   return `${quote}${body}${quote}`;
 };
 
+// Where an id's current text lives in the source. Returns the literal and, when
+// that literal feeds other copy items too, their ids (`sharedWith`).
+const before = dump(ROOT);
+// Every candidate is probed, even a single one: the literal must really produce this item.
+const resolveSource = (id, text) => {
+  const found = literals.filter((literal) => literal.value === text);
+  const locations = found.map((literal) => `${literal.path}:${literal.line}`);
+  if (!found.length) return { locations, problem: "the text is not a single string literal in the source (it is assembled in code, e.g. from a name)" };
+  const feeding = found.map((literal) => ({ literal, ids: probe(literal) })).filter((entry) => entry.ids?.exact.includes(id));
+  if (feeding.length !== 1) return { locations, problem: `the text appears ${found.length} times in the source (${locations.join(", ")}) and no single literal produces this item` };
+  const [{ literal, ids }] = feeding;
+  return { literal, locations: [`${literal.path}:${literal.line}`], sharedWith: ids.exact.filter((other) => other !== id), derived: ids.derived };
+};
+
+// --map: the source of every editable copy id (no change set).
+if (MAP) {
+  const { originals: all } = await import(join(ROOT, "src/lib/editorial/catalog.ts"));
+  const rows = [...all].map(([id, text]) => {
+    const source = resolveSource(id, text);
+    return { id, kind: config.kindOf(id), page: config.sectionFor(id)?.page, source: source.literal ? `${source.literal.path}:${source.literal.line}` : null, sharedWith: source.sharedWith ?? [], derived: source.derived ?? [], problem: source.problem ?? null };
+  });
+  const unique = rows.filter((row) => row.source && !row.sharedWith.length).length;
+  const shared = rows.filter((row) => row.source && row.sharedWith.length);
+  const assembled = rows.filter((row) => !row.source);
+  for (const row of rows) console.log(`${row.source ? (row.sharedWith.length ? "≡" : "✓") : "!"} ${row.id}  ${row.source ?? row.problem}${row.sharedWith.length ? `  (shared with ${row.sharedWith.join(", ")})` : ""}${row.derived.length ? `  (also feeds ${row.derived.join(", ")})` : ""}`);
+  console.log(`\nSource map: ${rows.length} editable ids · ${unique} in their own literal · ${shared.length} in a literal shared with other items · ${assembled.length} assembled in code (integrate by hand)`);
+  if (option("--report")) writeFileSync(option("--report"), `${JSON.stringify({ format: "raidguild-editorial-source-map", version: 1, sourceRevision: head, rows }, null, 2)}\n`);
+  process.exit(0);
+}
+
 const results = changes.filter((change) => typeof change?.id === "string" && OPERATIONS.includes(change.operation)).map((change) => {
   const current = originals.get(change.id);
   const result = { id: change.id, operation: change.operation, field: change.field ?? config.fieldLabel(change.id), page: change.pageLabel ?? config.sectionFor(change.id)?.pageLabel ?? "", section: change.section ?? config.sectionFor(change.id)?.label ?? "", base: change.base, proposed: change.proposed, comment: change.comment ?? "", status: "ok", problems: [] };
@@ -145,12 +218,18 @@ const results = changes.filter((change) => typeof change?.id === "string" && OPE
     result.removeTarget = config.removalTarget(change.id, scope);
     result.structural = config.structuralReason(change.id, "REMOVE", scope);
   }
+  if (change.operation === "REPLACE" || change.operation === "SHORTEN") {
+    const reason = config.structuralReason(change.id, change.operation, "item", { base: change.base, proposed: change.proposed });
+    if (reason) { result.structural = reason; if (result.status === "ok") { result.status = "blocked"; result.problems.push(`structural: ${reason} Not applied by this tool.`); } }
+  }
   if (change.operation !== "KEEP") {
-    const found = literals.filter((literal) => literal.value === change.base);
-    result.locations = found.map((literal) => `${literal.path}:${literal.line}`);
+    const source = resolveSource(change.id, current);
+    result.locations = source.locations;
+    result.sharedWith = source.sharedWith;
+    result.derived = source.derived;
     if (change.operation === "REPLACE" || change.operation === "SHORTEN") {
-      if (found.length === 1) result.literal = found[0];
-      else if (result.status === "ok") { result.status = "blocked"; result.problems.push(found.length ? `the text appears ${found.length} times in the source (${result.locations.join(", ")}); edit it by hand` : "the text is not a single string literal in the source (it is assembled in code); edit it by hand"); }
+      if (source.literal) result.literal = source.literal;
+      else if (result.status === "ok") { result.status = "blocked"; result.problems.push(`${source.problem}; edit it by hand`); }
     }
   }
   return result;
@@ -158,16 +237,28 @@ const results = changes.filter((change) => typeof change?.id === "string" && OPE
 
 // --- 5. rehearse the text changes on a copy and verify every copy item ---
 const textChanges = results.filter((result) => (result.operation === "REPLACE" || result.operation === "SHORTEN") && result.status === "ok");
+// A literal shared by several items changes all of them: allowed only when the
+// change set gives every one of them the same new text (then it is one edit).
+const byId = new Map(results.map((result) => [result.id, result]));
 const byLiteral = new Map();
 for (const result of textChanges) {
+  if (result.sharedWith?.length) {
+    const others = result.sharedWith.map((id) => byId.get(id));
+    if (others.some((other) => !other || other.proposed !== result.proposed || !["REPLACE", "SHORTEN"].includes(other.operation))) {
+      result.status = "blocked";
+      result.problems.push(`its source text is shared with ${result.sharedWith.join(", ")}: one edit changes all of them. Propose the same text for all, or split the source first (a code change)`);
+      continue;
+    }
+  }
   const key = `${result.literal.path}:${result.literal.start}`;
-  if (byLiteral.has(key)) { result.status = "blocked"; result.problems.push(`shares its source text with ${byLiteral.get(key).id}`); byLiteral.get(key).status = "blocked"; }
-  else byLiteral.set(key, result);
+  if (!byLiteral.has(key)) byLiteral.set(key, result);
+  else if (byLiteral.get(key).proposed !== result.proposed) { result.status = "blocked"; result.problems.push(`shares its source text with ${byLiteral.get(key).id}`); byLiteral.get(key).status = "blocked"; }
 }
 const planned = textChanges.filter((result) => result.status === "ok");
+const edits = [...byLiteral.values()].filter((result) => result.status === "ok");
 const patch = (base) => {
   const files = new Map();
-  for (const result of planned) {
+  for (const result of edits) {
     const { path, start, end, raw } = result.literal;
     const entry = files.get(path) ?? { text: readFileSync(join(base, path), "utf8"), edits: [] };
     entry.edits.push({ start, end, replacement: encode(raw, result.proposed) });
@@ -181,9 +272,10 @@ const patch = (base) => {
   }
   return out;
 };
-const dump = (root) => JSON.parse(execFileSync(process.execPath, [SELF, "--dump-copy", root], { cwd: root, stdio: ["ignore", "pipe", "pipe"] }).toString());
 const verify = (before, after) => {
   const expected = new Map(planned.map((result) => [result.id, result.proposed]));
+  // Items assembled from a changed literal follow it ("<name> website homepage").
+  for (const result of planned) for (const id of result.derived ?? []) if (!expected.has(id)) expected.set(id, before[id].split(result.current).join(result.proposed));
   const problems = [];
   for (const id of new Set([...Object.keys(before), ...Object.keys(after)])) {
     const want = expected.has(id) ? expected.get(id) : before[id];
@@ -193,13 +285,9 @@ const verify = (before, after) => {
 };
 let diff = "";
 let verification = [];
-const before = dump(ROOT);
 if (planned.length) {
-  const temp = mkdtempSync(join(tmpdir(), "raidguild-editorial-"));
+  const temp = scratch();
   try {
-    cpSync(join(ROOT, "src"), join(temp, "src"), { recursive: true });
-    for (const name of ["tsconfig.json", "package.json"]) cpSync(join(ROOT, name), join(temp, name));
-    symlinkSync(join(ROOT, "node_modules"), join(temp, "node_modules"));
     const files = patch(ROOT);
     for (const [path, text] of files) writeFileSync(join(temp, path), text);
     verification = verify(before, dump(temp));
@@ -230,7 +318,8 @@ for (const result of results) {
   if (result.operation === "REPLACE" || result.operation === "SHORTEN") lines.push(`    current:  ${JSON.stringify(result.current ?? result.base)}`, `    proposed: ${JSON.stringify(result.proposed)}`);
   else lines.push(`    text:     ${JSON.stringify(result.current ?? result.base)}`);
   if (result.status === "conflict" && result.current !== undefined && result.current !== result.base) lines.push(`    made against: ${JSON.stringify(result.base)}`);
-  if (result.literal && result.status === "ok") lines.push(`    source:   ${result.literal.path}:${result.literal.line}`);
+  if (result.literal && result.status === "ok") lines.push(`    source:   ${result.literal.path}:${result.literal.line}${result.sharedWith?.length ? ` (one text for ${[result.id, ...result.sharedWith].join(", ")})` : ""}`);
+  if (result.derived?.length && result.status === "ok") lines.push(`    also updates (assembled from this text): ${result.derived.join(", ")}`);
   if (result.operation === "REMOVE") {
     lines.push(result.structural ? `    STRUCTURAL: ${result.structural} Needs separate approval; not applied.` : `    not applied automatically: removing copy needs a reviewed code change (component and narrative type), never an empty string.${result.locations?.length ? ` Text at ${result.locations.join(", ")}.` : ""}`);
     if (result.removeScope !== "item") lines.push(`    removes everything under ${result.removeTarget}`);

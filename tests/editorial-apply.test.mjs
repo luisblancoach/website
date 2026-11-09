@@ -56,7 +56,7 @@ describe("apply-editorial CLI", { timeout: 120000 }, () => {
     assert.match(out, /DRY RUN \(nothing is written\)/);
     assert.match(out, /✓ Hero · Headline, line 1 · Rewrite/);
     assert.match(out, /✓ Services gallery · Card 1 .* · Shorten/);
-    assert.match(out, /⚠ Hero · Button 2 · Remove \(item\)[\s\S]*STRUCTURAL: .*Needs separate approval; not applied\./);
+    assert.match(out, /⚠ Hero · Button 2 (\(“Explore our work”\) )?· Remove \(item\)[\s\S]*STRUCTURAL: .*Needs separate approval; not applied\./);
     assert.match(out, /○ Hero · Introduction · Keep as is[\s\S]*recorded: reviewed, keep as is \(no change\)/);
     assert.match(out, /-  title: \{ lead: design\("Hard problems,"\)/);
     assert.match(out, /\+  title: \{ lead: design\("Hard problems, solved,"\)/);
@@ -98,13 +98,63 @@ describe("apply-editorial CLI", { timeout: 120000 }, () => {
     assert.match(run(write("longer.json", data)).out, /SHORTEN, but the proposal is not shorter than the base/);
   });
 
-  test("text found more than once in the source is blocked, not guessed", async () => {
+  test("text found more than once is resolved by probing which literal produces the item, never guessed", async () => {
     const root = copyRoot("ambiguous");
     appendFileSync(join(root, "src/lib/data/constants.ts"), `\nexport const editorialTestDuplicate = ${JSON.stringify(originals.get(HERO))};\n`);
     const data = await changeSet((drafts) => applyEdit(drafts, HERO, "Hard problems, solved,", originals.get(HERO), NOW));
     const { code, out } = run(write("ambiguous.json", data), [], root);
+    assert.equal(code, 0, out);
+    assert.match(out, /source: {3}src\/lib\/narrative\/clients\.ts:\d+/);
+    assert.match(out, /Verified on a copy: 1 text change reads exactly as proposed/);
+    // The same text twice, and neither literal produces the item: blocked.
+    const both = copyRoot("assembled");
+    const narrative = join(both, "src/lib/narrative/clients.ts");
+    writeFileSync(narrative, readFileSync(narrative, "utf8").replace('design("Hard problems,")', 'design(["Hard", "problems,"].join(" "))'));
+    appendFileSync(join(both, "src/lib/data/constants.ts"), `\nexport const editorialTestDuplicate = ${JSON.stringify(originals.get(HERO))};\n`);
+    const blocked = run(write("assembled.json", data), [], both);
+    assert.equal(blocked.code, 2);
+    assert.match(blocked.out, /BLOCKED: .*no single literal produces this item|BLOCKED: the text is not a single string literal/);
+  });
+
+  test("a literal shared by several items is applied only when all of them get the same text", async () => {
+    const READ_MORE = (index) => `clients.previousWorks.works.${index}.link.label`;
+    const one = await changeSet((drafts) => applyEdit(drafts, READ_MORE(0), "Read the case", originals.get(READ_MORE(0)), NOW));
+    const single = run(write("shared-one.json", one));
+    assert.equal(single.code, 2);
+    assert.match(single.out, /its source text is shared with clients\.previousWorks\.works\.1\.link\.label/);
+    const all = await changeSet((drafts) => { for (let index = 0; index < 9; index++) drafts = applyEdit(drafts, READ_MORE(index), "Read the case", originals.get(READ_MORE(index)), NOW); return drafts; });
+    const together = run(write("shared-all.json", all));
+    assert.equal(together.code, 0, together.out);
+    assert.match(together.out, /Verified on a copy: 9 text changes read exactly as proposed/);
+    assert.equal((together.out.match(/^\+.*"Read the case"/gm) ?? []).length, 1, "one edit in the source");
+  });
+
+  test("a text assembled from the changed literal follows it, and is verified", async () => {
+    const NAME = "clients.previousWorks.works.3.name";
+    const data = await changeSet((drafts) => applyEdit(drafts, NAME, "Livepeer Inc.", originals.get(NAME), NOW));
+    const { code, out } = run(write("derived.json", data));
+    assert.equal(code, 0, out);
+    assert.match(out, /also updates \(assembled from this text\): clients\.previousWorks\.works\.3\.snapshot\.alt/);
+    assert.match(out, /Verified on a copy: 1 text change reads exactly as proposed/);
+  });
+
+  test("a rewrite that changes a stated price is structural and never applied", async () => {
+    const PRICE = "community.benefits.cards.3.body";
+    const data = await changeSet((drafts) => applyEdit(drafts, PRICE, originals.get(PRICE).replace("$20", "$25"), originals.get(PRICE), NOW));
+    assert.match(data.changes[0].structural.reason, /price/);
+    const { code, out } = run(write("price.json", data));
     assert.equal(code, 2);
-    assert.match(out, /BLOCKED: the text appears 2 times in the source/);
+    assert.match(out, /BLOCKED: structural: Changes a stated price/);
+  });
+
+  test("--map gives the source of every editable copy id", () => {
+    const result = spawnSync("bun", [CLI, "--map", "--root", REPO, "--report", join(work, "map.json")], { cwd: REPO, encoding: "utf8" });
+    assert.equal(result.status, 0, result.stderr);
+    const map = JSON.parse(readFileSync(join(work, "map.json"), "utf8"));
+    assert.equal(map.rows.length, originals.size);
+    for (const row of map.rows) assert.ok(row.source || /assembled in code/.test(row.problem), `${row.id}: ${row.problem}`);
+    // Only the screenshot descriptions ("<name> website homepage") are assembled in code.
+    assert.deepEqual(map.rows.filter((row) => !row.source).map((row) => row.id).filter((id) => !/^clients\.previousWorks\.works\.\d\.snapshot\.alt$/.test(id)), []);
   });
 
   test("--apply needs the change set id, writes exactly the proposals, verifies, and leaves removals and KEEP alone", async () => {

@@ -12,7 +12,7 @@ import MemberBenefits from "@/components/venture/sections/MemberBenefits";
 import Faq from "@/components/venture/sections/Faq";
 import Creed from "@/components/venture/sections/Creed";
 import {
-  communityActivity, communityBenefits, communityCapabilities, communityCreed, communityFaq, communityGuild, communityHats, communityHero, communityJoin,
+  communityActivity, communityBenefits, communityCapabilities, communityCreed, communityFaq, communityGuild, communityHats, communityHero, communityJoin, communityMeta,
   communityMoloch, communityRaidaFeature,
 } from "@/lib/narrative/community";
 import { buildersCommunity } from "@/lib/narrative/shared";
@@ -31,13 +31,13 @@ import { forAudience } from "@/lib/narrative/public";
 // replaces the root's, so site name, type and URL are restated. Share image:
 // a 1200 × 630 WebP cut of the Moloch rectangle artwork (111 KB; the 5.7 MB
 // original is untouched).
-const SHARE_TITLE = "Join the DAO: find your people at RaidGuild";
-const DESCRIPTION =
-  "RaidGuild is a builder-owned community. Meet Guild members, explore their experiments, and find people to build and contribute with.";
-const SHARE_IMAGE = { url: "/images/venture/og/community-moloch.webp", width: 1200, height: 630, type: "image/webp", alt: "Guild builders facing Moloch, a horned colossus, in a coral city" };
+// Copy (November 9): the strings are narrative copy (communityMeta), with stable ids for Editorial Mode.
+const SHARE_TITLE = communityMeta.shareTitle.text;
+const DESCRIPTION = communityMeta.description.text;
+const SHARE_IMAGE = { url: "/images/venture/og/community-moloch.webp", width: 1200, height: 630, type: "image/webp", alt: communityMeta.shareImageAlt.text };
 export const metadata: Metadata = {
   alternates: { canonical: "/community" },
-  title: "Join the DAO",
+  title: communityMeta.title.text,
   description: DESCRIPTION,
   openGraph: { siteName: "RaidGuild", type: "website", url: "/community", title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE] },
   twitter: { card: "summary_large_image", title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE.url] },

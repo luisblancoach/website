@@ -3,23 +3,22 @@
 import Link from "next/link";
 import { HuntMarker, HuntPixel } from "@/components/UnchartedHunt";
 import Sigil from "../primitives/Sigil";
+import { CopyText } from "../primitives/Review";
 import { useVenture } from "./VentureShell";
 import styles from "../venture.module.css";
 
 export default function SiteFooter() {
-  const { pathname } = useVenture();
+  const { pathname, site } = useVenture();
+  const { motto, socials, copyright } = site.footer;
 
   return (
     <footer className={styles.footer}>
       {pathname === "/"
         ? <a className={styles.brand} href="#top"><Sigil /><span>RAID<br />GUILD</span></a>
         : <Link className={styles.brand} href="/"><Sigil /><span>RAID<br />GUILD</span></Link>}
-      <p>INDEPENDENT MINDS.<br />WE GO FURTHER TOGETHER.</p>
+      <p><CopyText copy={motto.lead} /><br /><CopyText copy={motto.em} /></p>
       <div className={styles.socials}>
-        <a href="https://github.com/raid-guild" target="_blank" rel="noopener noreferrer">GITHUB</a>
-        <a href="https://x.com/RaidGuild" target="_blank" rel="noopener noreferrer">X / TWITTER</a>
-        <a href="https://discord.gg/2vx47gT95y" target="_blank" rel="noopener noreferrer">DISCORD</a>
-        <a href="https://raidguild-brand-guide-production.up.railway.app/" target="_blank" rel="noopener noreferrer">BRAND ARCHIVE</a>
+        {socials.map((link) => <a key={link.label.id} href={link.href} target="_blank" rel="noopener noreferrer"><CopyText copy={link.label} /></a>)}
       </div>
       {/* Audience routes (October 30, late night): the hunt's second and final
           clues live here, away from the inquiry form and the creed's call to
@@ -30,7 +29,7 @@ export default function SiteFooter() {
           <div className={styles.unchartedWalker}><HuntPixel artifact="walker" /><HuntMarker artifact="walker" label="A mark left by the walker" /></div>
         </div>
       )}
-      <small>© 2019—2026 RAIDGUILD · EARTH &amp; ELSEWHERE</small>
+      <small><CopyText copy={copyright} /></small>
     </footer>
   );
 }
