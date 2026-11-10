@@ -31,8 +31,11 @@ Status: implemented and verified locally; **not committed, not deployed**.
   host built with `RAIDGUILD_INDEXING=on`. Set once in the root layout; the pages no longer hard-code robots.
   The Cloudflare review Worker additionally sends `X-Robots-Tag: noindex, nofollow` (unchanged).
 - **Canonical and og:url** are absolute on `https://www.raidguild.org` for all three routes.
-- **Share images** resolve on the serving host (`metadataBase` = deployment origin on Vercel/Railway), so link
-  previews work on review deployments; on Cloudflare (no origin variable) they still point at raidguild.org.
+- **Share images** resolve on the deployment's production host (`metadataBase` = Vercel's production domain, or
+  Railway's). On raidguild.org this is the site itself. Correction after the release (2026-11-10): the Vercel review
+  project's production domain is `raidguild.estudioblanco.org`, which still redirects to Railway, so previews from the
+  review site show no image; on Cloudflare (no origin variable) they point at raidguild.org paths that exist only
+  after go-live. Review hosts only; no effect on raidguild.org.
 - **`twitter:site` = `@RaidGuild`** on all three routes.
 - **Sitemap**: `/`, `/agency`, `/community` on the canonical origin, and empty while the build is not indexable.
 - **JSON-LD** on all three routes (§4).

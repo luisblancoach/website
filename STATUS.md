@@ -271,6 +271,19 @@ owner's decision on `raidguild.estudioblanco.org` routing (still 302 to Railway)
 
 # Session log (newest first; history, not current state)
 
+## November 10, night: final handoff released (`b0d6cb6`), Vercel review and Cloudflare Editorial Mode live
+
+- Commit `b0d6cb613760bb53f891eb2bfc32e138d36f7d0c` (78 files, manifest), pushed to `fork`; upstream untouched.
+- Vercel review: `dpl_D4iJJAvqf2LRwSourYmN9Lm2mnj4` (production of `raidguild-venture-beyond-review`, clean archive,
+  `vercel@65.8.0`), https://raidguild-venture-beyond-review.vercel.app, noindex; rollback `dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD`.
+- Cloudflare: Worker `raidguild-estudioblanco` version `32af0c5c-155c-4aee-b60b-c667f973dce7` (opt-in Editorial Mode,
+  noindex), rollback `5dcaac41`.
+- Verified live: both routes and `/`, SEO/AEO tags and files, 16 illustrations, polish, hunt; editor rich text 21/21,
+  export → CLI dry run OK. Limitations and the Tae/Dekan workflow: `docs/venture-integration.md`, "Final handoff release".
+- Docs of this close (STATUS, CHANGELOG, `docs/venture-integration.md`, `docs/seo-aeo-handoff.md`) committed on
+  top of `b0d6cb6` as "docs(handoff): finalize Venture Beyond release records" and pushed to `fork` (owner-approved);
+  no redeploy.
+
 ## November 10, late night: Editorial Mode final acceptance; release manifest ready (nothing committed)
 
 - Shareable guide and `docs/editorial-guide-tae.md` updated (Tae: edit, format, review, export; Dekan: validate,
