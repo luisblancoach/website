@@ -24,7 +24,7 @@ export default function ClientReasons({ id, content }: { id: string; content: Re
         <p className={styles.intro}><CopyText copy={content.intro} /></p>
       </div>
       <div className={styles.reasonList}>
-        {content.items.map((item, index) => {
+        {content.items.filter((item) => !item.retired).map((item, index) => {
           const expanded = open === index;
           return (
             <div key={item.title.id} className={styles.reasonItem}>

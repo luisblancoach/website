@@ -209,7 +209,7 @@ if (MAP) {
 const results = changes.filter((change) => typeof change?.id === "string" && OPERATIONS.includes(change.operation)).map((change) => {
   const current = originals.get(change.id);
   const result = { id: change.id, operation: change.operation, field: change.field ?? config.fieldLabel(change.id), page: change.pageLabel ?? config.sectionFor(change.id)?.pageLabel ?? "", section: change.section ?? config.sectionFor(change.id)?.label ?? "", base: change.base, proposed: change.proposed, comment: change.comment ?? "", status: "ok", problems: [] };
-  if (current === undefined) { result.status = "conflict"; result.problems.push("unknown copy id: not an editable item in the current source"); return result; }
+  if (current === undefined) { const why = config.sectionFor(change.id) ? config.exclusionReason(change.id) : null; result.status = "conflict"; result.problems.push(why && /^Retired/.test(why) ? `retired: ${why}` : "unknown copy id: not an editable item in the current source"); return result; }
   result.current = current;
   if (current !== change.base) { result.status = "conflict"; result.problems.push("source changed: the site's text is no longer the text this decision was made against"); }
   if (change.operation === "REMOVE") {
