@@ -47,7 +47,7 @@
 /* The title is its own container, so the line sizes sit on the lines. */
 :global(html) .card .cardTitle > span { font-size: min(17px, 100cqi / 21); }
 :global(html) :global([data-audience]) .card .cardTitle em,
-:global(html) .card .cardTitle em { color: var(--gal-accent); display: inline-block; font-family: var(--font-last-duel-extended), var(--font-display), sans-serif !important; font-size: min(22px, 100cqi / 16.8); font-style: italic; font-synthesis: style; font-weight: 700; line-height: 1.05; margin-top: .1em; }
+:global(html) .card .cardTitle em { color: var(--gal-accent); display: inline-block; font-family: var(--font-last-duel-extended), var(--font-display), sans-serif !important; font-size: min(22px, 100cqi / 16.8); font-style: italic; font-synthesis: style; font-weight: 700; line-height: 1.05; margin-top: .1em; white-space: normal; }
 
 .body { font: 400 16px/1.5 var(--font-body), sans-serif; grid-column: 2; margin: 10px 0 0; max-width: 44ch; }
 
