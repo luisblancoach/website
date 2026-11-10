@@ -170,6 +170,12 @@
 .iconDiscord { -webkit-mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; }
 .iconPortal { -webkit-mask: url("/images/icons/ico_portal.svg") center / contain no-repeat; mask: url("/images/icons/ico_portal.svg") center / contain no-repeat; }
 .iconHandbook { -webkit-mask: url("/images/icons/ico_handbook.svg") center / contain no-repeat; mask: url("/images/icons/ico_handbook.svg") center / contain no-repeat; }
+/* Footer link marks (November 10, owner). GitHub and X fill their whole 24 px box, so they draw a little smaller to
+   sit at the same optical size as the Discord, RaidGuild and blog marks. */
+.iconGithub, .iconX, .iconBlog { background: currentColor; display: block; }
+.iconGithub { -webkit-mask: url("/images/icons/ico_github.svg") center / 84% no-repeat; mask: url("/images/icons/ico_github.svg") center / 84% no-repeat; }
+.iconX { -webkit-mask: url("/images/icons/ico_x.svg") center / 78% no-repeat; mask: url("/images/icons/ico_x.svg") center / 78% no-repeat; }
+.iconBlog { -webkit-mask: url("/images/icons/ico_blog.svg") center / contain no-repeat; mask: url("/images/icons/ico_blog.svg") center / contain no-repeat; }
 /* November 2 (owner): every sword is turned 180° (the *-hilt.svg files are the
    owner's arrows rotated, the originals are untouched), so the hilt leads like
    an arrowhead in the action's direction. */
@@ -496,7 +502,14 @@
 .footer { align-items: start; background: var(--deep); color: var(--paper); display: grid; gap: 50px; grid-template-columns: 1fr 1fr 1fr; padding: 70px clamp(24px, 5vw, 80px) 30px; }
 .footer > p { font-family: var(--font-display), serif; font-size: 22px; line-height: 1.15; margin: 0; }
 .socials { display: flex; flex-direction: column; gap: 10px; justify-self: end; }
-.socials a { color: inherit; display: inline-flex; align-items: center; font-size: var(--type-ui); letter-spacing: var(--tracking-caps); min-height: var(--tap-inline); text-decoration: none; }
+.socials a { color: inherit; display: inline-flex; align-items: center; font-size: var(--type-ui); gap: 12px; letter-spacing: var(--tracking-caps); min-height: var(--tap-inline); text-decoration: none; text-transform: uppercase; }
+.socialIcon { flex: none; height: 18px; width: 18px; }
+/* Links inside copy (November 10, Editorial Mode rich text): the surrounding text colour and type, underlined;
+   a thicker line on hover; the site's focus ring. */
+.inlineLink { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em; }
+@media (hover: hover) { .inlineLink:hover { text-decoration-thickness: 2px; } }
+.inlineLink:focus-visible { border-radius: 2px; box-shadow: 0 0 0 3px var(--cta-focus-halo, #efe9d7); outline: 3px solid var(--cta-focus-ring, #102d2c); outline-offset: 3px; }
+@media (hover: hover) { .socials a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; } }
 .footer small { border-top: 1px solid rgba(239,233,215,.2); font-size: var(--type-ui); grid-column: 1 / -1; letter-spacing: var(--tracking-caps); opacity: .8; padding-top: 25px; }
 
 /* The paired Figma frame uses the same accents over a canonical navy ground. */
@@ -812,7 +825,7 @@
   .contactFormShell { box-shadow: 20px 20px 0 var(--sky); height: 720px; padding: 54px; }
 
   .footer { gap: 56.25px; grid-template-columns: 394.49px 1fr 394.49px; height: 402px; padding: 78.75px 72px 33.75px; }
-  .footer > p { font-size: 24.75px; font-style: italic; letter-spacing: 0; line-height: 28.46px; }
+  .footer > p { font-size: 24.75px; font-style: normal; letter-spacing: 0; line-height: 28.46px; }
   .socials { gap: 16px; }
   .socials a { font-size: 14px; letter-spacing: 1px; line-height: 16px; }
   .footer small { border-color: var(--sky); font-size: 14px; letter-spacing: 1px; line-height: 16px; opacity: 1; padding-top: 25px; }
@@ -1040,6 +1053,10 @@
   .contact { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 5vw; padding: 48px 5vw; }
   .contactDruid, .contactDek { width: 100%; }
   .footer { grid-template-columns: 1fr 1fr 1fr; height: auto; }
+  /* November 10 (owner): the motto is upright now, which is wider than the italic; its column takes the motto's
+     width so it keeps its two lines, and the size eases down only where the row is too narrow (1000–1180 px). */
+  .footer { grid-template-columns: 1fr auto 1fr; }
+  .footer > p { font-size: min(24.75px, 2.1vw); white-space: nowrap; }
   .heroCopy { left: 12%; }
   .heroSupplement { top: 455px; left: 21%; }
 }
@@ -2543,14 +2560,16 @@
 .site[data-audience] main > :is(:global(#case-studies), :global(#spears), :global(#team), :global(#stewards), :global(#contact), :global(#guild), :global(#work), :global(#hats), :global(#join)) { padding-block: var(--section-space); }
 .site[data-audience] main > :is(:global(#raida), :global(#moloch)) { padding-bottom: 0; }
 @media (min-width: 1000px) {
-  .site[data-audience] main > :is(:global(#case-studies), :global(#spears), :global(#team), :global(#stewards), :global(#contact), :global(#guild), :global(#raida), :global(#moloch), :global(#work), :global(#hats), :global(#join)) { align-content: start; box-sizing: border-box; min-height: min(100svh, 960px); }
+  .site[data-audience] main > :is(:global(#case-studies), :global(#spears), :global(#team), :global(#stewards), :global(#contact), :global(#raida), :global(#moloch), :global(#work), :global(#hats), :global(#join)) { align-content: start; box-sizing: border-box; min-height: min(100svh, 960px); }
 }
+/* November 10 (owner, final polish): the Guild section is no longer a viewport tall. Its content ends well above
+   900 px, which left about 300 px of empty cream before [ WAYS TO CONTRIBUTE ]; it now keeps only the section
+   rhythm, and since it shares its surface with [ WAYS TO CONTRIBUTE ] in Day, it keeps half of it below (the
+   artwork's own transparent margin adds the rest), so the two read as connected. Opening the Guild kit still grows
+   it downward. */
+.site[data-audience] main > :global(#guild) { padding-bottom: calc(var(--section-space) / 2); }
 
-/* Hunt clues in the footer (audience routes, October 30, late night): a quiet
-   row above the copyright, their notes opening upward. */
-.footerClues { align-items: center; display: flex; flex-wrap: wrap; gap: 8px 28px; grid-column: 1 / -1; opacity: .85; }
-.footerClues .unchartedWalker { margin: 0; }
-.footerClues .unchartedWalker details[open] > div { left: 0; transform: none; width: min(320px, calc(100vw - 48px)); }
+/* The footer's hunt-clue row (October 30) was removed on November 10 at the owner's request. */
 
 /* Inquiry heading (October 30, final pass): "YOU'RE BUILDING" stays on one
    line. It measures 10.1 em in the display face; it takes 46 px where the

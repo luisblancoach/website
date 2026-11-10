@@ -6,6 +6,29 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
+- **Final card illustrations (owner, 2026-11-10), uncommitted, awaiting approval:** 16 owner-supplied PNGs in
+  `public/images/illustrations/{hire,community,membership}/` replace the art of the /agency services gallery (6),
+  the /community capabilities gallery (6) and the /community member benefits (4), mapped in card order through the
+  narrative data layer. Tests 125/125, tsc, lint 0 errors, isolated build OK; 16/16 verified in Day/Night at 1440
+  and 393 px. Mapping and checksums: `docs/asset-provenance.md`. Not deployed.
+- **Final UI polish (owner, 2026-11-10), same candidate, uncommitted, awaiting visual approval:** company selector
+  with one geometry and no 1–2 px shifts (five logo SVGs recentred, Daedalus plate matched); Moloch CTA in dark green;
+  less space between the Guild and Ways to contribute; footer motto upright, hunt clues removed, icons on every link
+  and a new "Portal Blog" link. Tests 125/125, tsc, lint 0 errors, isolated build OK; polish checks 92/92 in
+  Day/Night at 1440 and 393 px. Details: `docs/venture-integration.md`, 2026-11-10.
+- **Hunt and SEO / AEO (2026-11-10), same candidate, uncommitted:** the portal overlay shows the hunt only on `/`
+  (no dead-end trail on the audience routes); noindex on every build except the raidguild.org production deploy;
+  absolute canonicals on www.raidguild.org; sitemap of the three routes at go-live; Organization, WebSite, WebPage
+  and Service JSON-LD from published copy; heading text spacing; llms.txt and agent Markdown corrected. Tests
+  130/130, tsc, lint 0 errors; layout unchanged. Report: `docs/seo-aeo-handoff.md`.
+- **Editorial Mode rich text (2026-11-10), same candidate, uncommitted, awaiting review:** bold, italic, underline
+  and links inside running text, as `**…**`, `_…_`, `++…++`, `[…](…)` in the existing string format
+  (`src/lib/narrative/inline.ts`); toolbar, shortcuts, undo/redo, phone layout; link sanitizing at every layer;
+  prose-only field policy; CLI and export carry it unchanged. Tests 137/137; rich-text QA 21/21; visitor layout
+  identical. Workflow: `docs/editorial-guide-tae.md`.
+- **Final acceptance (2026-11-10):** formatted paragraph edited → exported → applied by the CLI on a clean scratch repo
+  (1 line, ids unchanged) → tests 137/137, build, correct visitor HTML. Release manifest prepared (78 files).
+
 ## 2026-11-10 · Editorial cycle 02 closed: Tae's batch 03 live as Worker version `5dcaac41` (`release/editorial-cycle-02`)
 
 - Tae's batch 03 (`raidguild-tae-editorial(2).md`, change set `09f31b111631…`, made on `78b024005ad6`; Markdown only,

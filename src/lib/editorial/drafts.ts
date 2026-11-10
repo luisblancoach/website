@@ -11,7 +11,8 @@
 //            section): an explicit operation, never an empty string;
 //   KEEP     reviewed, keep as is: no content change.
 // Every operation is reversible: reverting a draft restores the published copy.
-import { EDITORIAL_SECTIONS, KIND_LABEL, componentOf, fieldLabel, kindOf, removalTarget, sectionFor, structuralReason, OPERATION_LABEL, SCOPE_LABEL, type CopyKind, type Operation, type RemoveScope } from "./config";
+import { inlineProblems, plainText } from "../narrative/inline";
+import { EDITORIAL_SECTIONS, KIND_LABEL, componentOf, fieldLabel, formattingFor, kindOf, removalTarget, sectionFor, structuralReason, OPERATION_LABEL, SCOPE_LABEL, type CopyKind, type Operation, type RemoveScope } from "./config";
 
 export type { Operation, RemoveScope } from "./config";
 
@@ -90,7 +91,8 @@ export type ChangesExport = {
 // Text as typed into the page: single spaces (contentEditable inserts NBSPs),
 // no line breaks, trimmed. The narrative copy uses neither NBSPs nor newlines.
 export const normalizeText = (text: string) => text.replace(/[ \s]+/g, " ").trim();
-const plainLength = (text: string) => text.replace(/\*\*/g, "").length;
+// Lengths and comparisons count words, not formatting markers (lib/narrative/inline.ts).
+const plainLength = (text: string) => plainText(text).length;
 
 export async function fingerprint(text: string) {
   const bytes = new TextEncoder().encode(text);
@@ -115,8 +117,11 @@ export function removedBy(drafts: Drafts, id: string): Draft | undefined {
 }
 
 export function warningsOf(draft: Draft): string[] {
-  if (draft.op === "SHORTEN" && plainLength(draft.text) >= plainLength(draft.base)) return ["Marked as Shorten, but the proposal is not shorter than the current text."];
-  return [];
+  const warnings: string[] = [];
+  if (draft.op === "SHORTEN" && plainLength(draft.text) >= plainLength(draft.base)) warnings.push("Marked as Shorten, but the proposal is not shorter than the current text.");
+  // Formatting the field does not take, or an unsafe link (November 10, rich text).
+  if ((draft.op === "REPLACE" || draft.op === "SHORTEN") && draft.text) warnings.push(...inlineProblems(draft.text, formattingFor(draft.id)));
+  return warnings;
 }
 
 // Saves typed `text` for `id`. Rules:

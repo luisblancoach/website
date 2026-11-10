@@ -87,6 +87,27 @@ Routes in code (working tree, 2026-11-07): `/` (entry, unchanged), `/agency` (Hi
 
 ## Uncommitted in this worktree
 
+- **Final card illustrations (owner, 2026-11-10), implemented and verified, awaiting commit approval:** the 16
+  untracked PNGs `public/images/illustrations/{hire,community,membership}/*.png` (owner-supplied; the folder's
+  `.DS_Store` is not part of them) and the image references in `src/lib/narrative/clients.ts` and
+  `src/lib/narrative/community.ts`, the updated assertion in `tests/narrative.test.mjs`, plus this STATUS,
+  `CHANGELOG.md` (Unreleased), `docs/asset-provenance.md` and `docs/venture-integration.md` (2026-11-10, "Final card
+  illustrations"). Not deployed: the live Worker `5dcaac41` still shows the previous art.
+- **Editorial Mode rich text (2026-11-10), same candidate, verified, awaiting review:** `src/lib/narrative/inline.ts`
+  and `tests/editorial-rich.test.mjs` (new); `primitives/Review.tsx`, `editorial/EditorialMode.tsx`,
+  `lib/editorial/{config,drafts}.ts`, `lib/seo.ts`, `sections/Faq.tsx`, `venture.module.css`,
+  `scripts/apply-editorial.mjs`, `tests/editorial{,-apply}.test.mjs`, `docs/editorial-guide-tae.md`.
+- **Hunt fix and SEO / AEO pass (2026-11-10), same candidate, verified, awaiting approval:**
+  `src/components/venture/shell/{PortalOverlay,VentureShell}.tsx`, `src/lib/seo.ts` (new), `src/app/layout.tsx`,
+  `src/app/(venture)/{page,agency/page,community/page}.tsx`, `src/app/sitemap.ts`, `src/lib/agent-readiness.ts`,
+  `public/llms.txt`, the `<br>` spacing in 20 venture components, `tests/seo.test.mjs` (new) and
+  `tests/agent-readiness.test.mjs`, `docs/seo-aeo-handoff.md` (new). The release requested earlier is held.
+- **Final UI polish (owner, 2026-11-10), same handoff candidate, verified, awaiting visual approval:**
+  `src/components/venture/{showcase,feature,venture}.module.css`, `src/components/venture/shell/SiteFooter.tsx`,
+  `src/lib/narrative/site.ts`, `tests/editorial.test.mjs` (field counts 294 / shared 23), five modified
+  `public/images/casestudies/custom_buttons/button_{pocket,daohaus,hypercerts,daedalus,livepeer}.svg` and three new
+  `public/images/icons/ico_{github,x,blog}.svg`. Record: `docs/venture-integration.md`, 2026-11-10, "Final UI polish".
+
 - The Editorial Mode v0.1 files are committed (`d1b6fa4`, owner-approved 2026-11-07); the docs that record them are
   committed separately (`c58e5a8`).
 - **Editorial build flag (2026-11-07, after v0.1), uncommitted, awaiting approval:** `next.config.ts` (`env`:
@@ -249,6 +270,69 @@ owner's decision on `raidguild.estudioblanco.org` routing (still 302 to Railway)
 ---
 
 # Session log (newest first; history, not current state)
+
+## November 10, late night: Editorial Mode final acceptance; release manifest ready (nothing committed)
+
+- Shareable guide and `docs/editorial-guide-tae.md` updated (Tae: edit, format, review, export; Dekan: validate,
+  apply, commit, deploy). Acceptance: a real paragraph formatted in the editor, exported, applied by the CLI on a clean
+  scratch repo (1 line, ids unchanged), tests 137/137 and build OK there, rendered correctly for visitors. Fixtures now
+  compare prose words, not markup (`docs/venture-integration.md`, "final acceptance").
+- Release manifest: `~/Projects/raidguild-backups/2026-11-10/RELEASE-MANIFEST.md` (78 files, staging rehearsed on a
+  temporary index, 0 owner files). Deploy targets and their open decisions are listed there.
+
+## November 10, late night: Editorial Mode rich text, verified, uncommitted; awaiting review
+
+- Owner request: inline formatting for Tae and Dekan. The existing format was extended (no Tiptap; evaluation in
+  `docs/venture-integration.md`): `**bold**`, `_italic_`, `++underline++`, `[link](https://…)`, prose fields only,
+  safe links only. New `src/lib/narrative/inline.ts`, `tests/editorial-rich.test.mjs`; changes in `Review.tsx`,
+  `EditorialMode.tsx` (toolbar, serializer, shortcuts), `config.ts` (`formattingFor`), `drafts.ts`, `seo.ts`,
+  `Faq.tsx`, `venture.module.css` (`.inlineLink`), `scripts/apply-editorial.mjs`, `tests/editorial-apply.test.mjs`,
+  `tests/editorial.test.mjs`; guide `docs/editorial-guide-tae.md` (Tae and Dekan, plus the developer's apply steps).
+- Checks: tests 137/137, tsc, lint 0 errors; opt-in build QA 21/21; exported JSON passes the CLI dry run; default
+  build's visitor layout identical. Not deployed; the shareable guide artifact still describes v0.3.
+
+## November 10, late night: hunt check and SEO / AEO pass, verified, uncommitted; release held
+
+- The owner approved the release (commit, push, Vercel deploy) subject to a hunt check, then sent Tae's SEO / AEO
+  brief mid-run ("do not commit, push, tag or deploy without explicit approval"). Nothing was committed, pushed or
+  deployed; the whole candidate (illustrations, polish, hunt, SEO) waits for approval.
+- Hunt: the portal overlay showed the hunt on `/community` with no clues left on the page; it now shows the hunt only
+  on `/` (`PortalOverlay` `hunt` prop). The on-page hunt exists only on `/`; console commands work everywhere.
+- SEO / AEO: `src/lib/seo.ts`, metadata on the three routes, JSON-LD, sitemap, llms.txt, agent Markdown, heading
+  spacing, `tests/seo.test.mjs`, report `docs/seo-aeo-handoff.md` (new file: needs `git add -f`).
+- Checks: tests 130/130, tsc, lint 0 errors; isolated build; crawl, JSON-LD structure 0 failures, robots/sitemap,
+  redirects; layout identical after the heading change; indexing switch verified in a second build; polish 92/92,
+  hunt 11/11, illustrations 16/16. Not run: Lighthouse, Rich Results Test (needs a public URL), October 23 comparison.
+- Open: D-2 (canonical www vs apex and go-live host; `RAIDGUILD_INDEXING=on` unless Vercel production on
+  raidguild.org), the editorial proposals in `docs/seo-aeo-handoff.md` §3 and §6.
+
+## November 10, late night: final UI polish (owner), verified, uncommitted
+
+- Same handoff candidate as the illustrations. Company selector normalized (one geometry from the art's 228:88 ratio
+  and corner, ring that only changes colour, no hover lift; five logo SVGs recentred, Daedalus plate matched); Moloch
+  CTA dark green (12.1:1); Guild → Ways to contribute gap about 360 → 178 px at 1440 (168 → 132 at 393); footer motto
+  upright on two lines, hunt clues removed from /agency and /community, icons on every link, new "Portal Blog".
+- Checks: tests 125/125, tsc, lint 0 errors; isolated build OK; `qa/polish-qa.mjs` 92/92 (both routes, Day/Night ×
+  1440/393); illustrations re-checked 16/16; footer destinations 200. Before/after:
+  `~/Projects/raidguild-backups/2026-11-10/qa/shots-polish/`. The owner's four reference screenshots did not reach
+  the session. Nothing committed, pushed, tagged or deployed.
+- Open: the hunt can no longer be completed on the audience routes (its two footer clues were removed on request).
+
+## November 10, night: final card illustrations (owner), verified, uncommitted
+
+- Session start checks matched (worktree, branch, HEAD `c4e921a`, baseline `40f3910`, owner files only).
+- 16 owner-supplied PNGs mapped in card order: /agency services gallery (hire 01–06), /community capabilities
+  gallery (community 01–06), /community member benefits (membership 01–04); references changed in the narrative
+  data layer only. Files used as supplied (no re-encoding). Mapping and checksums: `docs/asset-provenance.md`.
+- Checks: tests 125/125, tsc, lint 0 errors (1 old warning); isolated production build
+  (`~/Projects/raidguild-backups/2026-11-10/verify-illustrations`, :3061) OK; browser Day/Night × 1440/393 on both
+  routes: 16/16 in order and loaded, no distortion, no card or page overflow, CLS < 0.1, no failed image requests;
+  only console error the existing `/_vercel/insights/script.js` 404 (also live). Screenshots:
+  `~/Projects/raidguild-backups/2026-11-10/qa/shots-illustrations/`. Not compared against the October 23 reference
+  (new art by design). Nothing committed, pushed, tagged or deployed (awaiting approval).
+- Open: five replaced files are no longer referenced by any page (`spear-edge-problem-v1.webp`,
+  `field-signal-commons.png`, `field-autonomous-treasury.png`, `hero-landmarks-v1.png`, `creed-flyer-v1.png`): keep
+  or delete is the owner's call. The PNGs add 37.7 MB to the repository.
 
 ## November 10, evening: Tae's batch 03 live; editorial cycle 02 closed
 

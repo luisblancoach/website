@@ -45,7 +45,7 @@ const OPERATIONS = ["REPLACE", "SHORTEN", "REMOVE", "KEEP"];
 const SCOPES = ["item", "component", "section"];
 const SOURCE_DIRS = ["src/lib/narrative", "src/lib/data"];
 const sha256 = (text) => `sha256:${createHash("sha256").update(text, "utf8").digest("hex")}`;
-const plainLength = (text) => text.replace(/\*\*/g, "").length;
+
 
 // --- internal: print every copy item of a source tree (run in a separate process per tree) ---
 if (process.argv[2] === "--dump-copy") {
@@ -72,6 +72,10 @@ if ((!file && !MAP) || flag("--help")) {
 }
 const APPLY = flag("--apply");
 const ROOT = resolve(option("--root") ?? process.cwd());
+// Inline formatting (November 10): the one parser the site renders with; lengths
+// count words, not formatting markers.
+const inline = await import(join(ROOT, "src/lib/narrative/inline.ts"));
+const plainLength = (text) => inline.plainText(text).length;
 const fail = (message) => { console.error(`apply-editorial: ${message}`); process.exit(1); };
 
 // --- source probing (shared by the dry run and --map) ---
@@ -221,6 +225,9 @@ const results = changes.filter((change) => typeof change?.id === "string" && OPE
   if (change.operation === "REPLACE" || change.operation === "SHORTEN") {
     const reason = config.structuralReason(change.id, change.operation, "item", { base: change.base, proposed: change.proposed });
     if (reason) { result.structural = reason; if (result.status === "ok") { result.status = "blocked"; result.problems.push(`structural: ${reason} Not applied by this tool.`); } }
+    // Formatting the field does not take, or an unsafe link: never written to the source.
+    const formatting = typeof change.proposed === "string" ? inline.inlineProblems(change.proposed, config.formattingFor(change.id)) : [];
+    if (formatting.length && result.status === "ok") { result.status = "blocked"; result.problems.push(...formatting.map((problem) => `formatting: ${problem}`)); }
   }
   if (change.operation !== "KEEP") {
     const source = resolveSource(change.id, current);

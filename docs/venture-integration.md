@@ -1138,3 +1138,143 @@ time: its texts are edited after selecting the project's logo, as visitors see t
    comparison against the public build and the October 23 reference) before the next major structural release.
 6. **`raidguild.estudioblanco.org` routing**: the cutover proposed on 2026-11-09 (route + redirect-rule change)
    still awaits the owner's decision.
+
+## 2026-11-10 — Final card illustrations (owner; uncommitted, awaiting approval)
+
+- **Decision (owner):** the 16 final illustrations replace the card art of three groups, mapped 01–06 / 01–04 to
+  the cards in their visual (= source) order: the /agency services gallery (`hire/`), the /community capabilities
+  gallery (`community/`) and the /community member benefits (`membership/`). Mapping, checksums and the art they
+  replace: `docs/asset-provenance.md`, 2026-11-10.
+- **Consequence:** the two galleries no longer share art. Since November 3 the /community gallery reused the
+  /agency images; each now has its own set (the November 3 test that asserted equal images now asserts each set,
+  its order, 4:3 size and `contain`). The practice art in `lib/data/venture.ts` (`spear-onchain-v1.webp`,
+  `spear-applied-ai-v1.webp`) is unchanged; the cards no longer read it.
+- **Implementation:** image references only, in the narrative data layer (`src/lib/narrative/clients.ts`,
+  `src/lib/narrative/community.ts`): `{ src, width: 1448, height: 1086, fit: "contain" }` for gallery cards (the
+  existing 4:3 art box with its padding, as the previous practice art), `{ src, width: 1254, height: 1254 }` for
+  benefit thumbnails. No component, CSS, copy or editorial id changed; no asset deleted.
+- **Verification (isolated production build of HEAD + this change, `~/Projects/raidguild-backups/2026-11-10/verify-illustrations`,
+  `next start` on :3061):** tests 125/125, tsc clean, lint 0 errors (1 old warning), build OK. Browser
+  (`qa/illustrations-qa.mjs`): Day and Night at 1440 × 900 and 393 × 852, both routes: 16/16 cards show the
+  intended file in order, all loaded, delivered ratio 1.333 / 1.000 with `contain` / `cover` (no distortion), no
+  card overflow, no horizontal page overflow, CLS < 0.1, no failed image request. The only console error is the
+  existing 404 for `/_vercel/insights/script.js` (Vercel Analytics off Vercel; also on the live Worker).
+  Screenshots: `qa/shots-illustrations/` (section and all-cards strip per group, theme and width).
+  Not compared against the October 23 reference (the art is new by design). Not deployed.
+
+## 2026-11-10 — Final UI polish before handoff (owner; uncommitted, awaiting visual approval)
+
+Part of the same handoff candidate as the final card illustrations above. The owner's four reference screenshots
+did not reach the session; the changes follow the written brief and were checked on the pages themselves.
+
+- **Company selector (logo marquee, `/agency` Previous Works; the only place the shared `LogoMarquee` appears).**
+  Rendered cards were already equal in size; the inconsistencies were: the card was 190 × 73 (and 210 × 81) while the
+  art is 228 × 88, so the art's 16-unit corners (13.3 / 14.7 px) did not match the 12 px card and selection ring;
+  hovering lifted a card 2 px, so a clicked card sat 2 px above its neighbours; five logos sat 0.5–1.35 units off
+  centre inside their SVGs and the Daedalus logo showed a darker plate. Now (`showcase.module.css`, shared
+  component): one geometry from `--logo-w` with `aspect-ratio: 228 / 88` and the art's corner radius; a 3 px ring that
+  is always present and only changes colour (coral when selected, 45 % coral on hover); no hover lift; focus ring
+  unchanged. Asset fixes: `docs/asset-provenance.md`. Marquee motion, selection, keyboard and drag are untouched.
+- **Moloch CTA ("Find your path into the Guild", pink `[ THE GUILD ]` section):** dark surface in both themes:
+  `--color-dark-green` (#102D2C), cream label 12.1:1, dark-green edge, icon disc transparent with a cream ring (the
+  Night treatment); hover #1A3F3D (9.5:1), pressed #0A2120 (13.8:1), the shared 1 px lift, inset and focus ring.
+  Size (390 × 56 / 345 × 52), shape, icon and destination unchanged (`feature.module.css`).
+- **Guild → Ways to contribute spacing:** the desktop "at least one viewport tall" rule no longer applies to `#guild`
+  (its content ends about 650 px into a 900 px section), and since the Guild shares its Day surface with the next
+  section it keeps half of `--section-space` below (`venture.module.css`). From the last Guild content to the
+  `[ WAYS TO CONTRIBUTE ]` label: about 360 → 178 px at 1440, 168 → 132 px at 393. Nothing overlaps; opening the
+  Guild kit still grows the section downward.
+- **Footer (shared by both audiences and `/`):** the motto is upright (it was italic from 1000 px; phones were
+  already upright) and keeps its two lines on desktop: its column takes the motto's width and the size (24.75 px)
+  eases down only between 1000 and about 1180 px (21 px at 1000). The two hunt clues ("A signal at the edge of the
+  map", "A mark left by the walker") and their row were removed from the audience routes; `/` keeps its own clues
+  (inquiry and creed), so **the hunt can no longer be completed from /agency or /community**. Each link shows an
+  18 px icon (GitHub, X, Discord, RaidGuild mark, blog) in the text colour, labels are set in capitals by CSS, links
+  underline on hover; focus unchanged. New link "Portal Blog" → https://portal.raidguild.org/posts
+  (`site.footer.socials.4.label`, owner-approved), so Editorial Mode now has 294 active fields (shared 23).
+- **Verification (isolated production build `~/Projects/raidguild-backups/2026-11-10/verify-illustrations`, :3061):**
+  tests 125/125 (editorial counts updated for the new field), tsc clean, lint 0 errors (1 old warning), build OK.
+  `qa/polish-qa.mjs`, both routes, Day/Night × 1440/393: 92/92 (selector geometry identical on hover and selection,
+  Moloch CTA colours, contrast and focus in every state, Guild gap, footer motto, links, icons, no clues, no
+  horizontal overflow, CLS < 0.1, no failed requests or console errors apart from the existing Vercel Analytics 404).
+  `qa/illustrations-qa.mjs` re-run: 16/16 illustrations unchanged. Footer destinations all answer 200. Before/after
+  screenshots: `qa/shots-polish/{before,after}-*`. Not compared against the October 23 reference. Not deployed.
+
+## 2026-11-10 — Hunt after the footer clues; SEO / AEO pass (same candidate; uncommitted)
+
+- **Hunt (owner: verify, do not restore the footer copy, keep `/`).** The audience routes could still open the
+  portal (`/community` Projects Explorer), whose overlay invited the hunt ("Follow the rabbit … find the ✧ signal
+  and the ✧ mark further down the page") although the signal and walker are no longer on those pages: a dead end.
+  `PortalOverlay` now takes `hunt` (`pathname === "/"` in `VentureShell`): off `/` the overlay shows no hunt intro
+  and no rabbit clue, and its screen-reader title and description no longer mention the trail. `/` is unchanged
+  (all three clues). **Deliberate limitation:** the on-page hunt exists only on `/`; the `raidguild` console
+  commands still work on every route (progress is per device), and their help text already points to the `/`
+  gallery. Verified: `qa/hunt-qa.mjs` 11/11.
+- **SEO / AEO (Tae's request).** Report and decisions: `docs/seo-aeo-handoff.md`. Code: `src/lib/seo.ts`
+  (canonical origin `https://www.raidguild.org`, indexing gate, asset origin, JSON-LD builders), root layout
+  (robots, `metadataBase`, `twitter:site`), the three pages (absolute canonical and og:url, JSON-LD), `sitemap.ts`
+  (three routes when indexable, empty otherwise), `public/llms.txt`, `lib/agent-readiness.ts` (stale Markdown for
+  `/` and `/join` removed), a space before every `<br>` in the venture components (heading text), and
+  `tests/seo.test.mjs` (run through `agent-readiness.test.mjs`, since the test list lives in the owner's
+  `package.json`). **Indexing decision:** every build is `noindex` except the Vercel production deployment of
+  raidguild.org or a build with `RAIDGUILD_INDEXING=on`; go-live needs that confirmed (D-2).
+- **Release held:** the owner's "Final Handoff Release" (commit, push, Vercel deploy) was superseded mid-run by the
+  SEO / AEO brief ("do not commit, push, tag or deploy without explicit approval"); nothing was committed or deployed.
+
+## 2026-11-10 — Editorial Mode rich text (owner request; same candidate, uncommitted, awaiting review)
+
+- **Architecture found:** 294 editable fields, each a plain string literal in `src/lib/narrative/*` (plus
+  `lib/data`), rendered by `CopyText` (`primitives/Review.tsx`) with one inline mark, `**bold**`; the editor edits
+  the rendered text in a `contenteditable` `<rg-copy>` and serializes it back (`EditorialMode.tsx`); drafts live
+  in localStorage (`store.ts`), export as Markdown + fingerprinted JSON (`lib/editorial/drafts.ts`) and are applied
+  to the exact literal by `scripts/apply-editorial.mjs`. Inline formatting fits this design without a new engine.
+- **Decision: extend the existing inline format; no Tiptap.** Four marks only, as text:
+  `**bold**`, `_italic_`, `++underline++`, `[words](address)` (`src/lib/narrative/inline.ts`: one parser for the
+  renderer, the editor, drafts, the CLI and search metadata). No HTML, styles, sizes or colours can be expressed.
+  None of the 477 existing strings uses `_`, `++` or `](`; every one prints back unchanged and renders through the
+  untouched legacy path (visitor layout identical in 12 route/theme/width combinations).
+- **Tiptap, evaluated and not adopted:** it would replace the 294 in-place `contenteditable` fields with
+  ProseMirror instances (or one editor per focused field), add roughly 100–150 KB gzipped of editor code to the
+  opt-in bundle, need a ProseMirror-JSON ↔ string-literal mapping for the export and the CLI (or move copy to a
+  store, i.e. a CMS), and re-test the guards that keep links and buttons inert while editing. Its benefits (tables,
+  lists, collaborative editing) are outside this brief. Reconsider only if block formatting or a CMS is wanted.
+- **Field policy (`config.ts formattingFor`):** marks and links only in running prose (body, answer, intro,
+  description, detail, dek, text, requirement: 57 rendered on the two pages, including the 4 editable fields that
+  already use bold);
+  titles, display lines, labels, buttons, questions, names, ticker words and all hidden text (alt, screen-reader
+  names, metadata) stay plain. Verified on both pages that no prose field sits inside a link or button.
+- **Links:** `https://`, `http://`, `mailto:`, site paths and `#anchors` only (`safeHref`); `javascript:`, `data:`,
+  protocol-relative and malformed addresses are refused in the editor, flagged in drafts and the export, blocked by
+  the CLI, and never rendered as links (they stay visible text). External links open in a new tab with
+  `rel="noopener noreferrer"`; links take the text colour, underline and the site focus ring (`.inlineLink`).
+- **Editor:** a toolbar above the text (top of the screen on phones, 40 px targets): Bold, Italic, Underline, Link
+  (add / update / remove), Undo, Redo; Cmd/Ctrl+B/I/U/K; Alt+F10 into the toolbar, arrows, Escape back. Browser
+  formatting other than B/I/U is dropped; disallowed fields keep plain text. The Changes panel shows the formatted
+  proposal, its markup and "Formatting only" changes. Shorten counts words, not markers. FAQ placeholders no longer
+  mistake a link for a placeholder. JSON-LD and metadata use plain text.
+- **Verification:** tests 137/137 (new `tests/editorial-rich.test.mjs`: round trip of every existing string,
+  marks, nesting, link safety, policy, warnings; CLI test: formatted text applied as written, title formatting
+  and `javascript:` refused); tsc, lint 0 errors. Opt-in build (`verify-editorial-rich`, :3064), `qa/rich-qa.mjs`
+  21/21: toolbar and labels, bold/italic/underline/link by button and shortcut, unsafe link refused, undo/redo,
+  keyboard access, title stays plain, persistence after reload, Preview link attributes, Changes panel, export of
+  both files, phone toolbar and tap; the exported JSON passes the CLI dry run (1 change, 476 others unchanged).
+  Not deployed; the shareable guide doc (claude.ai artifact) is not updated yet.
+
+## 2026-11-10 — Editorial Mode final acceptance (owner: inline parser approved, no Tiptap)
+
+- **Responsibilities:** Tae edits, formats, previews, reviews and exports; Dekan validates the export, applies it
+  with the CLI, runs the checks, commits and deploys (`docs/editorial-guide-tae.md` and the shareable guide
+  https://claude.ai/artifact/Xmhy49kfgYYqx3zrKiT6x5, both updated: toolbar, shortcuts, field restrictions, link rules,
+  Save → Export → Apply).
+- **Acceptance run** (`~/Projects/raidguild-backups/2026-11-10/acceptance/`): in the opt-in editor, the Join text
+  (`community.join.body`) got bold, italic (shortcut), underline and a link (Cmd/Ctrl+K), was saved and exported.
+  On a clean scratch repository of the candidate, the CLI dry run and `--apply --confirm 023524e782d2` changed one line
+  of `src/lib/narrative/community.ts` only, 477 copy ids before and after, only that id changed; tests 137/137, tsc,
+  build OK; visitors get `<strong>`, `<em>`, `<u>` and `<a href target=_blank rel="noopener noreferrer">` in the server
+  HTML at 1440 and 393 px, no overflow, no errors. Raw markers appear only in the React data inside `<script>` (as
+  `**` already did), never in visible text or metadata.
+- **Fixture decision:** copy fixtures pin the words, not the formatting. The run first failed two tests: one of the
+  new rich-text tests asserted that no live copy used the new marks (replaced by the real invariant: every string
+  round-trips and carries only the formatting its field takes), and `narrative.test.mjs` compared prose verbatim
+  (13 prose assertions and the two brief checks now compare `plainText`). A formatting-only change therefore needs no
+  test edit; a wording change to pinned brief copy still does, by design.

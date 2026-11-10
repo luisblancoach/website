@@ -149,6 +149,20 @@ export function kindOf(id: string): CopyKind {
 
 export { NOT_RENDERED };
 
+// Inline formatting (November 10, rich text): which fields may carry
+// **bold**, _italic_, ++underline++ and [links](https://…) (lib/narrative/inline.ts).
+// Running prose only: texts, answers, introductions, descriptions, details.
+// Labels, titles and their two display lines, questions, names, buttons, ticker
+// words and every hidden text (alt text, screen-reader names, metadata) stay
+// plain, so the type system, headings and controls cannot be restyled from copy.
+// Links follow the same fields; none of them sits inside a link or button
+// (checked on the rendered pages, tests/editorial-rich.test.mjs and the QA run).
+const PROSE = /(?:^|\.)(body|answer|intro|description|detail|dek|text|requirement)$/;
+export function formattingFor(id: string): { marks: boolean; links: boolean } {
+  const prose = kindOf(id) === "visible" && PROSE.test(id) && isEditableId(id);
+  return { marks: prose, links: prose };
+}
+
 // Generic names for the leaves of the narrative types (lib/narrative/types.ts).
 const FIELD: Record<string, string> = {
   label: "Label",

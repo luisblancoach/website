@@ -14,9 +14,11 @@ import "./globals.css";
 import { Providers } from "@/providers/providers";
 import VercelAnalytics from "@/components/VercelAnalytics";
 import { themeBootScript } from "@/lib/theme";
+import { ASSET_ORIGIN, ROBOTS, SITE_ORIGIN, X_HANDLE } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.raidguild.org"),
+  // Relative share images resolve on the serving host; canonical URLs are absolute (lib/seo.ts).
+  metadataBase: new URL(ASSET_ORIGIN),
   title: {
     default: "RaidGuild — A Builder-Owned Community",
     template: "%s | RaidGuild",
@@ -26,17 +28,20 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: "RaidGuild",
     type: "website",
-    url: "https://www.raidguild.org",
+    url: `${SITE_ORIGIN}/`,
     title: "RaidGuild — A Builder-Owned Community",
     description:
       "Explore the people, ideas, and independent specialist practices growing from the RaidGuild community.",
   },
   twitter: {
     card: "summary_large_image",
+    site: X_HANDLE,
     title: "RaidGuild — A Builder-Owned Community",
     description:
       "Explore the people, ideas, and independent specialist practices growing from the RaidGuild community.",
   },
+  // noindex on every host until go-live (lib/seo.ts).
+  robots: ROBOTS,
 };
 
 export default function RootLayout({

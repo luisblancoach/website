@@ -26,22 +26,30 @@
 .marqueeGroup { display: flex; flex: none; gap: var(--marquee-gap); padding-right: var(--marquee-gap); }
 
 .marqueeButton {
+  /* November 10 (owner, alignment pass): every logo card has one geometry. The
+     custom buttons are 228 × 88 with 16-unit corners, so the card takes their
+     exact ratio and corner at its width (no stretching, and the selection ring
+     follows the art's corner). The ring is always there and only changes
+     colour: selecting, hovering or focusing never moves or resizes a card. */
+  --logo-w: 190px;
+  aspect-ratio: 228 / 88;
   background: none;
   border: 0;
-  border-radius: 12px;
+  border-radius: calc(var(--logo-w) * 16 / 228);
+  box-shadow: 0 0 0 3px transparent;
   cursor: pointer;
   display: block;
   flex: none;
-  height: 73px;
+  height: auto;
   padding: 0;
-  transition: box-shadow .2s, transform .2s;
-  width: 190px;
+  transition: box-shadow .2s;
+  width: var(--logo-w);
   -webkit-tap-highlight-color: transparent;
 }
 .marquee[data-dragging] .marqueeButton { cursor: grabbing; }
-.marqueeButton img { border-radius: 12px; display: block; height: 100%; pointer-events: none; user-select: none; width: 100%; }
+.marqueeButton img { border-radius: inherit; display: block; height: 100%; pointer-events: none; user-select: none; width: 100%; }
 .marqueeButton[data-selected] { box-shadow: 0 0 0 3px var(--coral); }
-@media (hover: hover) { .marqueeButton:hover { transform: translateY(-2px); } }
+@media (hover: hover) { .marqueeButton:not([data-selected]):hover { box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 45%, transparent); } }
 .marqueeButton:focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo, #efe9d7); outline: 3px solid var(--cta-focus-ring, #102d2c); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .marqueeButton { transition: none; } }
 
@@ -104,7 +112,7 @@
   .showcaseStage { margin-top: 36px; }
   .marqueePrimary { margin-top: 0; order: 0; }
   .marqueeSecondary { display: block; margin-inline: calc(-1 * clamp(24px, 6vw, 88px)); margin-top: 32px; order: 2; }
-  .marqueeButton { height: 81px; width: 210px; }
+  .marqueeButton { --logo-w: 210px; }
   .featured { margin-top: 28px; }
   .work { gap: 24px; grid-template-columns: 1fr; }
   .workCopy h3 { font-size: 44px; }

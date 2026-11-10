@@ -9,26 +9,26 @@ import GuildInquiry from "@/components/venture/sections/GuildInquiry";
 import Creed from "@/components/venture/sections/Creed";
 import SectionSlope from "@/components/venture/primitives/SectionSlope";
 import { entryGuild, entryHero } from "@/lib/narrative/entry";
+import { canonicalUrl, graph, jsonLd, organizationNode, webPageNode, websiteNode, X_HANDLE } from "@/lib/seo";
 
-const publicAssetOrigin = process.env.RAILWAY_PUBLIC_DOMAIN
-  ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
-  : "https://www.raidguild.org";
+const TITLE = "RaidGuild — Venture Beyond";
+const DESCRIPTION =
+  "Meet RaidGuild, a builder-owned community of designers, engineers, researchers, strategists, and operators exploring emerging technology together, from applied AI to onchain systems.";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-  title: { absolute: "RaidGuild — Venture Beyond" },
-  description:
-    "Meet RaidGuild, a builder-owned community of designers, engineers, researchers, strategists, and operators exploring emerging technology together, from applied AI to onchain systems.",
+  alternates: { canonical: canonicalUrl("/") },
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   openGraph: {
     type: "website",
-    url: "https://www.raidguild.org",
+    url: canonicalUrl("/"),
     siteName: "RaidGuild",
     title: "RaidGuild — Venture Beyond",
     description:
       "Meet the builder-owned RaidGuild community and explore its people, experiments, and independent practices in applied AI and onchain systems.",
     images: [
       {
-        url: `${publicAssetOrigin}/opengraph-image.png`,
+        url: "/opengraph-image.png",
         width: 1733,
         height: 908,
         alt: "Two RaidGuild travelers overlooking a coral citadel in an alien landscape",
@@ -37,37 +37,26 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: X_HANDLE,
     title: "RaidGuild — Venture Beyond",
     description:
       "Meet the builder-owned RaidGuild community and explore its people, experiments, and independent practices in applied AI and onchain systems.",
-    images: [`${publicAssetOrigin}/opengraph-image.png`],
+    images: ["/opengraph-image.png"],
   },
 };
 
 export const dynamic = "force-dynamic";
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "RaidGuild",
-  url: "https://www.raidguild.org",
-  logo: "https://www.raidguild.org/images/raidguild-logo.svg",
-  description:
-    "A builder-owned community of creative and technical people sharing knowledge, exploring technology, and building together since 2019.",
-  foundingDate: "2019",
-  sameAs: [
-    "https://github.com/raid-guild",
-    "https://x.com/RaidGuild",
-    "https://discord.gg/2vx47gT95y",
-  ],
-};
+// Organization, WebSite and this page (lib/seo.ts); November 10 replaces the
+// Organization-only block, whose Discord invite was not an identity profile.
+const structuredData = graph(organizationNode, websiteNode, webPageNode("/", TITLE, DESCRIPTION));
 
 export default function Home() {
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
       />
       <Hero content={entryHero} />
       <GuildTicker />

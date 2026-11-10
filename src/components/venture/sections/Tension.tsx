@@ -11,7 +11,7 @@ export default function Tension({ content }: { content: TensionContent }) {
     <section className={`${styles.tension} ${arrivalTarget === "tension" ? styles.sectionArriving : ""}`} id="tension" aria-labelledby="tension-heading">
       <header className={styles.narrativeHeading}>
         <p className={styles.sectionLabel}><CopyText copy={content.label} /></p>
-        <h2 id="tension-heading"><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+        <h2 id="tension-heading"><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
       </header>
       <div className={styles.tensionSides}>
         {content.sides.map((side) => (

@@ -9,6 +9,8 @@ import { approved, defineNarrative, type NarrativeLink, type Copy } from "./type
 // browser bundle on its own.
 const existing = (text: string) => approved(text, "existing-site");
 
+export type FooterIcon = "github" | "x" | "discord" | "brand" | "blog";
+
 export type SiteContent = {
   // The audience switch's labels (lib/venture-routes.ts keeps the routes). The
   // Day / Night switch stays in ThemeSwitch.tsx: control labels, not copy.
@@ -17,7 +19,8 @@ export type SiteContent = {
   hero: { index: { label: Copy; number: Copy }; scrollCue: Copy };
   ticker: { label: Copy; words: Copy[] };
   creed: { label: Copy; statement: { lead: Copy; em: Copy } };
-  footer: { motto: { lead: Copy; em: Copy }; socials: (NarrativeLink & { href: string })[]; copyright: Copy };
+  // Each footer link carries the icon it shows (SiteFooter.tsx; November 10).
+  footer: { motto: { lead: Copy; em: Copy }; socials: (NarrativeLink & { href: string; icon: FooterIcon })[]; copyright: Copy };
 };
 
 export const siteContent: SiteContent = defineNarrative("site", {
@@ -36,10 +39,12 @@ export const siteContent: SiteContent = defineNarrative("site", {
   footer: {
     motto: { lead: existing("INDEPENDENT MINDS."), em: existing("WE GO FURTHER TOGETHER.") },
     socials: [
-      { label: existing("GITHUB"), href: "https://github.com/raid-guild" },
-      { label: existing("X / TWITTER"), href: "https://x.com/RaidGuild" },
-      { label: existing("DISCORD"), href: "https://discord.gg/2vx47gT95y" },
-      { label: existing("BRAND ARCHIVE"), href: "https://raidguild-brand-guide-production.up.railway.app/" },
+      { label: existing("GITHUB"), href: "https://github.com/raid-guild", icon: "github" },
+      { label: existing("X / TWITTER"), href: "https://x.com/RaidGuild", icon: "x" },
+      { label: existing("DISCORD"), href: "https://discord.gg/2vx47gT95y", icon: "discord" },
+      { label: existing("BRAND ARCHIVE"), href: "https://raidguild-brand-guide-production.up.railway.app/", icon: "brand" },
+      // November 10 (owner): the Portal's posts.
+      { label: approved("Portal Blog", "owner-approval"), href: "https://portal.raidguild.org/posts", icon: "blog" },
     ],
     copyright: existing("© 2019—2027 RAIDGUILD · EARTH & ELSEWHERE"),
   },

@@ -57,7 +57,7 @@ export default function SiteHeader({ nav = {} }: { nav?: AudienceNav }) {
         <div className={styles.topBar}>
           <Link className={styles.brand} href="/" aria-label="RaidGuild home" onClick={() => setMenuOpen(false)}>
             <Sigil />
-            <span>RAID<br />GUILD</span>
+            <span>RAID{" "}<br />GUILD</span>
           </Link>
           <AudienceSwitch current={audience} onNavigate={() => setMenuOpen(false)} />
           <ThemeSwitch segmented />
@@ -65,7 +65,7 @@ export default function SiteHeader({ nav = {} }: { nav?: AudienceNav }) {
       ) : (
         <a className={styles.brand} href="#top" aria-label="RaidGuild home">
           <Sigil />
-          <span>RAID<br />GUILD</span>
+          <span>RAID{" "}<br />GUILD</span>
         </a>
       )}
 
