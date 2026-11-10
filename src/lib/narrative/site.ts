@@ -27,7 +27,7 @@ export const siteContent: SiteContent = defineNarrative("site", {
   hero: { index: { label: existing("TRANSMISSION"), number: existing("001") }, scrollCue: existing("<<< SCROLL TO DESCEND") },
   ticker: {
     label: existing("Guild ticker"),
-    words: ["ONE GUILD", "SENIOR DEVS", "BUILDER-OWNED", "APPLIED AI", "SCOPED RAIDS", "BUILT BY OWNERS"].map(existing),
+    words: ["ONE GUILD", "SENIOR DEVS", "BUILDER-OWNED", "APPLIED AI", "SCOPED RAIDS", "FROM PROTOTYPE TO PRODUCTION"].map(existing),
   },
   creed: {
     label: existing("[ THE RAIDGUILD CREED ]"),
@@ -41,6 +41,6 @@ export const siteContent: SiteContent = defineNarrative("site", {
       { label: existing("DISCORD"), href: "https://discord.gg/2vx47gT95y" },
       { label: existing("BRAND ARCHIVE"), href: "https://raidguild-brand-guide-production.up.railway.app/" },
     ],
-    copyright: existing("© 2019—2026 RAIDGUILD · EARTH & ELSEWHERE"),
+    copyright: existing("© 2019—2027 RAIDGUILD · EARTH & ELSEWHERE"),
   },
 } satisfies SiteContent);

@@ -280,7 +280,7 @@ describe("editorial drafts (v0.2 operations)", () => {
     assert.ok(markdown.includes(data.exportId.slice(0, 19)));
     assert.ok(markdown.indexOf("## Agency") < markdown.indexOf("## Community"));
     assert.match(markdown, /### Why RaidGuild/);
-    assert.match(markdown, /#### Reason 1 \(“Small, senior, accountable teams”\) · Expanded text/);
+    assert.match(markdown, new RegExp(`#### Reason 1 \\(“${originals.get("clients.reasons.items.0.title")}”\\) · Expanded text`));
     assert.match(markdown, /- Operation: \*\*Shorten\*\* \(SHORTEN\)/);
     assert.match(markdown, /Proposed text \(exact wording\):\n\n> One lead, start to finish\./);
     assert.match(markdown, /Tae's comment:\n\n> Tighter\./);

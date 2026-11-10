@@ -43,7 +43,7 @@ export const communityHero: HeroContent = defineNarrative("community.hero", {
   // October 30: two sentences, "Find your people." / "Build something together.",
   // set on three lines with "together." much larger (the headline colour).
   title: { lead: owner("Find your people."), em: owner("Build something"), finale: owner("together.") },
-  dek: owner("RaidGuild is a **builder owned community** working across onchain systems, applied AI, and open source software. Meet fellow builders, explore their experiments, and find a place to contribute."),
+  dek: owner("RaidGuild is a **builder owned community** working across onchain systems, applied AI, and open source software. Meet fellow builders, explore our experiments, and find your place to contribute."),
   paths: [
     { label: owner("Explore the community"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "→", primary: true },
     { label: owner("See what we’re building"), section: "work", variant: "outline", icon: "↓" },
