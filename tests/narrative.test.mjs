@@ -67,7 +67,7 @@ describe("community narrative", () => {
       assert.equal(communityHero.paths[1].label.text, "See what we’re building");
       assert.equal(communityHero.paths[1].section, "work");
       assert.equal(`${communityJoin.title.lead.text} ${communityJoin.title.em.text}`, "Your first step into the Guild.");
-      assert.equal(communityJoin.body.text, "Create a Portal profile to explore sessions, projects, and posts. Meet the community on Discord, and read the membership guide when you’re ready to learn how joining the DAO works.");
+      assert.equal(communityJoin.body.text, "Create a Portal profile, explore what members are building, and introduce yourself on Discord. Ready to pursue membership? Read the membership guide.", "Tae's batch 03");
       assert.equal(communityJoin.actions[0].label.text, "Create your Portal profile");
   });
 
@@ -264,11 +264,11 @@ describe("Join the DAO iteration (/community)", () => {
     assert.equal(guild.kit.items.length, 4);
   });
 
-  test("Moloch is its own feature: October 30 title without a mark, October 28 body verbatim", () => {
+  test("Moloch is its own feature: October 30 title without a mark, body as Tae revised it (batch 03)", () => {
     const moloch = communityNarrative.communityMoloch;
     assert.equal(`${moloch.title.lead.text} ${moloch.title.em.text}`, "Together we slay Moloch");
     assert.equal(moloch.titleMark, undefined, "the sword mark was removed (November 2)");
-    assert.match(moloch.body.text, /^In RaidGuild lore, Moloch represents coordination failure/);
+    assert.match(moloch.body.text, /^In RaidGuild lore, Moloch represents human coordination failure/);
     assert.equal(moloch.cta.label.text, "Find your path into the Guild");
   });
 
@@ -396,7 +396,7 @@ describe("November 2 galleries and FAQs", () => {
 
   test("the member benefits are the brief's four, flagged, with existing art", () => {
     const { communityBenefits } = communityNarrative;
-    assert.deepEqual(communityBenefits.cards.map((card) => `${card.title.lead.text} ${card.title.em.text}`), ["Cohorts, bounties and raids", "Hackathons and hackerhouses", "RIPs and shared funding", "Guild email and Linktree"]);
+    assert.deepEqual(communityBenefits.cards.map((card) => `${card.title.lead.text} ${card.title.em.text}`), ["Cohorts, bounties and raids", "Hackathons and hackerhouses", "RIPs and shared funding", "Guild email and raidguild domain"]);
     for (const card of communityBenefits.cards) {
       assert.equal(card.body.reason, "claim", card.title.lead.text);
       assert.ok(readFileSync(new URL(`../public${card.image.src}`, import.meta.url)), card.image.src);

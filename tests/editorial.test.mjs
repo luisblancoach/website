@@ -200,8 +200,10 @@ describe("editorial drafts (v0.2 operations)", () => {
     assert.match(structuralReason("clients.meta.description", "REMOVE"), /search or sharing/);
     assert.equal(structuralReason("clients.faq.items.0.answer", "REMOVE"), null, "an answer's text is copy");
     const PRICE = "community.benefits.cards.3.body";
-    const base = originals.get(PRICE);
-    assert.match(base, /\$20/);
+    // Fixture: the card's text before Tae's batch 03 removed its price.
+    const base = "An @raidguild.org address and Linktree access for $20 a month.";
+    assert.doesNotMatch(originals.get(PRICE), /\$\d/, "the site no longer states a price here");
+    assert.match(structuralReason(PRICE, "REPLACE", "item", { base: originals.get(PRICE), proposed: `${originals.get(PRICE)} $20 a month.` }), /price/, "adding a price is a price change");
     assert.match(structuralReason(PRICE, "REPLACE", "item", { base, proposed: base.replace("$20", "$25") }), /price/);
     assert.equal(structuralReason(PRICE, "REPLACE", "item", { base, proposed: `Now: ${base}` }), null, "rewording around an unchanged price is copy");
     assert.match(structuralReason(PRICE, "SHORTEN", "item", { base, proposed: "Guild email." }), /price/, "dropping a price is a price change");
