@@ -24,7 +24,7 @@ export default function Stewardship({ content, titles = "role", illustration }: 
         <div className={styles.rosterHeading}>
           <div>
             <p className={styles.sectionLabel}><CopyText copy={content.label} /></p>
-            <h3><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h3>
+            <h3><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h3>
             <p><CopyText copy={content.intro} /></p>
           </div>
           {illustration && <Image className={styles.rosterArt} src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes="(max-width: 700px) 280px, 360px" aria-hidden="true" />}

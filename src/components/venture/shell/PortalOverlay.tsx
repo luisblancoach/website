@@ -15,9 +15,14 @@ type PortalOverlayProps = {
   onSpears: () => void;
   onProblem: () => void;
   onJoin: () => void;
+  // The hunt's clues (portal, signal, walker) all live on "/" since November 10,
+  // when the owner removed the signal and the walker from the audience routes'
+  // footer; elsewhere the overlay leaves the hunt out instead of pointing to
+  // clues that are not on the page.
+  hunt: boolean;
 };
 
-export default function PortalOverlay({ open, forming, closing, container, onClose, onSpears, onProblem, onJoin }: PortalOverlayProps) {
+export default function PortalOverlay({ open, forming, closing, container, onClose, onSpears, onProblem, onJoin, hunt }: PortalOverlayProps) {
   const [energized, setEnergized] = useState<string | null>(null);
   const firstChoiceRef = useRef<HTMLButtonElement>(null);
 
@@ -49,8 +54,8 @@ export default function PortalOverlay({ open, forming, closing, container, onClo
         onClose();
       }}
     >
-      <Dialog.Title className="sr-only">The RaidGuild Portal and discovery trail</Dialog.Title>
-      <Dialog.Description className="sr-only">Follow the rabbit to begin the three-clue hunt, or choose a destination.</Dialog.Description>
+      <Dialog.Title className="sr-only">{hunt ? "The RaidGuild Portal and discovery trail" : "The RaidGuild Portal"}</Dialog.Title>
+      <Dialog.Description className="sr-only">{hunt ? "Follow the rabbit to begin the three-clue hunt, or choose a destination." : "Choose a destination."}</Dialog.Description>
       <div className={styles.portalAtmosphere} aria-hidden="true" />
       <button
         ref={firstChoiceRef}
@@ -118,14 +123,14 @@ export default function PortalOverlay({ open, forming, closing, container, onClo
         <span>STABILITY 98.7%</span>
       </div>
       {forming && <p className={styles.portalBreach}>[ SPATIAL BREACH DETECTED ]</p>}
-      {!forming && (
+      {!forming && hunt && (
         <div className={styles.portalMessage}>
           <h2>THE HUNT <em>STARTS HERE.</em></h2>
           <p className={styles.portalHuntIntro}>Follow the rabbit for the first clue. Then find the ✧ signal and the ✧ mark further down the page.</p>
         </div>
       )}
-      {!forming && <div className={styles.unchartedPortal}><HuntPixel artifact="portal" /><HuntMarker artifact="portal" label="Follow the rabbit" rabbit /></div>}
-      <p className={styles.portalCoordinates}>39°44′N / 104°59′W<br />DESTINATION: UNMAPPED</p>
+      {!forming && hunt && <div className={styles.unchartedPortal}><HuntPixel artifact="portal" /><HuntMarker artifact="portal" label="Follow the rabbit" rabbit /></div>}
+      <p className={styles.portalCoordinates}>39°44′N / 104°59′W{" "}<br />DESTINATION: UNMAPPED</p>
     </Dialog.Content>
     </Dialog.Portal>
   );

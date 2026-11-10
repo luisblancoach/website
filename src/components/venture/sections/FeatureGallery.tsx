@@ -48,7 +48,7 @@ export default function FeatureGallery({ id, content, tone, anchors = [] }: { id
       {anchors.map((anchor) => <span key={anchor} id={anchor} className={venture.anchorTarget} />)}
       <div className={styles.head}>
         <p className={styles.label}><CopyText copy={content.label} /></p>
-        <h2 id={titleId} className={styles.title}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+        <h2 id={titleId} className={styles.title}><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
         {content.intro && <p className={styles.intro}><CopyText copy={content.intro} /></p>}
       </div>
       <div ref={rowRef} className={styles.viewport} role="region" aria-labelledby={titleId} tabIndex={0}>
@@ -61,7 +61,7 @@ export default function FeatureGallery({ id, content, tone, anchors = [] }: { id
               </div>
               <div className={styles.cardCopy}>
                 <p className={styles.cardLabel}><CopyText copy={card.label} /></p>
-                <h3 id={`${id}-card-${index}`} className={styles.cardTitle}><span><CopyText copy={card.title.lead} /></span><br /><em><CopyText copy={card.title.em} /></em></h3>
+                <h3 id={`${id}-card-${index}`} className={styles.cardTitle}><span><CopyText copy={card.title.lead} /></span>{" "}<br /><em><CopyText copy={card.title.em} /></em></h3>
                 <p className={styles.cardBody}><CopyText copy={card.body} /></p>
                 {card.link && <NarrativeAnchor link={card.link} className={styles.cardLink}><CopyText copy={card.link.label} /> <span aria-hidden="true">{card.link.href ? "↗" : "↓"}</span></NarrativeAnchor>}
               </div>

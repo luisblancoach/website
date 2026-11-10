@@ -31,29 +31,12 @@ export function acceptsMarkdown(accept: string | null): boolean {
   });
 }
 
+// November 10 (SEO / AEO handoff): the "/" and "/join" Markdown variants were
+// removed. "/" described the previous site (a "#hire-us" section, a free
+// four-week cohort) and differed from what people see; "/join" redirects to
+// Portal before this runs. Agents asking for Markdown now get the same HTML as
+// everyone else on those routes. /witch keeps its short description.
 const MARKDOWN_PAGES: Record<string, string> = {
-  "/": `# RaidGuild
-
-RaidGuild is a builder-owned collective shipping smart contracts, dApps, AI systems, DAO tooling, product design, and content strategy since 2019.
-
-## Services
-
-- Full-stack Web3 and smart contract development
-- AI solutions and workflow automation
-- Product and system design
-- Marketing and content strategy
-- DAO consulting and governance
-
-## Work with RaidGuild
-
-Visit [the hire section](https://www.raidguild.org/#hire-us) to start a project, or [join a cohort](https://www.raidguild.org/join) to explore membership.
-`,
-  "/join": `# Join a RaidGuild Cohort
-
-RaidGuild runs a free four-week proving ground for intermediate and experienced developers, designers, and operators to build a real Web3 project with guild members.
-
-Participants may go on to paid raids, recruitment, ventures, or guild membership. Apply through the [public join flow](https://www.raidguild.org/join).
-`,
   "/witch": `# The RaidGuild Witch
 
 The Witch is an interactive public RaidGuild experience. Open the [HTML experience](https://www.raidguild.org/witch) in a browser to use it.

@@ -15,7 +15,7 @@ export default function GuildPeople() {
         <div className={styles.rosterHeading}>
           <div>
             <p className={styles.sectionLabel}>[ CURRENT STEWARDS ]</p>
-            <h3>Keepers of<br /><em>the signal</em></h3>
+            <h3>Keepers of{" "}<br /><em>the signal</em></h3>
             <p>Stewards help care for the Guild’s shared knowledge, infrastructure, coordination, and public voice.</p>
           </div>
           <div className={styles.rosterAside}>
@@ -55,7 +55,7 @@ export default function GuildPeople() {
       <TeamWall members={guildMembers} suspended={portalOpen} />
       <div className={styles.teamCopy}>
         <p className={styles.sectionLabel}>[ THE TEAM ]</p>
-        <h3>A WIDE NETWORK<br /><em>OF BUILDERS</em></h3>
+        <h3>A WIDE NETWORK{" "}<br /><em>OF BUILDERS</em></h3>
         <p>Different skills, backgrounds, and curiosities. Get to know the people who share what they learn and make more possible together.</p>
         <a className={`${styles.pill} ${styles.pillOutline}`} href="https://discord.gg/2vx47gT95y" target="_blank" rel="noopener noreferrer">
           <span>Enter Discord</span>

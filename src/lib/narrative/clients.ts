@@ -167,6 +167,9 @@ export const clientsServices: ServicesContent = defineNarrative("clients.service
 // working. Facts reused from approved copy only: onchain work since 2019 (the
 // Onchain practice), the named clients (the showcase), handoff with
 // documentation (the showcase and the FAQ). No prices, timelines or guarantees.
+// November 10 (owner): final illustrations, one per card in order, from
+// public/images/illustrations/hire/ (01–06; 1448 × 1086 transparent PNGs,
+// shown whole). The practice art in lib/data/venture.ts is unchanged.
 const cardNote = "Card title from the published service name, set on two lines (November 2 gallery). Confirm.";
 const clientNote = "Client-facing service description (November 3 owner brief: speak to prospective clients). New draft; confirm the offering and wording.";
 const serviceCard = (title: string, lead: string, em: string, label: string, body: string, image: GalleryCard["image"], link?: GalleryCard["link"]): GalleryCard => {
@@ -182,26 +185,26 @@ export const clientsServiceGallery: FeatureGalleryContent = defineNarrative("cli
   cards: [
     serviceCard("Full-Stack Development", "Full-stack", "development", "Engineering",
       "Web apps, dApps, APIs and internal tools, built and deployed with code your team can maintain and extend.",
-      { src: "/images/neo/spear-edge-problem-v1.webp", width: 1024, height: 768, fit: "contain" }),
+      { src: "/images/illustrations/hire/01-technicians-repairing-a-steampunk-engine-core.png", width: 1448, height: 1086, fit: "contain" }),
     {
       label: wording("Onchain"),
       title: { lead: wording("Smart contracts,", "Service name from the November 2 brief (“Smart contracts and onchain systems”), on two lines. Confirm."), em: wording("onchain systems", "Service name from the November 2 brief. Confirm.") },
       body: claim("Smart contracts and onchain infrastructure, from contract design to user interface. Our work includes projects for Pocket Network, YieldNest, and Hypercerts.", "draft", `${clientNote} “Since 2019” is the Onchain practice's copy; the three clients are in the showcase.`),
-      image: { src: onchain.art, width: 1024, height: 768, fit: "contain" },
+      image: { src: "/images/illustrations/hire/02-floating-modular-space-city-workshop.png", width: 1448, height: 1086, fit: "contain" },
       link: { label: existing(onchain.cta), href: onchain.href, destination: claim("Railway production URL", "existing-site", "The practice link points to a railway.app deployment. Confirm the public URL.") },
     },
     serviceCard("AI Solutions & Automation", "Applied AI", "and automation", "Applied AI",
       "Reduce repetitive work with AI workflows built into the tools your team already uses. Forward deployed engineers sit inside your stack, with human review where it matters.",
-      { src: appliedAi.art, width: 1024, height: 768, fit: "contain" }, { label: existing(appliedAi.cta), href: appliedAi.href }),
+      { src: "/images/illustrations/hire/03-tech-orchestrator-and-robot-workshop.png", width: 1448, height: 1086, fit: "contain" }, { label: existing(appliedAi.cta), href: appliedAi.href }),
     serviceCard("Product & System Design", "Product and", "system design", "Design",
       "Turn complex ideas into usable products. Research, user flows, interfaces, and design systems, carried through to launch.",
-      { src: "/images/neo/guild-builders-v1.png", width: 768, height: 1024, fit: "contain" }),
+      { src: "/images/illustrations/hire/04-architects-of-the-ring-temple.png", width: 1448, height: 1086, fit: "contain" }),
     serviceCard("Marketing & Content Strategy", "Marketing and", "content strategy", "Growth",
       "Help the right people understand what you’re building. Positioning, launch content, and documentation that make your product’s value clear.",
-      { src: "/images/neo/field-signal-commons.png", width: 1122, height: 1402 }),
+      { src: "/images/illustrations/hire/05-fantasy-portal-merchant-hub.png", width: 1448, height: 1086, fit: "contain" }),
     serviceCard("DAO Consulting & Governance", "DAO consulting", "and governance", "Coordination",
       "Governance frameworks, treasury structures, and token models designed by builders with firsthand experience running a DAO.",
-      { src: "/images/neo/field-autonomous-treasury.png", width: 1003, height: 1568 }),
+      { src: "/images/illustrations/hire/06-celestial-amphitheater-vote.png", width: 1448, height: 1086, fit: "contain" }),
   ],
   cta: { label: design("Discuss your project"), section: "project-inquiry" },
 } satisfies FeatureGalleryContent);

@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import nextConfig from "../next.config.ts";
 import "./editorial-apply.test.mjs";
+import "./editorial-rich.test.mjs";
 import { EDITORIAL_SECTIONS, componentOf, exclusionReason, fieldLabel, isEditableId, kindOf, removalTarget, sectionFor, structuralReason } from "../src/lib/editorial/config.ts";
 import { TREES, hiddenIds, itemContext, originals, sourceOrder } from "../src/lib/editorial/catalog.ts";
 import { collectCopy } from "../src/lib/narrative/types.ts";
@@ -50,11 +51,12 @@ describe("editorial sections", () => {
     }
     // The exclusions are review notes (link destinations), copy these pages do not render, and retired items.
     assert.ok(excluded.every((id) => /\.destination$|^clients\.inquiry\.(summary\.hint|summary\.hintOpen|coordinates\.\d|image\.alt)|^community\.guild\.metrics\.|^clients\.reasons\.items\.5\./.test(id)), excluded.join(", "));
-    // v0.3 released with 295 editable fields; Tae's batch 02 retired Reason 6 (2 fields): 293 active.
-    assert.equal(originals.size, 293);
+    // v0.3 released with 295 editable fields; Tae's batch 02 retired Reason 6 (2 fields): 293 active;
+    // the footer's Portal Blog link (owner, November 10) adds one: 294.
+    assert.equal(originals.size, 294);
     const pages = { "/agency": 0, "/community": 0, shared: 0 };
     for (const id of originals.keys()) pages[sectionFor(id).page]++;
-    assert.deepEqual(pages, { "/agency": 128, "/community": 143, shared: 22 });
+    assert.deepEqual(pages, { "/agency": 128, "/community": 143, shared: 23 });
   });
 
   test("a retired item keeps its ids (tombstone) and leaves the active registry; the others do not shift", () => {
@@ -77,7 +79,7 @@ describe("editorial sections", () => {
     }
     let all = 0;
     for (const section of EDITORIAL_SECTIONS) all += collectCopy(TREES[section.prefix]).filter((copy) => !/\.destination$/.test(copy.id)).length;
-    assert.equal(all - 13, 295, "the 295 v0.3 ids are all still in the source (13 = items these pages do not render)");
+    assert.equal(all - 13, 296, "the 295 v0.3 ids are all still in the source, plus the Portal Blog link (13 = items these pages do not render)");
   });
 
   test("copy that is not shown as text is classified: alt text, screen-reader names, metadata", () => {

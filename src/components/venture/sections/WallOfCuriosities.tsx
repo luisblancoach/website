@@ -22,7 +22,7 @@ export default function WallOfCuriosities({ content }: { content?: ActivityConte
         {content ? <>
           <div className={explorer.headText}>
             <p className={styles.sectionLabel}><CopyText copy={content.label} /></p>
-            <h2><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+            <h2><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
             {content.intro && <p className={styles.collectionIntro}><CopyText copy={content.intro} /></p>}
           </div>
           {/* November 3 (owner): the Portal as a secondary action on the heading's row. */}
@@ -31,7 +31,7 @@ export default function WallOfCuriosities({ content }: { content?: ActivityConte
           </Dialog.Trigger>
         </> : <>
           <p className={styles.sectionLabel}>[ EXPLORE ]</p>
-          <h2>Wall of<br /><em>curiosities</em></h2>
+          <h2>Wall of{" "}<br /><em>curiosities</em></h2>
         </>}
       </header>
       <div id="uncharted" className={styles.collectionAnchor}>

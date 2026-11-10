@@ -7,6 +7,8 @@ This website introduces the Guild and its public work. Portal is the place to ex
 ## Public website
 
 - [RaidGuild homepage](https://www.raidguild.org/)
+- [Hire the DAO](https://www.raidguild.org/agency): senior designers and engineers for onchain products, digital experiences, and AI workflows; services, previous work, process FAQ, and the project inquiry form
+- [Join the DAO](https://www.raidguild.org/community): how the Guild works, ways to contribute, member benefits, and how to start on Portal
 - [The Guild](https://www.raidguild.org/#guild)
 - [Independent practices](https://www.raidguild.org/#spears)
 - [Field notes and public experiments](https://www.raidguild.org/#work)

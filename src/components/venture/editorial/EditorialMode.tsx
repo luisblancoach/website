@@ -13,9 +13,11 @@
 // button and Alt+Shift+E. Leave: Exit, Alt+Shift+E or ?editorial=0.
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { EDITORIAL_DEV, EDITORIAL_PAGES, KIND_LABEL, OPERATION_LABEL, SCOPE_LABEL, componentOf, exclusionReason, fieldLabel, kindOf, removalTarget, sectionFor, sectionTitle, structuralReason, type Operation, type RemoveScope } from "@/lib/editorial/config";
+import { EDITORIAL_DEV, EDITORIAL_PAGES, KIND_LABEL, OPERATION_LABEL, SCOPE_LABEL, componentOf, exclusionReason, fieldLabel, formattingFor, kindOf, removalTarget, sectionFor, sectionTitle, structuralReason, type Operation, type RemoveScope } from "@/lib/editorial/config";
 import { hiddenIds, itemContext, originals, sourceOrder } from "@/lib/editorial/catalog";
 import { EXPORT_FILES, applyEdit, conflictOf, fromExport, normalizeText, rebase, revert, setComment, sortedDrafts, toExport, toMarkdown, warningsOf, type Draft, type Drafts } from "@/lib/editorial/drafts";
+import { hasFormatting, plainText, safeHref } from "@/lib/narrative/inline";
+import { rich } from "../primitives/Review";
 import { editorial, useEditorial } from "./store";
 
 const PAGES = new Set<string>(EDITORIAL_PAGES);
@@ -24,24 +26,71 @@ const SELECTOR = "rg-copy[data-editable]";
 // The commit the site was built from, for the export (next.config.ts).
 const SOURCE_REVISION = process.env.NEXT_PUBLIC_EDITORIAL_SOURCE_REVISION || "unknown";
 
-// The page text of an editable element, back in the narrative format:
-// <strong>/<b> become "**…**" (Cmd/Ctrl+B adds bold), everything else is text.
+// The page text of an editable element, back in the narrative format
+// (lib/narrative/inline.ts): <strong>/<b> → "**…**", <em>/<i> → "_…_",
+// <u> → "++…++", <a href> → "[…](href)" when the address is safe. Only in fields
+// that take formatting (config.ts `formattingFor`); anything else the browser
+// inserts (spans, fonts, styles, other tags) keeps its words and loses its markup.
+// Spaces at the edge of a mark move outside it.
+const MARKS: Record<string, string> = { STRONG: "**", B: "**", EM: "_", I: "_", U: "++" };
 function serialize(element: HTMLElement) {
-  const walk = (node: Node): string => {
+  const policy = formattingFor(element.dataset.copyId ?? "");
+  const wrap = (inner: string, open: string, close: string) => {
+    const core = inner.trim();
+    if (!core) return inner;
+    const lead = inner.slice(0, inner.length - inner.trimStart().length);
+    const trail = inner.slice(inner.trimEnd().length);
+    return `${lead}${open}${core}${close}${trail}`;
+  };
+  const walk = (node: Node, inLink: boolean): string => {
     if (node.nodeType === Node.TEXT_NODE) return node.nodeValue ?? "";
     if (!(node instanceof HTMLElement)) return "";
     if (node.tagName === "BR") return " ";
-    const inner = [...node.childNodes].map(walk).join("");
-    return node.tagName === "STRONG" || node.tagName === "B" ? (inner.trim() ? `**${inner}**` : inner) : inner;
+    const link = node.tagName === "A" && !inLink && policy.links ? safeHref(node.getAttribute("href") ?? "") : null;
+    const inner = [...node.childNodes].map((child) => walk(child, inLink || Boolean(link))).join("");
+    if (link) return wrap(inner, "[", `](${link})`);
+    const marker = policy.marks ? MARKS[node.tagName] : undefined;
+    return marker ? wrap(inner, marker, marker) : inner;
   };
-  return normalizeText([...element.childNodes].map(walk).join("").replace(/\*\*\*\*/g, ""));
+  return normalizeText([...element.childNodes].map((child) => walk(child, false)).join("").replace(/\*\*\*\*|\+\+\+\+/g, ""));
 }
+
+// Character offsets of the selection inside an element, and back: the editor
+// re-renders a text after each commit, so a saved DOM range would not survive.
+function offsetsIn(element: HTMLElement): { start: number; end: number } | null {
+  const selection = window.getSelection();
+  if (!selection || !selection.rangeCount) return null;
+  const range = selection.getRangeAt(0);
+  if (!element.contains(range.startContainer) || !element.contains(range.endContainer)) return null;
+  const before = document.createRange();
+  before.selectNodeContents(element);
+  before.setEnd(range.startContainer, range.startOffset);
+  const start = before.toString().length;
+  return { start, end: start + range.toString().length };
+}
+function selectOffsets(element: HTMLElement, start: number, end: number) {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  let seen = 0, startSet = false;
+  range.selectNodeContents(element);
+  range.collapse(false);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const length = node.nodeValue?.length ?? 0;
+    if (!startSet && start <= seen + length) { range.setStart(node, start - seen); startSet = true; }
+    if (startSet && end <= seen + length) { range.setEnd(node, end - seen); break; }
+    seen += length;
+  }
+  const selection = window.getSelection();
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+}
+const editableById = (id: string) => document.querySelector<HTMLElement>(`rg-copy[data-editable][data-copy-id="${CSS.escape(id)}"]`);
 
 const editableOf = (target: EventTarget | null) => (target instanceof Element ? target.closest<HTMLElement>(SELECTOR) : null);
 // Any item in the Draft view, editable or not (a removed item is chosen, not typed into).
 const selectableOf = (target: EventTarget | null) => (target instanceof Element ? target.closest<HTMLElement>("rg-copy[data-selectable]") : null);
 const inEditorUi = (target: EventTarget | null) => target instanceof Element && target.closest("[data-editorial-ui]") !== null;
-const plain = (text: string) => text.replace(/\*\*/g, "");
+const plain = (text: string) => plainText(text);
 
 function download(name: string, content: string, type: string) {
   const url = URL.createObjectURL(new Blob([content], { type }));
@@ -171,6 +220,158 @@ function ItemActions({ item, draft, notify }: { item: { id: string; label: strin
   );
 }
 
+// Formatting toolbar (November 10, rich text) for the text being edited:
+// Bold, Italic, Underline and Link in fields that take formatting
+// (config.ts `formattingFor`), Undo and Redo everywhere. Pointer presses keep
+// the focus and the selection in the text; from the keyboard, Alt+F10 moves
+// into the toolbar (arrows move between its buttons, Escape goes back to the
+// text) and Cmd/Ctrl+B, I, U and K work in the text itself. Every action first
+// puts the focus and the selection back (by character offsets), so it also
+// works after the text was re-rendered. The browser's own editing commands do
+// the work, so Cmd/Ctrl+Z undoes them like typing.
+type FormatTarget = { id: string; label: string };
+const FORMAT_KEYS = { bold: "Mod+B", italic: "Mod+I", underline: "Mod+U", link: "Mod+K" } as const;
+const isMac = () => typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
+const shortcut = (keys: string) => keys.replace("Mod", isMac() ? "⌘" : "Ctrl");
+
+function FormatBar({ target, linkRequest, notify, onLeave }: { target: FormatTarget; linkRequest: number; notify: (message: string) => void; onLeave: () => void }) {
+  const policy = formattingFor(target.id);
+  const bar = useRef<HTMLDivElement>(null);
+  const saved = useRef<{ start: number; end: number } | null>(null);
+  const [marks, setMarks] = useState({ bold: false, italic: false, underline: false, link: null as string | null });
+  const [rect, setRect] = useState<DOMRect | null>(null);
+  const [linkDraft, setLinkDraft] = useState<string | null>(null);
+  const [narrow, setNarrow] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 700px)");
+    const update = () => {
+      setNarrow(media.matches);
+      const element = editableById(target.id);
+      if (!element) return;
+      setRect(element.getBoundingClientRect());
+      const offsets = offsetsIn(element);
+      if (!offsets) return;
+      saved.current = offsets;
+      const anchor = window.getSelection()?.anchorNode ?? null;
+      const link = (anchor instanceof Element ? anchor : anchor?.parentElement)?.closest("a");
+      setMarks({
+        bold: document.queryCommandState("bold"), italic: document.queryCommandState("italic"), underline: document.queryCommandState("underline"),
+        link: link && element.contains(link) ? link.getAttribute("href") : null,
+      });
+    };
+    update();
+    document.addEventListener("selectionchange", update);
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => { document.removeEventListener("selectionchange", update); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+  }, [target.id]);
+
+  // Cmd/Ctrl+K in the text opens the link field.
+  useEffect(() => {
+    if (!linkRequest || !policy.links) return;
+    setLinkDraft(marks.link ?? "https://");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkRequest]);
+
+  const restore = () => {
+    const element = editableById(target.id);
+    if (!element) { notify("This text is no longer on the page."); return null; }
+    if (document.activeElement !== element) element.focus();
+    if (saved.current) selectOffsets(element, saved.current.start, saved.current.end);
+    return element;
+  };
+  const run = (command: "bold" | "italic" | "underline" | "undo" | "redo") => {
+    if (!restore()) return;
+    document.execCommand("styleWithCSS", false, "false");
+    document.execCommand(command);
+  };
+  const selectLinkAround = (element: HTMLElement) => {
+    const selection = window.getSelection();
+    const anchor = selection?.anchorNode ?? null;
+    const link = (anchor instanceof Element ? anchor : anchor?.parentElement)?.closest("a");
+    if (!selection || !link || !element.contains(link)) return false;
+    const range = document.createRange();
+    range.selectNodeContents(link);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    return true;
+  };
+  const applyLink = () => {
+    const href = safeHref(linkDraft ?? "");
+    if (!href) { notify("Use an address that starts with https://, mailto:, / (a page of this site) or # (a section)."); return; }
+    const element = restore();
+    if (!element) return;
+    const selection = window.getSelection();
+    if (selection?.isCollapsed && !selectLinkAround(element)) {
+      // No words selected: the address itself becomes the linked text.
+      const start = saved.current?.start ?? 0;
+      document.execCommand("insertText", false, href);
+      selectOffsets(element, start, start + href.length);
+    }
+    document.execCommand("createLink", false, href);
+    setLinkDraft(null);
+    notify("Link added. Enter saves the text.");
+  };
+  const removeLink = () => {
+    const element = restore();
+    if (!element) return;
+    if (window.getSelection()?.isCollapsed) selectLinkAround(element);
+    document.execCommand("unlink");
+    setLinkDraft(null);
+    notify("Link removed.");
+  };
+  const backToText = () => { setLinkDraft(null); restore(); };
+  const hold = (event: { preventDefault: () => void }) => event.preventDefault();
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); backToText(); return; }
+    if (event.target instanceof HTMLInputElement) return;
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+    const buttons = [...(bar.current?.querySelectorAll<HTMLButtonElement>(".rgx-format-tools button:not(:disabled)") ?? [])];
+    const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
+    if (index < 0) return;
+    event.preventDefault();
+    buttons[(index + (event.key === "ArrowRight" ? 1 : buttons.length - 1)) % buttons.length].focus();
+  };
+  const onBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    const next = event.relatedTarget;
+    if (next instanceof Node && (bar.current?.contains(next) || editableById(target.id)?.contains(next))) return;
+    if (linkDraft === null) onLeave();
+  };
+
+  const style = narrow || !rect ? undefined : { left: Math.max(8, Math.min(rect.left, window.innerWidth - 470)), top: rect.top > 60 ? rect.top - 52 : rect.bottom + 8 };
+  const tool = (name: "bold" | "italic" | "underline", text: ReactNode, label: string) => (
+    <button type="button" aria-pressed={marks[name]} aria-keyshortcuts={FORMAT_KEYS[name].replace("Mod", isMac() ? "Meta" : "Control")} title={`${label} (${shortcut(FORMAT_KEYS[name])})`} aria-label={label} disabled={!policy.marks} onPointerDown={hold} onMouseDown={hold} onClick={() => run(name)}>{text}</button>
+  );
+  return (
+    <div ref={bar} className="rgx-format" data-editorial-ui="" data-narrow={narrow ? "" : undefined} role="toolbar" aria-label={`Formatting: ${target.label}`} style={style} onKeyDown={onKeyDown} onBlur={onBlur}>
+      <span className="rgx-format-label" title={target.label}>{target.label}</span>
+      <span className="rgx-format-tools">
+        {tool("bold", <b>B</b>, "Bold")}
+        {tool("italic", <i>I</i>, "Italic")}
+        {tool("underline", <u>U</u>, "Underline")}
+        <button type="button" aria-pressed={marks.link !== null} aria-expanded={linkDraft !== null} aria-keyshortcuts={isMac() ? "Meta+K" : "Control+K"} title={`Link (${shortcut(FORMAT_KEYS.link)})`} aria-label="Link" disabled={!policy.links} onPointerDown={hold} onMouseDown={hold} onClick={() => setLinkDraft(marks.link ?? "https://")}>Link</button>
+        <span className="rgx-format-sep" aria-hidden="true" />
+        <button type="button" title={`Undo (${shortcut("Mod+Z")})`} aria-label="Undo" onPointerDown={hold} onMouseDown={hold} onClick={() => run("undo")}>↶</button>
+        <button type="button" title={`Redo (${shortcut(isMac() ? "Mod+Shift+Z" : "Mod+Y")})`} aria-label="Redo" onPointerDown={hold} onMouseDown={hold} onClick={() => run("redo")}>↷</button>
+      </span>
+      {!policy.marks && <span className="rgx-format-note">Plain text in this field</span>}
+      {linkDraft !== null && (
+        <form className="rgx-format-link" onSubmit={(event) => { event.preventDefault(); applyLink(); }}>
+          <label>
+            <span>Link address</span>
+            <input type="text" inputMode="url" autoComplete="off" spellCheck={false} value={linkDraft} autoFocus onChange={(event) => setLinkDraft(event.target.value)} aria-describedby="rgx-link-help" />
+          </label>
+          <button type="submit">{marks.link ? "Update" : "Add link"}</button>
+          {marks.link && <button type="button" onClick={removeLink}>Remove link</button>}
+          <button type="button" onClick={backToText}>Cancel</button>
+          <small id="rgx-link-help">https://, mailto:, a page of this site (/agency) or a section (#faq). Other sites open in a new tab.</small>
+        </form>
+      )}
+    </div>
+  );
+}
+
 // The editor's chrome renders in the browser only: nothing of it is in the
 // server HTML, so it can never cause a hydration mismatch.
 const noSubscription = () => () => {};
@@ -182,6 +383,9 @@ export default function EditorialMode() {
   const onEditorialPage = PAGES.has(pathname);
   const [panelOpen, setPanelOpen] = useState(false);
   const [focused, setFocused] = useState<{ label: string; rect: DOMRect } | null>(null);
+  // The text the formatting toolbar acts on: kept while the focus is in the toolbar.
+  const [formatTarget, setFormatTarget] = useState<FormatTarget | null>(null);
+  const [linkRequest, setLinkRequest] = useState(0);
   // The item the operations apply to: the last text clicked or edited.
   const [selected, setSelected] = useState<{ id: string; label: string } | null>(null);
   const [notice, setNotice] = useState("");
@@ -248,6 +452,22 @@ export default function EditorialMode() {
       const element = editableOf(event.target);
       if (!element) return;
       event.stopPropagation();
+      // Formatting shortcuts (November 10): only the approved marks, only where the field takes them.
+      const key = event.key.toLowerCase();
+      if ((event.metaKey || event.ctrlKey) && !event.altKey && ["b", "i", "u", "k"].includes(key)) {
+        event.preventDefault();
+        const policy = formattingFor(element.dataset.copyId ?? "");
+        if (key === "k") { if (policy.links) setLinkRequest((n) => n + 1); else notify("Links cannot be added to this field."); return; }
+        if (!policy.marks) { notify("This field takes plain text only."); return; }
+        document.execCommand("styleWithCSS", false, "false");
+        document.execCommand(key === "b" ? "bold" : key === "i" ? "italic" : "underline");
+        return;
+      }
+      if (event.altKey && event.key === "F10") {
+        event.preventDefault();
+        document.querySelector<HTMLButtonElement>(".rgx-format .rgx-format-tools button:not(:disabled)")?.focus();
+        return;
+      }
       if (event.key === "Enter") { event.preventDefault(); element.blur(); }
       if (event.key === "Escape") {
         event.preventDefault();
@@ -263,7 +483,12 @@ export default function EditorialMode() {
       if (event.key === " ") event.preventDefault();
     };
     const onBeforeInput = (event: InputEvent) => {
-      if (editableOf(event.target) && (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak")) event.preventDefault();
+      const element = editableOf(event.target);
+      if (!element) return;
+      if (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak") event.preventDefault();
+      // The browser's own formatting (context menu, touch bar): bold, italic and
+      // underline where the field takes them; nothing else (strikethrough, colours, fonts).
+      if (event.inputType.startsWith("format") && (!formattingFor(element.dataset.copyId ?? "").marks || !["formatBold", "formatItalic", "formatUnderline"].includes(event.inputType))) event.preventDefault();
     };
     const onInput = (event: Event) => {
       const element = editableOf(event.target);
@@ -280,6 +505,7 @@ export default function EditorialMode() {
       if (!element) return;
       starts.set(element, serialize(element));
       setSelected({ id: element.dataset.copyId!, label: element.dataset.copyLabel ?? "" });
+      setFormatTarget((previous) => previous?.id === element.dataset.copyId ? previous : { id: element.dataset.copyId!, label: element.dataset.copyLabel ?? "" });
       element.spellcheck = true;
       track(element);
     };
@@ -289,6 +515,8 @@ export default function EditorialMode() {
       element.spellcheck = false;
       window.cancelAnimationFrame(tracking);
       setFocused(null);
+      // Into the toolbar: it keeps acting on this text.
+      if (!(event.relatedTarget instanceof Element && event.relatedTarget.closest(".rgx-format"))) setFormatTarget(null);
       editorial.commit(element.dataset.copyId!);
     };
     const listeners: [string, EventListener][] = [
@@ -337,11 +565,7 @@ export default function EditorialMode() {
   return (
     <>
       <style>{EDITOR_CSS}</style>
-      {active && focused && (
-        <div className="rgx-chip" data-editorial-ui="" aria-hidden="true" style={{ left: Math.max(8, Math.min(focused.rect.left, window.innerWidth - 320)), top: focused.rect.top > 44 ? focused.rect.top - 34 : focused.rect.bottom + 8 }}>
-          <b>{focused.label}</b> <span>Enter saves · Esc undoes</span>
-        </div>
-      )}
+      {active && state.view === "draft" && formatTarget && <FormatBar key={formatTarget.id} target={formatTarget} linkRequest={linkRequest} notify={notify} onLeave={() => setFormatTarget(null)} />}
       <div className="rgx-bar" data-editorial-ui="" role="region" aria-label="Editorial Mode">
         {!state.active ? (
           <button type="button" className="rgx-enter" onClick={() => editorial.setActive(true)} title="Editorial Mode (Alt+Shift+E)">✎ Edit copy</button>
@@ -526,6 +750,10 @@ function ChangeRow({ draft, onShow }: { draft: Draft; onShow: () => void }) {
         <dd className="rgx-proposed">
           {rewritten ? diff.added : draft.op === "REMOVE" ? <em>Remove {SCOPE_LABEL[draft.scope ?? "item"]} from the page</em> : <em>Keep as is (reviewed)</em>}
         </dd>
+        {/* Formatting (November 10): the proposal as it will read, and its exact source text. */}
+        {rewritten && hasFormatting(draft.text) && <><dt>Formatted</dt><dd className="rgx-formatted" onClickCapture={(event) => event.preventDefault()} title={draft.text}>{rich(draft.text)}</dd></>}
+        {rewritten && (hasFormatting(draft.text) || hasFormatting(draft.base)) && <><dt>Markup</dt><dd><code className="rgx-markup">{draft.text}</code></dd></>}
+        {rewritten && plain(draft.base) === plain(draft.text) && <><dt>Change</dt><dd>Formatting only</dd></>}
       </dl>
       {rewritten && (
         <div className="rgx-segment rgx-kind" role="group" aria-label="Kind of change">
@@ -613,7 +841,7 @@ html[data-editorial] rg-copy[data-flash] { animation: rgx-flash 1.6s ease-out; }
 @keyframes rgx-flash { 0%, 30% { background: color-mix(in srgb, #ee3c78 40%, transparent); } }
 @media (prefers-reduced-motion: reduce) { html[data-editorial] rg-copy { transition: none; } html[data-editorial] rg-copy[data-flash] { animation: none; outline: 3px solid #ee3c78; } }
 
-.rgx-bar, .rgx-panel, .rgx-chip { color: #f4f4f5; font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: normal; text-transform: none; }
+.rgx-bar, .rgx-panel, .rgx-chip, .rgx-format { color: #f4f4f5; font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: normal; text-transform: none; }
 .rgx-bar button, .rgx-panel button { background: #262a33; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; color: inherit; cursor: pointer; font: inherit; padding: 6px 12px; }
 .rgx-bar button:hover, .rgx-panel button:hover:not(:disabled) { background: #323743; }
 .rgx-bar button:focus-visible, .rgx-panel button:focus-visible, .rgx-panel textarea:focus-visible { outline: 2px solid #ee3c78; outline-offset: 2px; }
@@ -655,6 +883,30 @@ html[data-editorial] rg-copy[data-flash] { animation: rgx-flash 1.6s ease-out; }
   pointer-events: none; position: fixed; text-overflow: ellipsis; white-space: nowrap; z-index: 2147483000;
 }
 .rgx-chip span { color: #b9bcc6; }
+.rgx-format {
+  align-items: center; background: #15171c; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  display: flex; flex-wrap: wrap; gap: 6px; max-width: min(460px, calc(100vw - 16px)); padding: 6px 8px; position: fixed; z-index: 2147483000;
+}
+.rgx-format-label { color: #b9bcc6; font-size: 12px; max-width: 150px; overflow: hidden; padding: 0 2px; text-overflow: ellipsis; white-space: nowrap; }
+.rgx-format-tools { align-items: center; display: inline-flex; gap: 4px; }
+.rgx-format button { background: #262a33; border: 1px solid rgba(255,255,255,.14); border-radius: 8px; color: inherit; cursor: pointer; font: inherit; min-height: 32px; min-width: 32px; padding: 4px 8px; }
+.rgx-format button:hover:not(:disabled) { background: #323743; }
+.rgx-format button[aria-pressed="true"] { background: #ee3c78; border-color: #ee3c78; color: #fff; }
+.rgx-format button:disabled { cursor: default; opacity: .35; }
+.rgx-format button:focus-visible, .rgx-format input:focus-visible { outline: 2px solid #ee3c78; outline-offset: 2px; }
+.rgx-formatted a { color: #ff8fb5; }
+.rgx-markup { background: #262a33; border-radius: 6px; color: #d6d8de; display: block; font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; padding: 4px 6px; }
+.rgx-format-sep { background: rgba(255,255,255,.14); height: 20px; margin: 0 2px; width: 1px; }
+.rgx-format-note { color: #8d919c; font-size: 11px; }
+.rgx-format-link { align-items: center; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-basis: 100%; flex-wrap: wrap; gap: 6px; padding-top: 6px; }
+.rgx-format-link label { display: grid; flex: 1 1 220px; gap: 2px; }
+.rgx-format-link label span { color: #8d919c; font-size: 11px; }
+.rgx-format-link input { background: #262a33; border: 1px solid rgba(255,255,255,.14); border-radius: 8px; color: inherit; font: inherit; min-height: 32px; padding: 4px 8px; }
+.rgx-format-link small { color: #8d919c; flex-basis: 100%; font-size: 11px; }
+/* Phones: pinned to the top, clear of the on-screen keyboard. */
+.rgx-format[data-narrow] { left: 8px; max-width: none; right: 8px; top: 8px; }
+.rgx-format[data-narrow] .rgx-format-label { max-width: 40vw; }
+.rgx-format[data-narrow] button { min-height: 40px; min-width: 40px; }
 .rgx-panel {
   background: #15171c; border-left: 1px solid rgba(255,255,255,.12); bottom: 0; box-shadow: -10px 0 30px rgba(0,0,0,.35); display: flex; flex-direction: column;
   overflow: auto; position: fixed; right: 0; top: 0; width: min(440px, 100vw); z-index: 2147483001;

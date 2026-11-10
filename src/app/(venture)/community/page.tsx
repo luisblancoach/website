@@ -18,6 +18,7 @@ import {
 import { buildersCommunity } from "@/lib/narrative/shared";
 import { crewHorizontal, foundryPortrait, molochArtwork, queenRaidaArtwork } from "@/lib/data/illustrations";
 import { forAudience } from "@/lib/narrative/public";
+import { canonicalUrl, graph, jsonLd, organizationNode, webPageNode, websiteNode, X_HANDLE } from "@/lib/seo";
 
 // Join the DAO architecture (October 29, final pass; November 2, owner order):
 // hero → ideas into working systems (capability gallery, builder side) →
@@ -36,13 +37,17 @@ const SHARE_TITLE = communityMeta.shareTitle.text;
 const DESCRIPTION = communityMeta.description.text;
 const SHARE_IMAGE = { url: "/images/venture/og/join-dao-2026.png", width: 1731, height: 909, type: "image/png", alt: communityMeta.shareImageAlt.text };
 export const metadata: Metadata = {
-  alternates: { canonical: "/community" },
+  alternates: { canonical: canonicalUrl("/community") },
   title: communityMeta.title.text,
   description: DESCRIPTION,
-  openGraph: { siteName: "RaidGuild", type: "website", url: "/community", title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE] },
-  twitter: { card: "summary_large_image", title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE.url] },
-  robots: { index: false, follow: true },
+  openGraph: { siteName: "RaidGuild", type: "website", url: canonicalUrl("/community"), title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE] },
+  twitter: { card: "summary_large_image", site: X_HANDLE, title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE.url] },
+  // Indexing follows the root layout (lib/seo.ts): noindex until go-live.
 };
+
+// Organization, WebSite and this page (lib/seo.ts; November 10). The page name is
+// the title as it appears in search ("Join the DAO | RaidGuild").
+const structuredData = graph(organizationNode, websiteNode, webPageNode("/community", `${communityMeta.title.text} | RaidGuild`, DESCRIPTION));
 
 // November 3: /community has its own capability gallery (the same six
 // capabilities, framed for builders, with community links and no inquiry) and
@@ -55,6 +60,7 @@ export const metadata: Metadata = {
 export default function CommunityPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       <Hero content={forAudience(communityHero)} grouped curtain still />
       <GuildTicker />
       <GuildPrologue content={forAudience(communityGuild)} metrics={false} kitExpander />

@@ -11,7 +11,7 @@ export default function ActiveSpears() {
     <section className={`${styles.practice} ${arrivalTarget === "spears" ? styles.sectionArriving : ""}`} id="spears">
       <div className={styles.practiceHeading}>
         <p className={styles.sectionLabel}>[ ACTIVE SPEARS ]</p>
-        <h2>Specialized at<br /><em>the applied edge</em></h2>
+        <h2>Specialized at{" "}<br /><em>the applied edge</em></h2>
         <div className={styles.practiceAside}>
           <p>The Guild is the center of gravity. These independently led practices are its tips of the spear, turning shared experience into focused offerings with their own teams and direction.</p>
           <a className={`${styles.pill} ${styles.pillOutlineNavy}`} href={sectionHref("project-inquiry")} onClick={followInquiryLink}>

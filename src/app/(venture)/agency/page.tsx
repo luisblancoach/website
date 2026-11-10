@@ -13,6 +13,7 @@ import { clientsCreed, clientsFaq, clientsHero, clientsInquiry, clientsMeta, cli
 import { buildersClients, peopleClients } from "@/lib/narrative/shared";
 import { crewHorizontal, foundryPortrait } from "@/lib/data/illustrations";
 import { forAudience } from "@/lib/narrative/public";
+import { canonicalUrl, graph, jsonLd, organizationNode, serviceNodes, webPageNode, websiteNode, X_HANDLE } from "@/lib/seo";
 
 // The October 23 Hire composition (40f3910), reordered November 2: hero →
 // services gallery (replaces the services accordion) → previous works →
@@ -32,17 +33,22 @@ const SHARE_TITLE = clientsMeta.shareTitle.text;
 const SEO_DESCRIPTION = clientsMeta.description.text;
 const SHARE_IMAGE = { url: "/images/venture/og/hire-dao-2026.png", width: 1731, height: 909, type: "image/png", alt: clientsMeta.shareImageAlt.text };
 export const metadata: Metadata = {
-  alternates: { canonical: "/agency" },
+  alternates: { canonical: canonicalUrl("/agency") },
   title: { absolute: SEO_TITLE },
   description: SEO_DESCRIPTION,
-  openGraph: { siteName: "RaidGuild", type: "website", url: "/agency", title: SHARE_TITLE, description: SEO_DESCRIPTION, images: [SHARE_IMAGE] },
-  twitter: { card: "summary_large_image", title: SHARE_TITLE, description: SEO_DESCRIPTION, images: [SHARE_IMAGE.url] },
-  robots: { index: false, follow: true },
+  openGraph: { siteName: "RaidGuild", type: "website", url: canonicalUrl("/agency"), title: SHARE_TITLE, description: SEO_DESCRIPTION, images: [SHARE_IMAGE] },
+  twitter: { card: "summary_large_image", site: X_HANDLE, title: SHARE_TITLE, description: SEO_DESCRIPTION, images: [SHARE_IMAGE.url] },
+  // Indexing follows the root layout (lib/seo.ts): noindex until go-live.
 };
+
+// Organization, WebSite, this page and the six services exactly as the services
+// gallery shows them (lib/seo.ts; November 10).
+const structuredData = graph(organizationNode, websiteNode, webPageNode("/agency", SEO_TITLE, SEO_DESCRIPTION), ...serviceNodes("/agency", forAudience(clientsServiceGallery).cards));
 
 export default function ClientsPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       <Hero content={forAudience(clientsHero)} grouped curtain still />
       <GuildTicker />
       <FeatureGallery id="spears" anchors={["services", "capabilities"]} content={forAudience(clientsServiceGallery)} tone="services" />

@@ -55,7 +55,7 @@ export default function GuildPrologue({ content, metrics = true, kitExpander = f
       </div>
       <div className={styles.prologueCopy}>
         <p className={styles.sectionLabel}><CopyText copy={content.label} /></p>
-        <h2><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+        <h2><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
         <div className={styles.prologueBody}>
           <p>
             <CopyText copy={content.body} />

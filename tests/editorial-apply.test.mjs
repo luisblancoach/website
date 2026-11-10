@@ -190,4 +190,24 @@ describe("apply-editorial CLI", { timeout: 120000 }, () => {
     assert.equal(dirty.code, 2);
     assert.match(dirty.out, /uncommitted changes/);
   });
+
+  // Rich text (November 10): formatted proposals apply like any text; formatting a
+  // field does not take, or an unsafe link, is refused before anything is written.
+  test("formatted copy is applied as written; disallowed formatting and unsafe links are refused", async () => {
+    const ANSWER = "clients.faq.items.0.answer";
+    const TEXT = "We scope each project around **your goals**, _technical requirements_ and ++budget++. Read [the handbook](https://handbook.raidguild.org/docs/).";
+    const root = copyRoot("rich");
+    const data = await changeSet((drafts) => applyEdit(drafts, ANSWER, TEXT, originals.get(ANSWER), NOW));
+    const { code, out } = run(write("rich.json", data), ["--apply", "--confirm", data.exportId.slice(7, 23)], root);
+    assert.equal(code, 0, out);
+    assert.ok(readFileSync(join(root, "src/lib/narrative/clients.ts"), "utf8").includes(JSON.stringify(TEXT)), "the formatted text is the new literal");
+    const title = await changeSet((drafts) => applyEdit(drafts, "clients.reasons.items.0.title", "Small teams. **Clear** accountability", originals.get("clients.reasons.items.0.title"), NOW));
+    const plainOnly = run(write("rich-title.json", title));
+    assert.equal(plainOnly.code, 2);
+    assert.match(plainOnly.out, /BLOCKED: formatting: This field takes plain text only/);
+    const unsafe = await changeSet((drafts) => applyEdit(drafts, ANSWER, "See [this](javascript:alert(1)).", originals.get(ANSWER), NOW));
+    const refused = run(write("rich-unsafe.json", unsafe));
+    assert.equal(refused.code, 2);
+    assert.match(refused.out, /BLOCKED: formatting: The link address “javascript:alert\(1”/);
+  });
 });

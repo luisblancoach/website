@@ -96,7 +96,7 @@ export default function PreviousWorks({ content, rotate = false }: { content: Pr
       onFocus={rotate ? (event) => { if ((event.target as HTMLElement).matches(":focus-visible")) setFocused(true); } : undefined}
       onBlur={rotate ? (event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false); } : undefined}
     >
-      <h2 id="previous-title" className={styles.showcaseTitle}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+      <h2 id="previous-title" className={styles.showcaseTitle}><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
       <div
         className={styles.showcaseStage}
         onPointerEnter={rotate ? (event) => { if (event.pointerType === "mouse") setHovering(true); } : undefined}

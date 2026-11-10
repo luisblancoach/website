@@ -222,9 +222,9 @@ export default function Hero({ content, grouped = false, curtain = false, still 
           {content.eyebrow && <p className={styles.eyebrow}><span /><CopyText copy={content.eyebrow} before=" " /></p>}
           <div ref={titleRef} className={[styles.heroTitle, content.title.long ? styles.heroTitleLong : "", content.title.plain ? styles.heroTitlePlain : "", content.title.finale ? styles.heroTitleStacked : ""].filter(Boolean).join(" ")}>
             {content.title.finale ? (
-              <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} />{" "}<br className={styles.heroTitleBreak} /><CopyText copy={content.title.finale} /></em></h1>
+              <h1><span><CopyText copy={content.title.lead} /></span>{" "}<br /><em><CopyText copy={content.title.em} />{" "}<br className={styles.heroTitleBreak} /><CopyText copy={content.title.finale} /></em></h1>
             ) : (
-              <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} /></em></h1>
+              <h1><span><CopyText copy={content.title.lead} /></span>{" "}<br /><em><CopyText copy={content.title.em} /></em></h1>
             )}
           </div>
           {grouped && supplement}
