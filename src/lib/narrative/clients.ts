@@ -93,6 +93,20 @@ export const clientsCapabilities: CapabilitiesContent = defineNarrative("clients
 // and Pocket Network on October 27, the others on October 28). It replaces the
 // October 23 archive summaries and their titles; no project carries a title
 // line, and nothing is added to Tae's wording.
+// Tae's editorial batch 02 (2026-11-10): each project's link names the site it opens
+// (lib/data/caseStudies.ts hrefs, each project's own site), so every label is its own
+// copy item and literal. Her capitalization is kept ("DAOHaus").
+const visitLabels: Record<string, string> = {
+  daohaus: "Visit DAOHaus",
+  daedalus: "Visit Daedalus",
+  brightid: "Visit BrightID",
+  livepeer: "Visit Livepeer",
+  hypercerts: "Visit Hypercerts",
+  pocket: "Visit Pocket Network",
+  problem: "Visit Problem.tv",
+  gitcoin: "Visit Gitcoin",
+  yieldnest: "Visit YieldNest",
+};
 const work = (id: string, details: Pick<ShowcaseWork, "title" | "description"> = {}): ShowcaseWork => {
   const project = caseStudyProjects.find((item) => item.id === id);
   if (!project) throw new Error(`Not a showcase project: ${id}`);
@@ -102,7 +116,7 @@ const work = (id: string, details: Pick<ShowcaseWork, "title" | "description"> =
     button: project.button,
     snapshot: { src: project.snapshot, alt: wording(`${project.name} website homepage`, "Describes the supplied website screenshot.") },
     ...details,
-    link: { label: design("Read more"), href: project.href },
+    link: { label: approved(visitLabels[id] ?? `Visit ${project.name}`, "owner-approval"), href: project.href },
   };
 };
 const showcaseDetails: Record<string, Pick<ShowcaseWork, "title" | "description">> = {

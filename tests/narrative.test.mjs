@@ -213,7 +213,8 @@ describe("clients narrative", () => {
       assert.ok(existsSync(new URL(`../public${work.button}`, import.meta.url)), work.button);
       assert.ok(existsSync(new URL(`../public${work.snapshot.src}`, import.meta.url)), work.snapshot.src);
       assert.match(work.link.href, /^https:\/\//, work.id);
-      assert.doesNotMatch(work.link.href, /portal\.raidguild\.org|raidguild\.org/, "Read more opens the project's own site");
+      assert.doesNotMatch(work.link.href, /portal\.raidguild\.org|raidguild\.org/, "the link opens the project's own site");
+      assert.match(work.link.label.text, /^Visit \S/, `${work.id}: Tae's batch 02 names the site the link opens`);
       assert.equal(work.pending, undefined, work.id);
     }
     const href = Object.fromEntries(works.map((w) => [w.id, w.link.href]));
