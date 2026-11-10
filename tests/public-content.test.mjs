@@ -31,9 +31,12 @@ describe("public narrative content", () => {
     assert.deepEqual(tree.works.map((w) => w.id), ["shown"]);
   });
 
-  test("review builds keep the full tree", () => {
+  test("review builds keep the full tree, except retired items (tombstones stay on the server)", () => {
     const review = forAudience(clientsNarrative, true);
-    assert.equal(review, clientsNarrative);
+    const { clientsReasons, ...rest } = clientsNarrative;
+    assert.deepEqual({ ...review, clientsReasons: undefined }, { ...rest, clientsReasons: undefined });
+    assert.deepEqual(review.clientsReasons.items, clientsReasons.items.filter((item) => !item.retired));
+    assert.equal(review.clientsReasons.items[0].body.note, clientsReasons.items[0].body.note, "review notes are kept");
   });
 
   test("client components never import narrative content modules", () => {

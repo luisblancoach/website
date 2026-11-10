@@ -10,6 +10,7 @@ import { EDITORIAL_SECTIONS, componentOf, exclusionReason, fieldLabel, isEditabl
 import { TREES, hiddenIds, itemContext, originals, sourceOrder } from "../src/lib/editorial/catalog.ts";
 import { collectCopy } from "../src/lib/narrative/types.ts";
 import { clientsNarrative } from "../src/lib/narrative/clients.ts";
+import { forAudience } from "../src/lib/narrative/public.ts";
 import {
   applyEdit, conflictOf, fingerprint, fromExport, normalizeText, parseStored, rebase, removedBy, revert, serializeStored, setComment, setOperation, toExport, toMarkdown, warningsOf,
 } from "../src/lib/editorial/drafts.ts";
@@ -67,6 +68,13 @@ describe("editorial sections", () => {
       assert.match(exclusionReason(id), /^Retired/);
     }
     assert.ok(isEditableId("clients.reasons.items.6.title"));
+    // Never sent to the browser, in public or review builds; the other items keep their ids.
+    for (const reviewing of [false, true]) {
+      const sent = forAudience(clientsReasons, reviewing);
+      assert.equal(sent.items.length, 6);
+      assert.ok(!JSON.stringify(sent).includes("Progress you can see every week"));
+      assert.equal(sent.items[5].title.id, "clients.reasons.items.6.title");
+    }
     let all = 0;
     for (const section of EDITORIAL_SECTIONS) all += collectCopy(TREES[section.prefix]).filter((copy) => !/\.destination$/.test(copy.id)).length;
     assert.equal(all - 13, 295, "the 295 v0.3 ids are all still in the source (13 = items these pages do not render)");
