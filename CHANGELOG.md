@@ -6,6 +6,15 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
+## 2026-11-10 · Tae's editorial batch 02 (34 decisions), live as Worker version `c309397c`
+
+- Tae holds editorial authority (owner decision); her batch 02 (`raidguild-tae-editorial-agency.md`, change set
+  `9e1c68fabd01…`) was implemented as submitted, as a manually authorized Markdown integration (no matching JSON):
+  `08ee651` 23 text decisions (the two stale ones resolved for her latest proposals), `8e82e54` nine "Visit"
+  project links, `6e7ae87` Reason 6 retired (tombstone, ids stable), `78b0240` retired items never leave the server.
+  Editorial Mode: 293 active fields. Live: 34/34 decisions, batch 02 QA 53/53, Editorial Mode suites 36/36 and
+  36/36, route checks 19/19, 0 errors. Claims flagged for owner verification in `docs/venture-integration.md`.
+
 ## 2026-11-09 · Tae's review applied `055cbb0` and Editorial Mode v0.3 `5f93262`, live as Worker version `8d6c86ce`
 
 - `055cbb0` "content(agency): apply Tae's approved editorial review (change set 1f3373b71bc5)": the hero

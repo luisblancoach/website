@@ -1,6 +1,6 @@
 # STATUS
 
-Current state verified on **2026-11-09 (-0300)** from the repository, the remotes, GitHub and the live hosts. Everything
+Current state verified on **2026-11-10 (-0300)** from the repository, the remotes, GitHub and the live hosts. Everything
 below "Session log" is history; the sections in this first part are the source of truth.
 
 ## Snapshot
@@ -17,7 +17,11 @@ below "Session log" is history; the sections in this first part are the source o
 - **Not done:**
   - `/agency` exists only locally (worktree and the clean build on :3022). Railway and Vercel still serve `/clients`.
   - The independent deployment on `raidguild.estudioblanco.org`: Cloudflare Workers chosen by the owner (2026-11-07).
-    **Live on workers.dev only: Tae's first review applied and Editorial Mode v0.3 (full coverage)** (2026-11-09,
+    **Live on workers.dev: Tae's editorial batch 02** (2026-11-10, Tae holds editorial authority): commits `08ee651`,
+    `8e82e54`, `6e7ae87`, `78b0240`, Worker version `c309397c-da11-4551-9e87-2be9a540b175` (rollback target `8d6c86ce`).
+    34/34 decisions live; Reason 6 retired; 293 active editorial fields. Claims flagged for owner verification:
+    `docs/venture-integration.md`, 2026-11-10. Before that:
+    **Tae's first review applied and Editorial Mode v0.3 (full coverage)** (2026-11-09,
     owner-approved): commits `055cbb0` (content) and `5f93262` (v0.3), Worker version
     `8d6c86ce-e4bb-4ba3-8185-26434d87cde4` (https://raidguild-estudioblanco.luisblancoach.workers.dev; editor at
     `/agency?editorial=1`, `/community?editorial=1`, opt-in, public, browser-local, not private). Live: Phase 4
@@ -41,7 +45,7 @@ below "Session log" is history; the sections in this first part are the source o
 | Item | Value (verified 2026-11-07; HEAD updated 2026-11-08) |
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
-| Branch / HEAD | `feat/venture-beyond-integration` @ the 2026-11-09 docs commit on top of `5f93262` (Editorial Mode v0.3), `055cbb0` (Tae's review applied), `ff5bc92` (v0.2 docs), `bb37620`, `5e04f1a` (v0.2), then `64d16d6` (opt-in Editorial Mode, 2026-11-08) on top of `0ad287e` (static-first kit), `8456bdb` (Louchi photo), `a1114f0` (Night) and `c58e5a8`, the docs commit "docs: record Editorial Mode v0.1 and the Cloudflare test deployment" on top of `d1b6fa4` (Editorial Mode v0.1), `8469c95` (Cloudflare kit), `134f24b` and `1b86fd6` (2026-11-07); no upstream configured |
+| Branch / HEAD | `feat/venture-beyond-integration` @ the 2026-11-10 docs commit on top of `78b0240`, `6e7ae87`, `8e82e54`, `08ee651` (Tae's batch 02), `1031982` (2026-11-09 docs), then `5f93262` (Editorial Mode v0.3), `055cbb0` (Tae's review applied), `ff5bc92` (v0.2 docs), `bb37620`, `5e04f1a` (v0.2), then `64d16d6` (opt-in Editorial Mode, 2026-11-08) on top of `0ad287e` (static-first kit), `8456bdb` (Louchi photo), `a1114f0` (Night) and `c58e5a8`, the docs commit "docs: record Editorial Mode v0.1 and the Cloudflare test deployment" on top of `d1b6fa4` (Editorial Mode v0.1), `8469c95` (Cloudflare kit), `134f24b` and `1b86fd6` (2026-11-07); no upstream configured |
 | Tags | `checkpoint/agency-baseline` (annotated) → `1b86fd6`, local only; `release/editorial-v0.1` (annotated, tag object `45c9377`) → `d1b6fa4`, **pushed to `fork`** 2026-11-07 |
 | `fork` branch | `fork/feat/venture-beyond-integration` = `c58e5a8` (pushed 2026-11-07, fast-forward from `7417113`) |
 | `fork` (luisblancoach/website) | `fork/feat/venture-beyond-integration` = `7417113` (pushed 2026-11-04) |
@@ -234,6 +238,17 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 ---
 
 # Session log (newest first; history, not current state)
+
+## November 10: Tae's editorial batch 02 live; Tae holds editorial authority
+
+- Owner decision: Tae has full editorial authority; her decisions are implemented as submitted (record in
+  `docs/venture-integration.md`, 2026-11-10). Batch 02 (34 decisions) implemented from the Markdown (no matching
+  JSON; no change set rebuilt), verified 34/34 in the source and live; Reason 6 retired as a tombstone; deployed as
+  `c309397c`. Checks and what was skipped: `docs/venture-integration.md`, 2026-11-10, "Release".
+- Not compared against the October 23 reference. `raidguild.estudioblanco.org` still 302s to Railway (cutover
+  proposal of 2026-11-09 not approved yet).
+- Next: owner verification of the flagged claims (payment/entity FAQ, pricing FAQ, forward-deployed engineers,
+  Problem description, copyright 2027); the estudioblanco.org cutover decision.
 
 ## November 9: Tae's review applied; Editorial Mode v0.3 (full coverage) live on workers.dev
 

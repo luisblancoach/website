@@ -993,3 +993,63 @@ time: its texts are edited after selecting the project's logo, as visitors see t
      `?editorial=1`, `/clients…` → 308 with path and query kept. The main `estudioblanco.org` site is a different
      route and Worker and is not touched.
 - Rollback: re-enable the redirect rule (instant), then `deploy/cloudflare/route.sh remove` (removes only this route).
+
+## 2026-11-10 — Editorial governance: Tae holds editorial authority (owner decision)
+
+- **Tae has full editorial authority over RaidGuild's website content.** Her decisions are approved by the project
+  owner and implemented as submitted: wording, positioning, additions, removals and editorial restructuring need
+  no further per-item approval. Claude's role is the implementation: accuracy, design system, technical
+  integrity, accessibility and functionality. Material factual or legal claims are flagged for verification by
+  the appropriate owner in the release report, never rewritten.
+
+## 2026-11-10 — Tae's editorial batch 02 (34 decisions), manually authorized Markdown integration
+
+- **Source:** `raidguild-tae-editorial-agency.md` (sha256 `491d5c281afac8145779de961fc651954970dba995f2400d7a651e33a37debe1`,
+  change set `sha256:9e1c68fabd01…`, made on `5f93262188e0`, last edited 2026-11-10 15:03 UTC; copy in
+  `~/Projects/raidguild-backups/2026-11-10/editorial/`). Despite the name it covers Agency, Community and both pages.
+- **No matching JSON** was available (the only JSON in Downloads was the 2026-11-09 test export). No change set was
+  rebuilt or signed. The Markdown was parsed into a review manifest (`review-manifest.json`); every base text matched
+  its fingerprint prefix (34/34), all 34 ids were editable, 32 bases equalled the source. The text changes were
+  applied to the exact literals given by `apply-editorial.mjs --map`, rehearsed first on a scratch copy and
+  verified with `--dump-copy`: exactly the intended copy items changed, as written (34/34 reflected).
+- **Implemented as submitted** (commits `08ee651`, `8e82e54`, `6e7ae87`, `78b0240`):
+  - 23 rewrites: navigation "Our Work"; hero introduction; services introduction and the six cards; Why RaidGuild
+    introduction and titles 1, 4 and 7; the Problem description; Builders and People introductions; FAQ answers 1,
+    2, 5 and 6; Community hero introduction; ticker word 6; copyright "© 2019—2027 RAIDGUILD · EARTH & ELSEWHERE".
+  - **Conflicts resolved for Tae's latest proposals:** `clients.hero.dek` (batch 01 text → "**Senior designers and
+    engineers, for your next onchain product, digital experience, or AI workflow**") and
+    `clients.serviceGallery.cards.4.body` (batch 01 "…documentation that explains…" → "Help the right people
+    understand what you’re building. Positioning, launch content, and documentation that make your product’s value
+    clear."). Her drafts had kept the pre-batch-01 base text; her new proposals supersede both.
+  - **Nine "Visit" labels** ("Visit DAOHaus" … "Visit YieldNest", her capitalization kept): one shared "Read more"
+    literal became one literal per project; ids and destinations unchanged; the screen-reader suffix is now
+    "(opens the <name> website)".
+  - **Reason 6 retired** ("DELETE" / "DELETE." on title and text = remove the item; the words are never published).
+    The item stays in the source as a tombstone (`retired`), so its ids and Reason 7's do not shift. `forAudience`
+    drops retired items before anything leaves the server (public and review builds); `ClientReasons` renders the
+    active ones: six rows. Editorial Mode removes the two ids from the active registry with a "Retired" reason; an
+    older draft or export naming them shows that reason (editor and CLI).
+- **Editorial field count:** 293 active editable fields (Agency 128, Community 143, Both pages 22; was 295). All 295
+  v0.3 ids remain in the source; the two retired ids are tombstones.
+- **Claims flagged for verification by the appropriate owner** (published as Tae wrote them; not independently
+  verified): FAQ "How do payment and contracts work?" (escrowed stablecoin payments, ACH/Wire, "our Marshall Islands
+  DAO": a legal entity and payment rails); FAQ "What does it cost?" (no fixed-price commitment any more); Applied AI
+  card ("Forward deployed engineers sit inside your stack"); the Problem description (Problem Media's own
+  positioning and "trusted and dependable operating partner"); copyright "2019—2027" (a year not yet begun at
+  publication). Also noted, unchanged by the batch: the process FAQ still promises "weekly demos" though Reason 6 is
+  retired; "handover" (new copy) and "handoff" (older copy) now both appear; the Builders and People introductions
+  open alike.
+- **Release (2026-11-10):** build `BASELINE=78b0240 deploy/cloudflare/build.sh 78b0240` (build id
+  `4boi1n3FPO1pibUz5K7QY`), deployed 16:12 UTC to the existing Worker as version
+  **`c309397c-da11-4551-9e87-2be9a540b175`** (workers.dev only; rollback target `8d6c86ce`, v0.3). Serving confirmed
+  from the responses (snapshot time and build id) at 16:12:16 UTC.
+- **Verification.** Before deploy (public build and local workerd opt-in build): tests 125/125, tsc, lint 0 errors;
+  batch 02 QA 53/53 on both (34/34 decisions in the HTML and client data, no "DELETE", six-row accordion by mouse
+  and keyboard, the nine links with their labels, destinations and accessible names, no horizontal overflow and a
+  one-line menu, Day/Night at 1440/1024/390/320 px, no page errors); Editorial Mode v0.3 suite 36/36 (293 active
+  fields: /agency 135/135 and /community 158/158 in place, Hidden text, export, CLI, batch-01 import with the retired
+  item explained); v0.2 suite 36/36; route checks 19/19; visitors on the opt-in build vs the public build 0 px in
+  5 of 8 cases (all Agency views and Community light 1440), the run stopped by request before the last three
+  Community cases. Live: route checks 19/19, batch 02 QA 53/53, v0.3 suite 36/36, v0.2 suite 36/36, one load round
+  (384 requests, 0 errors), tail 640 events all `ok` on `c309397c` (pages CPU max 7 ms, client data 18 ms, images 27 ms).
+  Not run live: the full-page visitor pixel comparison and the 3-round load test (shortened by request).
