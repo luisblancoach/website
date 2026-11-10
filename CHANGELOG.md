@@ -6,6 +6,20 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
+## 2026-11-10 · Editorial cycle 02 closed: Tae's batch 03 live as Worker version `5dcaac41` (`release/editorial-cycle-02`)
+
+- Tae's batch 03 (`raidguild-tae-editorial(2).md`, change set `09f31b111631…`, made on `78b024005ad6`; Markdown only,
+  manual integration) reconciled by copy id: all 49 decisions resolved: 32 already satisfied by batch 02, 2 already
+  retired (Reason 6 stays retired), 15 Community decisions applied in `5800aef` (About RaidGuild, capabilities,
+  Moloch, Hats Tree, member benefits including the Guild email/domain card, Join, two FAQ answers). Five shared
+  literals split so fields Tae did not edit keep their text (Agency practice copy included). `c749476` lets a long
+  benefit-card title wrap instead of overflowing at 320–1024 px.
+- Agency and Community updated live; Editorial Mode v0.3 operational (293 active fields). Tests 125/125, tsc clean;
+  targeted responsive QA at 1440 and 390 px passed locally and live. Pixel comparisons and load tests intentionally
+  skipped for this express release. Rollback target `c309397c`. Tae's editorial authority (including removal and
+  restructuring), the batch history and the next-cycle backlog: `docs/venture-integration.md`, 2026-11-10.
+  Annotated tag `release/editorial-cycle-02`, pushed to `fork` only.
+
 ## 2026-11-10 · Tae's editorial batch 02 (34 decisions), live as Worker version `c309397c`
 
 - Tae holds editorial authority (owner decision); her batch 02 (`raidguild-tae-editorial-agency.md`, change set
