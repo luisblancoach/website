@@ -32,7 +32,8 @@ const TAE_BRIEF = new Set([
   "DAOhaus provides tools for launching DAOs, voting on proposals, and managing shared treasuries. RaidGuild modernized its admin app, simplified its codebase and dependencies, and delivered maintenance documentation, operational runbooks, and AI-assisted development workflows with human review.",
   "BrightID helps applications verify that users are unique people while protecting their privacy. RaidGuild built Aura’s MetaNode graph explorer, including tools for labeling identities and assessing reputation, giving community verifiers more context for identifying trustworthy participants.",
   "Daedalus builds custom software and practical AI systems for businesses. RaidGuild delivered a client quote generator and integrated Coinbase embedded wallets, supporting both its business operations and wallet-enabled product development.",
-  "RaidGuild contributed development and UX work to Problem Media’s Good Game platform, helping bring the application toward delivery.",
+  // Tae's editorial batch 02 (2026-11-10) replaced the Problem description.
+  "Problem Media is an ownership platform that partners with exceptional founders, businesses, and assets to create long-term value. RaidGuild works as a trusted and dependable operating partner - having contributed development and UX work for Problem.",
   "Funding public goods through open-source tools and community coordination. RaidGuild contributed Passport–Snapshot validation work, Moloch-themed creative projects, and development support via our Skunk Squad.",
 ]);
 
@@ -406,7 +407,8 @@ describe("November 2 galleries and FAQs", () => {
     const { communityFaq } = communityNarrative;
     assert.equal(clientsFaq.items.length, 6);
     for (const item of clientsFaq.items) assert.equal(item.answer.reason, "claim", item.question.text);
-    assert.ok(clientsFaq.items.some((item) => /\[\$X–\$Y\]/.test(item.answer.text)), "cost stays a placeholder");
+    // Tae's editorial batch 02 (2026-11-10) answered cost without a figure: no placeholder, and no price stated.
+    assert.doesNotMatch(clientsFaq.items[0].answer.text, /\$\s?\d|\[\$/, "the cost answer states no unconfirmed figure");
     assert.doesNotMatch(collectCopy(clientsFaq).map((item) => item.text).join(" "), /\braids?\b/i, "buyer FAQ speaks of projects, not raids");
     for (const item of communityFaq.items) assert.notEqual(item.answer.source, "draft", item.question.text);
   });
