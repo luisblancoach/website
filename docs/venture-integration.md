@@ -1053,3 +1053,88 @@ time: its texts are edited after selecting the project's logo, as visitors see t
   Community cases. Live: route checks 19/19, batch 02 QA 53/53, v0.3 suite 36/36, v0.2 suite 36/36, one load round
   (384 requests, 0 errors), tail 640 events all `ok` on `c309397c` (pages CPU max 7 ms, client data 18 ms, images 27 ms).
   Not run live: the full-page visitor pixel comparison and the 3-round load test (shortened by request).
+
+## 2026-11-10 — Tae's editorial batch 03 and close of editorial cycle 02
+
+- **Governance (owner decision, restated at the close of the cycle).** Tae has editorial authority over the
+  website copy, **including removing content and restructuring it** (retiring an item, splitting or merging fields,
+  reordering). Her submitted decisions are approved and implemented as submitted. Claude implements them and keeps
+  accuracy, the design system, accessibility and technical integrity. Material factual or legal claims are flagged
+  for the appropriate owner, never rewritten. Prices, entitlements, billing, provisioning and business logic are not
+  editorial: copy may describe them, but an editorial release never changes them.
+- **Source:** `raidguild-tae-editorial(2).md` (sha256 `ed6fade88519f78a17ca750d2188ec6d7ef533c8b5877bcece6bffc84168787d`),
+  change set `sha256:09f31b111631…`, made on `78b024005ad6`, last edited 2026-11-10 17:24 UTC; 49 REPLACE decisions,
+  34 flagged stale (made against text batch 02 had since changed), 1 flagged structural (a price removed). No
+  matching JSON: manual, auditable Markdown integration; no JSON was rebuilt and no integrity verification is claimed.
+  Archived unmodified as `~/Projects/raidguild-backups/2026-11-10/editorial-b03/tae-b03.md`; index of all three
+  batches with checksums: `~/Projects/raidguild-backups/2026-11-10/EDITORIAL-ARCHIVE.md`.
+- **Reconciliation by copy id against `d974541`** (`manifest-b03.json`): **32 already satisfied** (all Agency and
+  shared decisions, the Community hero, ticker word 6, copyright: published by batch 02); **2 already retired**
+  (`clients.reasons.items.5.title` / `.body`, "DELETE": Reason 6 stays a tombstone; "DELETE" is never published);
+  **15 applied** (Community, commit `5800aef`): About RaidGuild text; capabilities label "[ ways to contribute ]" and
+  cards 1–3; Moloch text; Hats Tree introduction and Stewards text; member benefits card 3 text, card 4 title line
+  "and raidguild domain" and text (the "$20 a month" price removed from the copy, owner-approved; no price, billing
+  or domain provisioning changed); Join label "[ start with a hello ]" and text; FAQ answers "Who runs the Guild?" and
+  "Do members get a Guild email?". Verified with `--dump-copy`: exactly these 15 ids changed, all read as decided,
+  476 copy ids before and after.
+- **Shared fields separated.** Five source literals fed a field Tae edited and one she did not; each was split so
+  only her field changed (the other keeps its published text, ids unchanged):
+  - `community.capabilities.cards.1.body` / `.2.body` from the practice copy in `lib/data/venture.ts`, which Agency's
+    `clients.capabilities.practices.*.body` keep;
+  - `community.capabilities.cards.0.body` from `community.path.steps.1.body`;
+  - `community.join.body` from `community.faq.items.0.answer` ("Where do I start?");
+  - `community.faq.items.3.answer` from `community.guild.body` (both edited, to different texts);
+  - `community.faq.items.4.answer` from `community.guild.kit.items.0.detail`.
+- **Presentation corrections** (reported, wording untouched): "leader.Members" → "leader. Members" (FAQ);
+  "[ ways to contribute]" → "[ ways to contribute ]"; the closing period restored on the Hats Tree introduction after
+  its last sentence was cut. Kept as written: the spaced hyphens " - " (Moloch, Stewards) and "Raidguild.org".
+- **Layout fix `c749476`.** "AND RAIDGUILD DOMAIN" overflowed its card at 320, 390 and 1024 px under the title's
+  `nowrap`; the accent line of a benefit card title may now wrap (`benefits.module.css`). Titles that fit are unchanged.
+- **Fixtures** (in `5800aef`): the narrative tests read the new Join, Moloch and benefit texts; the CLI shared-literal
+  test uses `community.guild.kit.requirement` / `community.faq.items.1.answer`; the price-rule tests use a fixture
+  (no price remains in the copy) and also check that adding a price is structural.
+- **Editorial Mode v0.3 coverage (unchanged by batch 03):** 293 active editable fields (Agency 128, Community 143,
+  Both pages 22; 21 of them in Hidden text); the two Reason 6 ids are tombstones; 476 copy ids in the source.
+- **Release.** Build `BASELINE=c749476 deploy/cloudflare/build.sh c749476` (build id `u8lggr7pLO8-t7dGjQXGL`),
+  deployed to the existing Worker as version **`5dcaac41-1c25-4b5f-a1e4-30a65326a1f3`** (workers.dev only); serving
+  confirmed by the build id in the live HTML at 17:45 UTC. **Rollback target: `c309397c`** (batch 02). Railway, DNS,
+  raidguild.org, billing and upstream untouched.
+- **Verification.** Tests 125/125, tsc clean, lint 0 errors (1 old warning). Local workerd and live: both pages 200;
+  all 15 new texts in the visitor HTML and the replaced texts absent; at 1440 and 390 px no horizontal overflow, no
+  empty elements, every link labelled with a destination, no page errors; `?editorial=1` opens Editorial Mode (166
+  editable elements on /community) and visitors get no editor; Reason 6 absent, no "DELETE". The clipped-text probe
+  flagged only visually hidden screen-reader text (Hats, Join), the same on the previous live version. Benefit cards
+  measured at 320/390/1024/1440 px. **Intentionally skipped (express release):** pixel comparisons, load tests, the
+  full Editorial Mode suites, Night theme checks. Not compared against the October 23 reference.
+- **Checkpoint:** annotated tag `release/editorial-cycle-02` on the docs commit that records this, on top of
+  `c749476`; pushed to `fork` only.
+
+### Editorial history (cycle 02)
+
+| Batch | Change set | Made on | Decisions | Commits | Worker version |
+|---|---|---|---|---|---|
+| 01 | `1f3373b71bc5…` (JSON reconstructed byte for byte) | `bb37620` | 3 (2 rewrites, 1 KEEP) | `055cbb0` | `8d6c86ce` (with v0.3 `5f93262`) |
+| 02 | `9e1c68fabd01…` (Markdown only) | `5f93262188e0` | 34 (23 text, 9 link labels, Reason 6 retired) | `08ee651`, `8e82e54`, `6e7ae87`, `78b0240` | `c309397c` |
+| 03 | `09f31b111631…` (Markdown only) | `78b024005ad6` | 49 (32 satisfied, 2 retired, 15 applied) | `5800aef`, `c749476` | **`5dcaac41`** (current) |
+
+### Next cycle backlog (not started)
+
+1. **Draft rebasing.** Tae's drafts keep the base text she started from, so batch 03 carried 34 stale decisions
+   already published. Editorial Mode should rebase drafts on newly published copy (drop drafts the site now
+   matches, show real conflicts only).
+2. **Export compatibility.** Batches 02 and 03 came as Markdown only and print a truncated change-set id. Make the
+   JSON export reliably travel with the Markdown (or embed the full id and per-decision fingerprints in the Markdown)
+   so the CLI can verify integrity again.
+3. **Shared-field independence.** Several literals still feed more than one field (practice link labels across both
+   pages, the kit requirement and FAQ answer 2, Queen Raida's application panel and FAQ answer 3, capabilities card 5
+   and the stewardship introduction). Decide which should stay linked and give the others their own literals.
+4. **Remaining copy inconsistencies** for Tae's review: the process FAQ still promises "weekly demos" with Reason 6
+   retired; "handover" and "handoff" both appear; the Builders and People introductions open alike; "guild" vs
+   "Guild" capitalization (FAQ "Where do I start?" and Path step 2 keep lower case); the Guild kit list says
+   "Guild email" while the benefits card now says "Guild email and raidguild domain"; the practice copy now differs
+   between Agency and Community. Plus the claims flagged on 2026-11-10 (payment and entity FAQ, pricing FAQ,
+   forward-deployed engineers, Problem description, copyright 2027).
+5. **Full responsive and accessibility regression** (Day/Night, 320–1440 px, keyboard, screen-reader names, pixel
+   comparison against the public build and the October 23 reference) before the next major structural release.
+6. **`raidguild.estudioblanco.org` routing**: the cutover proposed on 2026-11-09 (route + redirect-rule change)
+   still awaits the owner's decision.

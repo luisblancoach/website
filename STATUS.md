@@ -1,6 +1,6 @@
 # STATUS
 
-Current state verified on **2026-11-10 (-0300)** from the repository, the remotes, GitHub and the live hosts. Everything
+Current state verified on **2026-11-10 (-0300), evening (editorial cycle 02 close)** from the repository, the remotes, GitHub and the live hosts. Everything
 below "Session log" is history; the sections in this first part are the source of truth.
 
 ## Snapshot
@@ -17,7 +17,12 @@ below "Session log" is history; the sections in this first part are the source o
 - **Not done:**
   - `/agency` exists only locally (worktree and the clean build on :3022). Railway and Vercel still serve `/clients`.
   - The independent deployment on `raidguild.estudioblanco.org`: Cloudflare Workers chosen by the owner (2026-11-07).
-    **Live on workers.dev: Tae's editorial batch 02** (2026-11-10, Tae holds editorial authority): commits `08ee651`,
+    **Live on workers.dev: editorial cycle 02 closed** (2026-11-10): Tae's batch 03 in `5800aef` (15 Community
+    decisions applied; all 49 resolved) and `c749476` (benefit title wrap), Worker version
+    **`5dcaac41-1c25-4b5f-a1e4-30a65326a1f3`** (rollback target `c309397c`), checkpoint tag
+    `release/editorial-cycle-02` (fork only). Editorial Mode v0.3: 293 active fields. Record and next-cycle backlog:
+    `docs/venture-integration.md`, 2026-11-10, "batch 03 and close of editorial cycle 02". Before that,
+    **Tae's editorial batch 02** (2026-11-10, Tae holds editorial authority): commits `08ee651`,
     `8e82e54`, `6e7ae87`, `78b0240`, Worker version `c309397c-da11-4551-9e87-2be9a540b175` (rollback target `8d6c86ce`).
     34/34 decisions live; Reason 6 retired; 293 active editorial fields. Claims flagged for owner verification:
     `docs/venture-integration.md`, 2026-11-10. Before that:
@@ -45,9 +50,9 @@ below "Session log" is history; the sections in this first part are the source o
 | Item | Value (verified 2026-11-07; HEAD updated 2026-11-08) |
 |---|---|
 | Directory | `/Users/louchi/Projects/raidguild-integration` (Git worktree of `~/Projects/raidguild-venture-beyond`) |
-| Branch / HEAD | `feat/venture-beyond-integration` @ the 2026-11-10 docs commit on top of `78b0240`, `6e7ae87`, `8e82e54`, `08ee651` (Tae's batch 02), `1031982` (2026-11-09 docs), then `5f93262` (Editorial Mode v0.3), `055cbb0` (Tae's review applied), `ff5bc92` (v0.2 docs), `bb37620`, `5e04f1a` (v0.2), then `64d16d6` (opt-in Editorial Mode, 2026-11-08) on top of `0ad287e` (static-first kit), `8456bdb` (Louchi photo), `a1114f0` (Night) and `c58e5a8`, the docs commit "docs: record Editorial Mode v0.1 and the Cloudflare test deployment" on top of `d1b6fa4` (Editorial Mode v0.1), `8469c95` (Cloudflare kit), `134f24b` and `1b86fd6` (2026-11-07); no upstream configured |
-| Tags | `checkpoint/agency-baseline` (annotated) → `1b86fd6`, local only; `release/editorial-v0.1` (annotated, tag object `45c9377`) → `d1b6fa4`, **pushed to `fork`** 2026-11-07 |
-| `fork` branch | `fork/feat/venture-beyond-integration` = `c58e5a8` (pushed 2026-11-07, fast-forward from `7417113`) |
+| Branch / HEAD | `feat/venture-beyond-integration` @ the cycle 02 close docs commit (tag `release/editorial-cycle-02`) on top of `c749476` (benefit title wrap), `5800aef` (Tae's batch 03), `d974541` (batch 02 docs), `78b0240`, `6e7ae87`, `8e82e54`, `08ee651` (Tae's batch 02), `1031982` (2026-11-09 docs), then `5f93262` (Editorial Mode v0.3), `055cbb0` (Tae's review applied), `ff5bc92` (v0.2 docs), `bb37620`, `5e04f1a` (v0.2), then `64d16d6` (opt-in Editorial Mode, 2026-11-08) on top of `0ad287e` (static-first kit), `8456bdb` (Louchi photo), `a1114f0` (Night) and `c58e5a8`, the docs commit "docs: record Editorial Mode v0.1 and the Cloudflare test deployment" on top of `d1b6fa4` (Editorial Mode v0.1), `8469c95` (Cloudflare kit), `134f24b` and `1b86fd6` (2026-11-07); no upstream configured |
+| Tags | `release/editorial-cycle-02` (annotated) → the cycle 02 close docs commit, **pushed to `fork`** 2026-11-10; `release/editorial-v0.2` → `bb37620` (fork); `checkpoint/agency-baseline` (annotated) → `1b86fd6`, local only; `release/editorial-v0.1` (annotated, tag object `45c9377`) → `d1b6fa4`, **pushed to `fork`** 2026-11-07 |
+| `fork` branch | `fork/feat/venture-beyond-integration` = HEAD (the cycle 02 close docs commit), pushed 2026-11-10; earlier `c58e5a8` (2026-11-07) |
 | `fork` (luisblancoach/website) | `fork/feat/venture-beyond-integration` = `7417113` (pushed 2026-11-04) |
 | `origin` (raid-guild/website) | `main` = `b02d67b` (unchanged). Integration lands on **`review/venture-beyond-redesign`** = `7d0e878` (PR #106, squash of `7417113`, parent `a6418ea`). `feat/venture-beyond-redesign` = `7d25ae2` (PR #100, open, older parallel work) |
 | Other worktrees (clean) | `raidguild-venture-beyond` (`feat/tae-content-update`, `a195359`), `raidguild-tae-narrative` (`feat/tae-narrative-redesign`, `3385f41`), `raidguild-tae-review` (`feat/tae-review-content`, `a6418ea`) |
@@ -196,6 +201,12 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 
 ## Next priorities
 
+**Next editorial cycle (backlog, not started; details in `docs/venture-integration.md`, 2026-11-10, "Next cycle
+backlog"):** rebase Tae's drafts on newly published copy; editorial export compatibility (JSON travelling with
+the Markdown, full change-set id); shared-field independence; review of the remaining copy inconsistencies and
+flagged claims; a full responsive and accessibility regression before the next major structural release; the
+owner's decision on `raidguild.estudioblanco.org` routing (still 302 to Railway).
+
 0. (2026-11-07, owner order) Establish the `/agency` baseline before Editorial Mode:
    1. done: the baseline commit `1b86fd6` and the tag `checkpoint/agency-baseline`;
    2. done: Cloudflare Workers chosen;
@@ -238,6 +249,20 @@ The scratch Playwright scripts live in the session scratchpad and are not versio
 ---
 
 # Session log (newest first; history, not current state)
+
+## November 10, evening: Tae's batch 03 live; editorial cycle 02 closed
+
+- Batch 03 (49 decisions) reconciled by copy id against `d974541`: 32 satisfied, 2 retired (Reason 6), 15 Community
+  decisions applied (`5800aef`); five shared literals split; three presentation corrections (missing space twice,
+  one closing period). `c749476`: benefit card title wraps instead of overflowing at 320–1024 px. Both pushed to
+  `fork`; built with `deploy/cloudflare/build.sh c749476`, deployed as `5dcaac41` (rollback `c309397c`).
+- Checks: tests 125/125, tsc, lint 0 errors; focused QA local and live (render, 15 texts, 1440/390 px overflow,
+  links, `?editorial=1`, Reason 6 absent). Skipped by request: pixel comparisons, load tests, full Editorial Mode
+  suites, Night checks. Not compared against the October 23 reference.
+- Close: STATUS, CHANGELOG and `docs/venture-integration.md` updated; archive index
+  `~/Projects/raidguild-backups/2026-11-10/EDITORIAL-ARCHIVE.md`; tag `release/editorial-cycle-02` on the docs commit,
+  pushed to `fork` only. Owner's uncommitted files untouched (`package.json`, 21 legacy image deletions,
+  `LastDuel-Ex2Retalic.otf`, `clients.pdf`).
 
 ## November 10: Tae's editorial batch 02 live; Tae holds editorial authority
 
