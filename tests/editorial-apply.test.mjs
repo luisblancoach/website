@@ -117,13 +117,13 @@ describe("apply-editorial CLI", { timeout: 120000 }, () => {
   });
 
   test("a literal shared by several items is applied only when all of them get the same text", async () => {
-    // The Join section's text is also the first community FAQ answer: one literal, two items.
-    const SHARED = ["community.join.body", "community.faq.items.0.answer"];
+    // The Guild kit requirement is also the second community FAQ answer: one literal, two items.
+    const SHARED = ["community.guild.kit.requirement", "community.faq.items.1.answer"];
     const TEXT = "Create a Portal profile to meet the Guild.";
     const one = await changeSet((drafts) => applyEdit(drafts, SHARED[0], TEXT, originals.get(SHARED[0]), NOW));
     const single = run(write("shared-one.json", one));
     assert.equal(single.code, 2);
-    assert.match(single.out, /its source text is shared with community\.faq\.items\.0\.answer/);
+    assert.match(single.out, /its source text is shared with community\.faq\.items\.1\.answer/);
     const all = await changeSet((drafts) => SHARED.reduce((next, id) => applyEdit(next, id, TEXT, originals.get(id), NOW), drafts));
     const together = run(write("shared-all.json", all));
     assert.equal(together.code, 0, together.out);
@@ -142,7 +142,8 @@ describe("apply-editorial CLI", { timeout: 120000 }, () => {
 
   test("a rewrite that changes a stated price is structural and never applied", async () => {
     const PRICE = "community.benefits.cards.3.body";
-    const data = await changeSet((drafts) => applyEdit(drafts, PRICE, originals.get(PRICE).replace("$20", "$25"), originals.get(PRICE), NOW));
+    // The card no longer states a price (Tae's batch 03), so adding one is the price change.
+    const data = await changeSet((drafts) => applyEdit(drafts, PRICE, originals.get(PRICE).replace(/\.$/, " for $25 a month."), originals.get(PRICE), NOW));
     assert.match(data.changes[0].structural.reason, /price/);
     const { code, out } = run(write("price.json", data));
     assert.equal(code, 2);

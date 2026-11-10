@@ -148,7 +148,7 @@ export const communityGuild: GuildContent = defineNarrative("community.guild", {
     ),
   },
   body: claim(
-    "**RaidGuild** runs as a DAO with no single leader. **Members** sponsor and vote on proposals, from welcoming new members to funding guild projects.",
+    "**RaidGuild** runs as a DAO with no single leader. **Members** sponsor and vote on proposals, from welcoming new members to funding Guild projects.",
     "handbook",
     "Paraphrases what-is-raidguild (“operates without a single leader”) and DAO operations (member sponsorship and votes). Confirm.",
     `${HB}dao-operations/`,
@@ -218,9 +218,9 @@ export const communityActivity: ActivityContent = defineNarrative("community.act
 } satisfies ActivityContent);
 
 export const communityJoin: JoinContent = defineNarrative("community.join", {
-  label: wording("[ JOIN THE GUILD ]"),
+  label: wording("[ start with a hello ]"),
   title: { lead: owner("Your first step"), em: owner("into the Guild.") },
-  body: owner("Create a Portal profile to explore sessions, projects, and posts. Meet the community on Discord, and read the membership guide when you’re ready to learn how joining the DAO works."),
+  body: owner("Create a Portal profile, explore what members are building, and introduce yourself on Discord. Ready to pursue membership? Read the membership guide."),
   actions: [
     { label: owner("Create your Portal profile"), href: PORTAL_JOIN_URL, destination: joinDestination(), variant: "filled", icon: "portal" },
     { label: existing("Enter Discord"), href: DISCORD_INVITE_URL, variant: "outline", icon: "discord" },
@@ -308,7 +308,7 @@ export const communityMoloch: ImmersiveContent = defineNarrative("community.molo
   label: existing("[ THE GUILD ]"),
   title: { lead: owner("Together we slay"), em: owner("Moloch") },
   body: claim(
-    "In RaidGuild lore, Moloch represents coordination failure: when individual incentives lead to outcomes nobody wants. Building together is our response—through shared ownership, useful tools, and systems that make cooperation easier.",
+    "In RaidGuild lore, Moloch represents human coordination failure: when individual incentives lead to outcomes nobody wants. Building together is our response - through shared ownership, useful tools, and systems that make cooperation easier.",
     "handbook",
     "Owner-supplied Join the DAO copy. Confirm the lore framing and current ownership language before publishing.",
     "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
@@ -325,7 +325,7 @@ export const communityHats: HatsContent = defineNarrative("community.hats", {
   label: oct23("[ STEWARDSHIP ]"),
   title: { lead: approved("RaidGuild's", "owner-approval"), em: approved("Hats Tree", "owner-approval") },
   intro: claim(
-    "RaidGuild’s Hats Tree maps the roles that help the Guild work: what each role is responsible for, how it fits into the wider organization, and who’s eligible to hold it. The tree is powered by Hats Protocol, which represents roles and their permissions onchain. Some roles also have budgets or defined decision-making authority.",
+    "RaidGuild’s Hats Tree maps the roles that help the Guild work: what each role is responsible for, how it fits into the wider organization, and who’s eligible to hold it. The tree is powered by Hats Protocol, which represents roles and their permissions onchain.",
     "handbook",
     "Owner-supplied Join the DAO copy. Confirm current Hats assignments, permissions, budgets and decision-making authority.",
     "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
@@ -333,7 +333,7 @@ export const communityHats: HatsContent = defineNarrative("community.hats", {
   stewards: {
     term: approved("Stewards", "owner-approval"),
     detail: claim(
-      "Stewards are members who take responsibility for keeping important parts of the Guild moving. A Brand Steward, for example, helps maintain a shared brand; a Handbook Steward guides upkeep of the Guild’s knowledge. Stewardship means doing and reporting on the work—not being everyone’s boss. Taking action and staying accountable is important to keep the org moving forward.",
+      "Stewards are members who take responsibility for keeping important parts of the Guild moving. A Brand Steward, for example, helps maintain a shared brand; a Handbook Steward guides upkeep of the Guild’s knowledge. Stewardship means doing and reporting on the work - not being everyone’s boss. Taking action and staying accountable is important to keep the org moving forward.",
       "handbook",
       "Owner-supplied Join the DAO copy. Confirm current steward roles and responsibilities.",
       "https://rg-handbook-nextra.vercel.app/dao-operations/dao-roles",
@@ -385,8 +385,8 @@ export const communityBenefits: FeatureGalleryContent = defineNarrative("communi
   cards: [
     { label: wording("Learn and earn"), title: { lead: benefit("Cohorts, bounties"), em: benefit("and raids") }, body: benefit("Start in a cohort with other newcomers, then take on bounties and join raids alongside Guild members."), image: { src: "/images/neo/hero-landmarks-v1.png", width: 1919, height: 820 } },
     { label: wording("Build together"), title: { lead: benefit("Hackathons"), em: benefit("and hackerhouses") }, body: benefit("Build with other members at hackathons and hackerhouses, and meet the people you raid with."), image: { src: "/images/neo/sky-citadel.png", width: 972, height: 1619 } },
-    { label: wording("Fund the work"), title: { lead: benefit("RIPs and"), em: benefit("shared funding") }, body: benefit("Propose ideas through the RIP system and the Guild’s decentralized funding mechanisms.", "Member benefit from the November 2 brief. Confirm what RIPs are called and how proposals are funded today."), image: { src: "/images/neo/field-protocol-garden.png", width: 971, height: 1619 } },
-    { label: wording("Guild kit"), title: { lead: benefit("Guild email"), em: benefit("and Linktree") }, body: benefit("An @raidguild.org address and Linktree access for $20 a month.", "Price and offer from the November 2 brief; unconfirmed. Confirm the price, billing and what is included."), image: { src: "/images/neo/creed-flyer-v1.png", width: 1536, height: 1024, fit: "contain" } },
+    { label: wording("Fund the work"), title: { lead: benefit("RIPs and"), em: benefit("shared funding") }, body: benefit("Bring an idea to the Guild. Submit a RaidGuild Improvement Proposal for members to discuss and consider funding.", "Member benefit from the November 2 brief. Confirm what RIPs are called and how proposals are funded today."), image: { src: "/images/neo/field-protocol-garden.png", width: 971, height: 1619 } },
+    { label: wording("Guild kit"), title: { lead: benefit("Guild email"), em: benefit("and raidguild domain") }, body: benefit("Eligible members can get a Guild email address and customized Raidguild.org domain access.", "Price and offer from the November 2 brief; unconfirmed. Confirm the price, billing and what is included."), image: { src: "/images/neo/creed-flyer-v1.png", width: 1536, height: 1024, fit: "contain" } },
   ],
 } satisfies FeatureGalleryContent);
 
@@ -400,11 +400,11 @@ export const communityFaq: FaqContent = defineNarrative("community.faq", {
   label: wording("[ Before you join ]"),
   title: { lead: wording("Questions"), em: wording("before you join") },
   items: [
-    { question: wording("Where do I start?"), answer: again(communityJoin.body) },
+    { question: wording("Where do I start?"), answer: { ...again(communityJoin.body), text: "Create a Portal profile to explore sessions, projects, and posts. Meet the community on Discord, and read the membership guide when you’re ready to learn how joining the DAO works." } },
     { question: wording("How do I become a member?"), answer: again(communityGuild.kit.requirement) },
     { question: wording("Where do applications happen?"), answer: again(communityQueenRaida.panels[2].detail) },
-    { question: wording("Who runs the Guild?"), answer: again(communityGuild.body) },
-    { question: wording("Do members get a Guild email?"), answer: again(kitEmail) },
+    { question: wording("Who runs the Guild?"), answer: { ...again(communityGuild.body), text: "**RaidGuild** runs as a DAO with no single leader. Members help decide who joins, what gets funded, and how the Guild develops through proposals and voting." } },
+    { question: wording("Do members get a Guild email?"), answer: { ...again(kitEmail), text: "Your own @raidguild.org address and domain for members paying for Guild kit." } },
   ],
 } satisfies FaqContent);
 
@@ -427,28 +427,28 @@ const onchainPractice = practice("Onchain Systems");
 const aiPractice = practice("Applied AI");
 const practiceNote = "Practice copy from lib/data/venture.ts, as published on the practices. Confirm the wording with the practice.";
 export const communityCapabilities: FeatureGalleryContent = defineNarrative("community.capabilities", {
-  label: oct23("[ Services & capabilities ]"),
+  label: oct23("[ ways to contribute ]"),
   title: { lead: oct23("Ideas into"), em: oct23("working systems") },
   intro: wording("What the Guild builds, and where you come in: raid on real projects, learn from the practices, and help shape how the Guild works.", "Builder-side intro (November 3 restructure); new wording. Confirm."),
   cards: [
     {
       label: wording("Engineering"),
       title: capability("Ship on", "real raids"),
-      body: again(communityPath.steps[1].body),
+      body: { ...again(communityPath.steps[1].body), text: "A raid is a client project taken on by a party of Guild members. Apprentices can work on raids and on internal Guild projects." },
       image: { src: "/images/neo/spear-edge-problem-v1.webp", width: 1024, height: 768, fit: "contain" },
       link: { label: wording("How raids work"), href: `${HB}raids/intro-to-raiding` },
     },
     {
       label: wording("Onchain"),
       title: capability("The onchain", "practice"),
-      body: claim(onchainPractice.copy, "existing-site", practiceNote),
+      body: claim("A specialist practice rooted in the Guild’s onchain experience since 2019. Explore our work with protocols, products, governance, and shared ownership.", "existing-site", practiceNote),
       image: { src: onchainPractice.art, width: 1024, height: 768, fit: "contain" },
       link: { label: existing(onchainPractice.cta), href: onchainPractice.href, destination: claim("Railway production URL", "existing-site", "The practice link points to a railway.app deployment. Confirm the public URL.") },
     },
     {
       label: wording("Applied AI"),
       title: capability("The applied AI", "practice"),
-      body: claim(aiPractice.copy, "existing-site", practiceNote),
+      body: claim("An applied AI practice, built on the Guild's technical bench. We build agent systems and the workflows around them.", "existing-site", practiceNote),
       image: { src: aiPractice.art, width: 1024, height: 768, fit: "contain" },
       link: { label: existing(aiPractice.cta), href: aiPractice.href },
     },
