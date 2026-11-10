@@ -117,16 +117,18 @@ describe("apply-editorial CLI", { timeout: 120000 }, () => {
   });
 
   test("a literal shared by several items is applied only when all of them get the same text", async () => {
-    const READ_MORE = (index) => `clients.previousWorks.works.${index}.link.label`;
-    const one = await changeSet((drafts) => applyEdit(drafts, READ_MORE(0), "Read the case", originals.get(READ_MORE(0)), NOW));
+    // The Join section's text is also the first community FAQ answer: one literal, two items.
+    const SHARED = ["community.join.body", "community.faq.items.0.answer"];
+    const TEXT = "Create a Portal profile to meet the Guild.";
+    const one = await changeSet((drafts) => applyEdit(drafts, SHARED[0], TEXT, originals.get(SHARED[0]), NOW));
     const single = run(write("shared-one.json", one));
     assert.equal(single.code, 2);
-    assert.match(single.out, /its source text is shared with clients\.previousWorks\.works\.1\.link\.label/);
-    const all = await changeSet((drafts) => { for (let index = 0; index < 9; index++) drafts = applyEdit(drafts, READ_MORE(index), "Read the case", originals.get(READ_MORE(index)), NOW); return drafts; });
+    assert.match(single.out, /its source text is shared with community\.faq\.items\.0\.answer/);
+    const all = await changeSet((drafts) => SHARED.reduce((next, id) => applyEdit(next, id, TEXT, originals.get(id), NOW), drafts));
     const together = run(write("shared-all.json", all));
     assert.equal(together.code, 0, together.out);
-    assert.match(together.out, /Verified on a copy: 9 text changes read exactly as proposed/);
-    assert.equal((together.out.match(/^\+.*"Read the case"/gm) ?? []).length, 1, "one edit in the source");
+    assert.match(together.out, /Verified on a copy: 2 text changes read exactly as proposed/);
+    assert.equal((together.out.match(new RegExp(`^\\+.*"${TEXT}"`, "gm")) ?? []).length, 1, "one edit in the source");
   });
 
   test("a text assembled from the changed literal follows it, and is verified", async () => {
