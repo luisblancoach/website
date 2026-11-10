@@ -9,6 +9,7 @@ import "./editorial-apply.test.mjs";
 import { EDITORIAL_SECTIONS, componentOf, exclusionReason, fieldLabel, isEditableId, kindOf, removalTarget, sectionFor, structuralReason } from "../src/lib/editorial/config.ts";
 import { TREES, hiddenIds, itemContext, originals, sourceOrder } from "../src/lib/editorial/catalog.ts";
 import { collectCopy } from "../src/lib/narrative/types.ts";
+import { clientsNarrative } from "../src/lib/narrative/clients.ts";
 import {
   applyEdit, conflictOf, fingerprint, fromExport, normalizeText, parseStored, rebase, removedBy, revert, serializeStored, setComment, setOperation, toExport, toMarkdown, warningsOf,
 } from "../src/lib/editorial/drafts.ts";
@@ -46,12 +47,29 @@ describe("editorial sections", () => {
         else { const reason = exclusionReason(copy.id); assert.ok(reason && reason.length > 20, `${copy.id} is excluded with a reason`); excluded.push(copy.id); }
       }
     }
-    // The exclusions are review notes (link destinations) and copy these pages do not render.
-    assert.ok(excluded.every((id) => /\.destination$|^clients\.inquiry\.(summary\.hint|summary\.hintOpen|coordinates\.\d|image\.alt)|^community\.guild\.metrics\./.test(id)), excluded.join(", "));
-    assert.equal(originals.size, 295);
+    // The exclusions are review notes (link destinations), copy these pages do not render, and retired items.
+    assert.ok(excluded.every((id) => /\.destination$|^clients\.inquiry\.(summary\.hint|summary\.hintOpen|coordinates\.\d|image\.alt)|^community\.guild\.metrics\.|^clients\.reasons\.items\.5\./.test(id)), excluded.join(", "));
+    // v0.3 released with 295 editable fields; Tae's batch 02 retired Reason 6 (2 fields): 293 active.
+    assert.equal(originals.size, 293);
     const pages = { "/agency": 0, "/community": 0, shared: 0 };
     for (const id of originals.keys()) pages[sectionFor(id).page]++;
-    assert.deepEqual(pages, { "/agency": 130, "/community": 143, shared: 22 });
+    assert.deepEqual(pages, { "/agency": 128, "/community": 143, shared: 22 });
+  });
+
+  test("a retired item keeps its ids (tombstone) and leaves the active registry; the others do not shift", () => {
+    const { clientsReasons } = clientsNarrative;
+    assert.equal(clientsReasons.items.length, 7, "Reason 6 stays in the source");
+    assert.match(clientsReasons.items[5].retired ?? "", /2026-11-10/);
+    assert.equal(clientsReasons.items[5].title.id, "clients.reasons.items.5.title");
+    assert.equal(clientsReasons.items[6].title.id, "clients.reasons.items.6.title", "Reason 7 keeps its id");
+    for (const id of ["clients.reasons.items.5.title", "clients.reasons.items.5.body"]) {
+      assert.ok(!isEditableId(id) && !originals.has(id), id);
+      assert.match(exclusionReason(id), /^Retired/);
+    }
+    assert.ok(isEditableId("clients.reasons.items.6.title"));
+    let all = 0;
+    for (const section of EDITORIAL_SECTIONS) all += collectCopy(TREES[section.prefix]).filter((copy) => !/\.destination$/.test(copy.id)).length;
+    assert.equal(all - 13, 295, "the 295 v0.3 ids are all still in the source (13 = items these pages do not render)");
   });
 
   test("copy that is not shown as text is classified: alt text, screen-reader names, metadata", () => {
@@ -103,7 +121,7 @@ describe("editorial sections", () => {
       const section = EDITORIAL_SECTIONS.find((entry) => entry.prefix === prefix);
       assert.equal(section.label, label);
       assert.equal(section.page, prefix.startsWith("clients") ? "/agency" : "/community");
-      for (const copy of collectCopy(TREES[prefix])) if (!/\.destination$/.test(copy.id)) assert.ok(isEditableId(copy.id), copy.id);
+      for (const copy of collectCopy(TREES[prefix])) if (!/\.destination$/.test(copy.id) && !/^Retired/.test(exclusionReason(copy.id) ?? "")) assert.ok(isEditableId(copy.id), copy.id);
     }
   });
 });

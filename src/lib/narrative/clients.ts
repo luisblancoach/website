@@ -229,7 +229,8 @@ export const clientsReasons: ReasonsContent = defineNarrative("clients.reasons",
     reason("Smart contracts, dApps and onchain products", "We design and ship contracts, decentralized applications and the products around them, and have done so since 2019.", `${reasonNote} “Since 2019” is the Onchain practice's copy.`),
     reason("One team from scope to handover", "Scoping, design, implementation, documentation and handoff stay with the same team, so nothing is lost between the plan and the code."),
     reason("Focused scope, clear ownership", "Each project starts from an agreed scope and a named owner for every part of it, so you know what is being built and who is responsible."),
-    reason("Progress you can see every week", "Weekly demos of working software, so you can steer early, while changes are still cheap.", `${reasonNote} Weekly demos are the buyer FAQ's process answer.`),
+    // Retired (Tae's editorial batch 02, 2026-11-10: "DELETE" on both texts, owner-approved): not rendered.
+    { ...reason("Progress you can see every week", "Weekly demos of working software, so you can steer early, while changes are still cheap.", `${reasonNote} Weekly demos are the buyer FAQ's process answer.`), retired: "2026-11-10, Tae's editorial batch 02" },
     reason("Code and documentation your team can maintain", "We hand over the code with its documentation and runbooks, or stay on for maintenance if you prefer. Teams such as Livepeer, Pocket Network, DAOhaus and Gitcoin have shipped with us.", `${reasonNote} Handoff and maintenance are the buyer FAQ's answers; the clients are in the showcase.`),
   ],
 } satisfies ReasonsContent);

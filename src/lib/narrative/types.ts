@@ -200,7 +200,9 @@ export type ReasonsContent = {
   label: Copy;
   title: Title;
   intro: Copy;
-  items: { title: Copy; body: Copy }[];
+  // `retired`: removed from the page, kept in the source so the other items keep their ids
+  // (clients.reasons.items.N). The string records when and why.
+  items: { title: Copy; body: Copy; retired?: string }[];
 };
 
 export type InquiryContent = {

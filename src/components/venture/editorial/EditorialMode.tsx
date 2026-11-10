@@ -13,7 +13,7 @@
 // button and Alt+Shift+E. Leave: Exit, Alt+Shift+E or ?editorial=0.
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { EDITORIAL_DEV, EDITORIAL_PAGES, KIND_LABEL, OPERATION_LABEL, SCOPE_LABEL, componentOf, fieldLabel, kindOf, removalTarget, sectionFor, sectionTitle, structuralReason, type Operation, type RemoveScope } from "@/lib/editorial/config";
+import { EDITORIAL_DEV, EDITORIAL_PAGES, KIND_LABEL, OPERATION_LABEL, SCOPE_LABEL, componentOf, exclusionReason, fieldLabel, kindOf, removalTarget, sectionFor, sectionTitle, structuralReason, type Operation, type RemoveScope } from "@/lib/editorial/config";
 import { hiddenIds, itemContext, originals, sourceOrder } from "@/lib/editorial/catalog";
 import { EXPORT_FILES, applyEdit, conflictOf, fromExport, normalizeText, rebase, revert, setComment, sortedDrafts, toExport, toMarkdown, warningsOf, type Draft, type Drafts } from "@/lib/editorial/drafts";
 import { editorial, useEditorial } from "./store";
@@ -518,7 +518,7 @@ function ChangeRow({ draft, onShow }: { draft: Draft; onShow: () => void }) {
           <span><button type="button" onClick={() => editorial.replaceDrafts((drafts) => rebase(drafts, draft.id, source ?? draft.base))}>Keep my decision</button></span>
         </div>
       )}
-      {conflict === "unknown-id" && <div className="rgx-conflict"><b>This text is no longer editable on the site.</b> Keep it for the record, or undo it.</div>}
+      {conflict === "unknown-id" && <div className="rgx-conflict"><b>{/^Retired/.test(exclusionReason(draft.id) ?? "") ? exclusionReason(draft.id) : "This text is no longer editable on the site."}</b> Keep it for the record, or undo it.</div>}
       {warnings.map((warning) => <div key={warning} className="rgx-conflict">{warning}</div>)}
       <dl>
         <dt>Current</dt><dd className="rgx-original">{rewritten ? diff.removed : plain(draft.base)}</dd>

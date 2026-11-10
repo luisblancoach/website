@@ -416,16 +416,19 @@ describe("November 2 galleries and FAQs", () => {
 });
 
 describe("November 3 client reasons (/clients)", () => {
-  test("Why RaidGuild answers the buyer: seven flagged reasons, no prices, timelines, guarantees or raid jargon", () => {
+  test("Why RaidGuild answers the buyer: six shown reasons (Reason 6 retired), flagged, no prices, timelines, guarantees or raid jargon", () => {
     const { clientsReasons } = clientsNarrative;
     assert.equal(clientsReasons.items.length, 7);
+    assert.deepEqual(clientsReasons.items.map((item) => Boolean(item.retired)), [false, false, false, false, false, true, false], "Tae's batch 02 retired Reason 6");
     for (const item of clientsReasons.items) {
       assert.equal(item.body.reason, "claim", item.title.text);
       assert.notEqual(item.title.status, "approved", item.title.text);
     }
     const copy = collectCopy(clientsReasons).map((item) => item.text).join(" ");
     assert.doesNotMatch(copy, /\$|\bguarantee|\b\d+\s*(?:days?|weeks?|months?)\b|\braids?\b/i);
-    for (const point of [/applied AI|AI and blockchain/i, /smart contracts/i, /scope/i, /handoff/i, /weekly/i, /maintain/i, /senior/i]) assert.match(copy, point);
+    const shown = collectCopy(clientsReasons.items.filter((item) => !item.retired)).map((item) => item.text).join(" ") + " " + clientsReasons.intro.text;
+    for (const point of [/applied AI|AI and blockchain/i, /smart contracts/i, /scope/i, /handoff|handover/i, /maintain/i, /senior/i]) assert.match(shown, point);
+    assert.doesNotMatch(shown, /\bDELETE\b/, "no deletion instruction is published");
   });
 });
 

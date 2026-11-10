@@ -74,7 +74,10 @@ export const EDITORIAL_SECTIONS: EditorialSection[] = [
   { prefix: "clients.nav", ...AGENCY, label: "Navigation", items: { items: "Menu item" }, fields: { cta: "Menu button" } },
   { prefix: "clients.hero", ...AGENCY, label: "Hero", items: { paths: "Button" }, fields: { title: "Headline", dek: "Introduction" } },
   { prefix: "clients.serviceGallery", ...AGENCY, label: "Services gallery", items: { cards: "Card" }, fields: { cta: "Section button" } },
-  { prefix: "clients.reasons", ...AGENCY, label: "Why RaidGuild", items: { items: "Reason" }, fields: { "items.title": "Title", "items.body": "Expanded text" } },
+  {
+    prefix: "clients.reasons", ...AGENCY, label: "Why RaidGuild", items: { items: "Reason" }, fields: { "items.title": "Title", "items.body": "Expanded text" },
+    exclude: [[/^items\.5\./, "Retired: Reason 6 was removed from the page (Tae's editorial batch 02, 2026-11-10); kept in the source so the other reasons keep their ids."]],
+  },
   {
     prefix: "clients.previousWorks", ...AGENCY, label: "Previous works", items: { works: "Project" },
     fields: { name: "Name", description: "Description", snapshot: "Screenshot", cta: "Section button" },
