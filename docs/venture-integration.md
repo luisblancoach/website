@@ -1278,3 +1278,47 @@ did not reach the session; the changes follow the written brief and were checked
   round-trips and carries only the formatting its field takes), and `narrative.test.mjs` compared prose verbatim
   (13 prose assertions and the two brief checks now compare `plainText`). A formatting-only change therefore needs no
   test edit; a wording change to pinned brief copy still does, by design.
+
+## 2026-11-10 — Final handoff release `b0d6cb6` (owner-approved)
+
+- **Commit:** `b0d6cb613760bb53f891eb2bfc32e138d36f7d0c` "feat(handoff): final illustrations, UI polish, SEO/AEO and
+  Editorial Mode rich text", 78 files exactly as in the release manifest
+  (`~/Projects/raidguild-backups/2026-11-10/RELEASE-MANIFEST.md`); pushed to `fork/feat/venture-beyond-integration`
+  (`c4e921a..b0d6cb6`). Upstream untouched (`origin/review/venture-beyond-redesign` `7d0e878`, `main` `b02d67b`).
+  Owner files preserved (`package.json`, 21 legacy image deletions, the font, `clients.pdf`, `.DS_Store`).
+- **Vercel review** (project `raidguild-venture-beyond-review`, existing configuration unchanged): clean archive
+  `git archive b0d6cb6` + the project link from `2026-11-02/deploy-04da57f`, `npx vercel@65.8.0 deploy --prod --yes
+  --build-env SHOW_REVIEW_FLAGS=false` → `dpl_D4iJJAvqf2LRwSourYmN9Lm2mnj4`, READY, production. Public URL:
+  https://raidguild-venture-beyond-review.vercel.app (the deployment URL itself needs a Vercel login). Editorial Mode
+  is not in this build. Vercel names `raidguild.estudioblanco.org` as the project's production domain; that host
+  still 302s to Railway through Cloudflare (DNS untouched).
+- **Cloudflare Editorial Mode** (Worker `raidguild-estudioblanco`, workers.dev, no routes, kit unchanged):
+  `BASELINE=b0d6cb6 deploy/cloudflare/build.sh b0d6cb6` (`NEXT_PUBLIC_EDITORIAL_MODE=opt-in`, review flags off;
+  build id `c9Lhe8g0jxuI8GbxG81Ts`), `wrangler deploy` → version **`32af0c5c-155c-4aee-b60b-c667f973dce7`**, serving
+  confirmed by its build id; `X-Robots-Tag: noindex, nofollow`. URLs: https://raidguild-estudioblanco.luisblancoach.workers.dev/agency?editorial=1
+  and `/community?editorial=1`.
+- **Verification, Vercel** (public alias): `/`, `/agency`, `/community` 200, `noindex, follow`, canonical
+  `https://www.raidguild.org…`, `twitter:site`, JSON-LD (Organization, WebSite, WebPage; 6 Service on /agency), one
+  H1 each, heading text spaced; robots.txt as before, sitemap valid and empty, llms.txt lists both audience pages,
+  agent Markdown off on `/`. Illustrations suite 236 checks passed (16/16 cards, Day/Night × 1440/393), one CLS
+  reading of 0.124 on a cold first load of /agency light 1440 that did not reproduce (4 reruns 0.0000–0.0005). Polish
+  92/92, hunt 11/11.
+- **Verification, Cloudflare:** rich-text suite 21/21 on the live Worker (activation, toolbar, bold/italic/underline/
+  link by button and shortcut, unsafe link refused, undo/redo, keyboard, plain-only title, save and reload, Preview,
+  Changes panel, export of both files, phone); the live export (source revision `b0d6cb613760`) passes the CLI dry run
+  against the commit (1 change, 476 unchanged). Visitors get no editor; `?editorial=1` opens it with 118 (/agency) and
+  167 (/community) editable texts; footer and illustrations present, no page errors.
+- **Known limitations:** share-image URLs on the Vercel review site point at `raidguild.estudioblanco.org` (its
+  production domain), which redirects, so previews there show no image; on the Worker they point at raidguild.org
+  paths, which exist only after go-live. The on-page hunt exists only on `/`. Editorial drafts live in one browser;
+  the editor link is public (no access control), as before. Raw formatting markers appear in React's script data,
+  never in visible text. Not compared against the October 23 reference. raidguild.org, Railway, DNS and
+  `raidguild.estudioblanco.org` routing unchanged (D-2 and the cutover remain open).
+- **Rollback:** Vercel: `npx vercel@65.8.0 rollback dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD` (the previous production,
+  `233777b`) from the linked archive directory, or promote it in the dashboard. Cloudflare: `wrangler rollback
+  5dcaac41-1c25-4b5f-a1e4-30a65326a1f3` from a kit build directory. Source: `git revert b0d6cb6` (never a reset of the
+  pushed branch).
+- **Editorial workflow (Tae / Dekan):** Tae edits and formats at the Worker URLs, previews, comments and exports both
+  files; Dekan runs `bun scripts/apply-editorial.mjs <json>` (dry run), then `--apply --confirm <12-character id>`,
+  `bun run test`, tsc, lint, a build, commit, push and deploys (Vercel review as above; the Worker with the kit so the
+  editor shows the new text). Guide: `docs/editorial-guide-tae.md`, shareable https://claude.ai/artifact/Xmhy49kfgYYqx3zrKiT6x5.
