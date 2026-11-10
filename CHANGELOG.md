@@ -6,6 +6,12 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
+- **Two-page architecture (owner, 2026-11-10):** Hire the DAO at `/` (unchanged page),
+  `/community` unchanged, `/agency` and `/clients` → `/` (308, query kept, no loops); the former `/` entry page
+  retired; SEO, sitemap, `llms.txt`, theme, navigation and Editorial Mode follow (copy ids unchanged). Tests 137/137;
+  visitor layout of `/` identical to the released `/agency`; editorial 21/21 + 8/8. Hunt: option A, on-page hunt
+  retired (Portal card, overlay and console help corrected; console commands kept). Details: `docs/venture-integration.md`.
+
 ## 2026-11-10 · Final handoff release `b0d6cb6`: Vercel review `dpl_D4iJJAvqf2LRwSourYmN9Lm2mnj4`, Worker `32af0c5c`
 
 - `b0d6cb613760bb53f891eb2bfc32e138d36f7d0c` "feat(handoff): …", 78 files (illustrations, UI polish, hunt, SEO/AEO,

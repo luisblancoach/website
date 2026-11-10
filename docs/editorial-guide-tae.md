@@ -23,7 +23,8 @@ Shareable version of this guide: https://claude.ai/artifact/Xmhy49kfgYYqx3zrKiT6
 
 ## Open the editor
 
-- Agency: https://raidguild-estudioblanco.luisblancoach.workers.dev/agency?editorial=1
+- Hire the DAO (Agency, the homepage): https://raidguild-estudioblanco.luisblancoach.workers.dev/?editorial=1
+  (older `/agency?editorial=1` links still work: they redirect to the homepage and keep the editor on)
 - Community: https://raidguild-estudioblanco.luisblancoach.workers.dev/community?editorial=1
 
 A dark bar appears at the bottom of the page. It always says **Local draft — not published**.
@@ -70,7 +71,7 @@ you are editing (at the top of the screen on a phone). Select the words first, t
 | Link | ⌘K / Ctrl+K | Add a link: type the address and press **Add link**. Inside a link: **Update** or **Remove link** |
 | ↶ ↷ | ⌘Z / Ctrl+Z, ⌘⇧Z / Ctrl+Y | Undo / redo the last change in this text |
 
-- Links may point to `https://…`, `mailto:…`, a page of this site (`/agency`, `/community`) or a section
+- Links may point to `https://…`, `mailto:…`, a page of this site (`/`, `/community`) or a section
   (`#faq`). Other addresses are refused. Links to other sites open in a new tab for visitors.
 - If no words are selected, the link address itself is inserted as the linked text.
 - Headings, titles, labels, buttons, questions, names and hidden text stay plain: there the buttons are

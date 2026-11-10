@@ -365,7 +365,7 @@ function FormatBar({ target, linkRequest, notify, onLeave }: { target: FormatTar
           <button type="submit">{marks.link ? "Update" : "Add link"}</button>
           {marks.link && <button type="button" onClick={removeLink}>Remove link</button>}
           <button type="button" onClick={backToText}>Cancel</button>
-          <small id="rgx-link-help">https://, mailto:, a page of this site (/agency) or a section (#faq). Other sites open in a new tab.</small>
+          <small id="rgx-link-help">https://, mailto:, a page of this site (/ or /community) or a section (#faq). Other sites open in a new tab.</small>
         </form>
       )}
     </div>

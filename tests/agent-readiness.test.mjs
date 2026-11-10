@@ -15,7 +15,8 @@ describe("agent readiness", () => {
     assert.ok(llms.startsWith("# RaidGuild"));
     assert.match(llms, /https:\/\/portal\.raidguild\.org\/join/);
     // Both audience pages are listed (November 10).
-    assert.match(llms, /https:\/\/www\.raidguild\.org\/agency/);
+    assert.match(llms, /\[Hire the DAO \(homepage\)\]\(https:\/\/www\.raidguild\.org\/\)/);
+    assert.doesNotMatch(llms, /raidguild\.org\/agency|raidguild\.org\/#/, "no retired routes or anchors");
     assert.match(llms, /https:\/\/www\.raidguild\.org\/community/);
     assert.doesNotMatch(llms.toLowerCase(), /todo|placeholder|lorem ipsum/);
   });

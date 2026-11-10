@@ -6,6 +6,11 @@ sitemaps, structured data general guidelines, Organization logo) and Bing Webmas
 `~/Projects/raidguild-backups/2026-11-06/raidguild-seo-aeo-audit-response.md` (items B-1…B-6, C-4, C-5, D-1…D-7).
 Status: implemented and verified locally; **not committed, not deployed**.
 
+> **Update 2026-11-10 (canonical routes, owner):** the public pages are now `/` (Hire the DAO, formerly `/agency`)
+> and `/community`; `/agency` and `/clients` redirect permanently to `/`; the former `/` entry page is retired. The
+> sitemap, canonicals, JSON-LD (Services on `/`) and `llms.txt` follow. The `/` title and description below are now
+> the Agency ones (§3 `/agency` rows); the old `/` proposals no longer apply. Record: `docs/venture-integration.md`.
+
 ## 1. Existing implementation and findings
 
 | Area | Before this pass | Finding |

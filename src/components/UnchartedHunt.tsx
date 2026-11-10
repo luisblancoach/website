@@ -30,14 +30,14 @@ const welcome = String.raw`
 
  raidguild.help()                 Start here
  raidguild.clue("portal")         Ask for a clue
- raidguild.clue("signal")         Find the second clue
+ raidguild.clue("signal")         The second clue
  raidguild.hint("portal")         Get a stronger hint
  raidguild.solve("portal", "…")   Try an answer
  raidguild.progress()             Check your discoveries
  raidguild.reset()                Start again
 
  No downloads, wallets, or pasted scripts required.
- Prefer to explore visually? Open The Portal in the gallery, then find the ✧ signal and the ✧ mark further down the page.
+ The trail lives here in the console: portal, then signal, then walker.
  Meet the Guild: https://portal.raidguild.org
 `;
 
@@ -57,8 +57,9 @@ export function UnchartedHunt({ children }: { children: ReactNode }) {
     if (!keys.includes(key) || typeof answer !== "string") return 'Try raidguild.clue("portal"), "signal", or "walker".';
     if (answer.trim().toLowerCase() !== artifacts[key].answer) return "Not quite. Follow the clue and try again.";
     if (!foundRef.current.includes(key)) save([...foundRef.current, key]);
-    if (key === "portal") return "Discovered: The Portal. Find the ✧ signal further down the page next.";
-    if (key === "signal") return "Discovered: The Signal. Look for the final ✧ mark near the end of the page.";
+    // November 10 (owner, option A): the on-page markers are retired; the console leads the trail.
+    if (key === "portal") return 'Discovered: The Portal. Next: raidguild.clue("signal").';
+    if (key === "signal") return 'Discovered: The Signal. Last: raidguild.clue("walker").';
     return `Discovered: ${artifacts[key].name}. ${artifacts[key].url}`;
   }
   useEffect(() => {
@@ -72,7 +73,7 @@ export function UnchartedHunt({ children }: { children: ReactNode }) {
       }
     } catch { /* Ignore invalid or unavailable storage. */ }
     const api = {
-      help: () => 'Open The Portal in the gallery and follow the rabbit. Next, find the ✧ signal and the ✧ mark further down the page. Glowing pixels offer extra hints. Commands: clue(key), hint(key), solve(key, answer), progress(), reset(). Keys: portal, signal, walker.',
+      help: () => 'Three clues, solved here in the console: start with raidguild.clue("portal"), answer with raidguild.solve("portal", "…"), then "signal" and "walker"; raidguild.hint(key) gives a stronger hint. Commands: clue(key), hint(key), solve(key, answer), progress(), reset(). Keys: portal, signal, walker.',
       clue: (key: string) => { const normalized = normalizeKey(key); return normalized ? artifacts[normalized].clue : "Choose portal, signal, or walker."; },
       hint: (key: string) => { const normalized = normalizeKey(key); return normalized ? hints[normalized] : "Choose portal, signal, or walker."; },
       solve: (key: string, answer: string) => { const normalized = normalizeKey(key); return normalized ? solve(normalized, answer) : 'Try raidguild.clue("portal"), "signal", or "walker".'; },
