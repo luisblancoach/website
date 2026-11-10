@@ -24,12 +24,12 @@ const storedValues = [null, "light", "dark", "invalid"];
 
 describe("theme resolution", () => {
   test("route defaults apply only to the audience routes", () => {
-    assert.equal(routeDefaultTheme("/agency"), "light");
+    // November 10: Hire the DAO is "/" (Day); /agency and /clients only redirect to it and never render.
+    assert.equal(routeDefaultTheme("/"), "light");
     assert.equal(routeDefaultTheme("/community"), "dark");
-    assert.equal(routeDefaultTheme("/"), null);
+    assert.equal(routeDefaultTheme("/agency"), null);
     assert.equal(routeDefaultTheme("/chat"), null);
     assert.equal(routeDefaultTheme("/agencyx"), null);
-    // /clients only redirects to /agency (next.config.ts); it never renders.
     assert.equal(routeDefaultTheme("/clients"), null);
   });
 
@@ -43,10 +43,10 @@ describe("theme resolution", () => {
   });
 
   test("without a preference, audience routes use their default and others follow the system", () => {
-    assert.equal(resolveTheme({ stored: null, pathname: "/agency", systemPrefersDark: true }), "light");
+    assert.equal(resolveTheme({ stored: null, pathname: "/", systemPrefersDark: true }), "light");
     assert.equal(resolveTheme({ stored: null, pathname: "/community", systemPrefersDark: false }), "dark");
-    assert.equal(resolveTheme({ stored: null, pathname: "/", systemPrefersDark: true }), "dark");
-    assert.equal(resolveTheme({ stored: "invalid", pathname: "/", systemPrefersDark: false }), "light");
+    assert.equal(resolveTheme({ stored: null, pathname: "/chat", systemPrefersDark: true }), "dark");
+    assert.equal(resolveTheme({ stored: "invalid", pathname: "/chat", systemPrefersDark: false }), "light");
   });
 
   test("the pre-paint boot script matches resolveTheme for every case", () => {
@@ -63,7 +63,7 @@ describe("theme resolution", () => {
   });
 
   test("the boot script still resolves when storage is unavailable", () => {
-    assert.equal(runBootScript({ stored: "dark", pathname: "/agency", systemPrefersDark: true, storageThrows: true }).dataset.theme, "light");
-    assert.equal(runBootScript({ stored: "light", pathname: "/", systemPrefersDark: true, storageThrows: true }).dataset.theme, "dark");
+    assert.equal(runBootScript({ stored: "dark", pathname: "/", systemPrefersDark: true, storageThrows: true }).dataset.theme, "light");
+    assert.equal(runBootScript({ stored: "light", pathname: "/chat", systemPrefersDark: true, storageThrows: true }).dataset.theme, "dark");
   });
 });

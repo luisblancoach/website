@@ -54,9 +54,9 @@ describe("editorial sections", () => {
     // v0.3 released with 295 editable fields; Tae's batch 02 retired Reason 6 (2 fields): 293 active;
     // the footer's Portal Blog link (owner, November 10) adds one: 294.
     assert.equal(originals.size, 294);
-    const pages = { "/agency": 0, "/community": 0, shared: 0 };
+    const pages = { "/": 0, "/community": 0, shared: 0 };
     for (const id of originals.keys()) pages[sectionFor(id).page]++;
-    assert.deepEqual(pages, { "/agency": 128, "/community": 143, shared: 23 });
+    assert.deepEqual(pages, { "/": 128, "/community": 143, shared: 23 });
   });
 
   test("a retired item keeps its ids (tombstone) and leaves the active registry; the others do not shift", () => {
@@ -130,7 +130,7 @@ describe("editorial sections", () => {
     for (const [prefix, label] of Object.entries(v02)) {
       const section = EDITORIAL_SECTIONS.find((entry) => entry.prefix === prefix);
       assert.equal(section.label, label);
-      assert.equal(section.page, prefix.startsWith("clients") ? "/agency" : "/community");
+      assert.equal(section.page, prefix.startsWith("clients") ? "/" : "/community");
       for (const copy of collectCopy(TREES[prefix])) if (!/\.destination$/.test(copy.id) && !/^Retired/.test(exclusionReason(copy.id) ?? "")) assert.ok(isEditableId(copy.id), copy.id);
     }
   });

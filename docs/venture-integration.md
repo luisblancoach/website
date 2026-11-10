@@ -1322,3 +1322,50 @@ did not reach the session; the changes follow the written brief and were checked
   files; Dekan runs `bun scripts/apply-editorial.mjs <json>` (dry run), then `--apply --confirm <12-character id>`,
   `bun run test`, tsc, lint, a build, commit, push and deploys (Vercel review as above; the Worker with the kit so the
   editor shows the new text). Guide: `docs/editorial-guide-tae.md`, shareable https://claude.ai/artifact/Xmhy49kfgYYqx3zrKiT6x5.
+
+## 2026-11-10 — Canonical routes: Hire the DAO at `/` (owner-approved; two-page architecture)
+
+- **Decision (owner):** `/` serves Hire the DAO (the former `/agency` page, unchanged); `/community` keeps Join the
+  DAO; `/agency` and `/clients` (and anything below them) redirect permanently to `/`. The former `/` entry page
+  ("Venture Beyond": Guild prologue, wall of curiosities, practices, legacy inquiry, entry creed) is retired from
+  the routes; its components and `lib/narrative/entry.ts` stay in the code, unused (no deletion without approval).
+- **Implementation:** `src/app/(venture)/page.tsx` is the Agency page (canonical, og:url and JSON-LD on `/`);
+  `src/app/(venture)/agency/` removed; `next.config.ts` redirects `/agency` → `/`, `/agency/:path+` → `/:path+`, the
+  same for `/clients` (explicit bare-path rules: `/:path*` with an empty path produced an empty Location and a
+  self-redirect loop on `/agency?editorial=1`, caught in testing); the host-scoped
+  `raidguild.estudioblanco.org` `/` → `/agency` redirect is removed (it would loop). `lib/venture-routes.ts` (Hire
+  the DAO href `/`, section homes, legacy `?audience=hire` → `/`), `lib/theme.ts` (`/` opens in Day),
+  `(venture)/layout.tsx` (nav keyed by `/`), `lib/editorial/config.ts` (Editorial pages `/` and `/community`;
+  copy ids unchanged), `lib/seo.ts` (public routes `/`, `/community`), `public/llms.txt`, `scripts/review-claims.mjs`,
+  `/chat` back-links to `/community#guild`, the editor's link example.
+- **Verification (isolated builds of the working tree, :3061 public and :3064 opt-in):** tests 137/137, tsc, lint 0
+  errors, both builds OK (`/` static). Redirects: `/agency`, `/clients` → `/` in one 308 with query kept
+  (`/agency?editorial=1` → `/?editorial=1`), sub-paths up one level, trailing-slash forms two hops (Next's slash
+  normalization first), `?audience=hire` → `/`, no loop on any host. Visitor layout of `/` identical to the released
+  `/agency` and `/community` unchanged (every element box, Day/Night × 1440/393). SEO: `/` canonical
+  `https://www.raidguild.org`, Agency title and description, 6 Service nodes; `/community` unchanged; sitemap lists
+  only `/` and `/community` at go-live; `llms.txt` two pages. Illustrations 16/16, polish 92/92. Editorial:
+  rich-text suite 21/21 at `/?editorial=1`; route checks 8/8 (118 / 167 editable texts, old `/agency?editorial=1`
+  links keep the editor, Hidden text by page, an export made on `/agency` imports, Show on page crosses to
+  `/community`, exports name "Agency (/)"); 477 copy ids identical to the release; the new export passes the CLI
+  dry run.
+- **Conflicts for the owner:**
+  1. **Hunt.** The retired entry page held all three on-page clues (Portal in its gallery, signal by its inquiry,
+     walker in its creed). No route now shows an on-page hunt; the overlay never shows it (`hunt={false}`); the
+     `raidguild` console commands still work. Two texts still promise it: the "The Portal" project card on
+     `/community` ("follow the rabbit to begin a three-clue discovery trail", `components/ArtifactGallery.tsx`;
+     live since `b0d6cb6`, missed by that release's hunt check) and the console help ("Open The Portal in the
+     gallery"). Options: retire the on-page hunt and reword those two texts; bring the hunt to `/community` (rabbit in
+     the overlay plus new signal and walker placements); or keep the old entry page at a hidden, noindex route.
+  2. The entry page's content (prologue, wall of curiosities, legacy inquiry) is no longer public.
+  3. Tae's editor link becomes `/?editorial=1` once released; old `/agency?editorial=1` links keep working through
+     the redirect. The shareable guide is updated at release, not before (its links would be wrong until then).
+
+- **Resolution (owner, final two-page architecture):** exactly two public experiences, `/` (Hire the DAO) and
+  `/community` (Join the DAO); "Venture Beyond" is a campaign concept, not a route. Hunt: **option A**, the on-page
+  hunt is retired. The Portal project card now reads "Step into RaidGuild's world through the Portal, then choose
+  where to go next: the Guild's practices, a project, or the community." (its gallery caption and button drop "the
+  hunt"); `PortalOverlay` no longer has a hunt branch (intro, rabbit clue and the `hunt` prop removed); the console
+  banner, help and "next clue" messages now lead the trail in the console itself (`raidguild.clue("signal")`, then
+  `"walker"`). Console commands, progress and the walker link are unchanged. No hunt was moved to `/community` and no
+  hidden landing was kept; the legacy entry components and the on-page clue markers remain in the code, unused.

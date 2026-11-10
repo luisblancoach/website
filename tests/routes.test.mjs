@@ -7,41 +7,42 @@ const redirect = (href) => legacyAudienceRedirect(new URL(href))?.href ?? null;
 
 describe("audience routes", () => {
   test("audience switch labels and destinations", () => {
-    assert.deepEqual(AUDIENCES.map((a) => [a.label, a.href]), [["Hire the DAO", "/agency"], ["Join the DAO", "/community"]]);
-    assert.equal(audienceForPath("/agency"), "clients");
-    // /clients is a redirect now (next.config.ts), not an audience route.
+    // November 10: Hire the DAO is the root page.
+    assert.deepEqual(AUDIENCES.map((a) => [a.label, a.href]), [["Hire the DAO", "/"], ["Join the DAO", "/community"]]);
+    assert.equal(audienceForPath("/"), "clients");
+    // /agency and /clients are redirects now (next.config.ts), not audience routes.
+    assert.equal(audienceForPath("/agency"), null);
     assert.equal(audienceForPath("/clients"), null);
     assert.equal(audienceForPath("/community"), "community");
-    assert.equal(audienceForPath("/"), null);
-    assert.equal(audienceForPath("/chat"), null);
+    assert.equal(audienceForPath("/community/x"), "community");
+    assert.equal(audienceForPath("/chat"), null, "\"/\" is not a prefix of every route");
   });
 
   test("section links route to the audience that owns the section", () => {
-    assert.equal(sectionHref("/", "guild"), "#guild");
-    assert.equal(sectionHref("/agency", "guild"), "/community#guild");
-    assert.equal(sectionHref("/community", "contact"), "/agency#contact");
+    assert.equal(sectionHref("/", "guild"), "/community#guild");
+    assert.equal(sectionHref("/community", "contact"), "/#contact");
   });
 
   test("each audience route carries its October 23 chapters", () => {
-    for (const section of ["case-studies", "capabilities", "spears", "team", "project-inquiry"]) assert.equal(sectionHref("/agency", section), `#${section}`, section);
+    for (const section of ["case-studies", "capabilities", "spears", "team", "project-inquiry"]) assert.equal(sectionHref("/", section), `#${section}`, section);
     // October 23 Join also closes with the services chapter.
     for (const section of ["guild", "raida", "work", "team", "join", "spears"]) assert.equal(sectionHref("/community", section), `#${section}`, section);
     // Chapters a route does not carry lead to the route that owns them.
-    assert.equal(sectionHref("/agency", "raida"), "/community#raida");
-    assert.equal(sectionHref("/community", "case-studies"), "/agency#case-studies");
-    assert.equal(sectionHref("/community", "project-inquiry"), "/agency#project-inquiry");
+    assert.equal(sectionHref("/", "raida"), "/community#raida");
+    assert.equal(sectionHref("/community", "case-studies"), "/#case-studies");
+    assert.equal(sectionHref("/community", "project-inquiry"), "/#project-inquiry");
   });
 });
 
 describe("legacy ?audience= links", () => {
   test("map to the audience routes", () => {
-    assert.equal(redirect("https://www.raidguild.org/?audience=hire"), "https://www.raidguild.org/agency");
+    assert.equal(redirect("https://www.raidguild.org/?audience=hire"), "https://www.raidguild.org/");
     assert.equal(redirect("https://www.raidguild.org/?audience=join"), "https://www.raidguild.org/community");
   });
 
   test("keep unrelated query parameters and the hash", () => {
     assert.equal(redirect("https://www.raidguild.org/?utm_source=x&audience=join&ref=tae#raida"), "https://www.raidguild.org/community?utm_source=x&ref=tae#raida");
-    assert.equal(redirect("http://localhost:3000/?audience=hire&utm_campaign=review"), "http://localhost:3000/agency?utm_campaign=review");
+    assert.equal(redirect("http://localhost:3000/?audience=hire&utm_campaign=review"), "http://localhost:3000/?utm_campaign=review");
   });
 
   test("leave everything else alone", () => {
@@ -66,17 +67,21 @@ describe("legacy ?audience= links", () => {
   });
 });
 
-describe("/clients → /agency (November 7, 2026)", () => {
-  test("/clients and everything below it redirect permanently to /agency", async () => {
+describe("canonical routes (November 10, 2026): Hire the DAO at /", () => {
+  test("/agency and /clients, and everything below them, redirect permanently to /", async () => {
     const redirects = await nextConfig.redirects();
-    const moved = redirects.filter((rule) => rule.source.startsWith("/clients"));
-    assert.deepEqual(moved, [{ source: "/clients/:path*", destination: "/agency/:path*", permanent: true }]);
+    const moved = redirects.filter((rule) => /^\/(agency|clients)/.test(rule.source));
+    // The bare paths have explicit rules: "/:path*" with an empty path loops (found November 10).
+    assert.deepEqual(moved, [
+      { source: "/agency", destination: "/", permanent: true },
+      { source: "/agency/:path+", destination: "/:path+", permanent: true },
+      { source: "/clients", destination: "/", permanent: true },
+      { source: "/clients/:path+", destination: "/:path+", permanent: true },
+    ]);
   });
 
-  test("the review domain root opens /agency directly, and nothing redirects away from the audience routes", async () => {
+  test("nothing redirects away from / or /community (no loop on any host)", async () => {
     const redirects = await nextConfig.redirects();
-    const root = redirects.find((rule) => rule.source === "/" && rule.has?.some((condition) => condition.value === "raidguild.estudioblanco.org"));
-    assert.equal(root?.destination, "/agency");
-    assert.ok(!redirects.some((rule) => /^\/(agency|community)(\/|$)/.test(rule.source)));
+    assert.ok(!redirects.some((rule) => rule.source === "/" || /^\/community(\/|$)/.test(rule.source)), JSON.stringify(redirects));
   });
 });

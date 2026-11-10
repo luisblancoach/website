@@ -271,6 +271,16 @@ owner's decision on `raidguild.estudioblanco.org` routing (still 302 to Railway)
 
 # Session log (newest first; history, not current state)
 
+## November 10, late night: canonical routes (Hire the DAO at `/`), verified locally, uncommitted
+
+- Owner order: `/` = Hire the DAO, `/community` = Join the DAO, `/agency` → `/` (308). Implemented in 21 files (page
+  move, redirects incl. a fix for an empty-path redirect loop, routes, theme, nav, Editorial pages, SEO, llms.txt,
+  tests, guide). Local isolated builds: tests 137/137, tsc, lint 0 errors; redirects without loops; `/` identical to
+  the released `/agency`; SEO for two pages; editorial 21/21 + route checks 8/8; ids unchanged. Not committed, not
+  deployed at this point. Owner decisions: exactly two public pages; hunt option A (on-page hunt retired, Portal card,
+  overlay and console texts corrected). Shareable guide updated at release. Details: `docs/venture-integration.md`,
+  "Canonical routes".
+
 ## November 10, night: final handoff released (`b0d6cb6`), Vercel review and Cloudflare Editorial Mode live
 
 - Commit `b0d6cb613760bb53f891eb2bfc32e138d36f7d0c` (78 files, manifest), pushed to `fork`; upstream untouched.

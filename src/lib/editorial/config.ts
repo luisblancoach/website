@@ -22,8 +22,9 @@
 export const EDITORIAL_DEV = process.env.NODE_ENV === "development";
 export const EDITORIAL_AVAILABLE = EDITORIAL_DEV || process.env.NEXT_PUBLIC_EDITORIAL_MODE === "opt-in";
 
-export type EditorialPage = "/agency" | "/community";
-export const EDITORIAL_PAGES: readonly EditorialPage[] = ["/agency", "/community"];
+// November 10 (canonical routes): Hire the DAO is "/" (was /agency). Copy ids keep their "clients." prefix.
+export type EditorialPage = "/" | "/community";
+export const EDITORIAL_PAGES: readonly EditorialPage[] = ["/", "/community"];
 // "shared": the chrome every Venture route shows (header switch, hero ornaments,
 // ticker, creed, footer); a decision there changes both pages.
 export type SectionPage = EditorialPage | "shared";
@@ -62,7 +63,7 @@ export type EditorialSection = {
   exclude?: [RegExp, string][];
 };
 
-const AGENCY = { page: "/agency", pageLabel: "Agency" } as const;
+const AGENCY = { page: "/", pageLabel: "Agency" } as const;
 const COMMUNITY = { page: "/community", pageLabel: "Community" } as const;
 const SHARED = { page: "shared", pageLabel: "Both pages" } as const;
 const META: EditorialSection["hidden"] = [[/^(title|description|shareTitle|shareImageAlt)$/, "metadata"]];

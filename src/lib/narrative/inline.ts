@@ -18,7 +18,7 @@ export type InlineNode =
 
 const PAIRS = [["**", "strong"], ["++", "u"], ["_", "em"]] as const;
 
-// Links: https, http, mailto, a site path ("/agency") or an anchor ("#faq").
+// Links: https, http, mailto, a site path ("/community") or an anchor ("#faq").
 // Anything else (javascript:, data:, protocol-relative "//", spaces, quotes or
 // angle brackets) is not a link.
 export function safeHref(raw: string): string | null {

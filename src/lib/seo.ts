@@ -38,7 +38,8 @@ export const ASSET_ORIGIN =
 export const canonicalUrl = (path: string) => (path === "/" ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${path}`);
 
 // The routes listed in the sitemap once the site is indexable.
-export const PUBLIC_ROUTES = ["/", "/agency", "/community"] as const;
+// The two canonical public pages (November 10): Hire the DAO at "/", Join the DAO at /community.
+export const PUBLIC_ROUTES = ["/", "/community"] as const;
 
 // --- Structured data (schema.org JSON-LD) ---
 // Only facts already published on the site: the name, the domain, the logo, the

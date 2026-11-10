@@ -250,7 +250,6 @@ function Shell({ children, nav, site }: { children: ReactNode; nav?: AudienceNav
         onSpears={() => dismissPortal("spears")}
         onProblem={() => dismissPortal("project-inquiry")}
         onJoin={joinGuild}
-        hunt={pathname === "/"}
       />
     </div>
     </UnchartedHunt>

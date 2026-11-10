@@ -10,7 +10,7 @@ import { siteContent } from "../src/lib/narrative/site.ts";
 describe("seo", () => {
   test("canonical URLs name the public domain, never a review host", () => {
     assert.equal(SITE_ORIGIN, "https://www.raidguild.org");
-    assert.deepEqual(PUBLIC_ROUTES.map(canonicalUrl), ["https://www.raidguild.org/", "https://www.raidguild.org/agency", "https://www.raidguild.org/community"]);
+    assert.deepEqual(PUBLIC_ROUTES.map(canonicalUrl), ["https://www.raidguild.org/", "https://www.raidguild.org/community"], "two canonical pages: Hire the DAO at /, Join the DAO");
   });
 
   test("builds are noindex unless they are the canonical production deployment", () => {
@@ -22,7 +22,7 @@ describe("seo", () => {
 
   test("Service markup is the services gallery as shown", () => {
     const cards = forAudience(clientsServiceGallery, false).cards;
-    const services = serviceNodes("/agency", cards);
+    const services = serviceNodes("/", cards);
     assert.equal(services.length, 6);
     assert.deepEqual(services.map((s) => s.name), ["Full-stack development", "Smart contracts, onchain systems", "Applied AI and automation", "Product and system design", "Marketing and content strategy", "DAO consulting and governance"]);
     services.forEach((service, i) => {
@@ -35,7 +35,7 @@ describe("seo", () => {
     const footer = siteContent.footer.socials.map((link) => link.href);
     for (const profile of organizationNode.sameAs) assert.ok(footer.includes(profile), profile);
     assert.equal(organizationNode.logo.url, "https://www.raidguild.org/images/raidguild-logo.svg");
-    const all = JSON.stringify(graph(organizationNode, websiteNode, webPageNode("/agency", "t", "d"), ...serviceNodes("/agency", forAudience(clientsServiceGallery, false).cards)));
+    const all = JSON.stringify(graph(organizationNode, websiteNode, webPageNode("/", "t", "d"), ...serviceNodes("/", forAudience(clientsServiceGallery, false).cards)));
     assert.doesNotMatch(all, /"(aggregateRating|review|priceRange|telephone|address|employee|offers)"\s*:/, "no invented business facts");
     assert.doesNotMatch(all, /TODO|placeholder/i);
   });

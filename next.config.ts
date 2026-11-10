@@ -36,22 +36,18 @@ const nextConfig: NextConfig = {
         destination: "/files/raid_guild.pdf",
         permanent: false, // true if you want a 308 permanent redirect
       },
-      // November 7, 2026: Hire the DAO moved from /clients to /agency. Old links
-      // (and anything below /clients) land on the same place with a 308; the
-      // query string is kept and the browser keeps the #section.
-      {
-        source: "/clients/:path*",
-        destination: "/agency/:path*",
-        permanent: true,
-      },
-      // Public review domain (November 3, 2026): its root opens Hire the DAO.
-      // Scoped to that host, so raidguild.org and every other host keep "/".
-      {
-        source: "/",
-        has: [{ type: "host", value: "raidguild.estudioblanco.org" }],
-        destination: "/agency",
-        permanent: false,
-      },
+      // November 10, 2026 (owner, canonical routes): Hire the DAO is the root
+      // page "/". Its former addresses, /agency (November 7) and /clients
+      // (before), and anything below them land there with a 308; the query
+      // string is kept and the browser keeps the #section. The host-scoped
+      // "/" → /agency redirect for raidguild.estudioblanco.org (November 3) was
+      // removed: "/" is Hire the DAO on every host, and keeping it would loop.
+      // The bare paths need their own rules: "/:path*" with an empty path
+      // resolves to an empty Location and loops on itself.
+      { source: "/agency", destination: "/", permanent: true },
+      { source: "/agency/:path+", destination: "/:path+", permanent: true },
+      { source: "/clients", destination: "/", permanent: true },
+      { source: "/clients/:path+", destination: "/:path+", permanent: true },
     ];
   },
 };
