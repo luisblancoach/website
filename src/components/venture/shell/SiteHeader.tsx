@@ -54,7 +54,7 @@ export default function SiteHeader({ nav = {} }: { nav?: AudienceNav }) {
           the theme switch stay pinned to the top of the viewport as one bar;
           the section navigation scrolls away with the header. */}
       {audience ? (
-        <div className={styles.topBar}>
+        <div className={styles.topBar} data-fixed-nav="">
           <Link className={styles.brand} href="/" aria-label="RaidGuild home" onClick={() => setMenuOpen(false)}>
             <Sigil />
             <span>RAID{" "}<br />GUILD</span>
