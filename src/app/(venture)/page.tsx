@@ -33,7 +33,7 @@ import { canonicalUrl, graph, jsonLd, organizationNode, serviceNodes, webPageNod
 const SEO_TITLE = clientsMeta.title.text;
 const SHARE_TITLE = clientsMeta.shareTitle.text;
 const SEO_DESCRIPTION = clientsMeta.description.text;
-const SHARE_IMAGE = { url: "/images/venture/og/clients-queen-raida.webp", width: 1200, height: 630, type: "image/webp", alt: clientsMeta.shareImageAlt.text };
+const SHARE_IMAGE = { url: "/images/venture/og/hire-dao-2026.png", width: 1731, height: 909, type: "image/png", alt: clientsMeta.shareImageAlt.text };
 export const metadata: Metadata = {
   alternates: { canonical: canonicalUrl("/") },
   title: { absolute: SEO_TITLE },

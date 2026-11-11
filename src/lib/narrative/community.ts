@@ -361,7 +361,7 @@ export const communityMeta: PageMetaContent = defineNarrative("community.meta", 
   title: wording("Join the DAO", "Page title (October 30 metadata draft); the root layout's template shows it as “Join the DAO | RaidGuild”."),
   description: wording("RaidGuild is a builder-owned community. Meet Guild members, explore their experiments, and find people to build and contribute with.", "October 30 metadata draft; needs editorial approval."),
   shareTitle: wording("Join the DAO: find your people at RaidGuild", "October 30 metadata draft; needs editorial approval."),
-  shareImageAlt: wording("Guild builders facing Moloch, a horned colossus, in a coral city", "Describes the share image (Moloch rectangle artwork)."),
+  shareImageAlt: wording("Join the DAO: RaidGuild builders looking toward a shared future", "Describes the 2026 Join the DAO share card; text from PR #108."),
 } satisfies PageMetaContent);
 
 export const communityCreed: CreedContent = defineNarrative("community.creed", {

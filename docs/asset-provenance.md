@@ -289,3 +289,7 @@ pill icon masks (`venture.module.css`) use the new files. Untracked until commit
     `395c9a63b0230bdf80d672e838d7f5a99a234c73fb4a8306004fe358dbf3ccfa`;
   - Discord and Brand Archive reuse `ico_discord.svg` and `venture/ico-logo.svg` (the RaidGuild mark).
   The GitHub and X marks identify links to those services' RaidGuild pages only.
+
+## Social preview cards — 2026-11-11
+
+Supplied directly by the project owner for this social-preview update. Copied unchanged from Downloads: `venturebeyond_thumbnail.png` → `public/opengraph-image.png`; `hire-dao-thumbnail.png` → `public/images/venture/og/hire-dao-2026.png`; `join-dao-thumbnail.png` → `public/images/venture/og/join-dao-2026.png`. Each is 1731 × 909 PNG. No additional authorship or licensing claim is made.

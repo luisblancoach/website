@@ -3,6 +3,24 @@
 Current state verified on **2026-11-10 (-0300), evening (editorial cycle 02 close)** from the repository, the remotes, GitHub and the live hosts. Everything
 below "Session log" is history; the sections in this first part are the source of truth.
 
+## Upstream records (raid-guild/website `main`, PRs #107 and #108), kept verbatim
+
+### Social preview cards · 2026-11-11
+
+- Prepared in the isolated `unfurl-updates/website` checkout. Owner authorized commit, push, and merge to main for the social preview release.
+- Home uses the supplied Venture Beyond card; `/clients` and the new non-redirecting `/agency` alias use Hire the DAO; `/community` uses Join the DAO. Open Graph and X metadata agree.
+- Moved the legacy file-based Open Graph image into public assets so route-specific metadata can take effect. Updated agency audience and anchor helpers.
+- Verification: all 8 website test files and TypeScript passed; targeted agency route assertions passed. Production build and live crawler previews were not verified. No rendered design or editorial parity claim.
+
+### Current release preparation · 2026-11-11
+
+- Worktree: `/home/dekanjbrown/Documents/Codex/2026-11-09/i-x20/work/website-release-merge`, an isolated checkout of `review/venture-beyond-redesign`. The original checkout and its untracked artwork and lockfile were untouched.
+- Branch state: the review tip `7d0e878` was reconciled with `origin/main` `b02d67b` for the existing website PR. The resulting merge commit is this checkout's HEAD; the worktree is clean at close. No production merge or deployment was performed here.
+- Conflicts resolved in `package.json`, `src/middleware.ts`, and `tests/agent-readiness.test.mjs`: retain the redesign's complete test and brand scripts, legacy audience redirect, and current Portal join URL while keeping `main`'s Markdown negotiation and discovery headers. Fixed one pre-existing CSS Modules purity error in `src/components/venture/venture.module.css` by scoping the summary focus selector to `.site`; the focus appearance is unchanged.
+- Verification: `bun install --frozen-lockfile`, `bun run test` (8 test files passed), `bunx tsc --noEmit --incremental false`, `bun run lint` (0 errors, 1 existing `ThemeAnchor` warning), and `SHOW_REVIEW_FLAGS=false bun run build` (Next.js Turbopack, 19/19 static pages generated) passed. The first sandboxed build could not fetch Ubuntu fonts from Google; the successful run used approved network access. A diagnostic Webpack run exposed the CSS selector error; its temporary build configuration was restored before the passing build.
+- October 23 visual reference comparison: not verified in this merge preparation, which changes no rendered design content. Editorial parity: not verified. The historical baseline tag is absent from this isolated clone; no visual or editorial edits were made.
+- Next priority: independently review the merge, then push the reviewed branch to update its PR. Merge to `main` and production verification remain owner release steps.
+
 ## Snapshot
 
 - **Latest integrated implementation:** commit `7417113` "feat(venture): baseline for Dekan review" on

@@ -292,7 +292,7 @@ export const clientsMeta: PageMetaContent = defineNarrative("clients.meta", {
     "owner-approval",
   ),
   shareTitle: approved("Hire RaidGuild: senior teams for hard onchain and AI builds", "owner-approval"),
-  shareImageAlt: approved("Queen Raida, RaidGuild's AI agent, rising from the clouds above a group of Guild builders", "owner-approval"),
+  shareImageAlt: wording("Hire the DAO: RaidGuild builders and AI companions at work", "Describes the 2026 Hire the DAO share card; text from PR #108."),
 } satisfies PageMetaContent);
 
 export const clientsNarrative = { clientsHero, clientsCapabilities, clientsServices, clientsServiceGallery, clientsReasons, clientsPreviousWorks, clientsFaq, clientsInquiry, clientsNav, clientsCreed, clientsMeta };

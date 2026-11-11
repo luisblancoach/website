@@ -1369,3 +1369,11 @@ did not reach the session; the changes follow the written brief and were checked
   banner, help and "next clue" messages now lead the trail in the console itself (`raidguild.clue("signal")`, then
   `"walker"`). Console commands, progress and the walker link are unchanged. No hunt was moved to `/community` and no
   hidden landing was kept; the legacy entry components and the on-page clue markers remain in the code, unused.
+
+## Social previews — 2026-11-11
+
+The home page uses Venture Beyond; `/clients` and `/agency` use Hire the DAO; `/community` uses Join the DAO. `/agency` renders the existing client experience without redirecting and retains its own canonical URL. Moving the root file-based Open Graph image into `public` allows explicit route metadata to select the intended image. Existing audience navigation still targets `/clients`.
+
+## Integration with `main` — 2026-11-11
+
+Branch `feat/venture-beyond-agency-community` replays `feat/venture-beyond-integration` (`7417113..c7cd52f`) on `main` `256b2ff`. Hire the DAO renders at `/`; `/agency` and `/clients` redirect permanently to `/` (one hop, query kept), which supersedes the non-redirecting `/agency` alias above. The 2026 cards stay: Hire the DAO on `/`, Join the DAO on `/community`, Venture Beyond as the site-wide default. The share-image descriptions follow the new cards (text from PR #108, marked for editorial approval). The Cloudflare review kit (`deploy/cloudflare/`) is not part of this branch.
