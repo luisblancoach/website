@@ -3514,3 +3514,111 @@
    - The Moloch CTA: see feature.module.css (its class lives there).
    Day is unchanged. Tokens are scoped to the pills, so hover / active keep working. */
 :global(html[data-theme="dark"]) .site[data-cta="semantic"] .pillFilled { --cta-border: #12163b; --cta-icon-bg: transparent; --cta-icon-fg: var(--cta-fg); }
+
+/* Hire the DAO form, November 11 (owner's review of the inquiry flow).
+   - Ubuntu throughout: labels, fields, placeholders, menus, buttons, messages;
+     the confirmation title alone is Last Duel.
+   - Semantic error colour per theme (Day #a61b29: 6.2:1 on cream, 7.5:1 on
+     white fields; Night #ffb4ab: 7.8:1 on the raised navy, 6.5:1 in fields),
+     used for messages, field lines, labels and the submission notice.
+   - Lighter selections: a chosen option has a primary edge and a 10% primary
+     fill and keeps the theme's text colour; the radio dot and the check are the
+     accent. Day uses the deeper pink #ce1252 (4.5:1 on cream, 4.0:1 on the
+     tint); Night the brand pink (3.5:1 on navy, 3.2:1 on the tint). A full
+     fill stays reserved for the main action (Next, Send inquiry).
+   Selectors start with html so they come after, and win over, the earlier
+   form rules of equal weight. */
+:global(html:not([data-theme="dark"])) .site .contactFormShell[data-inquiry-form] {
+  --inq-text: var(--color-dark-green); --inq-accent: #ce1252; --inq-soft: color-mix(in srgb, var(--color-pink) 10%, transparent);
+  --inq-line: rgba(16,45,44,.55); --inq-tile-line: rgba(16,45,44,.4); --inq-error: #a61b29; --inq-error-soft: color-mix(in srgb, #a61b29 7%, transparent);
+  --inq-field: #ffffff; --inq-field-valid: var(--color-cyan); --inq-field-invalid: color-mix(in srgb, var(--color-pink) 10%, #ffffff);
+  --inq-error-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='8.5' fill='none' stroke='%23a61b29' stroke-width='1.8'/%3E%3Cpath d='M10 5.6v5.6' stroke='%23a61b29' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.2' r='1.2' fill='%23a61b29'/%3E%3C/svg%3E");
+}
+:global(html[data-theme="dark"]) .site .contactFormShell[data-inquiry-form] {
+  --inq-text: var(--color-cream); --inq-accent: var(--color-pink); --inq-soft: color-mix(in srgb, var(--color-pink) 10%, transparent);
+  --inq-line: rgba(239,233,215,.5); --inq-tile-line: rgba(239,233,215,.42); --inq-error: #ffb4ab; --inq-error-soft: color-mix(in srgb, #ffb4ab 10%, transparent);
+  /* The keyboard ring in cream on navy (the site default, dark green, is 1.5:1 here). */
+  --cta-focus-ring: var(--color-cream); --cta-focus-halo: var(--color-navy);
+  --inq-field: rgba(239,233,215,.07); --inq-field-valid: color-mix(in srgb, var(--color-cyan) 32%, #252a61); /* cream text 4.9:1 */ --inq-field-invalid: color-mix(in srgb, var(--color-pink) 10%, #252a61);
+  --inq-error-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='8.5' fill='none' stroke='%23ffb4ab' stroke-width='1.8'/%3E%3Cpath d='M10 5.6v5.6' stroke='%23ffb4ab' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.2' r='1.2' fill='%23ffb4ab'/%3E%3C/svg%3E");
+}
+/* Ubuntu everywhere in the form. */
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :is(label, input, textarea, button, p, li, span, strong, a, h3, [data-slot="form-message"]) { font-family: var(--font-ubuntu), sans-serif !important; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.contact-btn-active) { font-size: 15px !important; font-weight: 700 !important; letter-spacing: .01em !important; text-transform: none !important; }
+/* Field messages: beside the field, in the error colour, with a mark that does not rely on colour. */
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global([data-slot="form-message"]) { align-items: flex-start; color: var(--inq-error) !important; display: flex; font-size: 14px !important; font-weight: 500; gap: 6px; line-height: 1.35; margin-top: 6px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global([data-slot="form-message"])::before { align-items: center; border: 1.5px solid currentColor; border-radius: 50%; content: "!"; display: inline-flex; flex: 0 0 auto; font: 700 11px/1 var(--font-ubuntu), sans-serif; height: 16px; justify-content: center; margin-top: 1px; width: 16px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(label[data-error="true"]) { color: var(--inq-error) !important; }
+
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(button[role="combobox"]):focus-visible { outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+/* Option tiles (What matters most, Services Needed). */
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choices) { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choices-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choice) { align-items: center; background: transparent; border: 1.5px solid var(--inq-tile-line); border-radius: 12px; color: var(--inq-text) !important; cursor: pointer; display: flex; font-size: 15px !important; font-weight: 500 !important; gap: 10px; line-height: 1.3 !important; margin: 0 !important; min-height: 44px; min-width: 0; padding: 9px 14px; position: relative; transition: background-color .15s ease, border-color .15s ease; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choice):hover { border-color: var(--inq-accent); }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choice[data-checked]) { background: var(--inq-soft); border-color: var(--inq-accent); }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choice):has(:focus-visible) { box-shadow: 0 0 0 3px var(--cta-focus-halo); outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(:is(.inquiry-choices[data-invalid], .inquiry-choices[aria-invalid="true"])) :global(.inquiry-choice):not([data-checked]) { border-color: var(--inq-error); }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-radio) { background: transparent; border: 2px solid var(--inq-tile-line); color: var(--inq-accent); flex: 0 0 auto; height: 18px; width: 18px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-radio[data-state="checked"]) { border-color: var(--inq-accent); }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-radio):focus-visible { box-shadow: none; outline: none; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-radio) svg { height: 9px; width: 9px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choice-input) { cursor: pointer; inset: 0; margin: 0; opacity: 0; position: absolute; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-check) { align-items: center; border: 2px solid var(--inq-tile-line); border-radius: 4px; color: transparent; display: inline-flex; flex: 0 0 auto; height: 18px; justify-content: center; width: 18px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-check) svg { height: 12px; width: 12px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choice[data-checked]) :global(.inquiry-check) { border-color: var(--inq-accent); color: var(--inq-accent); }
+@media (max-width: 600px) {
+  :global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choices-grid) { grid-template-columns: minmax(0, 1fr); }
+  :global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-choices) > :global(.inquiry-choice) { flex: 1 1 100%; }
+}
+/* Step header: focusable after a step change, ringed only for keyboard users. */
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] [data-wizard-progress]:focus { outline: none; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] [data-wizard-progress]:focus-visible { outline: 3px solid var(--cta-focus-ring); outline-offset: 4px; }
+/* Sending: the steps keep their place, read-only and slightly quieter. */
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] [data-busy] :global(.min-h-\[300px\]) { opacity: .62; transition: opacity .2s ease; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] [data-wizard-primary][aria-disabled="true"] { cursor: progress; }
+/* Field surfaces (November 11, revised): neutral to begin with; the system
+   celeste once a field with content has been checked and is valid; coral at
+   10% with a full error edge and an error mark when it is not. An optional
+   field left empty stays neutral. */
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :is(:global(.contact-form-input), :global(.contact-form-textarea), :global(button[role="combobox"])) { background-color: var(--inq-field) !important; transition: background-color .15s ease, border-color .15s ease; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :is(:global(.contact-form-input), :global(.contact-form-textarea), :global(button[role="combobox"]))[data-valid] { background-color: var(--inq-field-valid) !important; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :is(:global(.contact-form-input), :global(.contact-form-textarea), :global(button[role="combobox"]))[aria-invalid="true"] { background-color: var(--inq-field-invalid) !important; background-image: var(--inq-error-icon) !important; background-position: right 12px center !important; background-repeat: no-repeat !important; background-size: 18px 18px !important; border: 1.5px solid var(--inq-error) !important; border-radius: 6px !important; box-shadow: none !important; padding-right: 40px !important; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.contact-form-textarea)[aria-invalid="true"] { background-position: right 12px top 12px !important; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(button[role="combobox"])[aria-invalid="true"] { background-position: right 36px center !important; }
+@media (prefers-reduced-motion: reduce) { :global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :is(:global(.contact-form-input), :global(.contact-form-textarea), :global(button[role="combobox"])) { transition: none; } }
+
+/* Submission failure: a full-width alert just above the actions, with its own mark. */
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-notice) { align-items: start; background: var(--inq-field-invalid); border: 1.5px solid var(--inq-error); border-radius: 12px; color: var(--inq-text); column-gap: 12px; display: grid; font-size: 15px; grid-template-columns: auto minmax(0, 1fr); line-height: 1.45; padding: 14px 16px; width: 100%; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-notice-icon) { align-items: center; border: 2px solid var(--inq-error); border-radius: 50%; color: var(--inq-error); display: inline-flex; font: 700 14px/1 var(--font-ubuntu), sans-serif !important; height: 22px; justify-content: center; margin-top: 1px; width: 22px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-notice) p { margin: 0; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-notice-body) > * + * { margin-top: 4px; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-notice-title) { color: var(--inq-error); font-weight: 700; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-notice):focus { outline: none; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-notice):focus-visible { outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+
+/* Confirmation (November 11, revised): the title lives in the module heading
+   (THE FIRES / HAVE BEEN LIT!); here, right below it, the lit beacon, large and
+   centred, then the message across the panel and the Discord action. */
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-form) { container: inquiry / inline-size; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-confirmation) { color: var(--inq-text); display: flex; flex-direction: column; gap: 22px; text-align: left; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-confirmation-title) { color: var(--inq-text) !important; font-family: var(--font-last-duel), sans-serif !important; font-size: clamp(30px, 3.2vw, 42px); font-weight: 400; line-height: 1.04; margin: 0; outline: none; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-confirmation-body) { font-size: 17px; line-height: 1.55; margin: 0; max-width: none; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-confirmation-body) strong { font-weight: 700; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-discord) { align-items: center; align-self: flex-start; background: var(--cta-bg); border: var(--cta-border-width, 2px) solid var(--cta-border); border-radius: 100px; color: var(--cta-fg); display: inline-flex; font-size: 16px; font-weight: 700; gap: 10px; min-height: 48px; padding: 0 24px 0 20px; text-decoration: none; transition: box-shadow .18s ease, transform .18s ease; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-discord-icon) { background: currentColor; display: block; flex: 0 0 auto; height: 20px; -webkit-mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; width: 20px; }
+@media (hover: hover) { :global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-discord):hover { box-shadow: var(--cta-hover-shadow); transform: translateY(-1px); } }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-discord):active { box-shadow: var(--cta-active-inset); transform: none; }
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-discord):focus-visible { box-shadow: 0 0 0 3px var(--cta-focus-halo); outline: 3px solid var(--cta-focus-ring); outline-offset: 3px; }
+/* Phones: the Discord action spans the panel so its label stays on one line. */
+@container inquiry (max-width: 400px) {
+  :global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-discord) { align-self: stretch; font-size: 15px; justify-content: center; padding: 0 16px; white-space: nowrap; }
+}
+/* beacon.png has wide transparent margins: a square crop keeps the art large. */
+:global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-beacon) { align-self: center; aspect-ratio: 1; display: block; height: auto; margin: 0; max-width: 340px; object-fit: cover; object-position: 50% 50%; width: 100%; }
+@media (prefers-reduced-motion: reduce) { :global(html:is([data-theme="dark"], :not([data-theme="dark"]))) .site .contactFormShell[data-inquiry-form] :global(.inquiry-discord) { transition: none; } }
+
+/* The heading on steps 2 and 3 (label only) and after success. */
+.contact .contactCopy[data-compact] .sectionLabel { margin-bottom: 0; }
+.contact h2.contactDone { outline: none; }
+.contact h2.contactDone span { display: block; white-space: nowrap; }

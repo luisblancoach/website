@@ -1369,3 +1369,32 @@ did not reach the session; the changes follow the written brief and were checked
   banner, help and "next clue" messages now lead the trail in the console itself (`raidguild.clue("signal")`, then
   `"walker"`). Console commands, progress and the walker link are unchanged. No hunt was moved to `/community` and no
   hidden landing was kept; the legacy entry components and the on-page clue markers remain in the code, unused.
+
+## Hire the DAO form, states and 404 — 2026-11-11
+
+On `feat/venture-beyond-agency-community` (PR #109): lighter selections (Services Needed as check tiles), Ubuntu
+throughout the form, Day/Night error colours (#a61b29 / #ffb4ab), focus on the first field needing attention, the
+panel kept in place while sending, errors and retries that keep every answer and the step, the confirmation with the
+lit beacon (Last Duel title, static RaidGuild signature), the transmitter beside the error notice, and a 404 page with
+the fallen signpost. Illustrations: `docs/asset-provenance.md`, "Inquiry and error states".
+The specs link accepts a domain with or without protocol: trimmed, given https:// when it has none, full http(s)
+links kept as entered; normalized before Next validates and sent normalized (`normalizeLink` and `isValidLink`
+in `lib/validation.ts`, tests in `tests/inquiry-link.test.mjs`).
+
+**New copy pending Tae's review** (not yet in the narrative files, so not editable in Editorial Mode):
+
+| Where | Copy |
+|---|---|
+| Inquiry, step 3 action (was "Complete") | "Send inquiry" |
+| Inquiry, while sending | "Sending inquiry…" |
+| Inquiry, action after a failed send | "Try again" |
+| Inquiry, failed send (alert title) | "We couldn't confirm your inquiry." (owner's wording) |
+| Inquiry, failed send (alert text) | "Your answers are still here. You can try again." (owner's wording) |
+| Inquiry heading after success (label) | "[ Transmission Started ]" (owner's wording) |
+| Inquiry heading after success (title) | "The Fires" / "Have Been Lit!" (the existing title, set as the opening title's two lines) |
+| Confirmation, first sentence (was "Your quest has been received.") | "**Your Submission Has Been Received.**" in Ubuntu Bold (owner's wording) |
+| Inquiry, share-image descriptions (from PR #108) | already marked `wording` in `clients.ts` / `community.ts` |
+| Inquiry, invalid specs link (owner's wording) | "Enter a valid link, like example.com." |
+| 404 page title (owner's wording) | "This trail ends here." |
+| 404 page link (owner's wording) | "Back to RaidGuild" |
+| 404 browser tab | "This trail ends here" |

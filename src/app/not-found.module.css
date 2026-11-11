@@ -1,0 +1,20 @@
+/* 404 (November 11): the fallen signpost beside the message, on the site's
+   cream (Day) or navy (Night). The return link is the page's one action, so it
+   takes the filled primary style. */
+.page { align-items: center; background: #efe9d7; color: #102d2c; display: flex; min-height: 100svh; padding: 48px 24px; }
+:global(html[data-theme="dark"]) .page { background: #191e4e; color: #efe9d7; }
+.inner { align-items: center; display: grid; gap: clamp(24px, 5vw, 64px); grid-template-columns: minmax(0, 460px) minmax(0, 1fr); margin: 0 auto; max-width: 1040px; width: 100%; }
+.art { display: block; height: auto; width: 100%; }
+.copy { min-width: 0; }
+.code { font: 700 14px/1.4 var(--font-ubuntu-mono), monospace; letter-spacing: .12em; margin: 0 0 12px; opacity: .8; }
+.title { font-family: var(--font-last-duel), sans-serif; font-size: clamp(36px, 5vw, 64px); font-weight: 400; line-height: 1.02; margin: 0 0 28px; }
+.back { align-items: center; background: #ee3c78; border: 2px solid #12163b; border-radius: 100px; color: #071c1d; display: inline-flex; font: 700 16px/1.2 var(--font-ubuntu), sans-serif; min-height: 48px; padding: 0 26px; text-decoration: none; transition: box-shadow .18s ease, transform .18s ease; }
+:global(html[data-theme="dark"]) .back { border-color: #efe9d7; color: #12163b; }
+.back:hover { box-shadow: 0 3px 10px rgba(7, 28, 29, .25); transform: translateY(-1px); }
+.back:focus-visible { box-shadow: 0 0 0 3px #efe9d7; outline: 3px solid #102d2c; outline-offset: 3px; }
+:global(html[data-theme="dark"]) .back:focus-visible { box-shadow: 0 0 0 3px #191e4e; outline-color: #efe9d7; }
+@media (max-width: 700px) {
+  .inner { grid-template-columns: minmax(0, 1fr); }
+  .art { margin: 0 auto; max-width: 320px; }
+}
+@media (prefers-reduced-motion: reduce) { .back { transition: none; } .back:hover { transform: none; } }
