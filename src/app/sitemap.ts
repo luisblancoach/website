@@ -9,10 +9,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
-    {
-      url: `${base}/join`,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
   ];
 }

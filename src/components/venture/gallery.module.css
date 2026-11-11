@@ -1,0 +1,158 @@
+/* November 2 feature gallery and FAQ (FeatureGallery.tsx, Faq.tsx), shared by
+   /clients and /community. One structure, spacing and interaction on both
+   routes; `tone` changes the surface only. Content width follows the shared
+   column (--page-inline); the card row bleeds to the viewport's edges inside
+   its own scroll container, so the page never scrolls sideways.
+   Type: section titles take the two-level hierarchy (venture.module.css);
+   card titles repeat it at card scale (Retalic over extended italic), each
+   line one line: sizes are fitted to the card so the longest lines ("Smart
+   contracts," 15 characters, "and hackerhouses" 16) fit; labels use the section-marker tokens (Last Duel Bold); body,
+   links and FAQ text are Ubuntu. */
+
+.gallery, .faq, .reasons {
+  --gal-surface: var(--color-cream, #efe9d7); --gal-ink: var(--color-dark-green, #102d2c);
+  --gal-card: #f9f7e7; --gal-art: #e6dfc9; --gal-edge: rgba(16, 45, 44, .28); --gal-edge-strong: var(--color-dark-green, #102d2c);
+  --gal-accent: var(--color-pink, #ee3c78); --gal-ring: var(--color-dark-green, #102d2c);
+  background: var(--gal-surface); color: var(--gal-ink); padding-block: var(--section-space, 96px); scroll-margin-top: 90px;
+  transition: background-color .9s ease, color .9s ease;
+}
+:global(html[data-theme="dark"]) .gallery, :global(html[data-theme="dark"]) .faq, :global(html[data-theme="dark"]) .reasons {
+  --gal-surface: var(--color-navy, #191e4e); --gal-ink: var(--color-cream, #efe9d7);
+  --gal-card: #12163b; --gal-art: #0d1030; --gal-edge: rgba(239, 233, 215, .28); --gal-edge-strong: var(--color-cream, #efe9d7);
+  --gal-ring: var(--color-cream, #efe9d7);
+}
+/* Member benefits: the celeste surface in Day, the deep navy in Night, so the
+   two galleries read as one family with different rooms. */
+/* November 3, late night (owner): Membership is the sky in Day (as the Hats tree above it) and the raised navy in
+   Night (distinct from the Hats tree's deepest navy). Cards keep their celeste tint in Day, navy in Night. */
+.benefits { --gal-surface: var(--color-cyan, #b8e0df); --gal-card: #eaf5f4; --gal-art: #cfe8e7; }
+:global(html[data-theme="dark"]) .benefits { --gal-surface: var(--color-navy-raised, #252a61); --gal-card: var(--color-navy, #191e4e); --gal-art: #12163b; }
+
+.srOnly { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px; }
+
+.head, .foot { padding-inline: var(--page-inline, 24px); }
+.label { color: var(--gal-accent); font: 700 var(--type-marker, 16px)/1.35 var(--font-marker, var(--font-mono)), monospace; letter-spacing: var(--tracking-marker, .06em); margin: 0 0 18px; text-transform: uppercase; }
+.title { color: inherit; margin: 0; text-transform: uppercase; }
+.title em { color: var(--gal-accent); display: inline-block; }
+.intro { font: 400 var(--type-body-lg, 18px)/1.5 var(--font-body), sans-serif; margin: 20px 0 0; max-width: 36em; }
+
+/* The row: a focusable scroll region (arrow keys scroll it), snapping card by
+   card, padded to the content column so the first card lines up with the
+   heading and the last can scroll fully into view. */
+.viewport { margin-top: clamp(32px, 4vw, 48px); outline: none; overflow-x: auto; overscroll-behavior-x: contain; padding-block: 8px 16px; scroll-padding-inline: var(--page-inline, 24px); scroll-snap-type: x mandatory; scrollbar-color: var(--gal-edge) transparent; scrollbar-width: thin; }
+.viewport:focus-visible { box-shadow: inset 0 0 0 3px var(--gal-ring); }
+.row { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0 var(--page-inline, 24px); width: max-content; }
+.item { display: flex; flex: 0 0 min(82vw, 360px); scroll-snap-align: start; }
+
+.card { background: var(--gal-card); border: 2px solid var(--gal-edge); border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; transition: border-color .18s ease; width: 100%; }
+.card:focus-within { border-color: var(--gal-edge-strong); }
+@media (hover: hover) { .card:hover { border-color: var(--gal-edge-strong); } }
+.art { aspect-ratio: 4 / 3; background: var(--gal-art); line-height: 0; overflow: hidden; }
+.art img { display: block; height: 100%; object-fit: cover; object-position: center; width: 100%; }
+.artContain { padding: 18px; }
+.artContain img { object-fit: contain; }
+.cardCopy { container-type: inline-size; display: flex; flex: 1; flex-direction: column; gap: 12px; padding: 20px 22px 24px; }
+.cardLabel { color: var(--gal-accent); font: 700 12px/1.3 var(--font-marker, var(--font-mono)), monospace; letter-spacing: .06em; margin: 0; text-transform: uppercase; }
+/* The audience routes set every h3 in Ubuntu with !important; card titles are
+   display text, so they opt back in. */
+:global(html) :global([data-audience]) .card .cardTitle,
+:global(html) .card .cardTitle { font-family: var(--font-last-duel-retalic), var(--font-display), sans-serif !important; font-size: min(17px, 100cqi / 18.6); font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1.1; margin: 0; text-transform: uppercase; white-space: nowrap; }
+:global(html) :global([data-audience]) .card .cardTitle em,
+:global(html) .card .cardTitle em { color: var(--gal-accent); display: inline-block; font-family: var(--font-last-duel-extended), var(--font-display), sans-serif !important; font-size: min(23px, 100cqi / 16.8); font-style: italic; font-synthesis: style; font-weight: 700; line-height: 1.05; margin-top: .12em; }
+.cardBody { font: 400 16px/1.5 var(--font-body), sans-serif; margin: 0; }
+.cardLink { align-self: flex-start; color: inherit; font: 700 var(--type-ui, 14px)/1.4 var(--font-mono), monospace; letter-spacing: .06em; margin-top: auto; min-height: 44px; padding-top: 8px; text-decoration: underline; text-transform: uppercase; text-underline-offset: 5px; display: inline-flex; align-items: center; gap: 6px; }
+@media (hover: hover) { .cardLink:hover { text-decoration-thickness: 2px; } }
+.cardLink:focus-visible, .control:focus-visible, .faqQuestion button:focus-visible { outline: 3px solid var(--gal-ring); outline-offset: 3px; }
+
+/* Under the row: the sword buttons (one card per press) and the section's
+   action. */
+.foot { align-items: center; display: flex; flex-wrap: wrap; gap: 16px 24px; justify-content: space-between; margin-top: 24px; }
+.controls { display: flex; gap: 12px; order: 2; }
+.control { align-items: center; background: transparent; border: 2px solid currentColor; border-radius: 50%; color: inherit; cursor: pointer; display: inline-flex; height: 52px; justify-content: center; padding: 0; width: 52px; }
+.control > i { border-color: transparent !important; }
+.control:disabled { cursor: default; opacity: .32; }
+@media (hover: hover) { .control:not(:disabled):hover { background: color-mix(in srgb, currentColor 10%, transparent); } }
+.cta { order: 1; }
+.footnote { flex-basis: 100%; font: 400 16px/1.5 var(--font-body), sans-serif; margin: 0; order: 3; }
+.footnote a { color: inherit; text-underline-offset: 4px; }
+@media (max-width: 760px) {
+  .item { flex-basis: min(82vw, 320px); }
+  .row { gap: 14px; }
+  .foot { flex-direction: column; align-items: stretch; }
+  .controls { align-self: flex-end; order: 0; }
+  .cta { order: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery, .faq, .card { transition: none; }
+}
+
+/* FAQ: the heading above the list at every width (beside it, the two-line
+   title broke onto three lines), the list held to 880 px. Each question is a
+   heading whose button toggles its answer (+ turns to −). */
+.faq { display: grid; gap: 32px; padding-inline: var(--page-inline, 24px); }
+.faqList { max-width: 880px; }
+.faqList { border-bottom: 1px solid var(--gal-edge); }
+.faqItem { border-top: 1px solid var(--gal-edge); }
+.faqQuestion { margin: 0; }
+:global(html) :global([data-audience]) .faqQuestion { font-family: var(--font-body), sans-serif !important; }
+.faqQuestion button { align-items: center; background: none; border: 0; color: inherit; cursor: pointer; display: flex; font: 700 18px/1.35 var(--font-body), sans-serif; gap: 16px; justify-content: space-between; min-height: 64px; padding: 16px 0; text-align: left; width: 100%; }
+
+/* November 3 Figma pass: FAQ beside an illustration (the foundry portrait,
+   decorative). From 1000 px the heading and the list share the left column
+   (690 px at 1440) and the art takes the right one (up to 500 px), centred on
+   the column and allowed to run into the section's top and bottom padding
+   (0.4 × and 0.5 × --section-space; the top padding is 0.4 ×, so the art
+   starts at the module's edge), so it stands as tall as the module without
+   making it taller. Below
+   1000 px the art is hidden and the list keeps the full column. */
+.faqArt { display: none; }
+@media (min-width: 1000px) {
+  .faq:has(> .faqArt) { align-content: start; column-gap: 48px; grid-template-columns: minmax(0, 1fr) minmax(0, min(500px, 36vw)); }
+  .faq:has(> .faqArt) > :not(.faqArt) { grid-column: 1; }
+  .faq:has(> .faqArt) .faqList { max-width: none; }
+  .faqArt { display: block; grid-column: 2; grid-row: 1 / span 2; min-height: 0; position: relative; }
+  .faqArt img { height: calc(100% + var(--section-space, 115px) * .9); left: 0; object-fit: contain; object-position: center; position: absolute; top: calc(var(--section-space, 115px) * -.4); width: 100%; }
+}
+
+.faqAnswer p { font: 400 17px/1.6 var(--font-body), sans-serif; margin: 0; max-width: 60ch; padding: 0 0 22px; }
+.placeholder { background: color-mix(in srgb, var(--gal-accent) 14%, transparent); border: 1px dashed var(--gal-accent); border-radius: 4px; color: inherit; padding: 0 .25em; }
+
+/* November 3 (owner): one chevron marks every expandable row on the audience routes (the FAQ on both, the /clients
+   reasons). It points down while closed and turns up when the row opens; instant with reduced motion. */
+.chevron { color: currentColor; flex: 0 0 auto; height: 24px; stroke-width: 2.25; transition: transform .2s ease; width: 24px; }
+:is(.faqQuestion, .reasonTitle) button[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }
+
+/* Why RaidGuild (November 3, /clients, ClientReasons.tsx): the buyer's reasons after the services gallery, on the
+   same surface, so the two read as one services chapter (the top padding is reduced). From 1000 px the heading and
+   intro take the left column and the rows the right; below, they stack. Each row: the full RaidGuild sigil (the
+   CTA icon disc, a cream ring and the coral swords, as in sigil-logo.svg; decorative), the reason in Ubuntu bold,
+   and the chevron, on one grid so the three line up on every row. The answer starts under the reason's text. */
+.reasons { --mark: 44px; --mark-gap: 18px; display: grid; gap: 32px; padding-inline: var(--page-inline, 24px); padding-top: calc(var(--section-space, 96px) * .35); }
+.reasonsHead .intro { max-width: 34em; }
+.reasonList { border-bottom: 1px solid var(--gal-edge); }
+.reasonItem { border-top: 1px solid var(--gal-edge); }
+.reasonTitle { margin: 0; }
+:global(html) :global([data-audience]) .reasonTitle { font-family: var(--font-body), sans-serif !important; }
+.reasonTitle button { align-items: center; background: none; border: 0; color: inherit; column-gap: var(--mark-gap); cursor: pointer; display: grid; font: 700 19px/1.35 var(--font-body), sans-serif; grid-template-columns: var(--mark) minmax(0, 1fr) 24px; min-height: 76px; padding: 16px 0; text-align: left; width: 100%; }
+.reasonTitle button:focus-visible { outline: 3px solid var(--gal-ring); outline-offset: 3px; }
+.rowMark { background: var(--cta-icon-bg, #102d2c); border-radius: 50%; box-shadow: inset 0 0 0 2px var(--color-cream, #efe9d7); display: grid; height: var(--mark); place-items: center; width: var(--mark); }
+.rowMark::before { background: var(--color-pink, #ee3c78); content: ""; height: 56%; -webkit-mask: url("/images/icons/venture/ico-logo.svg") center / contain no-repeat; mask: url("/images/icons/venture/ico-logo.svg") center / contain no-repeat; width: 60%; }
+.reasonBody p { font: 400 17px/1.6 var(--font-body), sans-serif; margin: 0; max-width: 60ch; padding: 0 0 22px calc(var(--mark) + var(--mark-gap)); }
+@media (min-width: 1000px) {
+  .reasons { align-items: start; column-gap: clamp(48px, 6vw, 112px); grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+}
+@media (max-width: 760px) {
+  .reasons { --mark: 36px; --mark-gap: 14px; }
+  .reasonTitle button { font-size: 17px; grid-template-columns: var(--mark) minmax(0, 1fr) 22px; min-height: 68px; }
+  .reasonTitle .chevron { height: 22px; width: 22px; }
+  .reasonBody p { font-size: 16px; }
+}
+
+/* Card states (November 3, owner, revised): in Day the image area is the sky (#B8E0DF) at rest; the copy area keeps
+   its light surface in every state. A hovered card, or one whose link has focus, takes the Moloch magenta edge
+   in both themes (3.2:1 on cream, 4:1 on navy). The link's own 3 px focus ring stays dark green / cream. Shared
+   by the /clients services and /community capabilities galleries; instant with reduced motion. */
+:global(html:not([data-theme="dark"])) .card .art { background: var(--color-cyan, #b8e0df); }
+.card:focus-within { border-color: var(--color-pink, #ee3c78); }
+@media (hover: hover) { .card:hover { border-color: var(--color-pink, #ee3c78); } }

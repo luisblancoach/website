@@ -1,7 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../brand-dist/palette.css";
 
 @custom-variant dark (&:is(.dark *));
+
+/* Keep the hero's width stable when entrance/modal scroll locks are released. */
+html {
+    scrollbar-gutter: stable;
+}
 
 @theme inline {
     /* Brand Colors - Moloch */
@@ -46,7 +52,7 @@
     --font-size-heading-sm: 1.25rem; /* 20px */
     --font-size-body-lg: 1.25rem; /* 20px */
     --font-size-body-base: 1rem; /* 16px */
-    --font-size-body-sm: 0.75rem; /* 12px */
+    --font-size-body-sm: 0.875rem; /* 14px: minimum for readable interface text */
 
     /* Line Heights */
     --line-height-display-lg: 1.1; /* 110% */
@@ -137,40 +143,6 @@
 
 :root {
     --radius: 0.625rem;
-
-    /* Brand Colors - Moloch */
-    --moloch-100: #f1efee;
-    --moloch-200: #efc5bb;
-    --moloch-300: #e39b8b;
-    --moloch-400: #d25c41;
-    --moloch-500: #bd482d;
-    --moloch-600: #8b3521;
-    --moloch-700: #5c2316;
-    --moloch-800: #29100a;
-
-    /* Brand Colors - Scroll */
-    --scroll-100: #f9f7e7;
-    --scroll-150: #f3eeca;
-    --scroll-200: #ece5ac;
-    --scroll-300: #dccd6a;
-    --scroll-400: #d2c141;
-    --scroll-500: #b5a22c;
-    --scroll-600: #837820;
-    --scroll-700: #534a13;
-    --scroll-800: #211e07;
-
-    /* Brand Colors - Neutral */
-    --neutral-100: #f1efee;
-    --neutral-200: #d5cecd;
-    --neutral-300: #b9aeac;
-    --neutral-400: #9e8e8a;
-    --neutral-500: #806f6b;
-    --neutral-600: #645754;
-    --neutral-700: #433937;
-    --neutral-800: #221d1c;
-    --neutral-white: #fafafa;
-    --neutral-black: #0d0d0d;
-
     /* Light Theme - Using brand colors */
     --background: var(--scroll-100);
     --foreground: var(--moloch-800);
@@ -758,3 +730,24 @@
 .cohort-btn-learn:hover {
     @apply bg-scroll-100 text-moloch-800;
 }
+
+/* Contact channel picker (October 30): the "Prefer another way to connect?"
+   menu of the inquiry form. Radix renders it outside the page, so it is styled
+   here. Bone panel with a navy edge (navy with a cream edge in the dark
+   theme), 44 px options in Ubuntu (the venture pages' body face; the menu sits
+   outside them) with their channel mark, the highlighted option one
+   bone step deeper, the chosen one marked with a coral check. */
+.contact-channel { align-items: center; display: inline-flex; gap: 8px; }
+.contact-channel-icon { background: currentColor; display: inline-block; flex: 0 0 auto; height: 18px; width: 18px; }
+.contact-channel-icon[data-channel="DISCORD"] { -webkit-mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; mask: url("/images/icons/ico_discord.svg") center / contain no-repeat; }
+.contact-channel-icon[data-channel="TELEGRAM"] { -webkit-mask: url("/images/icons/ico_telegram.svg") center / contain no-repeat; mask: url("/images/icons/ico_telegram.svg") center / contain no-repeat; }
+.contact-channel-menu { background: #efe9d7; border: 2px solid #12163b; border-radius: 14px; box-shadow: 0 12px 28px rgba(7, 28, 29, .22); color: #102d2c; min-width: 10rem; padding: 4px; }
+.contact-channel-menu [role="option"] { border-radius: 10px; cursor: pointer; font: 600 15px/1.2 var(--font-ubuntu), sans-serif; min-height: 44px; padding-left: 36px; padding-right: 14px; }
+.contact-channel-menu [role="option"][data-highlighted] { background: #e6dfc9; color: #102d2c; outline: none; }
+.contact-channel-menu [role="option"] svg { color: #ce1252; }
+/* Light UI dark contrast (November 3): dark green on the audience routes; "/" keeps navy. */
+html:not([data-theme="dark"]):has([data-audience]) .contact-channel-menu { border-color: #102d2c; }
+html[data-theme="dark"] .contact-channel-menu { background: #191e4e; border-color: #efe9d7; box-shadow: 0 12px 28px rgba(0, 0, 0, .45); color: #efe9d7; }
+html[data-theme="dark"] .contact-channel-menu [role="option"][data-highlighted] { background: #262d69; color: #efe9d7; }
+html[data-theme="dark"] .contact-channel-menu [role="option"] svg { color: #ee3c78; }
+@media (prefers-reduced-motion: reduce) { .contact-channel-menu { animation: none !important; } }

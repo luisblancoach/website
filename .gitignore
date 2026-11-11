@@ -52,3 +52,7 @@ COHORT/
 
 # planning docs live outside the repo, in BrandSteward/
 docs/
+
+# Scratch from the Figma asset pull, and the PR body draft.
+/.figma-raw/
+/PR-BODY.md

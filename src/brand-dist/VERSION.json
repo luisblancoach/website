@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "distributionVersion": "0.1.0",
+  "generated": true,
+  "notice": "Generated artifact. Do not edit files in this directory manually.",
+  "source": "src/styles/tokens/palette.css",
+  "artifactHash": "sha256:bf4af1d453292e7059442a90a1c3f5b1bb081c57aefdc999d28f1dbe2a5bbbf7",
+  "files": {
+    "palette.css": "sha256:99c956d4a3c213778a67744e3a3e00dcdb2744f1d590b3ed3173189b01bad2cc"
+  }
+}

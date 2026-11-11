@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { acceptsMarkdown, appendDiscoveryLinks, isInternalNextRequest, markdownForPath, mergeVary } from "@/lib/agent-readiness";
+import { legacyAudienceRedirect } from "@/lib/venture-routes";
 
 export function middleware(request: NextRequest) {
+  const legacy = legacyAudienceRedirect(new URL(request.nextUrl.href));
+  if (legacy) return NextResponse.redirect(legacy, 307);
+
   const markdown = markdownForPath(request.nextUrl.pathname);
   if (markdown && !isInternalNextRequest(request.headers) && acceptsMarkdown(request.headers.get("accept"))) {
     return new NextResponse(markdown, {

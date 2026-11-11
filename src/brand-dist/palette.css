@@ -1,0 +1,63 @@
+/* GENERATED FILE - DO NOT EDIT. Source: raidguild-brand/src/styles/tokens/palette.css */
+/* Canonical RaidGuild palette source for Brand Distribution v0.1. */
+@theme inline {
+  --color-moloch-100: var(--moloch-100);
+  --color-moloch-200: var(--moloch-200);
+  --color-moloch-300: var(--moloch-300);
+  --color-moloch-400: var(--moloch-400);
+  --color-moloch-500: var(--moloch-500);
+  --color-moloch-600: var(--moloch-600);
+  --color-moloch-700: var(--moloch-700);
+  --color-moloch-800: var(--moloch-800);
+
+  --color-scroll-100: var(--scroll-100);
+  --color-scroll-200: var(--scroll-200);
+  --color-scroll-300: var(--scroll-300);
+  --color-scroll-400: var(--scroll-400);
+  --color-scroll-500: var(--scroll-500);
+  --color-scroll-600: var(--scroll-600);
+  --color-scroll-700: var(--scroll-700);
+  --color-scroll-800: var(--scroll-800);
+
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-white: var(--neutral-white);
+  --color-neutral-black: var(--neutral-black);
+}
+
+:root {
+  --moloch-100: #f1efee;
+  --moloch-200: #efc5bb;
+  --moloch-300: #e39b8b;
+  --moloch-400: #d25c41;
+  --moloch-500: #bd482d;
+  --moloch-600: #8b3521;
+  --moloch-700: #5c2316;
+  --moloch-800: #29100a;
+
+  --scroll-100: #f9f7e7;
+  --scroll-200: #ece5ac;
+  --scroll-300: #dccd6a;
+  --scroll-400: #d2c141;
+  --scroll-500: #b5a22c;
+  --scroll-600: #837820;
+  --scroll-700: #534a13;
+  --scroll-800: #211e07;
+
+  --neutral-100: #f1efee;
+  --neutral-200: #d5cecd;
+  --neutral-300: #b9aeac;
+  --neutral-400: #9e8e8a;
+  --neutral-500: #806f6b;
+  --neutral-600: #645754;
+  --neutral-700: #433937;
+  --neutral-800: #221d1c;
+  --neutral-white: #fafafa;
+  --neutral-black: #0d0d0d;
+}

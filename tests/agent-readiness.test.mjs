@@ -13,7 +13,7 @@ describe("agent readiness", () => {
   test("keeps llms.txt useful", async () => {
     const llms = await readFile("public/llms.txt", "utf8");
     assert.ok(llms.startsWith("# RaidGuild"));
-    assert.match(llms, /https:\/\/www\.raidguild\.org\/join/);
+    assert.match(llms, /https:\/\/portal\.raidguild\.org\/join/);
     assert.doesNotMatch(llms.toLowerCase(), /todo|placeholder|lorem ipsum/);
   });
 

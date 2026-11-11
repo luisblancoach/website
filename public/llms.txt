@@ -1,41 +1,29 @@
 # RaidGuild
 
-> RaidGuild is a decentralized collective of Web3 builders offering full-stack development, AI solutions and automation, product and system design, marketing and content strategy, and DAO consulting and governance.
+> RaidGuild is a builder-owned community of designers, engineers, researchers, strategists, and operators exploring emerging technology together. Its members share knowledge, experiments, and relationships; independently led practices pursue focused work in areas including applied AI and onchain systems.
 
-RaidGuild has been building in the Ethereum and Web3 ecosystem since 2019. The website is the public entry point for teams that want to start a project with RaidGuild, review completed work, understand service areas, or learn how to join the guild.
+This website introduces the Guild and its public work. Portal is the place to explore the community and join. The handbook provides more detailed membership and operating context. Specialist practices explain their own offerings on their own sites.
 
-## Primary Site
+## Public website
 
-- [Homepage](https://www.raidguild.org/)
-- [Services](https://www.raidguild.org/#services)
-- [Case studies and portfolio](https://www.raidguild.org/#case-studies)
-- [Hire RaidGuild](https://www.raidguild.org/#hire-us)
-- [Story and membership path](https://www.raidguild.org/#our-story)
-- [Cohort and joining](https://www.raidguild.org/join)
+- [RaidGuild homepage](https://www.raidguild.org/)
+- [The Guild](https://www.raidguild.org/#guild)
+- [Independent practices](https://www.raidguild.org/#spears)
+- [Field notes and public experiments](https://www.raidguild.org/#work)
 
-## Public Context
+## Community and context
 
-- [RaidGuild AI](https://www.raidguild.ai/)
-- [Portal](https://portal.raidguild.org/)
-- [Portal join page](https://portal.raidguild.org/join)
-- [Discord community invite](https://discord.gg/2vx47gT95y)
-- [Handbook overview](https://handbook.raidguild.org/docs/overview/what-is-raidguild)
+- [Portal: people, posts, and modules](https://portal.raidguild.org/)
+- [Join the Guild through Portal](https://portal.raidguild.org/join)
+- [RaidGuild handbook](https://handbook.raidguild.org/docs/overview/what-is-raidguild)
 - [Handbook joining guide](https://handbook.raidguild.org/docs/membership/join-the-guild)
+- [Discord community](https://discord.gg/2vx47gT95y)
 - [GitHub organization](https://github.com/raid-guild)
 - [X account](https://x.com/RaidGuild)
 
-## Service Areas
+## Independent practices
 
-- Full-stack development for dApps, smart contracts, DAO tooling, Discord bots, and public goods.
-- AI solutions and automation for practical workflows embedded in client operations.
-- Product and system design for user experiences, decentralized applications, DAO tooling, and token systems.
-- Marketing and content strategy for Web3 projects and communities.
-- DAO consulting and governance support for coordination, governance frameworks, and tokenomic models.
+- [Applied AI](https://raidguild.ai/)
+- [Onchain Systems — current preview; canonical subdomain forthcoming](https://raidguild-onchain-production.up.railway.app/)
 
-## Notes for AI Agents
-
-- Treat this file as a concise discovery guide, not a full replacement for the website or handbook.
-- Prefer the public website and public handbook links above for canonical context.
-- Do not infer private client work, internal operations, pricing, availability, or member information from this file.
-- For project inquiries, use the hire flow on the public website.
-- For membership inquiries, use the public cohort and Portal join flows.
+Use the public website and handbook for canonical context about RaidGuild. Do not infer private client work, pricing, availability, or member information from this file.

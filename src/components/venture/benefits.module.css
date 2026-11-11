@@ -1,0 +1,65 @@
+/* Member benefits (November 3, MemberBenefits.tsx), /community. The surface,
+   heading and tokens come from the galleries (gallery.module.css, `benefits`
+   tone: celeste in Day, deep navy in Night); this file holds the compact
+   layout that keeps it from reading as a second services row.
+   - Head: label and title, the intro beside them from 1000 px.
+   - Cards from 1000 px: numbered horizontal cards, two per row, a 104 px
+     square of art beside the copy, about 170 px tall instead of the
+     galleries' 470 px.
+   - Below 1000 px: the art shrinks to 56 px beside the label, so the title and
+     body take the card's full width; two per row from 700 px (tablets), a
+     plain stack on phones.
+   Card titles keep the galleries' two-level card scale (Retalic over extended
+   italic, each line on one line, sized to the copy column; the top line at
+   1 / 21 of it, for "COHORTS, BOUNTIES", 17 characters). */
+
+.head { display: grid; gap: 20px 48px; }
+.intro { margin: 0; }
+@media (min-width: 1000px) {
+  .head { align-items: end; grid-template-columns: minmax(0, auto) minmax(0, 30em); justify-content: space-between; }
+}
+
+.grid { display: grid; gap: 16px; list-style: none; margin: clamp(28px, 3.5vw, 40px) 0 0; padding: 0 var(--page-inline, 24px); }
+@media (min-width: 700px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .grid { gap: 20px; } }
+.item { display: flex; min-width: 0; }
+
+.card {
+  --thumb: 104px;
+  align-content: start; background: var(--gal-card); border: 2px solid var(--gal-edge); border-radius: 20px;
+  column-gap: 20px; display: grid; grid-template-columns: var(--thumb) minmax(0, 1fr); grid-template-rows: auto auto 1fr;
+  padding: 18px 20px 20px 18px; transition: border-color .18s ease; width: 100%;
+}
+@media (hover: hover) { .card:hover { border-color: var(--gal-edge-strong); } }
+
+.thumb { aspect-ratio: 1; background: var(--gal-art); border-radius: 14px; grid-column: 1; grid-row: 1 / -1; line-height: 0; overflow: hidden; width: var(--thumb); }
+.thumb img { display: block; height: 100%; object-fit: cover; object-position: center; width: 100%; }
+
+.meta { align-items: baseline; display: flex; gap: 12px; grid-column: 2; justify-content: space-between; margin: 0 0 8px; }
+.cardLabel { color: var(--gal-accent); font: 700 12px/1.3 var(--font-marker, var(--font-mono)), monospace; letter-spacing: .06em; text-transform: uppercase; }
+.number { font: 700 12px/1.3 var(--font-mono), monospace; letter-spacing: .08em; opacity: .55; }
+
+/* Title: the audience routes set every h3 in Ubuntu with !important; benefit
+   titles are display text, so they opt back in (as the gallery cards do). */
+.cardTitle { container-type: inline-size; grid-column: 2; margin: 0; }
+:global(html) :global([data-audience]) .card .cardTitle,
+:global(html) .card .cardTitle { font-family: var(--font-last-duel-retalic), var(--font-display), sans-serif !important; font-size: 17px; font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1.1; text-transform: uppercase; white-space: nowrap; }
+/* The title is its own container, so the line sizes sit on the lines. */
+:global(html) .card .cardTitle > span { font-size: min(17px, 100cqi / 21); }
+:global(html) :global([data-audience]) .card .cardTitle em,
+:global(html) .card .cardTitle em { color: var(--gal-accent); display: inline-block; font-family: var(--font-last-duel-extended), var(--font-display), sans-serif !important; font-size: min(22px, 100cqi / 16.8); font-style: italic; font-synthesis: style; font-weight: 700; line-height: 1.05; margin-top: .1em; }
+
+.body { font: 400 16px/1.5 var(--font-body), sans-serif; grid-column: 2; margin: 10px 0 0; max-width: 44ch; }
+
+/* Below 1000 px: the art beside the label, the title and body across the
+   card. */
+@media (max-width: 999px) {
+  .card { --thumb: 56px; column-gap: 14px; grid-template-rows: auto auto auto; padding: 16px; row-gap: 0; }
+  .thumb { border-radius: 12px; grid-row: 1; }
+  .meta { align-self: center; margin: 0; }
+  .cardTitle, .body { grid-column: 1 / -1; }
+  .cardTitle { margin-top: 14px; }
+  .body { font-size: 15px; margin-top: 8px; }
+}
+@media (max-width: 699px) { .grid { gap: 12px; } }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }

@@ -1,0 +1,165 @@
+/* November 3 project explorer (/community #work, ProjectExplorer.tsx), replacing the Explore gallery.
+   The section is dark green in Day and the raised navy in Night (venture.module.css), so the explorer reads
+   cream ink in both themes. Cards rest on a slightly raised surface; the selected card takes the sky in Day
+   (dark-green ink) and the card navy in Night, with the Moloch magenta edge, as the builder and steward cards.
+   No pills, plus signs, gradients, zoom or text over images. Desktop (≥ 1000 px): the viewport is two thirds
+   of the row and the stack sits on the right. Tablet: the stack moves under the viewport in two columns.
+   Phones: viewport, metadata and stack in one column. */
+
+.wrap, .explorer {
+  --ex-ink: var(--color-cream, #efe9d7);
+  --ex-card: #173b39; --ex-edge: rgba(239, 233, 215, .22); --ex-art: #0c2524;
+  --ex-sel-bg: var(--color-cyan, #b8e0df); --ex-sel-ink: var(--color-dark-green, #102d2c); --ex-accent: var(--color-pink, #ee3c78);
+  --ex-ring: var(--color-cream, #efe9d7);
+  color: var(--ex-ink);
+}
+.explorer { display: grid; gap: 32px; }
+.wrap { margin-top: clamp(28px, 3.5vw, 44px); }
+:global(html[data-theme="dark"]) :is(.wrap, .explorer) { --ex-card: #191e4e; --ex-art: #12163b; --ex-sel-bg: #303674; --ex-sel-ink: var(--color-cream, #efe9d7); }
+@media (min-width: 1000px) { .explorer { align-items: start; column-gap: clamp(28px, 3vw, 48px); grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); } }
+
+.srOnly { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px; }
+
+/* Main viewport: a 16:9 screenshot in a framed button that opens the larger view. */
+.stage { min-width: 0; }
+.media { aspect-ratio: 16 / 9; background: var(--ex-art); border: 2px solid var(--ex-edge); border-radius: 20px; cursor: zoom-in; display: block; overflow: hidden; padding: 0; position: relative; transition: border-color .18s ease; width: 100%; }
+.media:disabled { cursor: default; }
+@media (hover: hover) { .media:not(:disabled):hover { border-color: var(--ex-accent); } }
+.media:focus-visible { border-color: var(--ex-accent); outline: 3px solid var(--ex-ring); outline-offset: 3px; }
+.mediaFrame { animation: exFade .28s ease both; display: block; height: 100%; width: 100%; }
+.mediaFrame img { display: block; height: 100%; object-fit: cover; width: 100%; }
+@keyframes exFade { from { opacity: 0; } to { opacity: 1; } }
+.noPreview { align-items: center; color: var(--ex-ink); display: flex; font: 700 var(--type-ui, 14px)/1.3 var(--font-mono), monospace; height: 100%; justify-content: center; letter-spacing: .08em; opacity: .7; text-transform: uppercase; width: 100%; }
+
+/* Metadata under the viewport. */
+.meta { display: grid; gap: 10px; margin-top: 24px; max-width: 46em; min-width: 0; }
+.metaCategory { color: var(--ex-accent); font: 700 var(--type-marker, 14px)/1.35 var(--font-marker, var(--font-mono)), monospace; letter-spacing: var(--tracking-marker, .1em); margin: 0; text-transform: uppercase; }
+/* The artifact's title is technical, not display (owner): Last Duel Bold upright, mixed case, one line, fitted to
+   the column from its length (--chars, set inline), 16–28 px; anything longer ends in an ellipsis (full title in
+   the title attribute). */
+.meta { container-type: inline-size; }
+.metaTitle { color: var(--ex-ink); font: 700 clamp(16px, 100cqi / (var(--chars, 20) * .8), 28px)/1.2 var(--font-display), sans-serif; font-style: normal; margin: 0; overflow: hidden; text-overflow: ellipsis; text-transform: none; white-space: nowrap; }
+:global(html) :global([data-audience]) .meta .metaTitle { font-family: var(--font-display), sans-serif !important; font-style: normal !important; font-weight: 700 !important; }
+.metaBody { font: 400 17px/1.6 var(--font-body), sans-serif; margin: 0; }
+
+/* The stack of horizontal project cards. */
+.side { min-width: 0; }
+.sideLabel { font: 700 12px/1.3 var(--font-mono), monospace; letter-spacing: .08em; margin: 0 0 12px; opacity: .8; text-transform: uppercase; }
+.list { display: grid; gap: 12px; list-style: none; margin: 0; padding: 0; }
+.item { align-items: center; background: var(--ex-card); border: 2px solid var(--ex-edge); border-radius: 16px; color: var(--ex-ink); cursor: pointer; display: grid; gap: 14px; grid-template-columns: 120px minmax(0, 1fr); padding: 8px 14px 8px 8px; text-align: left; transition: background-color .18s ease, border-color .18s ease, color .18s ease; width: 100%; }
+@media (hover: hover) { .item:hover { border-color: var(--ex-accent); } }
+.item:focus-visible { outline: 3px solid var(--ex-ring); outline-offset: 3px; }
+.item[aria-current="true"] { background: var(--ex-sel-bg); border-color: var(--ex-accent); box-shadow: inset 0 0 0 1px var(--ex-accent); color: var(--ex-sel-ink); }
+.thumb { aspect-ratio: 16 / 9; background: var(--ex-art); border-radius: 10px; display: block; overflow: hidden; }
+.thumb img { display: block; height: 100%; object-fit: cover; width: 100%; }
+.itemText { display: grid; gap: 4px; min-width: 0; }
+.itemText small { font: 700 11px/1.3 var(--font-mono), monospace; letter-spacing: .08em; opacity: .85; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.itemText strong { font: 700 16px/1.25 var(--font-body), sans-serif; overflow-wrap: anywhere; }
+
+/* "Explore all": a text action under the stack (no pill). */
+.exploreAll { align-items: center; background: none; border: 0; color: inherit; cursor: pointer; display: inline-flex; font: 700 var(--type-ui, 14px)/1.4 var(--font-mono), monospace; gap: 8px; letter-spacing: .06em; margin-top: 16px; min-height: 44px; padding: 0; text-decoration: underline; text-transform: uppercase; text-underline-offset: 5px; white-space: nowrap; }
+@media (hover: hover) { .exploreAll:hover { text-decoration-thickness: 2px; } }
+.exploreAll:focus-visible { outline: 3px solid var(--ex-ring); outline-offset: 3px; }
+
+/* Desktop: the expanded stack scrolls inside the column so the viewport stays in sight. */
+@media (min-width: 1000px) {
+  .listExpanded { max-height: min(640px, 70vh); overflow-y: auto; overscroll-behavior: contain; padding: 4px 6px 4px 4px; scrollbar-width: thin; }
+}
+/* Tablet: the stack under the viewport, two columns. */
+@media (min-width: 640px) and (max-width: 999px) {
+  .list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* Phones: one column; smaller thumbnails. */
+@media (max-width: 639px) {
+  .item { grid-template-columns: 96px minmax(0, 1fr); }
+  .meta { margin-top: 18px; }
+  .metaBody { font-size: 16px; }
+}
+
+/* Larger view. */
+.lightboxOverlay { background: rgba(6, 12, 12, .82); inset: 0; position: fixed; z-index: 90; }
+.lightbox { background: var(--color-dark-green, #102d2c); border: 2px solid rgba(239, 233, 215, .22); border-radius: 20px; color: var(--color-cream, #efe9d7); display: grid; gap: 14px; left: 50%; max-height: 92vh; padding: 16px; position: fixed; top: 50%; transform: translate(-50%, -50%); width: min(1280px, 94vw); z-index: 91; }
+:global(html[data-theme="dark"]) .lightbox { background: var(--color-navy, #191e4e); }
+.lightboxBar { align-items: center; display: flex; gap: 16px; justify-content: space-between; }
+/* The dialog renders in a portal outside .site, where --font-display is another family: name Last Duel directly. */
+.lightboxTitle { font: 700 clamp(18px, 2vw, 24px)/1.2 var(--font-last-duel), sans-serif; margin: 0; text-transform: uppercase; }
+.lightboxClose { align-items: center; background: none; border: 2px solid currentColor; border-radius: 100px; color: inherit; cursor: pointer; display: inline-flex; flex: 0 0 auto; font: 700 14px/1 var(--font-mono), monospace; gap: 8px; letter-spacing: .06em; min-height: 44px; padding: 0 18px; text-transform: uppercase; white-space: nowrap; }
+.lightboxClose:focus-visible { outline: 3px solid var(--color-pink, #ee3c78); outline-offset: 3px; }
+.lightboxMedia { border-radius: 12px; min-height: 0; overflow: hidden; }
+.lightboxMedia img { display: block; height: auto; max-height: calc(92vh - 110px); object-fit: contain; width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mediaFrame { animation: none; }
+  .media, .item { transition: none; }
+}
+
+/* Heading row (WallOfCuriosities, /community): the heading on the left, "Open the Portal" (secondary, sword icon)
+   on the same row at the right; phones put it under the intro at full width. */
+.headRow { align-items: center; column-gap: 32px; display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+.headText { min-width: 0; }
+.portalButton { justify-self: end; }
+@media (max-width: 760px) {
+  .headRow { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+  .portalButton { justify-self: stretch; width: 100%; }
+}
+
+/* Category buttons: the shared category style (outlined; selected = magenta edge, no fill). */
+.categories { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+.categories button { background: transparent; border: 2px solid currentColor; border-radius: 24px; color: inherit; cursor: pointer; font: 700 var(--type-ui, 14px)/1.4 var(--font-mono), monospace; min-height: 44px; padding: 10px 16px; white-space: nowrap; }
+@media (hover: hover) { .categories button:not([aria-pressed="true"]):hover { background: color-mix(in srgb, currentColor 10%, transparent); } }
+.categories button[aria-pressed="true"] { border-color: var(--ex-accent); box-shadow: inset 0 0 0 1px var(--ex-accent); }
+.categories button:focus-visible { outline: 3px solid var(--ex-ring); outline-offset: 3px; }
+
+/* The media window: screenshot, previous / next chevrons on its edges and "Explore now" over the screenshot's
+   lower left (under it on phones). */
+.viewport { position: relative; }
+.chevron { align-items: center; background: color-mix(in srgb, var(--ex-card) 88%, transparent); border: 2px solid var(--ex-edge); border-radius: 50%; color: var(--ex-ink); cursor: pointer; display: inline-flex; height: 48px; justify-content: center; padding: 0; position: absolute; top: 50%; transform: translateY(-50%); width: 48px; z-index: 2; }
+.chevron svg { height: 26px; stroke-width: 2.25; width: 26px; }
+.chevronPrev { left: 14px; }
+.chevronNext { right: 14px; }
+@media (hover: hover) { .chevron:hover { border-color: var(--ex-accent); } }
+.chevron:focus-visible { outline: 3px solid var(--ex-ring); outline-offset: 3px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+/* A pill without its icon disc: label centred, even padding. */
+.action { justify-content: center; padding-inline: 28px; white-space: nowrap; }
+@media (min-width: 640px) {
+  .actionsOverlay { bottom: 18px; left: 18px; margin: 0; position: absolute; z-index: 2; }
+}
+@media (max-width: 639px) {
+  .chevron { height: 40px; width: 40px; }
+  .chevron svg { height: 22px; width: 22px; }
+  .chevronPrev { left: 8px; }
+  .chevronNext { right: 8px; }
+  .actions { display: grid; }
+  .action { width: 100%; }
+}
+/* The phone CTA rules (venture.module.css) align pill labels to the start; this pill has no icon, so it centres. */
+:global(html) .actions a.action, :global(html) .actions button.action { justify-content: center !important; padding-inline: 28px !important; }
+
+/* Caption over the media window (November 3, owner, supersedes the metadata under the image and the action at the
+   lower left): a transparent shadow rising from the window's foot in the section's surface colour (dark green in
+   Day, navy in Night), with the category eyebrow, the one-line title and the description on the left and
+   "Explore now" at the lower right. The shadow passes clicks through to the screenshot (larger view); only the
+   button takes them. Descriptions run up to ~180 characters: two or three lines, never clipped.
+   Phones (< 640 px, the window is ~200 px tall) keep the caption under the image, the button full width. */
+.caption { --scrim: 16, 45, 44; display: grid; gap: 14px 28px; margin-top: 18px; }
+:global(html[data-theme="dark"]) .caption { --scrim: 25, 30, 78; }
+.caption .meta { margin-top: 0; max-width: 46em; }
+@media (min-width: 640px) {
+  .media { border-radius: 20px; }
+  .caption { align-items: end; background: linear-gradient(to top, rgba(var(--scrim), .95) 0%, rgba(var(--scrim), .9) 55%, rgba(var(--scrim), .55) 78%, rgba(var(--scrim), 0) 100%); border-radius: 0 0 18px 18px; bottom: 2px; grid-template-columns: minmax(0, 1fr) auto; left: 2px; margin: 0; padding: clamp(72px, 9vw, 120px) clamp(20px, 2.4vw, 32px) clamp(18px, 2vw, 26px); pointer-events: none; position: absolute; right: 2px; z-index: 1; }
+  .caption .actions { margin: 0; pointer-events: auto; }
+  .caption .metaBody { font-size: 16px; line-height: 1.5; max-width: 40em; }
+  .caption .meta { gap: 6px; }
+  /* The chevrons sit at the window's mid-height, above the caption. */
+  .chevron { top: 38%; }
+}
+@media (min-width: 640px) and (max-width: 899px) {
+  .caption { grid-template-columns: minmax(0, 1fr); }
+  .caption .actions { justify-self: end; }
+}
+.caption .meta { animation: exFade .28s ease both; }
+@media (prefers-reduced-motion: reduce) { .caption .meta { animation: none; } }
+/* Phones: the caption is under the image, so the chevrons centre on the image itself (16:9 of the width). */
+.viewport { container-type: inline-size; }
+@media (max-width: 639px) { .chevron { top: calc(100cqi * 9 / 32); } }
