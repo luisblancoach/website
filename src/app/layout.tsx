@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     "A builder-owned community of creative and technical people sharing knowledge, exploring technology, and building together since 2019.",
   openGraph: {
     siteName: "RaidGuild",
+    images: [{ url: "/opengraph-image.png?v=louchi-2026-11", width: 1731, height: 909, alt: "RaidGuild — Venture Beyond" }],
     type: "website",
     url: "https://www.raidguild.org",
     title: "RaidGuild — A Builder-Owned Community",
@@ -33,6 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    images: ["/opengraph-image.png?v=louchi-2026-11"],
     title: "RaidGuild — A Builder-Owned Community",
     description:
       "Explore the people, ideas, and independent specialist practices growing from the RaidGuild community.",

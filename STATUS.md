@@ -1,5 +1,12 @@
 # STATUS
 
+## Social preview cards · 2026-11-11
+
+- Prepared in the isolated `unfurl-updates/website` checkout. Owner authorized commit, push, and merge to main for the social preview release.
+- Home uses the supplied Venture Beyond card; `/clients` and the new non-redirecting `/agency` alias use Hire the DAO; `/community` uses Join the DAO. Open Graph and X metadata agree.
+- Moved the legacy file-based Open Graph image into public assets so route-specific metadata can take effect. Updated agency audience and anchor helpers.
+- Verification: all 8 website test files and TypeScript passed; targeted agency route assertions passed. Production build and live crawler previews were not verified. No rendered design or editorial parity claim.
+
 ## Current release preparation · 2026-11-11
 
 - Worktree: `/home/dekanjbrown/Documents/Codex/2026-11-09/i-x20/work/website-release-merge`, an isolated checkout of `review/venture-beyond-redesign`. The original checkout and its untracked artwork and lockfile were untouched.

@@ -37,7 +37,7 @@ const routeSections: Record<string, readonly SectionId[]> = {
 };
 
 export function routeHasSection(pathname: string, section: SectionId) {
-  return routeSections[pathname]?.includes(section) ?? false;
+  return routeSections[pathname === "/agency" ? "/clients" : pathname]?.includes(section) ?? false;
 }
 
 export function sectionHref(pathname: string, section: SectionId) {
@@ -45,7 +45,8 @@ export function sectionHref(pathname: string, section: SectionId) {
 }
 
 export function audienceForPath(pathname: string): AudienceId | null {
-  return AUDIENCES.find((audience) => pathname === audience.href || pathname.startsWith(`${audience.href}/`))?.id ?? null;
+  const audiencePath = pathname === "/agency" ? "/clients" : pathname;
+  return AUDIENCES.find((audience) => audiencePath === audience.href || audiencePath.startsWith(`${audience.href}/`))?.id ?? null;
 }
 
 // The October 23 review build switched audiences with "/?audience=hire|join".

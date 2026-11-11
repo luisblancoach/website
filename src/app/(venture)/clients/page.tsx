@@ -23,14 +23,13 @@ import { forAudience } from "@/lib/narrative/public";
 // SEO copy (October 30, owner): the page title stands alone (no "| RaidGuild"
 // template); Open Graph and Twitter carry the Hire title and the same
 // description. A page's openGraph replaces the root's, so the site name, type
-// and this route's URL are restated. Share image (October 30): a 1200 × 630
-// WebP cut of the Queen Raida rectangle artwork (public/images/venture/og/,
-// 150 KB; the 6 MB original is untouched).
+// and this route's URL are restated. The owner-supplied November 2026 Hire card
+// is shared by /clients and its /agency alias.
 const SEO_TITLE = "RaidGuild | Smart Contracts, dApp & AI Development Studio";
 const SHARE_TITLE = "Hire RaidGuild: senior teams for hard onchain and AI builds";
 const SEO_DESCRIPTION =
   "Small senior teams for smart contracts, dApps, product design and applied AI. We've shipped work for Livepeer, Pokt Network, DAOHaus, Gitcoin and more. Start your project brief.";
-const SHARE_IMAGE = { url: "/images/venture/og/clients-queen-raida.webp", width: 1200, height: 630, type: "image/webp", alt: "Queen Raida, RaidGuild's AI agent, rising from the clouds above a group of Guild builders" };
+const SHARE_IMAGE = { url: "/images/venture/og/hire-dao-2026.png", width: 1731, height: 909, type: "image/png", alt: "Hire the DAO: RaidGuild builders and AI companions at work" };
 export const metadata: Metadata = {
   alternates: { canonical: "/clients" },
   title: { absolute: SEO_TITLE },

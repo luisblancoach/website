@@ -29,12 +29,11 @@ import { forAudience } from "@/lib/narrative/public";
 // Metadata (October 30): community copy (builder-owned, members, experiments,
 // finding people to build with), drafted for review. A page's openGraph
 // replaces the root's, so site name, type and URL are restated. Share image:
-// a 1200 × 630 WebP cut of the Moloch rectangle artwork (111 KB; the 5.7 MB
-// original is untouched).
+// the owner-supplied November 2026 Join the DAO card.
 const SHARE_TITLE = "Join the DAO: find your people at RaidGuild";
 const DESCRIPTION =
   "RaidGuild is a builder-owned community. Meet Guild members, explore their experiments, and find people to build and contribute with.";
-const SHARE_IMAGE = { url: "/images/venture/og/community-moloch.webp", width: 1200, height: 630, type: "image/webp", alt: "Guild builders facing Moloch, a horned colossus, in a coral city" };
+const SHARE_IMAGE = { url: "/images/venture/og/join-dao-2026.png", width: 1731, height: 909, type: "image/png", alt: "Join the DAO: RaidGuild builders looking toward a shared future" };
 export const metadata: Metadata = {
   alternates: { canonical: "/community" },
   title: "Join the DAO",

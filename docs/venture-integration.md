@@ -761,3 +761,7 @@ November 3, 2026 — /community restructure (uncommitted):
   experiments" (the B3.4 name), pending confirmation.
 - 2026-11-04 (owner): the Last Duel OTFs may be published in the public repositories (luisblancoach/website and
   the raid-guild/website PR); the baseline for Dekan's review goes up as a PR against raid-guild/website `main`.
+
+## Social previews — 2026-11-11
+
+The home page uses Venture Beyond; `/clients` and `/agency` use Hire the DAO; `/community` uses Join the DAO. `/agency` renders the existing client experience without redirecting and retains its own canonical URL. Moving the root file-based Open Graph image into `public` allows explicit route metadata to select the intended image. Existing audience navigation still targets `/clients`.

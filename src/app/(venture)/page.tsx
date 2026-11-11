@@ -28,10 +28,10 @@ export const metadata: Metadata = {
       "Meet the builder-owned RaidGuild community and explore its people, experiments, and independent practices in applied AI and onchain systems.",
     images: [
       {
-        url: `${publicAssetOrigin}/opengraph-image.png`,
-        width: 1733,
-        height: 908,
-        alt: "Two RaidGuild travelers overlooking a coral citadel in an alien landscape",
+        url: `${publicAssetOrigin}/opengraph-image.png?v=louchi-2026-11`,
+        width: 1731,
+        height: 909,
+        alt: "Venture Beyond: RaidGuild builders approaching a ringed citadel",
       },
     ],
   },
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "RaidGuild — Venture Beyond",
     description:
       "Meet the builder-owned RaidGuild community and explore its people, experiments, and independent practices in applied AI and onchain systems.",
-    images: [`${publicAssetOrigin}/opengraph-image.png`],
+    images: [`${publicAssetOrigin}/opengraph-image.png?v=louchi-2026-11`],
   },
 };
 

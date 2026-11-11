@@ -223,3 +223,7 @@ pill icon masks (`venture.module.css`) use the new files. Untracked until commit
   `~/Projects/raidguild-backups/2026-11-03/Ilus_03.original.png`.
 - After: sha256 `b6492c83b6e714d8e9a143f9117e53360a0577aeba8bcdf96413cb9d7382d362` (2,186,205 bytes).
 - Use: decorative, beside the FAQ on /clients and /community from 1000 px (empty alt, aria-hidden).
+
+## Social preview cards — 2026-11-11
+
+Supplied directly by the project owner for this social-preview update. Copied unchanged from Downloads: `venturebeyond_thumbnail.png` → `public/opengraph-image.png`; `hire-dao-thumbnail.png` → `public/images/venture/og/hire-dao-2026.png`; `join-dao-thumbnail.png` → `public/images/venture/og/join-dao-2026.png`. Each is 1731 × 909 PNG. No additional authorship or licensing claim is made.
