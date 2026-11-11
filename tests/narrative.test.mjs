@@ -283,7 +283,7 @@ describe("Join the DAO iteration (/community)", () => {
 
   test("the Hats Tree section carries the Hats Tree and stewardship copy and links to tree 1822", () => {
     const hats = communityNarrative.communityHats;
-    assert.equal(`${hats.title.lead.text} ${hats.title.em.text}`, "RaidGuild's Hats Tree");
+    assert.equal(`${hats.title.lead.text} ${hats.title.em.text}`, "RaidGuild's Role Structure");
     assert.match(plainText(hats.intro.text), /powered by Hats Protocol/);
     assert.match(plainText(hats.stewards.detail.text), /^Stewards are members who take responsibility/);
     assert.match(hats.snapshot.text, /Reference snapshot/);

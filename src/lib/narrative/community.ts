@@ -323,7 +323,9 @@ export const communityMoloch: ImmersiveContent = defineNarrative("community.molo
 // Protocol, the section's one link.
 export const communityHats: HatsContent = defineNarrative("community.hats", {
   label: oct23("[ STEWARDSHIP ]"),
-  title: { lead: approved("RaidGuild's", "owner-approval"), em: approved("Hats Tree", "owner-approval") },
+  // November 11 (owner): the heading reads RAIDGUILD'S / ROLE STRUCTURE; the
+  // intro and the link keep "Hats Tree", the Hats Protocol name.
+  title: { lead: approved("RaidGuild's", "owner-approval"), em: approved("Role Structure", "owner-approval") },
   intro: claim(
     "RaidGuild’s Hats Tree maps the roles that help the Guild work: what each role is responsible for, how it fits into the wider organization, and who’s eligible to hold it. The tree is powered by Hats Protocol, which represents roles and their permissions onchain.",
     "handbook",
