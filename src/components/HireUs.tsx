@@ -36,18 +36,32 @@ import {
   hireUsFormSchema,
   type HireUsFormData,
   transformFormDataToApiFormat,
+  isValidLink,
+  normalizeLink,
 } from "@/lib/validation";
-import Image from "next/image";
-import MultipleSelector, { type Option } from "./ui/multiselect";
+import { Check } from "lucide-react";
+import type { Option } from "./ui/multiselect";
 import { DISCORD_INVITE_URL } from "@/lib/data/constants";
 import { analyticsEvents, trackAnalyticsEvent } from "@/lib/analytics";
+import { focusFirstInvalid, revealBelowNav } from "@/lib/inquiry-scroll";
+import Image from "next/image";
 
 interface StepProps {
   form: ReturnType<typeof useForm<HireUsFormData>>;
   isActive?: boolean;
+  // Fields already checked by a step's Next (November 11): with content and
+  // no error they take the "valid" surface.
+  validated?: ReadonlySet<string>;
 }
 
-const PersonalInfoStep = ({ form, isActive }: StepProps) => {
+// data-valid for a field: checked, without an error, and not empty (an empty
+// optional field stays neutral).
+const validMark = (validated: ReadonlySet<string> | undefined, field: { name: string; value: unknown }, state: { invalid: boolean }) => {
+  const filled = Array.isArray(field.value) ? field.value.length > 0 : String(field.value ?? "").trim() !== "";
+  return validated?.has(field.name) && !state.invalid && filled ? "" : undefined;
+};
+
+const PersonalInfoStep = ({ form, isActive, validated }: StepProps) => {
   if (!isActive) return null;
 
   return (
@@ -57,13 +71,13 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
           <FormField
             control={form.control}
             name="name"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel>
                   Your name <RequiredFieldIndicator />
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="What should we call you?" {...field} />
+                  <Input placeholder="What should we call you?" {...field} data-valid={validMark(validated, field, fieldState)} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -72,7 +86,7 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
           <FormField
             control={form.control}
             name="email"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel>
                   Email address <RequiredFieldIndicator />
@@ -82,6 +96,7 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
                     type="email"
                     placeholder="Where can we reach you?"
                     {...field}
+                    data-valid={validMark(validated, field, fieldState)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -93,7 +108,7 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
       <FormField
         control={form.control}
         name="bio"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>
               Tell us about your role <RequiredFieldIndicator />
@@ -102,6 +117,7 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
               <Textarea
                 placeholder="Describe your project involvement, please introduce yourself"
                 {...field}
+                data-valid={validMark(validated, field, fieldState)}
               />
             </FormControl>
             <FormMessage />
@@ -112,7 +128,7 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
       <FormField
         control={form.control}
         name="altContactName"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>Prefer another way to connect?</FormLabel>
             <div className="flex">
@@ -121,6 +137,7 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
                   placeholder="What is your username?"
                   className="!rounded-r-none border-r-0"
                   {...field}
+                  data-valid={validMark(validated, field, fieldState)}
                 />
               </FormControl>
               <FormField
@@ -161,7 +178,7 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
   );
 };
 
-const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
+const ProjectDetailsStep = ({ form, isActive, validated }: StepProps) => {
   if (!isActive) return null;
 
   return (
@@ -169,7 +186,7 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
       <FormField
         control={form.control}
         name="projectName"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>
               Name of your project or organization <RequiredFieldIndicator />
@@ -178,6 +195,7 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
               <Input
                 placeholder="Protocol to passion project, what do you go by?"
                 {...field}
+                data-valid={validMark(validated, field, fieldState)}
               />
             </FormControl>
             <FormMessage />
@@ -187,7 +205,7 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
       <FormField
         control={form.control}
         name="description"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>
               How can we help? <RequiredFieldIndicator />
@@ -196,6 +214,7 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
               <Textarea
                 placeholder="What can we build, scope, design or source for you?"
                 {...field}
+                data-valid={validMark(validated, field, fieldState)}
               />
             </FormControl>
             <FormMessage />
@@ -206,7 +225,7 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
       <FormField
         control={form.control}
         name="specsLink"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>Do you have project specs?</FormLabel>
             <FormControl>
@@ -214,6 +233,7 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
                 placeholder="Link to your specs, docs, Figma files, or any materials (optional)"
                 // className="rounded-l-none border-l-0"
                 {...field}
+                data-valid={validMark(validated, field, fieldState)}
               />
             </FormControl>
             <FormMessage />
@@ -225,98 +245,118 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
   );
 };
 
-const ServicesSelector = ({
+// Services Needed (November 11): four options shown at once as check tiles,
+// instead of a combobox whose chosen options left the list. The selection is
+// kept as {label, value} options, the shape the API transform expects.
+const ServicesChoices = ({
+  value,
   onChange,
+  labelId,
 }: {
+  value: Option[] | undefined;
   onChange: (options: Option[]) => void;
+  labelId: string;
 }) => {
-  const { error, formItemId, formDescriptionId, formMessageId } =
-    useFormField();
+  const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
+  const chosen = new Set((value ?? []).map((option) => option.value));
+  const toggle = (optionValue: string, on: boolean) => {
+    const next = new Set(chosen);
+    if (on) next.add(optionValue);
+    else next.delete(optionValue);
+    onChange(SERVICES_OPTIONS.filter((option) => next.has(option.value)).map(({ label, value }) => ({ label, value })));
+  };
 
   return (
-    <MultipleSelector
-      onChange={onChange}
-      options={SERVICES_OPTIONS}
-      placeholder="Select"
-      hideClearAllButton={true}
-      hidePlaceholderWhenSelected={true}
-      inputProps={{
-        id: formItemId,
-        "aria-invalid": !!error,
-        "aria-describedby": !error
-          ? formDescriptionId
-          : `${formDescriptionId} ${formMessageId}`,
-      }}
-      emptyIndicator={
-        <p className="text-center text-body-md leading-10 text-gray-600 dark:text-gray-400">
-          no results found.
-        </p>
-      }
-    />
+    <div
+      role="group"
+      id={formItemId}
+      aria-labelledby={labelId}
+      aria-describedby={error ? `${formDescriptionId} ${formMessageId}` : formDescriptionId}
+      data-invalid={error ? "" : undefined}
+      className="inquiry-choices inquiry-choices-grid"
+    >
+      {SERVICES_OPTIONS.map((option) => {
+        const checked = chosen.has(option.value);
+        return (
+          <label key={option.value} className="inquiry-choice" data-checked={checked || undefined}>
+            <input
+              type="checkbox"
+              className="inquiry-choice-input"
+              checked={checked}
+              aria-invalid={!!error}
+              onChange={(event) => toggle(option.value, event.target.checked)}
+            />
+            <span className="inquiry-check" aria-hidden="true">
+              <Check strokeWidth={3} />
+            </span>
+            <span>{option.label}</span>
+          </label>
+        );
+      })}
+    </div>
   );
 };
 
-const RequirementsStep = ({ form, isActive }: StepProps) => {
+const RequirementsStep = ({ form, isActive, validated }: StepProps) => {
   if (!isActive) return null;
 
   return (
     <div className="space-y-4">
-      <div className="mb-4">
-        <FormField
-          control={form.control}
-          name="projectPriority"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>What matters most to you?</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-row gap-5 md:gap-10"
-                >
-                  {PROJECT_PRIORITY_OPTIONS.map((option) => (
-                    <div
-                      key={option.value}
-                      className="flex items-center space-x-2"
-                    >
-                      <RadioGroupItem value={option.value} id={option.value} />
-                      <label
-                        htmlFor={option.value}
-                        className="text-body-md peer-disabled:cursor-not-allowed peer-disabled:opacity-70 !leading-tight"
-                      >
-                        {option.label}
-                      </label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="projectPriority"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel id="inquiry-priority-label">What matters most to you?</FormLabel>
+            <FormControl>
+              <RadioGroup
+                onValueChange={field.onChange}
+                value={field.value}
+                aria-labelledby="inquiry-priority-label"
+                className="inquiry-choices"
+              >
+                {PROJECT_PRIORITY_OPTIONS.map((option) => (
+                  <label
+                    key={option.value}
+                    htmlFor={`inquiry-priority-${option.value}`}
+                    className="inquiry-choice"
+                    data-checked={field.value === option.value || undefined}
+                  >
+                    <RadioGroupItem
+                      value={option.value}
+                      id={`inquiry-priority-${option.value}`}
+                      className="inquiry-radio"
+                    />
+                    <span>{option.label}</span>
+                  </label>
+                ))}
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         <FormField
           control={form.control}
           name="budget"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel>
                 What&apos;s your budget range <RequiredFieldIndicator />
               </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value ?? ""}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger onBlur={field.onBlur} data-valid={validMark(validated, field, fieldState)}>
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
-                  {BUDGET_OPTIONS.map((o) => {
-                    return (
-                      <SelectItem key={o.value} value={o.value}>
-                        {o.label}
-                      </SelectItem>
-                    );
-                  })}
+                <SelectContent className="inquiry-select-menu">
+                  {BUDGET_OPTIONS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -326,25 +366,23 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
         <FormField
           control={form.control}
           name="timeline"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel>
                 Timeline <RequiredFieldIndicator />
               </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value ?? ""}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger onBlur={field.onBlur} data-valid={validMark(validated, field, fieldState)}>
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
-                  {TIMELINE_OPTIONS.map((o) => {
-                    return (
-                      <SelectItem key={o.value} value={o.value}>
-                        {o.label}
-                      </SelectItem>
-                    );
-                  })}
+                <SelectContent className="inquiry-select-menu">
+                  {TIMELINE_OPTIONS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -353,39 +391,70 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-        <FormField
-          control={form.control}
-          name="services"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Services Needed <RequiredFieldIndicator />
-              </FormLabel>
-              <ServicesSelector onChange={field.onChange} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="services"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel id="inquiry-services-label">
+              Services Needed <RequiredFieldIndicator />
+            </FormLabel>
+            <ServicesChoices value={field.value} onChange={field.onChange} labelId="inquiry-services-label" />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   );
 };
 
+// Server validation paths (lib/validation.ts consultationApiSchema) back to the
+// form's fields, so their messages appear next to the field.
+const API_FIELDS: Array<[RegExp, keyof HireUsFormData]> = [
+  [/contact\.data\.name$/, "name"],
+  [/contact_info\.data\.email$/, "email"],
+  [/contact\.data\.bio$/, "bio"],
+  [/contact_info\.data\.(discord|telegram)$/, "altContactName"],
+  [/consultData\.name$/, "projectName"],
+  [/consultData\.description$/, "description"],
+  [/consultData\.link$/, "specsLink"],
+  [/consultations_services_required/, "services"],
+  [/budget_key$/, "budget"],
+  [/additional_info$/, "timeline"],
+  [/delivery_priorities_key$/, "projectPriority"],
+];
+
+const STEP_FIELDS: Array<Array<keyof HireUsFormData>> = [
+  ["name", "email", "bio", "altContactName"],
+  ["projectName", "description", "specsLink"],
+  ["projectPriority", "budget", "timeline", "services"],
+];
+
+export type InquiryStatus = "idle" | "submitting" | "success" | "error";
+export type InquiryProgress = { step: number; status: InquiryStatus };
+
 // `guided` is the October 23 form (40f3910) used by the audience routes: plain
 // step names, a short introduction and the progress indicator.
-export default function HireUs({ guided = false, onExit }: { guided?: boolean; onExit?: () => void }) {
-  // State management for user feedback
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submissionStatus, setSubmissionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [validationErrors, setValidationErrors] = useState<
-    Array<{ field: string; message: string }>
-  >([]);
+// November 11: the form stays mounted while it sends and after an error, so
+// every answer (and the step) survives a retry; the panel keeps its size while
+// sending, and the result (confirmation or error) is focused and brought into
+// view only as far as needed. With `onProgress`, the surrounding module
+// (GuildInquiry) owns the heading: it shows the full introduction on step 1, a
+// compact one on steps 2 and 3, and the confirmation title, and it keeps the
+// heading in view; the form then leaves those to it.
+export default function HireUs({ guided = false, onExit, onProgress }: { guided?: boolean; onExit?: () => void; onProgress?: (progress: InquiryProgress) => void }) {
+  const [status, setStatus] = useState<InquiryStatus>("idle");
+  const [step, setStep] = useState(0);
+  const [validated, setValidated] = useState<ReadonlySet<string>>(() => new Set());
+  const validatedRef = React.useRef(validated);
+  validatedRef.current = validated;
   const formRef = React.useRef<HTMLDivElement>(null);
+  const noticeRef = React.useRef<HTMLDivElement>(null);
+  const confirmationRef = React.useRef<HTMLDivElement>(null);
+  const confirmationTitleRef = React.useRef<HTMLHeadingElement>(null);
   const hasTrackedFormView = React.useRef(false);
+  const isSubmitting = status === "submitting";
+  const headingOutside = Boolean(onProgress);
 
   const form = useForm<HireUsFormData>({
     resolver: zodResolver(hireUsFormSchema),
@@ -404,6 +473,15 @@ export default function HireUs({ guided = false, onExit }: { guided?: boolean; o
       projectPriority: PROJECT_PRIORITY_OPTIONS[0].value,
     },
   });
+
+  // A field shown as invalid, or already checked, is checked again as soon as
+  // it changes, so its message and surface follow what the visitor types.
+  React.useEffect(() => {
+    const subscription = form.watch((_values, { name }) => {
+      if (name && (form.getFieldState(name).error || validatedRef.current.has(name))) void form.trigger(name);
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   React.useEffect(() => {
     if (!formRef.current || hasTrackedFormView.current) return;
@@ -424,45 +502,69 @@ export default function HireUs({ guided = false, onExit }: { guided?: boolean; o
     return () => observer.disconnect();
   }, []);
 
+  // The surrounding module learns the step and status before paint, so its
+  // heading changes in the same frame as the form.
+  React.useLayoutEffect(() => {
+    onProgress?.({ step, status });
+  }, [onProgress, step, status]);
+
+  // The result of a submission takes focus and is shown below the fixed bar.
+  React.useLayoutEffect(() => {
+    if (status === "success" && !headingOutside) {
+      confirmationTitleRef.current?.focus({ preventScroll: true });
+      if (confirmationRef.current) revealBelowNav(confirmationRef.current);
+    } else if (status === "error" && noticeRef.current) {
+      noticeRef.current.focus({ preventScroll: true });
+      // The notice and the actions below it (Try again) together, when they fit.
+      const actions = noticeRef.current.parentElement?.querySelector<HTMLElement>("[data-wizard-primary]");
+      revealBelowNav(noticeRef.current, 16, actions ?? undefined);
+    }
+  }, [status, headingOutside]);
+
+  const markValidated = (fields: Array<keyof HireUsFormData>) =>
+    setValidated((previous) => new Set([...previous, ...fields]));
+
+  // A step that does not validate: its first field needing attention takes focus.
+  const failStep = (step: string) => {
+    trackAnalyticsEvent(analyticsEvents.hireFormSubmitError, {
+      error_type: "validation",
+      error_category: "client",
+      step,
+    });
+    requestAnimationFrame(() => focusFirstInvalid(formRef.current));
+  };
+
   // Validation functions for each step
   const validatePersonalInfo = async () => {
     const result = await form.trigger(["name", "email", "bio"]);
-    if (!result) {
-      trackAnalyticsEvent(analyticsEvents.hireFormSubmitError, {
-        error_type: "validation",
-        error_category: "client",
-        step: "contact_info",
-      });
-    }
+    markValidated(STEP_FIELDS[0]);
+    if (!result) failStep("contact_info");
     return result;
   };
 
   const validateProjectDetails = async () => {
-    const result = await form.trigger(["projectName", "description"]);
-    if (!result) {
-      trackAnalyticsEvent(analyticsEvents.hireFormSubmitError, {
-        error_type: "validation",
-        error_category: "client",
-        step: "project_details",
-      });
-    }
+    // The specs link is normalized in place before it is validated: trimmed,
+    // and given https:// when it has no protocol. Text that is not a link stays
+    // as typed (trimmed), so the visitor can correct it.
+    const raw = form.getValues("specsLink") ?? "";
+    const link = normalizeLink(raw);
+    const next = link === "" || isValidLink(link) ? link : raw.trim();
+    if (next !== raw) form.setValue("specsLink", next, { shouldDirty: true });
+    const result = await form.trigger(["projectName", "description", "specsLink"]);
+    markValidated(STEP_FIELDS[1]);
+    if (!result) failStep("project_details");
     return result;
   };
 
   const validateRequirements = async () => {
     const result = await form.trigger([
+      "projectPriority",
       "budget",
       "timeline",
       "services",
-      "projectPriority",
     ]);
-    if (!result) {
-      trackAnalyticsEvent(analyticsEvents.hireFormSubmitError, {
-        error_type: "validation",
-        error_category: "client",
-        step: "requirements",
-      });
-    }
+    markValidated(STEP_FIELDS[2]);
+    if (!result) failStep("requirements");
     return result;
   };
 
@@ -470,21 +572,14 @@ export default function HireUs({ guided = false, onExit }: { guided?: boolean; o
     if (isSubmitting) return; // Prevent multiple submissions
 
     const formData = form.getValues();
-    console.log("Wizard completed:", formData);
     const servicesCount = formData.services?.length ?? 0;
 
-    // Reset states
-    setIsSubmitting(true);
-    setSubmissionStatus("idle");
-    setErrorMessage("");
-    setValidationErrors([]);
+    setStatus("submitting");
 
-    //tracking
     trackAnalyticsEvent(analyticsEvents.hireFormSubmitAttempt, {
       services_count: servicesCount,
     });
 
-    // Transform form data to API format using the centralized function
     const consultData = transformFormDataToApiFormat(formData);
 
     try {
@@ -496,141 +591,77 @@ export default function HireUs({ guided = false, onExit }: { guided?: boolean; o
         body: JSON.stringify({ consultData }),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
 
       if (response.ok) {
-        console.log("Consultation submitted successfully:", result);
-        setSubmissionStatus("success");
-
-        //tracking
         trackAnalyticsEvent(analyticsEvents.hireFormSubmitSuccess, {
           services_count: servicesCount,
         });
-        // Reset form after successful submission
         form.reset();
-      } else {
-        console.error("Failed to submit consultation:", result);
-        setSubmissionStatus("error");
-
-        // Handle validation errors
-        if (
-          response.status === 400 &&
-          result.details &&
-          Array.isArray(result.details)
-        ) {
-          console.error("Validation errors:", result.details);
-          setValidationErrors(result.details);
-          setErrorMessage("Please fix the validation errors below.");
-          trackAnalyticsEvent(analyticsEvents.hireFormSubmitError, {
-            error_type: "server_validation",
-            error_category: "server",
-            step: "submit",
-          });
-        } else {
-          setErrorMessage(
-            result.error || "Failed to submit consultation. Please try again."
-          );
-          trackAnalyticsEvent(analyticsEvents.hireFormSubmitError, {
-            error_type: "server_error",
-            error_category: "server",
-            step: "submit",
-          });
-        }
+        setStatus("success");
+        return;
       }
+
+      // The technical detail stays in the console; the visitor sees one plain
+      // notice, and any field the server rejected is marked beside the field.
+      console.error("Consultation not confirmed:", response.status, result);
+      if (response.status === 400 && Array.isArray(result.details)) {
+        for (const detail of result.details as Array<{ field: string; message: string }>) {
+          const field = API_FIELDS.find(([pattern]) => pattern.test(detail.field))?.[1];
+          if (field) form.setError(field, { type: "server", message: detail.message });
+        }
+        trackAnalyticsEvent(analyticsEvents.hireFormSubmitError, {
+          error_type: "server_validation",
+          error_category: "server",
+          step: "submit",
+        });
+      } else {
+        trackAnalyticsEvent(analyticsEvents.hireFormSubmitError, {
+          error_type: "server_error",
+          error_category: "server",
+          step: "submit",
+        });
+      }
+      setStatus("error");
     } catch (error) {
-      console.error("Error submitting consultation:", error);
-      setSubmissionStatus("error");
-      setErrorMessage(
-        "Network error. Please check your connection and try again."
-      );
+      console.error("Consultation not confirmed (network):", error);
       trackAnalyticsEvent(analyticsEvents.hireFormSubmitError, {
         error_type: "network",
         error_category: "network",
         step: "submit",
       });
-    } finally {
-      setIsSubmitting(false);
+      setStatus("error");
     }
   };
 
-  // Feedback components
-  const SuccessState = () => (
-    <div className="text-center space-y-4 p-8">
-      <div className="flex items-center justify-center">
-        <Image
-          src="/images/Logomark.svg"
-          alt="Raid Guild"
-          width={169}
-          height={159}
-          className="flex-shrink-0"
-        />
-      </div>
-      <a
-        className="text-body-md hover:text-moloch-500 transition-colors"
-        href={DISCORD_INVITE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Introduce yourself in Discord
-      </a>
-    </div>
-  );
+  // After Next/Previous: record the step and, unless the surrounding module
+  // anchors its own heading, keep the step header below the fixed bar.
+  const onStepChange = React.useCallback((root: HTMLDivElement, index: number) => {
+    setStep(index);
+    if (headingOutside) return;
+    const header = root.querySelector<HTMLElement>("[data-wizard-progress]") ?? root;
+    const rect = header.getBoundingClientRect();
+    const nav = document.querySelector("[data-fixed-nav]")?.getBoundingClientRect().bottom ?? 0;
+    if (rect.top < nav + 16 || rect.top > window.innerHeight * 0.6) revealBelowNav(header);
+  }, [headingOutside]);
 
-  const ErrorState = () => (
-    <div className="space-y-4 p-6 border rounded-md bg-scroll-100">
-      <p className="text-body-md text-moloch-500">{errorMessage}</p>
-
-      {validationErrors.length > 0 && (
-        <div className="mt-4 text-body-md">
-          <h4 className="font-medium text-moloch-800 mb-2">
-            Please fix the following issues:
-          </h4>
-          <ul className="list-disc list-inside space-y-1 text-body-md text-moloch-600">
-            {validationErrors.map((error, index) => (
-              <li key={index}>
-                <span className="font-medium">{error.field}:</span>{" "}
-                {error.message}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <button
-        onClick={() => {
-          setSubmissionStatus("idle");
-          setErrorMessage("");
-          setValidationErrors([]);
-        }}
-        className="contact-btn-active mt-5"
-      >
-        Try Again
-      </button>
-    </div>
-  );
-
-  const LoadingIndicator = () => (
-    <div className="flex items-center justify-center p-8">
-      <div className="text-center space-y-4">
-        <div className="flex items-center justify-center animate-spin [animation-duration:7s]">
-          <Image
-            src="/images/Logomark.svg"
-            alt="Raid Guild"
-            width={169}
-            height={159}
-            className="flex-shrink-0"
-          />
-        </div>
+  // Submission failure (November 11): a full-width alert just above the
+  // actions. New copy, pending Tae's review.
+  const errorNotice = status === "error" ? (
+    <div className="inquiry-notice" role="alert" tabIndex={-1} ref={noticeRef}>
+      <span className="inquiry-notice-icon" aria-hidden="true">!</span>
+      <div className="inquiry-notice-body">
+        <p className="inquiry-notice-title">We couldn&apos;t confirm your inquiry.</p>
+        <p>Your answers are still here. You can try again.</p>
       </div>
     </div>
-  );
+  ) : null;
 
   const wizardSteps: WizardStep[] = [
     {
       id: "personal-info",
       title: guided ? "About you" : "Contact Info",
-      // description: "Tell us about yourself",
-      component: <PersonalInfoStep form={form} />,
+      component: <PersonalInfoStep form={form} validated={validated} />,
       validation: validatePersonalInfo,
       onStepComplete: () => {
         trackAnalyticsEvent(analyticsEvents.hireFormStepCompleted, {
@@ -643,8 +674,7 @@ export default function HireUs({ guided = false, onExit }: { guided?: boolean; o
     {
       id: "project-description",
       title: guided ? "Your project" : "Project Description",
-      // description: "Describe your project requirements",
-      component: <ProjectDetailsStep form={form} />,
+      component: <ProjectDetailsStep form={form} validated={validated} />,
       validation: validateProjectDetails,
       onStepComplete: () => {
         trackAnalyticsEvent(analyticsEvents.hireFormStepCompleted, {
@@ -657,8 +687,7 @@ export default function HireUs({ guided = false, onExit }: { guided?: boolean; o
     {
       id: "requirements",
       title: guided ? "Scope & timing" : "Requirements & Timeline",
-      // description: "Specific requirements and timeline details",
-      component: <RequirementsStep form={form} />,
+      component: <RequirementsStep form={form} validated={validated} />,
       validation: validateRequirements,
       onStepComplete: () => {
         trackAnalyticsEvent(analyticsEvents.hireFormStepCompleted, {
@@ -671,40 +700,55 @@ export default function HireUs({ guided = false, onExit }: { guided?: boolean; o
   ];
 
   return (
-    <div>
-      <div className="mx-auto w-full">
-        {submissionStatus === "success" ? (
-          <>
-            <h3 className="text-heading-lg font-bold text-moloch-500 mb-12">
-              The Fires Have Been Lit!
-            </h3>
-            <p className="text-center text-body-md">
-              Your quest has been received. A member of the Guild will be in
-              touch with you shortly to discuss next steps.
-            </p>
-          </>
-        ) : guided ? (
-          // October 30: no heading of its own. The module's title ("Tell us
-          // what you're building") introduces the form and the stepper names
-          // the step (the "Three steps…" line was removed earlier, Frame 123).
-          null
-        ) : (
+    <div className="inquiry-form" data-status={status}>
+      {status !== "success" && !guided && (
+        <div className="mx-auto w-full">
           <h3 className="text-heading-lg font-bold text-moloch-500 mb-12">
             Let&apos;s Get Started
           </h3>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Wizard */}
       <div className="space-y-4" ref={formRef}>
-        <Form {...form}>
-          {submissionStatus === "success" ? (
-            <SuccessState />
-          ) : submissionStatus === "error" ? (
-            <ErrorState />
-          ) : isSubmitting ? (
-            <LoadingIndicator />
-          ) : (
+        {status === "success" ? (
+          // Confirmation (November 11, revised): the title belongs to the
+          // module's heading when it has one ("[ Transmission Started ]", THE
+          // FIRES / HAVE BEEN LIT!). Order, in the DOM and on screen: title,
+          // the lit beacon (centred), the message across the panel, then the
+          // Discord action.
+          <div className="inquiry-confirmation" ref={confirmationRef}>
+            {!headingOutside && (
+              <h3 className="inquiry-confirmation-title" tabIndex={-1} ref={confirmationTitleRef}>
+                The Fires Have Been Lit!
+              </h3>
+            )}
+            {/* Right below the title: the lit beacon (public/images/venture/states/beacon.png, see docs/asset-provenance.md). Decorative. */}
+            <Image
+              className="inquiry-beacon"
+              src="/images/venture/states/beacon.png"
+              alt=""
+              width={1448}
+              height={1086}
+              sizes="(max-width: 600px) 92vw, 440px"
+            />
+            {/* Owner's wording (November 11), pending Tae's review: the first
+                sentence in Ubuntu Bold, the second regular. */}
+            <p className="inquiry-confirmation-body">
+              <strong>Your Submission Has Been Received.</strong> A member of the
+              Guild will be in touch with you shortly to discuss next steps.
+            </p>
+            <a
+              className="inquiry-discord"
+              href={DISCORD_INVITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="inquiry-discord-icon" aria-hidden="true" />
+              Introduce yourself in Discord
+            </a>
+          </div>
+        ) : (
+          <Form {...form}>
             <Wizard
               className="hire-us-wizard"
               steps={wizardSteps}
@@ -713,9 +757,14 @@ export default function HireUs({ guided = false, onExit }: { guided?: boolean; o
               allowBackNavigation={true}
               showSummary={false}
               onExit={onExit}
+              submitLabel={status === "error" ? "Try again" : "Send inquiry"}
+              busy={isSubmitting}
+              busyLabel="Sending inquiry…"
+              notice={errorNotice}
+              onStepChange={onStepChange}
             />
-          )}
-        </Form>
+          </Form>
+        )}
       </div>
     </div>
   );

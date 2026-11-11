@@ -1,5 +1,33 @@
 import { z } from "zod";
 
+// "Do you have project specs?" (November 11): a link with or without its
+// protocol. Surrounding spaces are removed; a link without a protocol gets
+// https://; an http:// or https:// link is kept exactly as entered. The field
+// is normalized before Next validates it, and the normalized link is sent.
+export const LINK_MESSAGE = "Enter a valid link, like example.com.";
+
+export function normalizeLink(raw: string | undefined): string {
+  const value = (raw ?? "").trim();
+  if (!value) return "";
+  if (/^https?:\/\//i.test(value)) return value;
+  // Another scheme (ftp://, javascript://…) is left as is, for validation to reject.
+  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(value)) return value;
+  return `https://${value.replace(/^\/\//, "")}`;
+}
+
+// http(s) only, no spaces or credentials, and a real host name: dot-separated
+// labels ending in a top-level domain ("example.com", "docs.example.co.uk").
+export function isValidLink(value: string): boolean {
+  if (/\s/.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return (url.protocol === "https:" || url.protocol === "http:") && !url.username && !url.password
+      && /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+(?:[a-z]{2,63}|xn--[a-z0-9-]{1,59})$/i.test(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
 // Base form schema for client-side validation
 export const hireUsFormSchema = z.object({
   name: z.string().min(2, {
@@ -19,7 +47,10 @@ export const hireUsFormSchema = z.object({
   description: z.string().min(10, {
     message: "Please describe how we can help in at least 10 characters.",
   }),
-  specsLink: z.string().url().optional().or(z.literal("")),
+  specsLink: z
+    .string()
+    .optional()
+    .refine((value) => { const link = normalizeLink(value); return link === "" || isValidLink(link); }, { message: LINK_MESSAGE }),
   budget: z.string().min(1, {
     message: "Please select a budget range.",
   }),
@@ -137,8 +168,8 @@ export const transformFormDataToApiFormat = (formData: HireUsFormData) => {
       },
     },
     type_key: "NEW",
-    specs_key: Number(formData.specsLink?.length) > 1 ? "YES" : "NONE",
-    link: formData.specsLink,
+    specs_key: normalizeLink(formData.specsLink) ? "YES" : "NONE",
+    link: normalizeLink(formData.specsLink),
     name: formData.projectName,
     description: formData.description,
     consultations_services_required: {

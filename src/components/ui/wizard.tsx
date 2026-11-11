@@ -38,6 +38,18 @@ interface WizardProps {
   // Shown as "Back" on the first step, to leave the wizard (e.g. close the
   // surrounding inquiry); later steps keep "Previous".
   onExit?: () => void;
+  // November 11 (Hire the DAO form): the last step's action and its sending
+  // state. While `busy`, the steps stay in place (same size, read-only) and the
+  // action shows `busyLabel`, so the panel never collapses during a request.
+  submitLabel?: string;
+  busy?: boolean;
+  busyLabel?: string;
+  // Shown above the actions (e.g. a submission error), so it sits where the
+  // visitor pressed the button.
+  notice?: React.ReactNode;
+  // Called after a step change has rendered, with the wizard's root, so the
+  // host can keep the active step in view.
+  onStepChange?: (root: HTMLDivElement, index: number) => void;
 }
 
 export function Wizard({
@@ -48,12 +60,28 @@ export function Wizard({
   allowBackNavigation = true,
   showSummary,
   onExit,
+  submitLabel = "Complete",
+  busy = false,
+  busyLabel = "Sending…",
+  notice,
+  onStepChange,
 }: WizardProps) {
   const [currentStep, setCurrentStep] = React.useState(0);
   const [completedSteps, setCompletedSteps] = React.useState<Set<number>>(
     new Set()
   );
   const [isValidating, setIsValidating] = React.useState(false);
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const renderedStep = React.useRef(currentStep);
+
+  // After a step change: let the host anchor the panel, then move focus to the
+  // progress indicator, which names the new step.
+  React.useLayoutEffect(() => {
+    if (renderedStep.current === currentStep || !rootRef.current) return;
+    renderedStep.current = currentStep;
+    onStepChange?.(rootRef.current, currentStep);
+    rootRef.current.querySelector<HTMLElement>("[data-wizard-progress]")?.focus({ preventScroll: true });
+  }, [currentStep, onStepChange]);
 
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;
@@ -88,6 +116,7 @@ export function Wizard({
   };
 
   const goToNextStep = async () => {
+    if (busy) return;
     const currentStepData = steps[currentStep];
 
     if (currentStepData.validation) {
@@ -134,7 +163,7 @@ export function Wizard({
   const disableSubmit = isLastStep && !isFinalStepCanSubmit;
 
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn("space-y-6", className)} ref={rootRef} aria-busy={busy || undefined} data-busy={busy || undefined}>
       {/* Guided form (October 30): one full-width stepper. Each step is a
           small numbered circle and its title, over a bar segment; the
           segments fill as the steps are reached, so the progress bar is the
@@ -143,7 +172,7 @@ export function Wizard({
           controls (Next and Previous move between them); the current one is
           marked with aria-current. */}
       {showProgress ? (
-        <nav className="wizard-stepper" aria-label={`Form progress: step ${currentStep + 1} of ${steps.length}`}>
+        <nav className="wizard-stepper" aria-label={`Form progress: step ${currentStep + 1} of ${steps.length}, ${steps[currentStep].title}`} tabIndex={-1} data-wizard-progress="">
           <ol style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
             {steps.map((step, index) => (
               <li
@@ -159,7 +188,7 @@ export function Wizard({
           </ol>
         </nav>
       ) : (
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4" tabIndex={-1} data-wizard-progress="" aria-label={`Step ${currentStep + 1} of ${steps.length}, ${steps[currentStep].title}`}>
           {steps.map((step, index) => (
             <div
               key={step.id}
@@ -198,7 +227,8 @@ export function Wizard({
         {steps[currentStep].description && (
           <CardDescription>{steps[currentStep].description}</CardDescription>
         )}
-        <div className="min-h-[300px]">
+        {/* While sending, the fields stay visible but cannot change. */}
+        <div className="min-h-[300px]" inert={busy || undefined}>
           {React.isValidElement(steps[currentStep].component)
             ? React.cloneElement(steps[currentStep].component, {
                 isActive: true,
@@ -209,10 +239,12 @@ export function Wizard({
         </div>
       </div>
 
+      {notice}
+
       {/* Navigation Buttons */}
       <div className="flex items-center justify-end gap-4">
         {isFirstStep && onExit && (
-          <Button size={null} onClick={onExit} className="contact-btn-active" data-wizard-exit="">
+          <Button size={null} onClick={onExit} disabled={busy} className="contact-btn-active" data-wizard-exit="">
             <ChevronLeft className="h-4 w-4" />
             <span>Back</span>
           </Button>
@@ -221,7 +253,7 @@ export function Wizard({
           <Button
             size={null}
             onClick={goToPreviousStep}
-            disabled={!allowBackNavigation}
+            disabled={!allowBackNavigation || busy}
             className="contact-btn-active"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -231,12 +263,15 @@ export function Wizard({
 
         <Button
           onClick={goToNextStep}
+          // While sending, the button keeps focus (aria-disabled, not disabled).
           disabled={isValidating || (isLastStep && disableSubmit)}
+          aria-disabled={busy || undefined}
           size={null}
           className="contact-btn-active"
+          data-wizard-primary=""
         >
           {isLastStep ? (
-            <span>Complete</span>
+            <span aria-live="polite">{busy ? busyLabel : submitLabel}</span>
           ) : (
             <>
               <span>Next</span>

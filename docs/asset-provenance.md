@@ -293,3 +293,17 @@ pill icon masks (`venture.module.css`) use the new files. Untracked until commit
 ## Social preview cards — 2026-11-11
 
 Supplied directly by the project owner for this social-preview update. Copied unchanged from Downloads: `venturebeyond_thumbnail.png` → `public/opengraph-image.png`; `hire-dao-thumbnail.png` → `public/images/venture/og/hire-dao-2026.png`; `join-dao-thumbnail.png` → `public/images/venture/og/join-dao-2026.png`. Each is 1731 × 909 PNG. No additional authorship or licensing claim is made.
+
+## Inquiry and error states — 2026-11-11
+
+Three illustrations generated for RaidGuild and selected by Luis (project owner); two are used. Supplied as final PNGs in
+`public/images/venture/states/` and copied unchanged into this branch. Each is 1448 × 1086, 8-bit RGBA with a
+transparent background. No other authorship or licensing claim is made.
+
+| File | sha256 | Bytes | Use |
+|---|---|---|---|
+| `beacon.png` | `96259a014c8246b9e231bf5c51405a048b9f5acf7e30f6aedcec5fd59054aa3f` | 831,127 | Hire the DAO inquiry confirmation ("The Fires Have Been Lit!"): large, below the message and the Discord action, in its own space. Decorative (empty alt). Replaces the code-drawn SVG beacon proposed earlier the same day, which was never committed. |
+| `error.png` | `0f883622f9ad443c54431a5ce713ec4effcecfae9fe915d5502f3f67d0591690` | 1,014,277 | Not used. Tried beside the submission error notice, then removed on the owner's review the same day (the notice is a plain alert). Not shipped in this branch; the supplied original stays in the integration worktree. |
+| `404.png` | `a04f0693526112aab737372636084dcf5978343ce18469892e9d33d27d146929` | 867,933 | The fallen signpost on the not-found page (`src/app/not-found.tsx`). Decorative. |
+
+Served through `next/image`, so visitors receive resized copies; the originals stay as supplied.

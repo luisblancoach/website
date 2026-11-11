@@ -751,3 +751,20 @@ html[data-theme="dark"] .contact-channel-menu { background: #191e4e; border-colo
 html[data-theme="dark"] .contact-channel-menu [role="option"][data-highlighted] { background: #262d69; color: #efe9d7; }
 html[data-theme="dark"] .contact-channel-menu [role="option"] svg { color: #ee3c78; }
 @media (prefers-reduced-motion: reduce) { .contact-channel-menu { animation: none !important; } }
+
+/* Hire the DAO form, November 11: the budget and timeline menus. Radix renders
+   them outside the page, so they are styled here, like the channel menu above.
+   Ubuntu, 44 px options; the highlighted option a quiet tint; the chosen one a
+   primary edge and a 10% primary fill, with the check as the accent. */
+.inquiry-select-menu { background: #efe9d7; border: 2px solid #102d2c; border-radius: 14px; box-shadow: 0 12px 28px rgba(7, 28, 29, .22); color: #102d2c; font-family: var(--font-ubuntu), sans-serif; padding: 4px; }
+.inquiry-select-menu [role="option"] { border: 1.5px solid transparent; border-radius: 10px; color: #102d2c; cursor: pointer; font: 500 15px/1.2 var(--font-ubuntu), sans-serif; margin: 2px 0; min-height: 44px; padding-left: 36px; padding-right: 14px; }
+.inquiry-select-menu [role="option"][data-highlighted] { background: rgba(16, 45, 44, .08); color: #102d2c; outline: none; }
+.inquiry-select-menu [role="option"][data-state="checked"] { background: color-mix(in srgb, #ee3c78 10%, transparent); border-color: #ce1252; color: #102d2c; }
+.inquiry-select-menu [role="option"][data-state="checked"][data-highlighted] { background: color-mix(in srgb, #ee3c78 16%, transparent); }
+.inquiry-select-menu [role="option"] svg { color: #ce1252; }
+html[data-theme="dark"] .inquiry-select-menu { background: #191e4e; border-color: #efe9d7; box-shadow: 0 12px 28px rgba(0, 0, 0, .45); color: #efe9d7; }
+html[data-theme="dark"] .inquiry-select-menu [role="option"] { color: #efe9d7; }
+html[data-theme="dark"] .inquiry-select-menu [role="option"][data-highlighted] { background: rgba(239, 233, 215, .1); color: #efe9d7; }
+html[data-theme="dark"] .inquiry-select-menu [role="option"][data-state="checked"] { border-color: #ee3c78; }
+html[data-theme="dark"] .inquiry-select-menu [role="option"] svg { color: #ee3c78; }
+@media (prefers-reduced-motion: reduce) { .inquiry-select-menu { animation: none !important; } }

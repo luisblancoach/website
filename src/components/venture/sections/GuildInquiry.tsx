@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
-import HireUs from "@/components/HireUs";
+import HireUs, { type InquiryProgress } from "@/components/HireUs";
+import { fixedNavBottom, revealBelowNav } from "@/lib/inquiry-scroll";
 import { HuntMarker, HuntPixel } from "@/components/UnchartedHunt";
 import { entryInquiry } from "@/lib/narrative/entry";
 import type { InquiryContent } from "@/lib/narrative/types";
@@ -33,6 +34,35 @@ export default function GuildInquiry({ content, surface }: { content?: InquiryCo
   const formRef = useRef<HTMLDivElement>(null);
   const wasExpanded = useRef(inquiryExpanded);
 
+  // November 11: on the audience routes the heading follows the form. Step 1
+  // shows the full introduction; steps 2 and 3 only the label (the title stays
+  // for assistive technology), with the form's stepper below it; after a
+  // successful inquiry the label reads "[ Transmission Started ]" and the
+  // title becomes THE FIRES / HAVE BEEN LIT!, with the opening title's
+  // treatment. The heading is kept below the fixed bar when the step changes,
+  // and the confirmation title takes focus. New copy, pending Tae's review.
+  const [progress, setProgress] = useState<InquiryProgress>({ step: 0, status: "idle" });
+  const onProgress = useCallback((next: InquiryProgress) => setProgress((current) => (current.step === next.step && current.status === next.status ? current : next)), []);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const doneTitleRef = useRef<HTMLHeadingElement>(null);
+  const inquiryRef = useRef<HTMLDivElement>(null);
+  const shown = useRef(progress);
+  const done = open && progress.status === "success";
+  const compact = open && !done && progress.step > 0;
+  useLayoutEffect(() => {
+    const before = shown.current;
+    shown.current = progress;
+    const header = headerRef.current;
+    if (!open || !header) return;
+    if (progress.status === "success" && before.status !== "success") {
+      doneTitleRef.current?.focus({ preventScroll: true });
+      revealBelowNav(header, 16, inquiryRef.current ?? undefined);
+    } else if (progress.step !== before.step && progress.status !== "success") {
+      const top = header.getBoundingClientRect().top;
+      if (top < fixedNavBottom() + 16 || top > window.innerHeight * 0.6) revealBelowNav(header);
+    }
+  }, [progress, open]);
+
   // The introduction and its button disappear when the form opens, so focus
   // moves to the form, and back to the button when it closes.
   useEffect(() => {
@@ -62,19 +92,28 @@ export default function GuildInquiry({ content, surface }: { content?: InquiryCo
         {content
           ? <ContactGallerySlot />
           : <Image className={styles.contactDruid} src="/images/neo/contact-druid-transparent.png" alt={copy.image.alt.text} width={768} height={1024} sizes="(max-width: 600px) 70vw, 420px" />}
-        <div className={styles.contactCopy}>
-          <p className={styles.sectionLabel}><CopyText copy={copy.label} /></p>
-          <h2 className={styles.contactHeadline}><CopyText copy={copy.title.lead} after=" " /><em><CopyText copy={copy.title.em} /></em></h2>
-          <p className={styles.contactDek}><CopyText copy={copy.body} /></p>
+        <div className={styles.contactCopy} ref={headerRef} data-inquiry-header={open ? "" : undefined} data-compact={compact || undefined} data-done={done || undefined}>
+          {done ? (
+            <>
+              <p className={styles.sectionLabel}>[ Transmission Started ]</p>
+              <h2 className={`${styles.contactHeadline} ${styles.contactDone}`} tabIndex={-1} ref={doneTitleRef}><span>The Fires</span>{" "}<em>Have Been Lit!</em></h2>
+            </>
+          ) : (
+            <>
+              <p className={styles.sectionLabel}><CopyText copy={copy.label} /></p>
+              <h2 className={`${styles.contactHeadline} ${compact ? "sr-only" : ""}`}><CopyText copy={copy.title.lead} after=" " /><em><CopyText copy={copy.title.em} /></em></h2>
+              {!compact && <p className={styles.contactDek}><CopyText copy={copy.body} /></p>}
+            </>
+          )}
           {!content && <div className={styles.contactClue}><HuntPixel artifact="signal" /><HuntMarker artifact="signal" label="A signal near the inquiry" /></div>}
         </div>
       </div>
       {open ? (
         // Audience routes: always open, so a plain container (a <details>
         // without its summary would draw the browser's own "Details" toggle).
-        <div className={styles.inquiryMore} id="project-inquiry" tabIndex={-1}>
-          <div className={styles.contactFormShell} ref={formRef} role="group" aria-label={copy.summary.label.text} data-inquiry-form="">
-            <HireUs guided />
+        <div className={styles.inquiryMore} id="project-inquiry" tabIndex={-1} ref={inquiryRef}>
+          <div className={styles.contactFormShell} ref={formRef} role="group" aria-label={copy.summary.label.text} data-inquiry-form="" data-inquiry-done={done || undefined}>
+            <HireUs guided onProgress={onProgress} />
           </div>
         </div>
       ) : (
