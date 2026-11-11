@@ -1415,3 +1415,12 @@ on the card's surface and shown whole (contain); below that the illustration sit
 still square (160–240 px). Two cards per row from 700 px. Eyebrows in Ubuntu Mono 14 px with the theme accent; titles
 (Last Duel, 15/18 px) and bodies (Ubuntu 15 px) a step smaller and free to wrap, left-aligned. Copy and editorial ids
 unchanged. Open: the pink eyebrows at 14 px are 3.4:1 (Day) and 4.2:1 (Night), below 4.5:1 for small text, as before.
+
+## Steward role and Stewardship heading — 2026-11-11 (owner)
+
+- Takekek (Tae) shows as **Account manager** (`lib/data/members.ts`): the steward card on `/` and the builder cards on
+  `/` and `/community`. Name, avatar, project line and link unchanged. The Hats tree still lists her as wearer of the
+  Sync Steward hat (1822.5), the Hats Protocol role name, which is matched through `stewards[].role`.
+- The Stewardship heading on `/community` reads RAIDGUILD'S / **ROLE STRUCTURE** (`community.hats.title.em`), in the
+  coral, slanted Extended treatment; the line is fitted to the column so it stays on one line. The intro ("RaidGuild's
+  Hats Tree maps…") and the link "Explore the Hats Tree" keep the Hats Protocol name.

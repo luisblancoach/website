@@ -194,7 +194,8 @@ export const mercenaries: Mercenary[] = [
   },
   {
     name: "Takekek",
-    title: "Ops",
+    // November 11 (owner): visible role on the steward and builder cards.
+    title: "Account manager",
     imagePath: "/images/member-takekek.png",
     roleIcon: "/images/icon-og-marketing.svg",
   },

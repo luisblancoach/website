@@ -2978,6 +2978,10 @@
 /* "MEMBER-GOVERNED" (15.5 em) stays on one line at every width. */
 :global(html) .site.site[data-audience] .prologue h2 { container-type: inline-size; }
 :global(html) .site.site[data-audience] .prologue h2 > em { font-size: min(var(--head-bottom), 100cqi / 15.8) !important; white-space: nowrap; }
+/* November 11: "ROLE STRUCTURE" (about 13.4 em) stays on one line under
+   RAIDGUILD'S: the shared size, reduced only where the column is narrower. */
+:global(html) .site.site[data-audience] main > :global(#hats) h2:has(> em) { container-type: inline-size; }
+:global(html) .site.site[data-audience] main > :global(#hats) h2 > em { font-size: min(var(--head-bottom), 100cqi / 13.6, (100vw - 48px) / 15.4) !important; white-space: nowrap; }
 
 /* Panel headings (Hire inquiry, Join, "/" contact); on the audience routes
    the second line fits the panel ("YOU'RE BUILDING" is 13.1 em). */
