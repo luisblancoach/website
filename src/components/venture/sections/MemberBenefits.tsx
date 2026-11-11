@@ -6,10 +6,11 @@ import styles from "../benefits.module.css";
 
 // Member benefits on /community (November 3): why a builder would join, kept
 // apart from the capability gallery. Same surface, heading and card language
-// as the galleries (gallery.module.css), its own compact layout
-// (benefits.module.css): no scrolling row, no large artwork; four numbered
-// cards with a small square of art, two per row from 700 px and a plain
-// stack on phones. Nothing in a card is interactive; the art is decorative.
+// as the galleries (gallery.module.css), its own layout (benefits.module.css).
+// November 11: the illustration is a square column the full height of the
+// card, shown whole; the copy sits beside it, or below it inside the same card
+// when the card is narrow. Two per row from 700 px. Nothing in a card is
+// interactive; the art is decorative.
 export default function MemberBenefits({ id, content }: { id: string; content: FeatureGalleryContent }) {
   const titleId = `${id}-title`;
   return (
@@ -26,14 +27,16 @@ export default function MemberBenefits({ id, content }: { id: string; content: F
           <li key={card.title.lead.id} className={styles.item}>
             <article className={styles.card} aria-labelledby={`${id}-card-${index}`}>
               <div className={styles.thumb}>
-                <Image src={card.image.src} alt="" width={card.image.width} height={card.image.height} sizes="(max-width: 999px) 56px, 104px" />
+                <Image src={card.image.src} alt="" width={card.image.width} height={card.image.height} sizes="(max-width: 699px) 240px, 220px" />
               </div>
-              <p className={styles.meta}>
-                <span className={styles.cardLabel}><CopyText copy={card.label} /></span>
-                <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-              </p>
-              <h3 id={`${id}-card-${index}`} className={styles.cardTitle}><span><CopyText copy={card.title.lead} /></span>{" "}<br /><em><CopyText copy={card.title.em} /></em></h3>
-              <p className={styles.body}><CopyText copy={card.body} /></p>
+              <div className={styles.copy}>
+                <p className={styles.meta}>
+                  <span className={styles.cardLabel}><CopyText copy={card.label} /></span>
+                  <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                </p>
+                <h3 id={`${id}-card-${index}`} className={styles.cardTitle}><span><CopyText copy={card.title.lead} /></span>{" "}<br /><em><CopyText copy={card.title.em} /></em></h3>
+                <p className={styles.body}><CopyText copy={card.body} /></p>
+              </div>
             </article>
           </li>
         ))}

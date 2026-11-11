@@ -1,17 +1,16 @@
 /* Member benefits (November 3, MemberBenefits.tsx), /community. The surface,
    heading and tokens come from the galleries (gallery.module.css, `benefits`
-   tone: celeste in Day, deep navy in Night); this file holds the compact
-   layout that keeps it from reading as a second services row.
-   - Head: label and title, the intro beside them from 1000 px.
-   - Cards from 1000 px: numbered horizontal cards, two per row, a 104 px
-     square of art beside the copy, about 170 px tall instead of the
-     galleries' 470 px.
-   - Below 1000 px: the art shrinks to 56 px beside the label, so the title and
-     body take the card's full width; two per row from 700 px (tablets), a
-     plain stack on phones.
-   Card titles keep the galleries' two-level card scale (Retalic over extended
-   italic, each line on one line, sized to the copy column; the top line at
-   1 / 21 of it, for "COHORTS, BOUNTIES", 17 characters). */
+   tone: celeste in Day, deep navy in Night); this file holds the cards' layout.
+   November 11 (owner's review):
+   - The illustration is a square column on the left, as tall as the card's
+     interior, on the card's own surface (no dark tile) and shown whole
+     (contain, never cropped).
+   - Eyebrows in Ubuntu Mono, 14 px, in the theme accent; titles (Last Duel)
+     and bodies (Ubuntu) a step smaller so the art leads; titles wrap and stay
+     inside the card, left-aligned.
+   - Two cards per row from 700 px. Each card lays itself out from its own
+     width (container query): art beside the copy from 560 px, otherwise art
+     above the copy inside the same card, still square. */
 
 .head { display: grid; gap: 20px 48px; }
 .intro { margin: 0; }
@@ -22,44 +21,43 @@
 .grid { display: grid; gap: 16px; list-style: none; margin: clamp(28px, 3.5vw, 40px) 0 0; padding: 0 var(--page-inline, 24px); }
 @media (min-width: 700px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1000px) { .grid { gap: 20px; } }
-.item { display: flex; min-width: 0; }
+.item { container: benefit / inline-size; display: flex; min-width: 0; }
 
+/* Narrow card (phones, tablets, two-up below about 1200 px): art above. */
 .card {
-  --thumb: 104px;
-  align-content: start; background: var(--gal-card); border: 2px solid var(--gal-edge); border-radius: 20px;
-  column-gap: 20px; display: grid; grid-template-columns: var(--thumb) minmax(0, 1fr); grid-template-rows: auto auto 1fr;
-  padding: 18px 20px 20px 18px; transition: border-color .18s ease; width: 100%;
+  --art: clamp(160px, 58cqi, 240px);
+  background: var(--gal-card); border: 2px solid var(--gal-edge); border-radius: 20px; box-sizing: border-box;
+  display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); padding: 18px;
+  transition: border-color .18s ease; width: 100%;
 }
 @media (hover: hover) { .card:hover { border-color: var(--gal-edge-strong); } }
 
-.thumb { aspect-ratio: 1; background: var(--gal-art); border-radius: 14px; grid-column: 1; grid-row: 1 / -1; line-height: 0; overflow: hidden; width: var(--thumb); }
-.thumb img { display: block; height: 100%; object-fit: cover; object-position: center; width: 100%; }
+.thumb { aspect-ratio: 1; background: none; line-height: 0; width: var(--art); }
+.thumb img { display: block; height: 100%; object-fit: contain; object-position: center; width: 100%; }
 
-.meta { align-items: baseline; display: flex; gap: 12px; grid-column: 2; justify-content: space-between; margin: 0 0 8px; }
-.cardLabel { color: var(--gal-accent); font: 700 12px/1.3 var(--font-marker, var(--font-mono)), monospace; letter-spacing: .06em; text-transform: uppercase; }
-.number { font: 700 12px/1.3 var(--font-mono), monospace; letter-spacing: .08em; opacity: .55; }
+.copy { align-self: center; min-width: 0; }
+.meta { align-items: baseline; display: flex; gap: 12px; justify-content: space-between; margin: 0 0 8px; }
+.cardLabel { color: var(--gal-accent); font: 700 14px/1.3 var(--font-mono), monospace; letter-spacing: .06em; min-width: 0; text-transform: uppercase; }
+.number { flex: 0 0 auto; font: 700 12px/1.3 var(--font-mono), monospace; letter-spacing: .08em; opacity: .55; }
 
 /* Title: the audience routes set every h3 in Ubuntu with !important; benefit
-   titles are display text, so they opt back in (as the gallery cards do). */
-.cardTitle { container-type: inline-size; grid-column: 2; margin: 0; }
+   titles are display text, so they opt back in (as the gallery cards do).
+   Both lines may wrap; long words break rather than leave the card. */
+.cardTitle { margin: 0; min-width: 0; overflow-wrap: anywhere; text-align: left; }
 :global(html) :global([data-audience]) .card .cardTitle,
-:global(html) .card .cardTitle { font-family: var(--font-last-duel-retalic), var(--font-display), sans-serif !important; font-size: 17px; font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1.1; text-transform: uppercase; white-space: nowrap; }
-/* The title is its own container, so the line sizes sit on the lines. */
-:global(html) .card .cardTitle > span { font-size: min(17px, 100cqi / 21); }
+:global(html) .card .cardTitle { font-family: var(--font-last-duel-retalic), var(--font-display), sans-serif !important; font-size: 15px; font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1.15; text-transform: uppercase; white-space: normal; }
+:global(html) .card .cardTitle > span { font-size: inherit; }
 :global(html) :global([data-audience]) .card .cardTitle em,
-:global(html) .card .cardTitle em { color: var(--gal-accent); display: inline-block; font-family: var(--font-last-duel-extended), var(--font-display), sans-serif !important; font-size: min(22px, 100cqi / 16.8); font-style: italic; font-synthesis: style; font-weight: 700; line-height: 1.05; margin-top: .1em; white-space: normal; }
+:global(html) .card .cardTitle em { color: var(--gal-accent); display: inline; font-family: var(--font-last-duel-extended), var(--font-display), sans-serif !important; font-size: 18px; font-style: italic; font-synthesis: style; font-weight: 700; line-height: 1.1; white-space: normal; }
 
-.body { font: 400 16px/1.5 var(--font-body), sans-serif; grid-column: 2; margin: 10px 0 0; max-width: 44ch; }
+.body { font: 400 15px/1.5 var(--font-body), sans-serif; margin: 10px 0 0; max-width: 44ch; }
 
-/* Below 1000 px: the art beside the label, the title and body across the
-   card. */
-@media (max-width: 999px) {
-  .card { --thumb: 56px; column-gap: 14px; grid-template-rows: auto auto auto; padding: 16px; row-gap: 0; }
-  .thumb { border-radius: 12px; grid-row: 1; }
-  .meta { align-self: center; margin: 0; }
-  .cardTitle, .body { grid-column: 1 / -1; }
-  .cardTitle { margin-top: 14px; }
-  .body { font-size: 15px; margin-top: 8px; }
+/* Wide card: the art is a square column the full interior height, the copy
+   beside it. The column is sized so the copy fits within it, so the card's
+   interior is as tall as the art. */
+@container benefit (min-width: 560px) {
+  .card { --art: clamp(170px, 33cqi, 220px); align-items: stretch; column-gap: 22px; grid-template-columns: var(--art) minmax(0, 1fr); min-height: calc(var(--art) + 40px); }
+  .thumb { align-self: stretch; height: auto; min-height: var(--art); }
 }
 @media (max-width: 699px) { .grid { gap: 12px; } }
 @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
