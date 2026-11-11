@@ -55,7 +55,7 @@ export default function HatsTree({ content }: { content: HatsContent }) {
       <div className={styles.inner}>
         <div className={styles.copy}>
           <p className={styles.label}><CopyText copy={content.label} /></p>
-          <h2 id="hats-title" className={styles.title}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+          <h2 id="hats-title" className={styles.title}><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
           <div className={styles.intro}>
             <p><CopyText copy={content.intro} /></p>
             <p className={styles.stewards}><strong><CopyText copy={content.stewards.term} />.</strong> <CopyText copy={content.stewards.detail} /></p>

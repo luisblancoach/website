@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { useId, useState } from "react";
 import type { Illustration } from "@/lib/data/illustrations";
 import type { Copy, FaqContent } from "@/lib/narrative/types";
-import { CopyText, ReviewFlag } from "../primitives/Review";
+import { CopyText, rich } from "../primitives/Review";
 import styles from "../gallery.module.css";
 
 // November 2 FAQ (/clients before the inquiry, /community before Join). Each
@@ -18,12 +18,17 @@ import styles from "../gallery.module.css";
 // (from 1000 px; hidden below, where the list takes the full column).
 // November 3 (owner): the plus / minus sign became a chevron, the same marker
 // as the /clients reason rows; it turns when the answer opens.
+// A link ("[text](https://…)", November 10) is not a placeholder; text around
+// placeholders keeps its inline formatting.
+const PLACEHOLDER = /(\[[^\]]+\](?!\())/g;
+const placeholders = (text: string) => text.split(PLACEHOLDER).filter(Boolean).map((part, index) => /^\[[^\]]+\]$/.test(part)
+  ? <mark key={index} className={styles.placeholder} title="Placeholder: value to be confirmed"><span className={styles.srOnly}>Placeholder, to be confirmed: </span>{part}</mark>
+  : <span key={index}>{rich(part)}</span>);
+
+// Answers with placeholders render them marked; Editorial Mode edits the plain
+// text, brackets included (November 9).
 function Answer({ copy }: { copy: Copy }) {
-  if (!/\[[^\]]+\]/.test(copy.text)) return <CopyText copy={copy} />;
-  const parts = copy.text.split(/(\[[^\]]+\])/g).filter(Boolean).map((part, index) => part.startsWith("[")
-    ? <mark key={index} className={styles.placeholder} title="Placeholder: value to be confirmed"><span className={styles.srOnly}>Placeholder, to be confirmed: </span>{part}</mark>
-    : <span key={index}>{part}</span>);
-  return copy.status === "approved" ? <>{parts}</> : <ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{parts}</ReviewFlag>;
+  return /\[[^\]]+\](?!\()/.test(copy.text) ? <CopyText copy={copy} display={placeholders} /> : <CopyText copy={copy} />;
 }
 
 export default function Faq({ id, content, illustration }: { id: string; content: FaqContent; illustration?: Illustration }) {
@@ -33,7 +38,7 @@ export default function Faq({ id, content, illustration }: { id: string; content
     <section id={id} className={styles.faq} aria-labelledby={`${id}-title`}>
       <div className={styles.faqHead}>
         {content.label && <p className={styles.label}><CopyText copy={content.label} /></p>}
-        <h2 id={`${id}-title`} className={styles.title}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+        <h2 id={`${id}-title`} className={styles.title}><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
       </div>
       <div className={styles.faqList}>
         {content.items.map((item, index) => {

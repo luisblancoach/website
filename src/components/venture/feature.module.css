@@ -96,3 +96,18 @@
    for the accessible name and is not rendered; the two lines keep their sizes and the em its margin. */
 :global([data-audience]) .feature .title { align-items: flex-start; display: flex; flex-direction: column; }
 :global([data-audience]) .feature .title > br { display: none; }
+
+/* Night (November 6, owner): the Moloch CTA (outline on coral) takes a dark-navy edge (#12163B) instead of the cream
+   one; its icon disc is transparent with the cream ring and glyph. Day is unchanged.
+   November 10 (owner, final polish): in both themes the CTA is a dark surface: the canonical dark green
+   (--color-dark-green, #102D2C) with a cream label (12.9:1) and edge, its icon disc transparent with the cream ring
+   and glyph. Size, shape, icon and destination are unchanged; it keeps the shared lift, pressed inset and focus
+   ring (venture.module.css), with a lighter and a deeper green for hover and pressed. */
+.moloch .cta {
+  --cta-secondary-bg: var(--color-dark-green, #102d2c);
+  --cta-secondary-hover-bg: #1a3f3d;
+  --cta-secondary-active-bg: #0a2120;
+  --cta-secondary-fg: var(--color-cream, #efe9d7);
+  --cta-secondary-edge: var(--color-dark-green, #102d2c);
+}
+:global(html) .moloch .cta.cta > :last-child { background: transparent; border-color: var(--color-cream, #efe9d7); color: var(--color-cream, #efe9d7); }

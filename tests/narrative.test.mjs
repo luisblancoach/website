@@ -12,6 +12,8 @@ import { PORTAL_JOIN_URL } from "../src/lib/data/constants.ts";
 import { HATS_TREE_URL, featuredHats, hatImageSize, hatsParent, hatsRoles } from "../src/lib/data/hats.ts";
 import { molochArtwork, queenRaidaArtwork } from "../src/lib/data/illustrations.ts";
 import { collectCopy, reviewFlagsEnabled } from "../src/lib/narrative/types.ts";
+// Copy fixtures pin the words; inline formatting (**, _, ++, links) is checked in editorial-rich.test.mjs.
+import { plainText } from "../src/lib/narrative/inline.ts";
 import { existsSync } from "node:fs";
 
 // Lines that appear verbatim in Tae's approved narrative direction. Nothing else
@@ -32,7 +34,8 @@ const TAE_BRIEF = new Set([
   "DAOhaus provides tools for launching DAOs, voting on proposals, and managing shared treasuries. RaidGuild modernized its admin app, simplified its codebase and dependencies, and delivered maintenance documentation, operational runbooks, and AI-assisted development workflows with human review.",
   "BrightID helps applications verify that users are unique people while protecting their privacy. RaidGuild built Aura’s MetaNode graph explorer, including tools for labeling identities and assessing reputation, giving community verifiers more context for identifying trustworthy participants.",
   "Daedalus builds custom software and practical AI systems for businesses. RaidGuild delivered a client quote generator and integrated Coinbase embedded wallets, supporting both its business operations and wallet-enabled product development.",
-  "RaidGuild contributed development and UX work to Problem Media’s Good Game platform, helping bring the application toward delivery.",
+  // Tae's editorial batch 02 (2026-11-10) replaced the Problem description.
+  "Problem Media is an ownership platform that partners with exceptional founders, businesses, and assets to create long-term value. RaidGuild works as a trusted and dependable operating partner - having contributed development and UX work for Problem.",
   "Funding public goods through open-source tools and community coordination. RaidGuild contributed Passport–Snapshot validation work, Moloch-themed creative projects, and development support via our Skunk Squad.",
 ]);
 
@@ -51,7 +54,7 @@ describe("community narrative", () => {
 
   test("only Tae's verbatim lines are attributed to the brief", () => {
     for (const copy of community.filter((item) => item.source === "tae-brief")) {
-      assert.ok(TAE_BRIEF.has(copy.text), `${copy.id} is not in the brief: “${copy.text}”`);
+      assert.ok(TAE_BRIEF.has(plainText(copy.text)), `${copy.id} is not in the brief: “${copy.text}”`);
       assert.equal(copy.status, "approved");
     }
   });
@@ -66,7 +69,7 @@ describe("community narrative", () => {
       assert.equal(communityHero.paths[1].label.text, "See what we’re building");
       assert.equal(communityHero.paths[1].section, "work");
       assert.equal(`${communityJoin.title.lead.text} ${communityJoin.title.em.text}`, "Your first step into the Guild.");
-      assert.equal(communityJoin.body.text, "Create a Portal profile to explore sessions, projects, and posts. Meet the community on Discord, and read the membership guide when you’re ready to learn how joining the DAO works.");
+      assert.equal(plainText(communityJoin.body.text), "Create a Portal profile, explore what members are building, and introduce yourself on Discord. Ready to pursue membership? Read the membership guide.", "Tae's batch 03");
       assert.equal(communityJoin.actions[0].label.text, "Create your Portal profile");
   });
 
@@ -133,7 +136,7 @@ describe("all narratives", () => {
 
   test("only Tae's verbatim lines carry her approval", () => {
     for (const copy of everything.filter((item) => item.source === "tae-brief")) {
-      assert.ok(TAE_BRIEF.has(copy.text), `${copy.id}: “${copy.text}”`);
+      assert.ok(TAE_BRIEF.has(plainText(copy.text)), `${copy.id}: “${copy.text}”`);
       assert.equal(copy.status, "approved");
     }
   });
@@ -199,7 +202,7 @@ describe("clients narrative", () => {
     assert.deepEqual(clientsServices.services.map((s) => s.title.text), services.map((s) => s.title), "the accordion keeps the published order");
     for (const s of clientsServices.services) assert.equal(s.title.reason, "claim", s.title.id);
     assert.equal(clientsServices.cta.section, "project-inquiry");
-    assert.equal(clientsServices.intro[1].text, "Owners, not vendors: we turn shared experience into focused offerings with end dates of their own.");
+    assert.equal(plainText(clientsServices.intro[1].text), "Owners, not vendors: we turn shared experience into focused offerings with end dates of their own.");
     assert.equal(clientsServices.intro[1].source, "owner-approval", "the corrected sentence was approved by the owner");
     assert.equal(clientsNarrative.clientsCapabilities.title.lead.text, "Ideas into", "/community keeps the October 23 capabilities");
   });
@@ -212,7 +215,8 @@ describe("clients narrative", () => {
       assert.ok(existsSync(new URL(`../public${work.button}`, import.meta.url)), work.button);
       assert.ok(existsSync(new URL(`../public${work.snapshot.src}`, import.meta.url)), work.snapshot.src);
       assert.match(work.link.href, /^https:\/\//, work.id);
-      assert.doesNotMatch(work.link.href, /portal\.raidguild\.org|raidguild\.org/, "Read more opens the project's own site");
+      assert.doesNotMatch(work.link.href, /portal\.raidguild\.org|raidguild\.org/, "the link opens the project's own site");
+      assert.match(work.link.label.text, /^Visit \S/, `${work.id}: Tae's batch 02 names the site the link opens`);
       assert.equal(work.pending, undefined, work.id);
     }
     const href = Object.fromEntries(works.map((w) => [w.id, w.link.href]));
@@ -228,9 +232,9 @@ describe("clients narrative", () => {
       assert.equal(work.description.status, "approved", work.id);
       assert.equal(work.title, undefined, `${work.id}: the archive titles were replaced with the descriptions`);
     }
-    assert.match(byId.daedalus.description.text, /^Daedalus builds custom software and practical AI systems for businesses\./);
-    assert.match(byId.brightid.description.text, /Aura’s MetaNode graph explorer/);
-    assert.match(byId.gitcoin.description.text, /^Funding public goods .* Skunk Squad\.$/);
+    assert.match(plainText(byId.daedalus.description.text), /^Daedalus builds custom software and practical AI systems for businesses\./);
+    assert.match(plainText(byId.brightid.description.text), /Aura’s MetaNode graph explorer/);
+    assert.match(plainText(byId.gitcoin.description.text), /^Funding public goods .* Skunk Squad\.$/);
     assert.equal(byId.daedalus.name.text, "Daedalus");
     assert.ok(!byId.ud && !byId.gnosis, "Ultimate Dominion and Gnosis are not in this showcase");
   });
@@ -238,7 +242,7 @@ describe("clients narrative", () => {
   test("no outcome metrics are carried into case studies", () => {
     // Dollar amounts, multipliers and percentages; a "$" ticker such as $POKT is not a metric.
     for (const work of clientsNarrative.clientsPreviousWorks.works) {
-      assert.doesNotMatch(`${work.title?.text ?? ""} ${work.description?.text ?? ""}`, /\$\d|\d+x\b|\d+%|million|\bM\b/);
+      assert.doesNotMatch(`${work.title?.text ?? ""} ${plainText(work.description?.text ?? "")}`, /\$\d|\d+x\b|\d+%|million|\bM\b/);
     }
   });
 });
@@ -257,31 +261,31 @@ describe("Join the DAO iteration (/community)", () => {
   test("About RaidGuild is restored from f842d87", () => {
     const guild = communityNarrative.communityGuild;
     assert.equal(`${guild.title.lead.text} ${guild.title.em.text}`, "Builder-owned member-governed");
-    assert.match(guild.body.text, /runs as a DAO with no single leader/);
+    assert.match(plainText(guild.body.text), /runs as a DAO with no single leader/);
     assert.equal(guild.kit.heading.text, "Your Guild kit");
     assert.equal(guild.kit.items.length, 4);
   });
 
-  test("Moloch is its own feature: October 30 title without a mark, October 28 body verbatim", () => {
+  test("Moloch is its own feature: October 30 title without a mark, body as Tae revised it (batch 03)", () => {
     const moloch = communityNarrative.communityMoloch;
     assert.equal(`${moloch.title.lead.text} ${moloch.title.em.text}`, "Together we slay Moloch");
     assert.equal(moloch.titleMark, undefined, "the sword mark was removed (November 2)");
-    assert.match(moloch.body.text, /^In RaidGuild lore, Moloch represents coordination failure/);
+    assert.match(plainText(moloch.body.text), /^In RaidGuild lore, Moloch represents human coordination failure/);
     assert.equal(moloch.cta.label.text, "Find your path into the Guild");
   });
 
   test("Queen Raida feature uses the approved copy", () => {
     const raida = communityNarrative.communityRaidaFeature;
     assert.equal(`${raida.title.lead.text} ${raida.title.em.text}`, "A scout for signal. A scribe for the Guild.");
-    assert.equal(raida.body.text, "Queen Raida is RaidGuild’s AI agent. She helps spot useful developments, gather context, and turn the Guild’s work into clear updates, drafts, and next steps - giving members more room for the work that needs human judgment: choosing what matters, building trust, and making decisions.");
+    assert.equal(plainText(raida.body.text), "Queen Raida is RaidGuild’s AI agent. She helps spot useful developments, gather context, and turn the Guild’s work into clear updates, drafts, and next steps - giving members more room for the work that needs human judgment: choosing what matters, building trust, and making decisions.");
     assert.equal(raida.body.source, "owner-approval");
   });
 
   test("the Hats Tree section carries the Hats Tree and stewardship copy and links to tree 1822", () => {
     const hats = communityNarrative.communityHats;
     assert.equal(`${hats.title.lead.text} ${hats.title.em.text}`, "RaidGuild's Hats Tree");
-    assert.match(hats.intro.text, /powered by Hats Protocol/);
-    assert.match(hats.stewards.detail.text, /^Stewards are members who take responsibility/);
+    assert.match(plainText(hats.intro.text), /powered by Hats Protocol/);
+    assert.match(plainText(hats.stewards.detail.text), /^Stewards are members who take responsibility/);
     assert.match(hats.snapshot.text, /Reference snapshot/);
   });
 
@@ -336,7 +340,7 @@ describe("steward-supplied copy", () => {
   test("the steward's B3.4 lines were replaced by the owner's October 29 copy", () => {
     const lines = collectCopy([communityNarrative, clientsNarrative, sharedNarrative]).filter((copy) => copy.source === "steward-brief");
     assert.equal(lines.length, 0);
-    assert.equal(communityNarrative.communityActivity.collection.intro.text, "Games, tools, digital experiences, and field notes from Guild members. Explore what they made, how they approached it, and what they learned.");
+    assert.equal(plainText(communityNarrative.communityActivity.collection.intro.text), "Games, tools, digital experiences, and field notes from Guild members. Explore what they made, how they approached it, and what they learned.");
     assert.equal(communityNarrative.communityActivity.collection.intro.source, "owner-approval");
   });
 
@@ -394,7 +398,7 @@ describe("November 2 galleries and FAQs", () => {
 
   test("the member benefits are the brief's four, flagged, with existing art", () => {
     const { communityBenefits } = communityNarrative;
-    assert.deepEqual(communityBenefits.cards.map((card) => `${card.title.lead.text} ${card.title.em.text}`), ["Cohorts, bounties and raids", "Hackathons and hackerhouses", "RIPs and shared funding", "Guild email and Linktree"]);
+    assert.deepEqual(communityBenefits.cards.map((card) => `${card.title.lead.text} ${card.title.em.text}`), ["Cohorts, bounties and raids", "Hackathons and hackerhouses", "RIPs and shared funding", "Guild email and raidguild domain"]);
     for (const card of communityBenefits.cards) {
       assert.equal(card.body.reason, "claim", card.title.lead.text);
       assert.ok(readFileSync(new URL(`../public${card.image.src}`, import.meta.url)), card.image.src);
@@ -406,23 +410,27 @@ describe("November 2 galleries and FAQs", () => {
     const { communityFaq } = communityNarrative;
     assert.equal(clientsFaq.items.length, 6);
     for (const item of clientsFaq.items) assert.equal(item.answer.reason, "claim", item.question.text);
-    assert.ok(clientsFaq.items.some((item) => /\[\$X–\$Y\]/.test(item.answer.text)), "cost stays a placeholder");
+    // Tae's editorial batch 02 (2026-11-10) answered cost without a figure: no placeholder, and no price stated.
+    assert.doesNotMatch(plainText(clientsFaq.items[0].answer.text), /\$\s?\d|\[\$/, "the cost answer states no unconfirmed figure");
     assert.doesNotMatch(collectCopy(clientsFaq).map((item) => item.text).join(" "), /\braids?\b/i, "buyer FAQ speaks of projects, not raids");
     for (const item of communityFaq.items) assert.notEqual(item.answer.source, "draft", item.question.text);
   });
 });
 
 describe("November 3 client reasons (/clients)", () => {
-  test("Why RaidGuild answers the buyer: seven flagged reasons, no prices, timelines, guarantees or raid jargon", () => {
+  test("Why RaidGuild answers the buyer: six shown reasons (Reason 6 retired), flagged, no prices, timelines, guarantees or raid jargon", () => {
     const { clientsReasons } = clientsNarrative;
     assert.equal(clientsReasons.items.length, 7);
+    assert.deepEqual(clientsReasons.items.map((item) => Boolean(item.retired)), [false, false, false, false, false, true, false], "Tae's batch 02 retired Reason 6");
     for (const item of clientsReasons.items) {
       assert.equal(item.body.reason, "claim", item.title.text);
       assert.notEqual(item.title.status, "approved", item.title.text);
     }
     const copy = collectCopy(clientsReasons).map((item) => item.text).join(" ");
     assert.doesNotMatch(copy, /\$|\bguarantee|\b\d+\s*(?:days?|weeks?|months?)\b|\braids?\b/i);
-    for (const point of [/applied AI|AI and blockchain/i, /smart contracts/i, /scope/i, /handoff/i, /weekly/i, /maintain/i, /senior/i]) assert.match(copy, point);
+    const shown = collectCopy(clientsReasons.items.filter((item) => !item.retired)).map((item) => item.text).join(" ") + " " + clientsReasons.intro.text;
+    for (const point of [/applied AI|AI and blockchain/i, /smart contracts/i, /scope/i, /handoff|handover/i, /maintain/i, /senior/i]) assert.match(shown, point);
+    assert.doesNotMatch(shown, /\bDELETE\b/, "no deletion instruction is published");
   });
 });
 
@@ -431,7 +439,14 @@ describe("November 3 community restructure", () => {
     const { communityCapabilities } = communityNarrative;
     const { clientsServiceGallery } = clientsNarrative;
     assert.equal(communityCapabilities.cards.length, clientsServiceGallery.cards.length);
-    assert.deepEqual(communityCapabilities.cards.map((card) => card.image.src), clientsServiceGallery.cards.map((card) => card.image.src));
+    // November 10 (owner): each gallery has its own final illustration set, in card order, 4:3, uncropped.
+    assert.deepEqual(communityCapabilities.cards.map((card) => card.image.src.replace(/^.*\/(\d\d)-.*$/, "community/$1")), ["01", "02", "03", "04", "05", "06"].map((n) => `community/${n}`));
+    assert.deepEqual(clientsServiceGallery.cards.map((card) => card.image.src.replace(/^.*\/(\d\d)-.*$/, "hire/$1")), ["01", "02", "03", "04", "05", "06"].map((n) => `hire/${n}`));
+    for (const card of [...communityCapabilities.cards, ...clientsServiceGallery.cards]) {
+      assert.match(card.image.src, card.image.src.includes("/community/") ? /^\/images\/illustrations\/community\/0[1-6]-/ : /^\/images\/illustrations\/hire\/0[1-6]-/);
+      assert.deepEqual([card.image.width, card.image.height, card.image.fit], [1448, 1086, "contain"], card.image.src);
+      assert.ok(readFileSync(new URL(`../public${card.image.src}`, import.meta.url)), card.image.src);
+    }
     const copy = collectCopy(communityCapabilities).map((item) => item.text).join(" ");
     assert.doesNotMatch(copy, /inquiry|discuss your project|build for you/i);
     assert.equal(communityCapabilities.cta.section, "guild");
@@ -442,3 +457,6 @@ describe("November 3 community restructure", () => {
   });
 });
 
+
+// Editorial Mode tests run with this suite (package.json lists the test files).
+import "./editorial.test.mjs";

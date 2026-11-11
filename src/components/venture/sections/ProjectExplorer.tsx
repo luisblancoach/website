@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { fallbackArtifacts, guildPortal, type GalleryItem } from "@/components/ArtifactGallery";
 import { resolveArtifactPreview } from "@/lib/data/artifactPreviews";
+import type { Copy } from "@/lib/narrative/types";
+import { CopyText } from "../primitives/Review";
 import venture from "../venture.module.css";
 import styles from "../explorer.module.css";
 
@@ -40,7 +42,7 @@ const CATEGORIES: [string, string, (item: GalleryItem) => boolean][] = [
   ["post", "Field notes", (item) => item.kind === "post"],
 ];
 
-export default function ProjectExplorer({ onOpenPortal }: { onOpenPortal?: () => void }) {
+export default function ProjectExplorer({ onOpenPortal, explore }: { onOpenPortal?: () => void; explore: Copy }) {
   const [posts, setPosts] = useState<GalleryItem[]>([]);
   const [experiments, setExperiments] = useState<GalleryItem[]>(fallbackArtifacts);
   const [category, setCategory] = useState("all");
@@ -109,10 +111,10 @@ export default function ProjectExplorer({ onOpenPortal }: { onOpenPortal?: () =>
     <div className={styles.actions}>
       {isPortal ? (
         <Dialog.Trigger asChild>
-          <button type="button" className={`${venture.pill} ${venture.pillFilled} ${styles.action}`} onClick={onOpenPortal}><span>Explore now</span></button>
+          <button type="button" className={`${venture.pill} ${venture.pillFilled} ${styles.action}`} onClick={onOpenPortal}><span><CopyText copy={explore} /></span></button>
         </Dialog.Trigger>
       ) : (
-        <a className={`${venture.pill} ${venture.pillFilled} ${styles.action}`} href={url!} target="_blank" rel="noopener noreferrer" aria-label={`Explore ${selected.title} now (opens in a new tab)`}><span>Explore now</span></a>
+        <a className={`${venture.pill} ${venture.pillFilled} ${styles.action}`} href={url!} target="_blank" rel="noopener noreferrer" aria-label={`Explore ${selected.title} now (opens in a new tab)`}><span><CopyText copy={explore} /></span></a>
       )}
     </div>
   );

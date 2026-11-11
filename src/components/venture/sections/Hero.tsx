@@ -29,7 +29,7 @@ const CURTAIN_REACH = 0.45;
 // sky, landscape, title and copy no longer move with the pointer or the scroll,
 // and the copy no longer fades. The curtain is a separate effect and stays.
 export default function Hero({ content, grouped = false, curtain = false, still = false }: { content: HeroContent; grouped?: boolean; curtain?: boolean; still?: boolean }) {
-  const { portalOpen } = useVenture();
+  const { portalOpen, site } = useVenture();
   const heroRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
@@ -222,19 +222,19 @@ export default function Hero({ content, grouped = false, curtain = false, still 
           {content.eyebrow && <p className={styles.eyebrow}><span /><CopyText copy={content.eyebrow} before=" " /></p>}
           <div ref={titleRef} className={[styles.heroTitle, content.title.long ? styles.heroTitleLong : "", content.title.plain ? styles.heroTitlePlain : "", content.title.finale ? styles.heroTitleStacked : ""].filter(Boolean).join(" ")}>
             {content.title.finale ? (
-              <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} />{" "}<br className={styles.heroTitleBreak} /><CopyText copy={content.title.finale} /></em></h1>
+              <h1><span><CopyText copy={content.title.lead} /></span>{" "}<br /><em><CopyText copy={content.title.em} />{" "}<br className={styles.heroTitleBreak} /><CopyText copy={content.title.finale} /></em></h1>
             ) : (
-              <h1><span><CopyText copy={content.title.lead} /></span><br /><em><CopyText copy={content.title.em} /></em></h1>
+              <h1><span><CopyText copy={content.title.lead} /></span>{" "}<br /><em><CopyText copy={content.title.em} /></em></h1>
             )}
           </div>
           {grouped && supplement}
         </div>
         {!grouped && supplement}
         <div className={styles.heroIndex}>
-          <span>TRANSMISSION</span>
-          <strong>001</strong>
+          <span><CopyText copy={site.hero.index.label} /></span>
+          <strong><CopyText copy={site.hero.index.number} /></strong>
         </div>
-        <p className={styles.heroScrollCue} aria-hidden="true">&lt;&lt;&lt; SCROLL TO DESCEND</p>
+        <p className={styles.heroScrollCue} aria-hidden="true"><CopyText copy={site.hero.scrollCue} /></p>
         <div className={`${styles.heroForeground} ${styles.heroForegroundLeft}`} aria-hidden="true">
           <Image
             src="/images/neo/hero-foreground.png"

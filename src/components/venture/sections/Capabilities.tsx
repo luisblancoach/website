@@ -20,7 +20,7 @@ export default function Capabilities({ content, illustration }: { content: Capab
       <span id="capabilities" className={styles.anchorTarget} />
       <div className={styles.practiceHeading}>
         <p className={styles.sectionLabel}><CopyText copy={content.label} /></p>
-        <h2><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+        <h2><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
         <div className={styles.practiceAside}>
           <p><CopyText copy={content.intro} /></p>
           <NarrativeAnchor link={content.inquiry} className={`${styles.pill} ${styles.pillOutlineNavy}`}>

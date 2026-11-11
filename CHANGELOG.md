@@ -6,6 +6,176 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
+- **Two-page architecture (owner, 2026-11-10):** Hire the DAO at `/` (unchanged page),
+  `/community` unchanged, `/agency` and `/clients` → `/` (308, query kept, no loops); the former `/` entry page
+  retired; SEO, sitemap, `llms.txt`, theme, navigation and Editorial Mode follow (copy ids unchanged). Tests 137/137;
+  visitor layout of `/` identical to the released `/agency`; editorial 21/21 + 8/8. Hunt: option A, on-page hunt
+  retired (Portal card, overlay and console help corrected; console commands kept). Details: `docs/venture-integration.md`.
+
+## 2026-11-10 · Final handoff release `b0d6cb6`: Vercel review `dpl_D4iJJAvqf2LRwSourYmN9Lm2mnj4`, Worker `32af0c5c`
+
+- `b0d6cb613760bb53f891eb2bfc32e138d36f7d0c` "feat(handoff): …", 78 files (illustrations, UI polish, hunt, SEO/AEO,
+  Editorial Mode rich text), pushed to `fork` only. Vercel review (noindex): https://raidguild-venture-beyond-review.vercel.app.
+  Cloudflare Editorial Mode (opt-in, noindex): Worker `raidguild-estudioblanco` version
+  `32af0c5c-155c-4aee-b60b-c667f973dce7`. Live checks: Vercel crawl, sitemap, robots, JSON-LD; illustrations 16/16,
+  polish 92/92, hunt 11/11; Worker rich-text 21/21 and the live export passes the CLI dry run. Rollback:
+  `dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD` (Vercel), `5dcaac41` (Worker). Record: `docs/venture-integration.md`.
+- Released in it (previously listed as Unreleased):
+
+  - **Final card illustrations (owner, 2026-11-10):** 16 owner-supplied PNGs in
+    `public/images/illustrations/{hire,community,membership}/` replace the art of the /agency services gallery (6),
+    the /community capabilities gallery (6) and the /community member benefits (4), mapped in card order through the
+    narrative data layer. Tests 125/125, tsc, lint 0 errors, isolated build OK; 16/16 verified in Day/Night at 1440
+    and 393 px. Mapping and checksums: `docs/asset-provenance.md`.
+  - **Final UI polish (owner, 2026-11-10):** company selector
+    with one geometry and no 1–2 px shifts (five logo SVGs recentred, Daedalus plate matched); Moloch CTA in dark green;
+    less space between the Guild and Ways to contribute; footer motto upright, hunt clues removed, icons on every link
+    and a new "Portal Blog" link. Tests 125/125, tsc, lint 0 errors, isolated build OK; polish checks 92/92 in
+    Day/Night at 1440 and 393 px. Details: `docs/venture-integration.md`, 2026-11-10.
+  - **Hunt and SEO / AEO (2026-11-10):** the portal overlay shows the hunt only on `/`
+    (no dead-end trail on the audience routes); noindex on every build except the raidguild.org production deploy;
+    absolute canonicals on www.raidguild.org; sitemap of the three routes at go-live; Organization, WebSite, WebPage
+    and Service JSON-LD from published copy; heading text spacing; llms.txt and agent Markdown corrected. Tests
+    130/130, tsc, lint 0 errors; layout unchanged. Report: `docs/seo-aeo-handoff.md`.
+  - **Editorial Mode rich text (2026-11-10):** bold, italic, underline
+    and links inside running text, as `**…**`, `_…_`, `++…++`, `[…](…)` in the existing string format
+    (`src/lib/narrative/inline.ts`); toolbar, shortcuts, undo/redo, phone layout; link sanitizing at every layer;
+    prose-only field policy; CLI and export carry it unchanged. Tests 137/137; rich-text QA 21/21; visitor layout
+    identical. Workflow: `docs/editorial-guide-tae.md`.
+  - **Final acceptance (2026-11-10):** formatted paragraph edited → exported → applied by the CLI on a clean scratch repo
+    (1 line, ids unchanged) → tests 137/137, build, correct visitor HTML. Release manifest prepared (78 files).
+
+## 2026-11-10 · Editorial cycle 02 closed: Tae's batch 03 live as Worker version `5dcaac41` (`release/editorial-cycle-02`)
+
+- Tae's batch 03 (`raidguild-tae-editorial(2).md`, change set `09f31b111631…`, made on `78b024005ad6`; Markdown only,
+  manual integration) reconciled by copy id: all 49 decisions resolved: 32 already satisfied by batch 02, 2 already
+  retired (Reason 6 stays retired), 15 Community decisions applied in `5800aef` (About RaidGuild, capabilities,
+  Moloch, Hats Tree, member benefits including the Guild email/domain card, Join, two FAQ answers). Five shared
+  literals split so fields Tae did not edit keep their text (Agency practice copy included). `c749476` lets a long
+  benefit-card title wrap instead of overflowing at 320–1024 px.
+- Agency and Community updated live; Editorial Mode v0.3 operational (293 active fields). Tests 125/125, tsc clean;
+  targeted responsive QA at 1440 and 390 px passed locally and live. Pixel comparisons and load tests intentionally
+  skipped for this express release. Rollback target `c309397c`. Tae's editorial authority (including removal and
+  restructuring), the batch history and the next-cycle backlog: `docs/venture-integration.md`, 2026-11-10.
+  Annotated tag `release/editorial-cycle-02`, pushed to `fork` only.
+
+## 2026-11-10 · Tae's editorial batch 02 (34 decisions), live as Worker version `c309397c`
+
+- Tae holds editorial authority (owner decision); her batch 02 (`raidguild-tae-editorial-agency.md`, change set
+  `9e1c68fabd01…`) was implemented as submitted, as a manually authorized Markdown integration (no matching JSON):
+  `08ee651` 23 text decisions (the two stale ones resolved for her latest proposals), `8e82e54` nine "Visit"
+  project links, `6e7ae87` Reason 6 retired (tombstone, ids stable), `78b0240` retired items never leave the server.
+  Editorial Mode: 293 active fields. Live: 34/34 decisions, batch 02 QA 53/53, Editorial Mode suites 36/36 and
+  36/36, route checks 19/19, 0 errors. Claims flagged for owner verification in `docs/venture-integration.md`.
+
+## 2026-11-09 · Tae's review applied `055cbb0` and Editorial Mode v0.3 `5f93262`, live as Worker version `8d6c86ce`
+
+- `055cbb0` "content(agency): apply Tae's approved editorial review (change set 1f3373b71bc5)": the hero
+  introduction and services card 5 rewritten exactly as Tae wrote them (KEEP recorded for reason 6), applied with
+  `scripts/apply-editorial.mjs`. Owner-approved.
+- `5f93262` "feat(editorial): full coverage of /agency and /community (v0.3)": 295 editable copy fields (274 on the
+  page, 21 in the new Hidden text tab: alt text, screen-reader names, metadata); site chrome and page metadata
+  moved verbatim into the narrative source; price changes and navigation/heading/accessibility removals are
+  structural; CLI resolves repeated and shared texts by probing. Owner-approved.
+- Live on workers.dev: Phase 4 checks 19/19, v0.3 acceptance 36/36, v0.2 regression 36/36, visitors 0 px
+  against the public build, 0 errors in 984 load requests, static paths CPU max 19 ms. Pushed to `fork` only.
+  `raidguild.estudioblanco.org` still redirects to Railway (route change pending approval).
+
+## 2026-11-08 · Editorial Mode v0.2 `bb37620` (`release/editorial-v0.2`), live as Worker version `f8fd6838`
+
+- `5e04f1a` "feat(editorial): operations, Preview and two-file export (v0.2)": REPLACE, SHORTEN, REMOVE (text,
+  item or section; never an empty string) and KEEP, all reversible; structural removals flagged for separate
+  approval; Preview; synchronized `raidguild-tae-editorial.md` / `.json` export (version 2, fingerprints, source
+  revision, deterministic). `bb37620` "feat(editorial): apply-editorial CLI, dry run by default". Owner-approved.
+  Live: v0.2 acceptance 36/36, ordinary visitors 8/8 at 0 px, 0 errors under load, static paths CPU p99 11 ms.
+  Annotated tag `release/editorial-v0.2` → `bb37620`, pushed to `fork` only. Guide: `docs/editorial-guide-tae.md`.
+
+## 2026-11-08 · Opt-in Editorial Mode `64d16d6`, live as Worker version `f57739de`
+
+- Commit `64d16d6` "feat(editorial): opt-in Editorial Mode for production builds (?editorial=1)", owner-approved,
+  deployed to the review Worker on workers.dev. `?editorial=1` is an interface switch, not authentication, and
+  provides no privacy or access restriction; editing is browser-local. Live: editorial QA 36/36, ordinary visitors
+  8/8 at 0 px against the approved build, 0 errors under load, static paths CPU p99 12 ms. Not pushed.
+
+## 2026-11-08 · Static-first Cloudflare host `0ad287e`, live as Worker version `0c37e331`
+
+- Commit `0ad287e` "build(cloudflare): static-first assets for the Workers Free CPU limit" (deploy kit only),
+  owner-approved, built with the app tree of `8456bdb` (Night `a1114f0`, Louchi photo `8456bdb`) and deployed to the
+  existing `raidguild-estudioblanco` Worker on workers.dev. Live: static paths at CPU p50 0 ms / p99 14 ms, 0 errors
+  in 3 load rounds, `/agency` and `/community` 8/8 at 0 px against the approved build. Not pushed.
+
+## 2026-11-07 · Night refinements `a1114f0` and Louchi photo `8456bdb`
+
+- `a1114f0` "fix(night): dark-navy CTA edges and lighter gallery cards" (the November 6 owner request, until now
+  under "Unreleased") and `8456bdb` "feat(people): new photo for Louchi, Brand Steward", owner-approved. Verified on
+  isolated builds: Day unchanged (0 px), Night changes only the CTAs and gallery cards, the photo changes only its own
+  boxes; text identical. Not pushed, not deployed.
+
+## 2026-11-07 · Editorial Mode v0.1 `d1b6fa4` (`release/editorial-v0.1`)
+
+- Commit `d1b6fa4` "feat(editorial): introduce inline visual copy editing v0.1", owner-approved after reviewing the
+  local prototype; annotated tag `release/editorial-v0.1`. On top of `8469c95` (the Cloudflare kit). Inline editing of
+  the copy of six sections (Agency hero, services gallery, Why RaidGuild; Community hero, capabilities gallery,
+  Join) in local development only, with drafts in the browser, Original / Draft preview, a Changes panel
+  (comments, individual revert, conflicts), JSON export and import and a Markdown export. New:
+  `src/lib/editorial/`, `src/components/venture/editorial/`, `src/types/editorial.d.ts`,
+  `tests/editorial.test.mjs`; changed: `primitives/Review.tsx`, `shell/VentureShell.tsx`,
+  `tests/narrative.test.mjs` (imports the new tests).
+
+  Verified on an isolated copy (HEAD plus these files only): tests 105/105, tsc, lint 0 errors, build. Production
+  output byte-identical to the agency baseline; the 8-case pixel comparison against the clean baseline shows
+  0 differing pixels; 16 + 10 behaviour checks pass with the mode off; 38 + 39 + 1 editor checks pass on the dev
+  server. Not deployed (local development only by design).
+
+## 2026-11-07 · Agency baseline `1b86fd6` (`checkpoint/agency-baseline`)
+
+- Commit `1b86fd6` "feat(routes): move Hire the DAO from /clients to /agency" on `feat/venture-beyond-integration`
+  (8 files, one of them the moved page), owner-approved:
+  - `/agency` is the canonical Hire the DAO route;
+  - `/clients/*` answers a permanent 308 to `/agency/*`;
+  - the review-domain root and `?audience=hire` open `/agency`;
+  - `/community`, the copy and the CSS are unchanged.
+- Annotated tag `checkpoint/agency-baseline` → `1b86fd6`. Local only: not pushed, not deployed.
+- Verified on a clean archive whose tree is identical to the commit: tests 93/93, tsc, lint 0 errors, build. The
+  8-case pixel comparison against `7417113` (`/agency` and `/community`, Day and Night, 1440 and 390 px) shows
+  0 differing pixels, and 16 behaviour checks pass.
+- Owner hosting decision: an independent deployment on Cloudflare Workers for `raidguild.estudioblanco.org`
+  (not deployed yet).
+
+## 2026-11-04 · Baseline `7417113` merged upstream for Dekan's review
+
+- Commit `7417113` "feat(venture): baseline for Dekan review" (32 files) on `feat/venture-beyond-integration`. It
+  contains the November 3 iteration:
+  - Figma pass, widows and tablet fits, outlined selectors;
+  - client-facing /clients copy and "Why build with RaidGuild", chevron rows;
+  - /community order and surfaces, Hats and steward flips, builder wall, category buttons;
+  - the Projects Explorer replacing "Follow your curiosity" on /community.
+- Pushed to `fork/feat/venture-beyond-integration` (first push of `04da57f` and `233777b`, including the Last Duel
+  OTFs, owner-approved for the public repos).
+- PR raid-guild/website#106 merged by dekanbro into `review/venture-beyond-redesign` as squash commit `7d0e878`
+  (tree identical to `7417113`).
+- Verified before push, on a clean archive: tsc, lint 0 errors, tests 91/91, production build, 10-case browser set
+  and 24 Projects Explorer checks. Verified 2026-11-07: the Railway host
+  (`raidguild-website-redesign-production.up.railway.app`) serves text identical to the `7417113` build.
+
+## 2026-11-03 · `233777b` on the review project's Vercel Production
+
+- Commit `233777b`: /community restructure, hero layer seam, "Works" nav label, and a host-scoped redirect of `/` to
+  `/clients` for `raidguild.estudioblanco.org`.
+- Deployed to Vercel Production of `raidguild-venture-beyond-review` as `dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD`, aliased
+  to https://raidguild-venture-beyond-review.vercel.app. This replaced release `07031e2`. Still the alias on 2026-11-07.
+- Verified at the time: clean-copy tsc, tests 89/89, lint 0 errors, build, host redirect.
+  `raidguild.estudioblanco.org` was added to the project, but its DNS still redirects to Railway.
+- The same day, previews of uncommitted working trees: `dpl_Di9vK5qe5LQAgzu4aALNtYd6U8iK`, and
+  `dpl_DaWdfzxANbXHjSGXbDctk3ej2sk2` (content later committed as `7417113`).
+
+## 2026-11-02 · November 2 iteration `04da57f` (Vercel preview)
+
+- Typography migration from Grinder to Last Duel, two-level display hierarchy, mobile pass, hero passes, services
+  and member-benefit galleries, buyer and member FAQ.
+- Vercel Preview `dpl_HvV74WQ9m3QJ2CmCTNJ61VrRJVYP` (review alias unchanged). Verified at the time: tsc, tests
+  88/88, lint 0 errors, build.
+
 ## 2026-10-30 · Approved Venture Beyond release `07031e2`
 
 - Published to Vercel Production in `raidguild-venture-beyond-review`, deployment

@@ -762,6 +762,618 @@ November 3, 2026 — /community restructure (uncommitted):
 - 2026-11-04 (owner): the Last Duel OTFs may be published in the public repositories (luisblancoach/website and
   the raid-guild/website PR); the baseline for Dekan's review goes up as a PR against raid-guild/website `main`.
 
+## 2026-11-07 — /agency route and an independent baseline on estudioblanco.org
+
+- Owner decision: Hire the DAO moves from `/clients` to `/agency`, the canonical client route. `/clients` and
+  anything below it answer a permanent 308 to the same path under `/agency`; the query string is kept and the
+  browser keeps the `#section`. `/community` is unchanged. The review-domain root (`raidguild.estudioblanco.org/`)
+  opens `/agency` directly, and legacy `/?audience=hire` links land on `/agency`.
+- The audience id stays `clients` (`data-audience="clients"`, the CSS scoped to it, the narrative ids
+  `clients.*`, `lib/narrative/clients.ts`). Only the URL changed, so no stylesheet and no copy was touched.
+- Canonical and Open Graph URLs resolve against the unchanged `metadataBase` (`https://www.raidguild.org`), so
+  the page declares `https://www.raidguild.org/agency`. The route stays `noindex`; choosing the canonical origin
+  is SEO decision D-2. The sitemap still lists only `/` (the audience routes are `noindex`).
+- Owner decision: before Editorial Mode, establish a baseline under `raidguild.estudioblanco.org` that we deploy
+  and control ourselves, without touching raidguild.org, Dekan's Railway service or the upstream review branch.
+  Hosting proposal: Cloudflare Workers through the OpenNext adapter, attached as a Workers route on the existing
+  proxied record, with the current Cloudflare redirect to Railway as the instant rollback. Evidence and
+  procedure: `STATUS.md`, November 7 entry.
+- Owner approval, 2026-11-07:
+  - the migration is committed as `1b86fd6` and tagged `checkpoint/agency-baseline`;
+  - **Cloudflare Workers is the chosen host** for the independent baseline.
+- Owner constraints for that host:
+  - review flags off by default;
+  - the whole host stays out of search indexing;
+  - no production lead submission (no form secrets) for now;
+  - Railway, raidguild.org, DNS and the Cloudflare redirect rules stay as they are until the Worker has been
+    deployed and verified;
+  - the owner's uncommitted `package.json` change is not overwritten.
+
+## 2026-11-07 — Editorial Mode, local prototype (owner request)
+
+- Owner request: Tae edits the copy on the rendered pages, in context, with drafts kept apart from the
+  published narrative data, an Original / Draft preview, a Changes panel (comments, individual revert), JSON
+  export and import, a Markdown export for review and conflict detection. Nothing is approved automatically.
+  First scope: Agency hero, services gallery and Why RaidGuild; Community hero, capabilities gallery and Join.
+- Decisions in the prototype (uncommitted):
+  - **Local development only.** Both entry points (`CopyText` in `primitives/Review.tsx`, the mount in
+    `shell/VentureShell.tsx`) `require` the editor inside `process.env.NODE_ENV === "development"`, so production
+    builds drop it at build time. The isolated production build is byte-identical to the agency baseline (JS, CSS
+    and prerendered HTML, apart from Next's random build id).
+  - **The stable copy ids are the editing keys.** `lib/editorial/config.ts` lists the editable sections by id
+    prefix and names the fields in plain words ("Card 2 · Text"); enabling another section is one registry entry
+    plus its tree in `lib/editorial/catalog.ts`.
+  - **Drafts live in the browser** (localStorage), never in source files or on a server. A draft keeps the source
+    text it was made against; a later change to the source shows as a conflict until someone reviews it.
+  - **Edited text sits in an `<rg-copy>` custom element** while the mode is on, so no `span` rule of the site's
+    CSS applies to it; entering the mode moves no text block (measured on both pages, Day and Night, 1440 and
+    390 px).
+  - While the mode is on, a click on editable text edits it and activates nothing (links, disclosure buttons);
+    links do not navigate; other controls (gallery arrows, a row's chevron) work as usual.
+- Not decided yet: how Tae reaches the editor (a protected URL), where shared drafts are stored, and the review
+  and approval workflow. Recommendation: `STATUS.md`, November 7 entry "Editorial Mode".
+- Owner approval, 2026-11-07: the prototype is released as **Editorial Mode v0.1**, commit `d1b6fa4`, annotated tag
+  `release/editorial-v0.1`, pushed to the fork only (never upstream). Next owner goal: a protected remote editorial
+  deployment for Tae on our own Cloudflare Worker, with an explicit build-time flag (off by default), access
+  restricted by Cloudflare Access rather than by any URL or client-side switch, and no billing or account-level
+  change without the owner.
+
+## 2026-11-08 — Static-first review host; Editorial Mode opt-in for Tae (owner request)
+
+- **Static-first Cloudflare host** (owner approval 2026-11-08; kit `0ad287e`, Worker version `0c37e331`). The
+  review Worker answers the prerendered pages, their RSC payloads, the optimised images those pages use and the
+  `/api/posts`, `/api/artifacts` snapshots from static assets, without loading Next.js, so the public pages stay
+  within the Workers Free CPU limit. Deploy kit only; app tree identical to `8456bdb` (Night `a1114f0`, Louchi
+  photo `8456bdb`). Rollback target: version `0176ba2e`.
+- **Editorial Mode: no Cloudflare Access.** Access is unavailable on this account and plan, so the owner chose
+  an explicit opt-in instead: `?editorial=1` opens the editor on `/agency` and `/community`. The parameter is an
+  interface switch, **not authentication**: anyone with the URL can open the editor. This is acceptable only
+  because editing is entirely local to the browser (drafts in localStorage, exported as files); nothing is
+  written to a server, shared or published, and the client bundle holds no secret. This version is **not a
+  private editor**.
+- **Build flag `NEXT_PUBLIC_EDITORIAL_MODE`**: `disabled` (default, every build including raidguild.org: no editor
+  code in the bundle) or `opt-in` (set by `deploy/cloudflare/build.sh` for the review host only). In an opt-in
+  build the editor's chrome is a lazy chunk loaded only after `?editorial=1`; ordinary visitors get the published
+  HTML, no editor control and no editor styles. The mode is remembered in that browser until Exit or
+  `?editorial=0`. Local development keeps the "Edit copy" button and Alt+Shift+E.
+- The bar always shows "Local draft — not published".
+- Owner approval, 2026-11-08: the opt-in editor shipped as `64d16d6` (Worker version `f57739de`).
+
+## 2026-11-08, evening — Editorial Mode v0.2: operations, structured export, integration CLI (owner request)
+
+- **Four explicit operations** per copy item: REPLACE (new wording), SHORTEN (a shorter version), REMOVE (this
+  text, the whole item, or the whole section) and KEEP (reviewed, no change). REPLACE and SHORTEN keep the exact
+  typed text; SHORTEN that is not shorter is flagged in the editor and refused by the CLI. Emptying a text becomes
+  REMOVE: a removal is never an empty string. Every decision is reversible (Undo, Restore, Undo all).
+- **Structural removals need separate approval** (`structuralReason` in `lib/editorial/config.ts`): a whole item or
+  section, a button or link label, a heading or section label, or text serving accessibility.
+- **Preview** shows the page with the decisions applied: removed text and whatever only held it (its paragraph,
+  its button), whole items and whole sections are folded away, in the editor only.
+- **Export version 2**: `raidguild-tae-editorial.json` (authoritative: copy id, operation, base text, SHA-256
+  fingerprint, proposed text for REPLACE/SHORTEN only, source revision, review status "proposed", structural
+  flag, comment, conflict) and `raidguild-tae-editorial.md` (the review document), from one snapshot with the same
+  change set id (SHA-256 of the change list). Deterministic (no export timestamp), ordered by page and section.
+  Version 1 exports and stored drafts are migrated on import.
+- **`scripts/apply-editorial.mjs`**: dry run by default. Validates schema, change set id and fingerprints; resolves
+  every id in the current narrative; detects stale and unknown items; locates the single string literal holding
+  each text (refuses when absent or repeated); rehearses the patch on a throwaway copy and verifies that only the
+  planned copy items changed. `--apply --confirm <change-set-id>` writes REPLACE/SHORTEN only, refuses any
+  conflict and uncommitted target files, and re-verifies (restoring on failure). REMOVE is never applied
+  automatically (it needs a reviewed component and type change); KEEP is recorded only. No network code.
+- Owner approval, 2026-11-08: v0.2 released as `5e04f1a` (operations and export) and `bb37620` (CLI), annotated tag
+  `release/editorial-v0.2` → `bb37620`, deployed as Worker version `f8fd6838` (rollback target `f57739de`).
+
+### Reviewing and integrating Tae's proposals (process, 2026-11-08)
+
+1. **Receive** both files from Tae, `raidguild-tae-editorial.md` and `raidguild-tae-editorial.json`, by any channel
+   (email, Slack, a shared folder). They hold only page copy and her comments, no secrets. Keep the pair together
+   and do not edit the JSON: the CLI rejects a change set whose list no longer matches its id. Store them outside
+   the repository (e.g. `~/Projects/raidguild-backups/<date>/editorial/`) unless the owner approves versioning them.
+2. **Review** the Markdown. Decide per decision: approve, reject or discuss. ⚠ items (structural) and ⚡ items
+   (made against older text) need explicit attention. To approve only some, import the JSON in the editor
+   (Changes → Import), undo the rejected decisions and export again: the new pair gets a new change set id.
+3. **Dry run** (Claude): `bun scripts/apply-editorial.mjs raidguild-tae-editorial.json --report dry-run.json`. It
+   validates, flags conflicts, shows the exact source diff, and proves on a throwaway copy that only the intended
+   copy changes. Nothing is written.
+4. **Approve** the change set id explicitly (owner). Then, and only then, Claude runs
+   `--apply --confirm <change-set-id>` on this branch (target files must be clean): REPLACE and SHORTEN only,
+   exactly as written. Removals and structural decisions are separate, reviewed code changes with their own
+   approval; KEEP decisions are recorded, not written. Applying a text does not mark it approved in the narrative
+   (`status`, review flags): that is a separate editorial decision.
+5. **Verify and ship**: `bun run test`, `bun run review:claims`, lint, side-by-side visual comparison, then a commit
+   and a deployment, each with the owner's approval. Never write to the deployed Worker directly.
+
+## 2026-11-09 — Tae's first editorial review applied (owner-approved)
+
+- Source of truth: Tae's review document `raidguild-tae-editorial.md` (change set `sha256:1f3373b71bc5…`, made on
+  `bb37620`; three decisions). The `raidguild-tae-editorial.json` next to it in Downloads was an earlier **test**
+  export (one REPLACE "asdasdasdasd", change set `sha256:e994eec4…`) and was **not** applied; it is kept as
+  `~/Projects/raidguild-backups/2026-11-09/editorial/test-export-asdasd-DO-NOT-APPLY.json`.
+- Why the structured path was still used: the matching JSON was rebuilt from the Markdown with the editor's own
+  export code (`toExport`/`toMarkdown`, the decisions, base texts and edit times in the Markdown). The rebuilt pair
+  reproduces Tae's Markdown **byte for byte** and the change set id `1f3373b71bc5`, so it is the same change set.
+  The CLI dry run resolved both texts to `src/lib/narrative/clients.ts` and verified on a copy that the other 442
+  copy items were unchanged; `--apply --confirm 1f3373b71bc5b44e` wrote exactly the two literals.
+- Applied (`055cbb0`): `clients.hero.dek` (REPLACE) "**Senior designers and engineers, building your onchain
+  product, digital experience, or AI workflow**" (the whole line bold, as written) and
+  `clients.serviceGallery.cards.4.body` (REPLACE) "…documentation that explains what you built…". Recorded, no
+  change: `clients.reasons.items.5.body` (KEEP).
+- Editorial flag for the owner: in card 5, "explains" agrees with "documentation" but the subject is a list
+  ("Positioning, launch content and documentation"), which reads more naturally with "explain". Kept exactly as
+  Tae wrote and the owner approved; raise it with Tae if wanted.
+- Verified: tests, tsc, lint; hero typography, wrapping and responsive behaviour at 1440 / 1024 / 390 / 320 px in
+  Day and Night (bold 700, same line count except one line fewer at 320 px, no overflow); card 5 gains a line only
+  at 320 px. Pixel comparison against the approved build (2026-11-07, the v0.2 visitor reference): only the hero
+  introduction band differs on /agency; /community 0 px. Not compared against the October 23 reference.
+
+## 2026-11-09 — Editorial Mode v0.3: full coverage (owner request)
+
+- **One registry, no second editor.** `lib/editorial/config.ts` registers every narrative tree that /agency and
+  /community render (30 sections, in page order, then "Both pages"); `catalog.ts` holds their trees. Every copy
+  item of a registered tree is editable unless an exclusion names it with a reason. A test enforces that every
+  item is classified, and the e2e coverage audit checks the rendered page against the registry.
+- **Copy moved into the narrative, verbatim** (stable ids for strings that lived in components):
+  `lib/narrative/site.ts` (`site.header` page switch, `site.hero` index and scroll cue, `site.ticker`, `site.creed`,
+  `site.footer`), `clients.meta` / `community.meta` (page title, description, share title, share image alt) and
+  `community.activity.collection.actions` (the explorer's "Open the Portal" and "Explore now"). The chrome copy
+  reaches the client through `VentureLayout → VentureShell` props, like the navigation, so the narrative modules
+  never ship to the browser on their own. Visitors' pages are identical (see verification).
+- **Kinds of copy.** Page text is edited in place. Copy not shown as text is edited from the Changes panel's new
+  **Hidden text** tab: image descriptions (alt), screen-reader names, and search/sharing metadata. Exports keep
+  version 2: page-text changes have exactly the v0.2 shape; hidden items add `kind`. v0.2 change sets import
+  unchanged; items whose source has moved show as conflicts ("source changed").
+- **Structural decisions** (separate approval, never applied by the CLI): removal of a whole item or section, of
+  navigation (menu items, the page switch), a button or link label, a heading (titles, FAQ questions, project
+  names), a section label, accessibility text or metadata; and any rewrite or shortening that **changes a stated
+  price or amount** (copy may state "$20 a month"; the amount is the owner's decision).
+- **Not editable, on purpose** (no live records, no behaviour): member names, roles and profile links (builders,
+  stewards, Hats tree: data records), the Portal projects list (runtime snapshot from the Portal), the inquiry
+  form (labels, placeholders, validation: application behaviour), the Portal overlay and the discovery-trail
+  puzzle (interactive experience), interface controls (Day/Night, menu toggle, carousel arrows, filters, skip
+  link, counters, generated screen-reader templates) and the RaidGuild wordmark. Links' destinations and hrefs
+  are data, never copy. Within registered trees: 7 link-destination review notes and 13 items these pages do not
+  render (the inquiry's hints, coordinates and illustration alt; the Guild statistics) are excluded.
+- **FAQ placeholders**: answers with "[X–Y weeks]" are edited as plain text, brackets included; visitors still see
+  the marked placeholders (`CopyText` gained a `display` renderer for visitors).
+- **CLI source mapping** (`scripts/apply-editorial.mjs`): every candidate literal is probed on a scratch copy of the
+  source to learn exactly which copy ids it produces, so repeated texts resolve to the right literal instead of
+  being refused. A literal that feeds several items (a shared constant, a helper called twice) is applied only
+  when the change set gives all of them the same new text; texts assembled from a literal ("<name> website
+  homepage") follow it and are verified. `--map` reports the source of every editable id.
+
+### Editorial coverage report (v0.3, `5f93262`)
+
+| | Count |
+|---|---|
+| Eligible copy fields (registered, editable) | **295**: Agency 130, Community 143, Both pages 22 |
+| Editable in place on the page | 274 (e2e: /agency 137/137, /community 158/158 including the shared chrome) |
+| Editable from Hidden text | 21: 11 image descriptions, 2 screen-reader names, 8 metadata fields |
+| Successfully editable | **295 / 295** |
+| Structural if removed (separate approval) | 191: headings 99, buttons and links 47, section labels 14, accessibility 13, navigation 10, metadata 8 |
+| Structural if the amount changes | every item stating a price (today: the Guild kit card, "$20 a month") |
+| Source map | 260 in their own literal · 26 in a literal shared with other items (applied together or not at all) · 9 assembled in code (the screenshot descriptions, "<name> website homepage": integrated by hand) |
+| Excluded inside registered trees | 20 (7 link-destination notes; 13 not rendered on these pages) |
+
+Remaining gaps (proposed for a later pass, not started): the inquiry form's labels, placeholders and messages;
+the Portal overlay and hunt clue texts; the explorer's category filter names and "Explore all N" / "Show fewer";
+the profession gallery's labels; "PROFILE FORTHCOMING"; Day/Night labels. Previous works shows one project at a
+time: its texts are edited after selecting the project's logo, as visitors see them.
+
+### Release: v0.3 live on workers.dev (2026-11-09)
+
+- Commits: `055cbb0` (Tae's content), `5f93262` (v0.3 full coverage, with its tests), and the docs commit. Built
+  with `BASELINE=5f93262 deploy/cloudflare/build.sh 5f93262` (`~/Projects/raidguild-backups/2026-11-09/cf-build-5f93262`,
+  build id `_BOBdnwXmxKffNv4ktiiq`, editor revision `5f93262`); deployed to the existing Worker
+  `raidguild-estudioblanco` as version **`8d6c86ce-e4bb-4ba3-8185-26434d87cde4`** (workers.dev only, no route).
+  Rollback target: `f8fd6838` (v0.2), then `f57739de`.
+- Propagation: deployed 22:35 UTC during Cloudflare's open incident "Changes made to Workers may be delayed or
+  disrupted"; the previous version kept answering until 22:46 UTC. Serving was confirmed from the responses
+  themselves (data snapshot time, build id, the new build's files), not from the deployment record.
+- Live verification (after 22:46 UTC): Phase 4 checks 19/19 (Tae's two texts and the Keep text in the server HTML
+  and the RSC payload, client navigation, routes, redirects with query strings, noindex, lead POST 503); v0.3
+  acceptance 36/36 (all 295 fields: 274 in place, Hidden text, structural and price flags, export, CLI, v0.2
+  import); v0.2 regression 36/36; ordinary visitors 8/8 at 0 px (Agency and Community, Day and Night, 1440 and 390 px)
+  against the public build of `5f93262`, no editor element; 3 load rounds, 984 requests, 0 errors; tail 348 events, all `ok` on
+  `8d6c86ce`, static paths CPU p50 0 ms, max 19 ms (the dynamic `/` unchanged from v0.2).
+
+### `raidguild.estudioblanco.org` (investigation 2026-11-09; change NOT made, needs approval)
+
+- Current behaviour (read-only checks): the record is proxied by Cloudflare (zone `estudioblanco.org`, same
+  account as the Worker) and every request answers **302 to `https://raidguild-website-redesign-production.up.railway.app/`**:
+  the path is dropped, the query string is kept (`/agency?editorial=1` → `/?editorial=1`). Workers routes on
+  the zone: `estudioblanco.org/*` → `estudioblanco-app`, `coema.estudioblanco.org/*`, `estudioblanco.org/coema*`;
+  none for this host. The Wrangler token cannot read zone rules, so the rule type (Single Redirect, Page Rule or
+  Bulk Redirect) must be read in the dashboard.
+- Proposed change (two steps, owner approval required for each; no DNS record change, no new Worker, no billing):
+  1. Attach the prepared route `raidguild.estudioblanco.org/*` → `raidguild-estudioblanco` with
+     `wrangler deploy -c wrangler.route.jsonc` from the release build directory (same code, adds only the route).
+     While the redirect rule is active it keeps answering first; the check shows the order.
+  2. The owner disables (does not delete) the redirect rule for `raidguild.estudioblanco.org` in Cloudflare →
+     estudioblanco.org → Rules. The Worker then serves the host: `/` → 307 `/agency`, `/agency`, `/community`,
+     `?editorial=1`, `/clients…` → 308 with path and query kept. The main `estudioblanco.org` site is a different
+     route and Worker and is not touched.
+- Rollback: re-enable the redirect rule (instant), then `deploy/cloudflare/route.sh remove` (removes only this route).
+
+## 2026-11-10 — Editorial governance: Tae holds editorial authority (owner decision)
+
+- **Tae has full editorial authority over RaidGuild's website content.** Her decisions are approved by the project
+  owner and implemented as submitted: wording, positioning, additions, removals and editorial restructuring need
+  no further per-item approval. Claude's role is the implementation: accuracy, design system, technical
+  integrity, accessibility and functionality. Material factual or legal claims are flagged for verification by
+  the appropriate owner in the release report, never rewritten.
+
+## 2026-11-10 — Tae's editorial batch 02 (34 decisions), manually authorized Markdown integration
+
+- **Source:** `raidguild-tae-editorial-agency.md` (sha256 `491d5c281afac8145779de961fc651954970dba995f2400d7a651e33a37debe1`,
+  change set `sha256:9e1c68fabd01…`, made on `5f93262188e0`, last edited 2026-11-10 15:03 UTC; copy in
+  `~/Projects/raidguild-backups/2026-11-10/editorial/`). Despite the name it covers Agency, Community and both pages.
+- **No matching JSON** was available (the only JSON in Downloads was the 2026-11-09 test export). No change set was
+  rebuilt or signed. The Markdown was parsed into a review manifest (`review-manifest.json`); every base text matched
+  its fingerprint prefix (34/34), all 34 ids were editable, 32 bases equalled the source. The text changes were
+  applied to the exact literals given by `apply-editorial.mjs --map`, rehearsed first on a scratch copy and
+  verified with `--dump-copy`: exactly the intended copy items changed, as written (34/34 reflected).
+- **Implemented as submitted** (commits `08ee651`, `8e82e54`, `6e7ae87`, `78b0240`):
+  - 23 rewrites: navigation "Our Work"; hero introduction; services introduction and the six cards; Why RaidGuild
+    introduction and titles 1, 4 and 7; the Problem description; Builders and People introductions; FAQ answers 1,
+    2, 5 and 6; Community hero introduction; ticker word 6; copyright "© 2019—2027 RAIDGUILD · EARTH & ELSEWHERE".
+  - **Conflicts resolved for Tae's latest proposals:** `clients.hero.dek` (batch 01 text → "**Senior designers and
+    engineers, for your next onchain product, digital experience, or AI workflow**") and
+    `clients.serviceGallery.cards.4.body` (batch 01 "…documentation that explains…" → "Help the right people
+    understand what you’re building. Positioning, launch content, and documentation that make your product’s value
+    clear."). Her drafts had kept the pre-batch-01 base text; her new proposals supersede both.
+  - **Nine "Visit" labels** ("Visit DAOHaus" … "Visit YieldNest", her capitalization kept): one shared "Read more"
+    literal became one literal per project; ids and destinations unchanged; the screen-reader suffix is now
+    "(opens the <name> website)".
+  - **Reason 6 retired** ("DELETE" / "DELETE." on title and text = remove the item; the words are never published).
+    The item stays in the source as a tombstone (`retired`), so its ids and Reason 7's do not shift. `forAudience`
+    drops retired items before anything leaves the server (public and review builds); `ClientReasons` renders the
+    active ones: six rows. Editorial Mode removes the two ids from the active registry with a "Retired" reason; an
+    older draft or export naming them shows that reason (editor and CLI).
+- **Editorial field count:** 293 active editable fields (Agency 128, Community 143, Both pages 22; was 295). All 295
+  v0.3 ids remain in the source; the two retired ids are tombstones.
+- **Claims flagged for verification by the appropriate owner** (published as Tae wrote them; not independently
+  verified): FAQ "How do payment and contracts work?" (escrowed stablecoin payments, ACH/Wire, "our Marshall Islands
+  DAO": a legal entity and payment rails); FAQ "What does it cost?" (no fixed-price commitment any more); Applied AI
+  card ("Forward deployed engineers sit inside your stack"); the Problem description (Problem Media's own
+  positioning and "trusted and dependable operating partner"); copyright "2019—2027" (a year not yet begun at
+  publication). Also noted, unchanged by the batch: the process FAQ still promises "weekly demos" though Reason 6 is
+  retired; "handover" (new copy) and "handoff" (older copy) now both appear; the Builders and People introductions
+  open alike.
+- **Release (2026-11-10):** build `BASELINE=78b0240 deploy/cloudflare/build.sh 78b0240` (build id
+  `4boi1n3FPO1pibUz5K7QY`), deployed 16:12 UTC to the existing Worker as version
+  **`c309397c-da11-4551-9e87-2be9a540b175`** (workers.dev only; rollback target `8d6c86ce`, v0.3). Serving confirmed
+  from the responses (snapshot time and build id) at 16:12:16 UTC.
+- **Verification.** Before deploy (public build and local workerd opt-in build): tests 125/125, tsc, lint 0 errors;
+  batch 02 QA 53/53 on both (34/34 decisions in the HTML and client data, no "DELETE", six-row accordion by mouse
+  and keyboard, the nine links with their labels, destinations and accessible names, no horizontal overflow and a
+  one-line menu, Day/Night at 1440/1024/390/320 px, no page errors); Editorial Mode v0.3 suite 36/36 (293 active
+  fields: /agency 135/135 and /community 158/158 in place, Hidden text, export, CLI, batch-01 import with the retired
+  item explained); v0.2 suite 36/36; route checks 19/19; visitors on the opt-in build vs the public build 0 px in
+  5 of 8 cases (all Agency views and Community light 1440), the run stopped by request before the last three
+  Community cases. Live: route checks 19/19, batch 02 QA 53/53, v0.3 suite 36/36, v0.2 suite 36/36, one load round
+  (384 requests, 0 errors), tail 640 events all `ok` on `c309397c` (pages CPU max 7 ms, client data 18 ms, images 27 ms).
+  Not run live: the full-page visitor pixel comparison and the 3-round load test (shortened by request).
+
+## 2026-11-10 — Tae's editorial batch 03 and close of editorial cycle 02
+
+- **Governance (owner decision, restated at the close of the cycle).** Tae has editorial authority over the
+  website copy, **including removing content and restructuring it** (retiring an item, splitting or merging fields,
+  reordering). Her submitted decisions are approved and implemented as submitted. Claude implements them and keeps
+  accuracy, the design system, accessibility and technical integrity. Material factual or legal claims are flagged
+  for the appropriate owner, never rewritten. Prices, entitlements, billing, provisioning and business logic are not
+  editorial: copy may describe them, but an editorial release never changes them.
+- **Source:** `raidguild-tae-editorial(2).md` (sha256 `ed6fade88519f78a17ca750d2188ec6d7ef533c8b5877bcece6bffc84168787d`),
+  change set `sha256:09f31b111631…`, made on `78b024005ad6`, last edited 2026-11-10 17:24 UTC; 49 REPLACE decisions,
+  34 flagged stale (made against text batch 02 had since changed), 1 flagged structural (a price removed). No
+  matching JSON: manual, auditable Markdown integration; no JSON was rebuilt and no integrity verification is claimed.
+  Archived unmodified as `~/Projects/raidguild-backups/2026-11-10/editorial-b03/tae-b03.md`; index of all three
+  batches with checksums: `~/Projects/raidguild-backups/2026-11-10/EDITORIAL-ARCHIVE.md`.
+- **Reconciliation by copy id against `d974541`** (`manifest-b03.json`): **32 already satisfied** (all Agency and
+  shared decisions, the Community hero, ticker word 6, copyright: published by batch 02); **2 already retired**
+  (`clients.reasons.items.5.title` / `.body`, "DELETE": Reason 6 stays a tombstone; "DELETE" is never published);
+  **15 applied** (Community, commit `5800aef`): About RaidGuild text; capabilities label "[ ways to contribute ]" and
+  cards 1–3; Moloch text; Hats Tree introduction and Stewards text; member benefits card 3 text, card 4 title line
+  "and raidguild domain" and text (the "$20 a month" price removed from the copy, owner-approved; no price, billing
+  or domain provisioning changed); Join label "[ start with a hello ]" and text; FAQ answers "Who runs the Guild?" and
+  "Do members get a Guild email?". Verified with `--dump-copy`: exactly these 15 ids changed, all read as decided,
+  476 copy ids before and after.
+- **Shared fields separated.** Five source literals fed a field Tae edited and one she did not; each was split so
+  only her field changed (the other keeps its published text, ids unchanged):
+  - `community.capabilities.cards.1.body` / `.2.body` from the practice copy in `lib/data/venture.ts`, which Agency's
+    `clients.capabilities.practices.*.body` keep;
+  - `community.capabilities.cards.0.body` from `community.path.steps.1.body`;
+  - `community.join.body` from `community.faq.items.0.answer` ("Where do I start?");
+  - `community.faq.items.3.answer` from `community.guild.body` (both edited, to different texts);
+  - `community.faq.items.4.answer` from `community.guild.kit.items.0.detail`.
+- **Presentation corrections** (reported, wording untouched): "leader.Members" → "leader. Members" (FAQ);
+  "[ ways to contribute]" → "[ ways to contribute ]"; the closing period restored on the Hats Tree introduction after
+  its last sentence was cut. Kept as written: the spaced hyphens " - " (Moloch, Stewards) and "Raidguild.org".
+- **Layout fix `c749476`.** "AND RAIDGUILD DOMAIN" overflowed its card at 320, 390 and 1024 px under the title's
+  `nowrap`; the accent line of a benefit card title may now wrap (`benefits.module.css`). Titles that fit are unchanged.
+- **Fixtures** (in `5800aef`): the narrative tests read the new Join, Moloch and benefit texts; the CLI shared-literal
+  test uses `community.guild.kit.requirement` / `community.faq.items.1.answer`; the price-rule tests use a fixture
+  (no price remains in the copy) and also check that adding a price is structural.
+- **Editorial Mode v0.3 coverage (unchanged by batch 03):** 293 active editable fields (Agency 128, Community 143,
+  Both pages 22; 21 of them in Hidden text); the two Reason 6 ids are tombstones; 476 copy ids in the source.
+- **Release.** Build `BASELINE=c749476 deploy/cloudflare/build.sh c749476` (build id `u8lggr7pLO8-t7dGjQXGL`),
+  deployed to the existing Worker as version **`5dcaac41-1c25-4b5f-a1e4-30a65326a1f3`** (workers.dev only); serving
+  confirmed by the build id in the live HTML at 17:45 UTC. **Rollback target: `c309397c`** (batch 02). Railway, DNS,
+  raidguild.org, billing and upstream untouched.
+- **Verification.** Tests 125/125, tsc clean, lint 0 errors (1 old warning). Local workerd and live: both pages 200;
+  all 15 new texts in the visitor HTML and the replaced texts absent; at 1440 and 390 px no horizontal overflow, no
+  empty elements, every link labelled with a destination, no page errors; `?editorial=1` opens Editorial Mode (166
+  editable elements on /community) and visitors get no editor; Reason 6 absent, no "DELETE". The clipped-text probe
+  flagged only visually hidden screen-reader text (Hats, Join), the same on the previous live version. Benefit cards
+  measured at 320/390/1024/1440 px. **Intentionally skipped (express release):** pixel comparisons, load tests, the
+  full Editorial Mode suites, Night theme checks. Not compared against the October 23 reference.
+- **Checkpoint:** annotated tag `release/editorial-cycle-02` on the docs commit that records this, on top of
+  `c749476`; pushed to `fork` only.
+
+### Editorial history (cycle 02)
+
+| Batch | Change set | Made on | Decisions | Commits | Worker version |
+|---|---|---|---|---|---|
+| 01 | `1f3373b71bc5…` (JSON reconstructed byte for byte) | `bb37620` | 3 (2 rewrites, 1 KEEP) | `055cbb0` | `8d6c86ce` (with v0.3 `5f93262`) |
+| 02 | `9e1c68fabd01…` (Markdown only) | `5f93262188e0` | 34 (23 text, 9 link labels, Reason 6 retired) | `08ee651`, `8e82e54`, `6e7ae87`, `78b0240` | `c309397c` |
+| 03 | `09f31b111631…` (Markdown only) | `78b024005ad6` | 49 (32 satisfied, 2 retired, 15 applied) | `5800aef`, `c749476` | **`5dcaac41`** (current) |
+
+### Next cycle backlog (not started)
+
+1. **Draft rebasing.** Tae's drafts keep the base text she started from, so batch 03 carried 34 stale decisions
+   already published. Editorial Mode should rebase drafts on newly published copy (drop drafts the site now
+   matches, show real conflicts only).
+2. **Export compatibility.** Batches 02 and 03 came as Markdown only and print a truncated change-set id. Make the
+   JSON export reliably travel with the Markdown (or embed the full id and per-decision fingerprints in the Markdown)
+   so the CLI can verify integrity again.
+3. **Shared-field independence.** Several literals still feed more than one field (practice link labels across both
+   pages, the kit requirement and FAQ answer 2, Queen Raida's application panel and FAQ answer 3, capabilities card 5
+   and the stewardship introduction). Decide which should stay linked and give the others their own literals.
+4. **Remaining copy inconsistencies** for Tae's review: the process FAQ still promises "weekly demos" with Reason 6
+   retired; "handover" and "handoff" both appear; the Builders and People introductions open alike; "guild" vs
+   "Guild" capitalization (FAQ "Where do I start?" and Path step 2 keep lower case); the Guild kit list says
+   "Guild email" while the benefits card now says "Guild email and raidguild domain"; the practice copy now differs
+   between Agency and Community. Plus the claims flagged on 2026-11-10 (payment and entity FAQ, pricing FAQ,
+   forward-deployed engineers, Problem description, copyright 2027).
+5. **Full responsive and accessibility regression** (Day/Night, 320–1440 px, keyboard, screen-reader names, pixel
+   comparison against the public build and the October 23 reference) before the next major structural release.
+6. **`raidguild.estudioblanco.org` routing**: the cutover proposed on 2026-11-09 (route + redirect-rule change)
+   still awaits the owner's decision.
+
+## 2026-11-10 — Final card illustrations (owner; uncommitted, awaiting approval)
+
+- **Decision (owner):** the 16 final illustrations replace the card art of three groups, mapped 01–06 / 01–04 to
+  the cards in their visual (= source) order: the /agency services gallery (`hire/`), the /community capabilities
+  gallery (`community/`) and the /community member benefits (`membership/`). Mapping, checksums and the art they
+  replace: `docs/asset-provenance.md`, 2026-11-10.
+- **Consequence:** the two galleries no longer share art. Since November 3 the /community gallery reused the
+  /agency images; each now has its own set (the November 3 test that asserted equal images now asserts each set,
+  its order, 4:3 size and `contain`). The practice art in `lib/data/venture.ts` (`spear-onchain-v1.webp`,
+  `spear-applied-ai-v1.webp`) is unchanged; the cards no longer read it.
+- **Implementation:** image references only, in the narrative data layer (`src/lib/narrative/clients.ts`,
+  `src/lib/narrative/community.ts`): `{ src, width: 1448, height: 1086, fit: "contain" }` for gallery cards (the
+  existing 4:3 art box with its padding, as the previous practice art), `{ src, width: 1254, height: 1254 }` for
+  benefit thumbnails. No component, CSS, copy or editorial id changed; no asset deleted.
+- **Verification (isolated production build of HEAD + this change, `~/Projects/raidguild-backups/2026-11-10/verify-illustrations`,
+  `next start` on :3061):** tests 125/125, tsc clean, lint 0 errors (1 old warning), build OK. Browser
+  (`qa/illustrations-qa.mjs`): Day and Night at 1440 × 900 and 393 × 852, both routes: 16/16 cards show the
+  intended file in order, all loaded, delivered ratio 1.333 / 1.000 with `contain` / `cover` (no distortion), no
+  card overflow, no horizontal page overflow, CLS < 0.1, no failed image request. The only console error is the
+  existing 404 for `/_vercel/insights/script.js` (Vercel Analytics off Vercel; also on the live Worker).
+  Screenshots: `qa/shots-illustrations/` (section and all-cards strip per group, theme and width).
+  Not compared against the October 23 reference (the art is new by design). Not deployed.
+
+## 2026-11-10 — Final UI polish before handoff (owner; uncommitted, awaiting visual approval)
+
+Part of the same handoff candidate as the final card illustrations above. The owner's four reference screenshots
+did not reach the session; the changes follow the written brief and were checked on the pages themselves.
+
+- **Company selector (logo marquee, `/agency` Previous Works; the only place the shared `LogoMarquee` appears).**
+  Rendered cards were already equal in size; the inconsistencies were: the card was 190 × 73 (and 210 × 81) while the
+  art is 228 × 88, so the art's 16-unit corners (13.3 / 14.7 px) did not match the 12 px card and selection ring;
+  hovering lifted a card 2 px, so a clicked card sat 2 px above its neighbours; five logos sat 0.5–1.35 units off
+  centre inside their SVGs and the Daedalus logo showed a darker plate. Now (`showcase.module.css`, shared
+  component): one geometry from `--logo-w` with `aspect-ratio: 228 / 88` and the art's corner radius; a 3 px ring that
+  is always present and only changes colour (coral when selected, 45 % coral on hover); no hover lift; focus ring
+  unchanged. Asset fixes: `docs/asset-provenance.md`. Marquee motion, selection, keyboard and drag are untouched.
+- **Moloch CTA ("Find your path into the Guild", pink `[ THE GUILD ]` section):** dark surface in both themes:
+  `--color-dark-green` (#102D2C), cream label 12.1:1, dark-green edge, icon disc transparent with a cream ring (the
+  Night treatment); hover #1A3F3D (9.5:1), pressed #0A2120 (13.8:1), the shared 1 px lift, inset and focus ring.
+  Size (390 × 56 / 345 × 52), shape, icon and destination unchanged (`feature.module.css`).
+- **Guild → Ways to contribute spacing:** the desktop "at least one viewport tall" rule no longer applies to `#guild`
+  (its content ends about 650 px into a 900 px section), and since the Guild shares its Day surface with the next
+  section it keeps half of `--section-space` below (`venture.module.css`). From the last Guild content to the
+  `[ WAYS TO CONTRIBUTE ]` label: about 360 → 178 px at 1440, 168 → 132 px at 393. Nothing overlaps; opening the
+  Guild kit still grows the section downward.
+- **Footer (shared by both audiences and `/`):** the motto is upright (it was italic from 1000 px; phones were
+  already upright) and keeps its two lines on desktop: its column takes the motto's width and the size (24.75 px)
+  eases down only between 1000 and about 1180 px (21 px at 1000). The two hunt clues ("A signal at the edge of the
+  map", "A mark left by the walker") and their row were removed from the audience routes; `/` keeps its own clues
+  (inquiry and creed), so **the hunt can no longer be completed from /agency or /community**. Each link shows an
+  18 px icon (GitHub, X, Discord, RaidGuild mark, blog) in the text colour, labels are set in capitals by CSS, links
+  underline on hover; focus unchanged. New link "Portal Blog" → https://portal.raidguild.org/posts
+  (`site.footer.socials.4.label`, owner-approved), so Editorial Mode now has 294 active fields (shared 23).
+- **Verification (isolated production build `~/Projects/raidguild-backups/2026-11-10/verify-illustrations`, :3061):**
+  tests 125/125 (editorial counts updated for the new field), tsc clean, lint 0 errors (1 old warning), build OK.
+  `qa/polish-qa.mjs`, both routes, Day/Night × 1440/393: 92/92 (selector geometry identical on hover and selection,
+  Moloch CTA colours, contrast and focus in every state, Guild gap, footer motto, links, icons, no clues, no
+  horizontal overflow, CLS < 0.1, no failed requests or console errors apart from the existing Vercel Analytics 404).
+  `qa/illustrations-qa.mjs` re-run: 16/16 illustrations unchanged. Footer destinations all answer 200. Before/after
+  screenshots: `qa/shots-polish/{before,after}-*`. Not compared against the October 23 reference. Not deployed.
+
+## 2026-11-10 — Hunt after the footer clues; SEO / AEO pass (same candidate; uncommitted)
+
+- **Hunt (owner: verify, do not restore the footer copy, keep `/`).** The audience routes could still open the
+  portal (`/community` Projects Explorer), whose overlay invited the hunt ("Follow the rabbit … find the ✧ signal
+  and the ✧ mark further down the page") although the signal and walker are no longer on those pages: a dead end.
+  `PortalOverlay` now takes `hunt` (`pathname === "/"` in `VentureShell`): off `/` the overlay shows no hunt intro
+  and no rabbit clue, and its screen-reader title and description no longer mention the trail. `/` is unchanged
+  (all three clues). **Deliberate limitation:** the on-page hunt exists only on `/`; the `raidguild` console
+  commands still work on every route (progress is per device), and their help text already points to the `/`
+  gallery. Verified: `qa/hunt-qa.mjs` 11/11.
+- **SEO / AEO (Tae's request).** Report and decisions: `docs/seo-aeo-handoff.md`. Code: `src/lib/seo.ts`
+  (canonical origin `https://www.raidguild.org`, indexing gate, asset origin, JSON-LD builders), root layout
+  (robots, `metadataBase`, `twitter:site`), the three pages (absolute canonical and og:url, JSON-LD), `sitemap.ts`
+  (three routes when indexable, empty otherwise), `public/llms.txt`, `lib/agent-readiness.ts` (stale Markdown for
+  `/` and `/join` removed), a space before every `<br>` in the venture components (heading text), and
+  `tests/seo.test.mjs` (run through `agent-readiness.test.mjs`, since the test list lives in the owner's
+  `package.json`). **Indexing decision:** every build is `noindex` except the Vercel production deployment of
+  raidguild.org or a build with `RAIDGUILD_INDEXING=on`; go-live needs that confirmed (D-2).
+- **Release held:** the owner's "Final Handoff Release" (commit, push, Vercel deploy) was superseded mid-run by the
+  SEO / AEO brief ("do not commit, push, tag or deploy without explicit approval"); nothing was committed or deployed.
+
+## 2026-11-10 — Editorial Mode rich text (owner request; same candidate, uncommitted, awaiting review)
+
+- **Architecture found:** 294 editable fields, each a plain string literal in `src/lib/narrative/*` (plus
+  `lib/data`), rendered by `CopyText` (`primitives/Review.tsx`) with one inline mark, `**bold**`; the editor edits
+  the rendered text in a `contenteditable` `<rg-copy>` and serializes it back (`EditorialMode.tsx`); drafts live
+  in localStorage (`store.ts`), export as Markdown + fingerprinted JSON (`lib/editorial/drafts.ts`) and are applied
+  to the exact literal by `scripts/apply-editorial.mjs`. Inline formatting fits this design without a new engine.
+- **Decision: extend the existing inline format; no Tiptap.** Four marks only, as text:
+  `**bold**`, `_italic_`, `++underline++`, `[words](address)` (`src/lib/narrative/inline.ts`: one parser for the
+  renderer, the editor, drafts, the CLI and search metadata). No HTML, styles, sizes or colours can be expressed.
+  None of the 477 existing strings uses `_`, `++` or `](`; every one prints back unchanged and renders through the
+  untouched legacy path (visitor layout identical in 12 route/theme/width combinations).
+- **Tiptap, evaluated and not adopted:** it would replace the 294 in-place `contenteditable` fields with
+  ProseMirror instances (or one editor per focused field), add roughly 100–150 KB gzipped of editor code to the
+  opt-in bundle, need a ProseMirror-JSON ↔ string-literal mapping for the export and the CLI (or move copy to a
+  store, i.e. a CMS), and re-test the guards that keep links and buttons inert while editing. Its benefits (tables,
+  lists, collaborative editing) are outside this brief. Reconsider only if block formatting or a CMS is wanted.
+- **Field policy (`config.ts formattingFor`):** marks and links only in running prose (body, answer, intro,
+  description, detail, dek, text, requirement: 57 rendered on the two pages, including the 4 editable fields that
+  already use bold);
+  titles, display lines, labels, buttons, questions, names, ticker words and all hidden text (alt, screen-reader
+  names, metadata) stay plain. Verified on both pages that no prose field sits inside a link or button.
+- **Links:** `https://`, `http://`, `mailto:`, site paths and `#anchors` only (`safeHref`); `javascript:`, `data:`,
+  protocol-relative and malformed addresses are refused in the editor, flagged in drafts and the export, blocked by
+  the CLI, and never rendered as links (they stay visible text). External links open in a new tab with
+  `rel="noopener noreferrer"`; links take the text colour, underline and the site focus ring (`.inlineLink`).
+- **Editor:** a toolbar above the text (top of the screen on phones, 40 px targets): Bold, Italic, Underline, Link
+  (add / update / remove), Undo, Redo; Cmd/Ctrl+B/I/U/K; Alt+F10 into the toolbar, arrows, Escape back. Browser
+  formatting other than B/I/U is dropped; disallowed fields keep plain text. The Changes panel shows the formatted
+  proposal, its markup and "Formatting only" changes. Shorten counts words, not markers. FAQ placeholders no longer
+  mistake a link for a placeholder. JSON-LD and metadata use plain text.
+- **Verification:** tests 137/137 (new `tests/editorial-rich.test.mjs`: round trip of every existing string,
+  marks, nesting, link safety, policy, warnings; CLI test: formatted text applied as written, title formatting
+  and `javascript:` refused); tsc, lint 0 errors. Opt-in build (`verify-editorial-rich`, :3064), `qa/rich-qa.mjs`
+  21/21: toolbar and labels, bold/italic/underline/link by button and shortcut, unsafe link refused, undo/redo,
+  keyboard access, title stays plain, persistence after reload, Preview link attributes, Changes panel, export of
+  both files, phone toolbar and tap; the exported JSON passes the CLI dry run (1 change, 476 others unchanged).
+  Not deployed; the shareable guide doc (claude.ai artifact) is not updated yet.
+
+## 2026-11-10 — Editorial Mode final acceptance (owner: inline parser approved, no Tiptap)
+
+- **Responsibilities:** Tae edits, formats, previews, reviews and exports; Dekan validates the export, applies it
+  with the CLI, runs the checks, commits and deploys (`docs/editorial-guide-tae.md` and the shareable guide
+  https://claude.ai/artifact/Xmhy49kfgYYqx3zrKiT6x5, both updated: toolbar, shortcuts, field restrictions, link rules,
+  Save → Export → Apply).
+- **Acceptance run** (`~/Projects/raidguild-backups/2026-11-10/acceptance/`): in the opt-in editor, the Join text
+  (`community.join.body`) got bold, italic (shortcut), underline and a link (Cmd/Ctrl+K), was saved and exported.
+  On a clean scratch repository of the candidate, the CLI dry run and `--apply --confirm 023524e782d2` changed one line
+  of `src/lib/narrative/community.ts` only, 477 copy ids before and after, only that id changed; tests 137/137, tsc,
+  build OK; visitors get `<strong>`, `<em>`, `<u>` and `<a href target=_blank rel="noopener noreferrer">` in the server
+  HTML at 1440 and 393 px, no overflow, no errors. Raw markers appear only in the React data inside `<script>` (as
+  `**` already did), never in visible text or metadata.
+- **Fixture decision:** copy fixtures pin the words, not the formatting. The run first failed two tests: one of the
+  new rich-text tests asserted that no live copy used the new marks (replaced by the real invariant: every string
+  round-trips and carries only the formatting its field takes), and `narrative.test.mjs` compared prose verbatim
+  (13 prose assertions and the two brief checks now compare `plainText`). A formatting-only change therefore needs no
+  test edit; a wording change to pinned brief copy still does, by design.
+
+## 2026-11-10 — Final handoff release `b0d6cb6` (owner-approved)
+
+- **Commit:** `b0d6cb613760bb53f891eb2bfc32e138d36f7d0c` "feat(handoff): final illustrations, UI polish, SEO/AEO and
+  Editorial Mode rich text", 78 files exactly as in the release manifest
+  (`~/Projects/raidguild-backups/2026-11-10/RELEASE-MANIFEST.md`); pushed to `fork/feat/venture-beyond-integration`
+  (`c4e921a..b0d6cb6`). Upstream untouched (`origin/review/venture-beyond-redesign` `7d0e878`, `main` `b02d67b`).
+  Owner files preserved (`package.json`, 21 legacy image deletions, the font, `clients.pdf`, `.DS_Store`).
+- **Vercel review** (project `raidguild-venture-beyond-review`, existing configuration unchanged): clean archive
+  `git archive b0d6cb6` + the project link from `2026-11-02/deploy-04da57f`, `npx vercel@65.8.0 deploy --prod --yes
+  --build-env SHOW_REVIEW_FLAGS=false` → `dpl_D4iJJAvqf2LRwSourYmN9Lm2mnj4`, READY, production. Public URL:
+  https://raidguild-venture-beyond-review.vercel.app (the deployment URL itself needs a Vercel login). Editorial Mode
+  is not in this build. Vercel names `raidguild.estudioblanco.org` as the project's production domain; that host
+  still 302s to Railway through Cloudflare (DNS untouched).
+- **Cloudflare Editorial Mode** (Worker `raidguild-estudioblanco`, workers.dev, no routes, kit unchanged):
+  `BASELINE=b0d6cb6 deploy/cloudflare/build.sh b0d6cb6` (`NEXT_PUBLIC_EDITORIAL_MODE=opt-in`, review flags off;
+  build id `c9Lhe8g0jxuI8GbxG81Ts`), `wrangler deploy` → version **`32af0c5c-155c-4aee-b60b-c667f973dce7`**, serving
+  confirmed by its build id; `X-Robots-Tag: noindex, nofollow`. URLs: https://raidguild-estudioblanco.luisblancoach.workers.dev/agency?editorial=1
+  and `/community?editorial=1`.
+- **Verification, Vercel** (public alias): `/`, `/agency`, `/community` 200, `noindex, follow`, canonical
+  `https://www.raidguild.org…`, `twitter:site`, JSON-LD (Organization, WebSite, WebPage; 6 Service on /agency), one
+  H1 each, heading text spaced; robots.txt as before, sitemap valid and empty, llms.txt lists both audience pages,
+  agent Markdown off on `/`. Illustrations suite 236 checks passed (16/16 cards, Day/Night × 1440/393), one CLS
+  reading of 0.124 on a cold first load of /agency light 1440 that did not reproduce (4 reruns 0.0000–0.0005). Polish
+  92/92, hunt 11/11.
+- **Verification, Cloudflare:** rich-text suite 21/21 on the live Worker (activation, toolbar, bold/italic/underline/
+  link by button and shortcut, unsafe link refused, undo/redo, keyboard, plain-only title, save and reload, Preview,
+  Changes panel, export of both files, phone); the live export (source revision `b0d6cb613760`) passes the CLI dry run
+  against the commit (1 change, 476 unchanged). Visitors get no editor; `?editorial=1` opens it with 118 (/agency) and
+  167 (/community) editable texts; footer and illustrations present, no page errors.
+- **Known limitations:** share-image URLs on the Vercel review site point at `raidguild.estudioblanco.org` (its
+  production domain), which redirects, so previews there show no image; on the Worker they point at raidguild.org
+  paths, which exist only after go-live. The on-page hunt exists only on `/`. Editorial drafts live in one browser;
+  the editor link is public (no access control), as before. Raw formatting markers appear in React's script data,
+  never in visible text. Not compared against the October 23 reference. raidguild.org, Railway, DNS and
+  `raidguild.estudioblanco.org` routing unchanged (D-2 and the cutover remain open).
+- **Rollback:** Vercel: `npx vercel@65.8.0 rollback dpl_8BmqYkt7ykpEw5NFZmgm2kKCiqdD` (the previous production,
+  `233777b`) from the linked archive directory, or promote it in the dashboard. Cloudflare: `wrangler rollback
+  5dcaac41-1c25-4b5f-a1e4-30a65326a1f3` from a kit build directory. Source: `git revert b0d6cb6` (never a reset of the
+  pushed branch).
+- **Editorial workflow (Tae / Dekan):** Tae edits and formats at the Worker URLs, previews, comments and exports both
+  files; Dekan runs `bun scripts/apply-editorial.mjs <json>` (dry run), then `--apply --confirm <12-character id>`,
+  `bun run test`, tsc, lint, a build, commit, push and deploys (Vercel review as above; the Worker with the kit so the
+  editor shows the new text). Guide: `docs/editorial-guide-tae.md`, shareable https://claude.ai/artifact/Xmhy49kfgYYqx3zrKiT6x5.
+
+## 2026-11-10 — Canonical routes: Hire the DAO at `/` (owner-approved; two-page architecture)
+
+- **Decision (owner):** `/` serves Hire the DAO (the former `/agency` page, unchanged); `/community` keeps Join the
+  DAO; `/agency` and `/clients` (and anything below them) redirect permanently to `/`. The former `/` entry page
+  ("Venture Beyond": Guild prologue, wall of curiosities, practices, legacy inquiry, entry creed) is retired from
+  the routes; its components and `lib/narrative/entry.ts` stay in the code, unused (no deletion without approval).
+- **Implementation:** `src/app/(venture)/page.tsx` is the Agency page (canonical, og:url and JSON-LD on `/`);
+  `src/app/(venture)/agency/` removed; `next.config.ts` redirects `/agency` → `/`, `/agency/:path+` → `/:path+`, the
+  same for `/clients` (explicit bare-path rules: `/:path*` with an empty path produced an empty Location and a
+  self-redirect loop on `/agency?editorial=1`, caught in testing); the host-scoped
+  `raidguild.estudioblanco.org` `/` → `/agency` redirect is removed (it would loop). `lib/venture-routes.ts` (Hire
+  the DAO href `/`, section homes, legacy `?audience=hire` → `/`), `lib/theme.ts` (`/` opens in Day),
+  `(venture)/layout.tsx` (nav keyed by `/`), `lib/editorial/config.ts` (Editorial pages `/` and `/community`;
+  copy ids unchanged), `lib/seo.ts` (public routes `/`, `/community`), `public/llms.txt`, `scripts/review-claims.mjs`,
+  `/chat` back-links to `/community#guild`, the editor's link example.
+- **Verification (isolated builds of the working tree, :3061 public and :3064 opt-in):** tests 137/137, tsc, lint 0
+  errors, both builds OK (`/` static). Redirects: `/agency`, `/clients` → `/` in one 308 with query kept
+  (`/agency?editorial=1` → `/?editorial=1`), sub-paths up one level, trailing-slash forms two hops (Next's slash
+  normalization first), `?audience=hire` → `/`, no loop on any host. Visitor layout of `/` identical to the released
+  `/agency` and `/community` unchanged (every element box, Day/Night × 1440/393). SEO: `/` canonical
+  `https://www.raidguild.org`, Agency title and description, 6 Service nodes; `/community` unchanged; sitemap lists
+  only `/` and `/community` at go-live; `llms.txt` two pages. Illustrations 16/16, polish 92/92. Editorial:
+  rich-text suite 21/21 at `/?editorial=1`; route checks 8/8 (118 / 167 editable texts, old `/agency?editorial=1`
+  links keep the editor, Hidden text by page, an export made on `/agency` imports, Show on page crosses to
+  `/community`, exports name "Agency (/)"); 477 copy ids identical to the release; the new export passes the CLI
+  dry run.
+- **Conflicts for the owner:**
+  1. **Hunt.** The retired entry page held all three on-page clues (Portal in its gallery, signal by its inquiry,
+     walker in its creed). No route now shows an on-page hunt; the overlay never shows it (`hunt={false}`); the
+     `raidguild` console commands still work. Two texts still promise it: the "The Portal" project card on
+     `/community` ("follow the rabbit to begin a three-clue discovery trail", `components/ArtifactGallery.tsx`;
+     live since `b0d6cb6`, missed by that release's hunt check) and the console help ("Open The Portal in the
+     gallery"). Options: retire the on-page hunt and reword those two texts; bring the hunt to `/community` (rabbit in
+     the overlay plus new signal and walker placements); or keep the old entry page at a hidden, noindex route.
+  2. The entry page's content (prologue, wall of curiosities, legacy inquiry) is no longer public.
+  3. Tae's editor link becomes `/?editorial=1` once released; old `/agency?editorial=1` links keep working through
+     the redirect. The shareable guide is updated at release, not before (its links would be wrong until then).
+
+- **Resolution (owner, final two-page architecture):** exactly two public experiences, `/` (Hire the DAO) and
+  `/community` (Join the DAO); "Venture Beyond" is a campaign concept, not a route. Hunt: **option A**, the on-page
+  hunt is retired. The Portal project card now reads "Step into RaidGuild's world through the Portal, then choose
+  where to go next: the Guild's practices, a project, or the community." (its gallery caption and button drop "the
+  hunt"); `PortalOverlay` no longer has a hunt branch (intro, rabbit clue and the `hunt` prop removed); the console
+  banner, help and "next clue" messages now lead the trail in the console itself (`raidguild.clue("signal")`, then
+  `"walker"`). Console commands, progress and the walker link are unchanged. No hunt was moved to `/community` and no
+  hidden landing was kept; the legacy entry components and the on-page clue markers remain in the code, unused.
+
 ## Social previews — 2026-11-11
 
 The home page uses Venture Beyond; `/clients` and `/agency` use Hire the DAO; `/community` uses Join the DAO. `/agency` renders the existing client experience without redirecting and retains its own canonical URL. Moving the root file-based Open Graph image into `public` allows explicit route metadata to select the intended image. Existing audience navigation still targets `/clients`.
+
+## Integration with `main` — 2026-11-11
+
+Branch `feat/venture-beyond-agency-community` replays `feat/venture-beyond-integration` (`7417113..c7cd52f`) on `main` `256b2ff`. Hire the DAO renders at `/`; `/agency` and `/clients` redirect permanently to `/` (one hop, query kept), which supersedes the non-redirecting `/agency` alias above. The 2026 cards stay: Hire the DAO on `/`, Join the DAO on `/community`, Venture Beyond as the site-wide default. The share-image descriptions follow the new cards (text from PR #108, marked for editorial approval). The Cloudflare review kit (`deploy/cloudflare/`) is not part of this branch.

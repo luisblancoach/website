@@ -14,6 +14,10 @@ describe("agent readiness", () => {
     const llms = await readFile("public/llms.txt", "utf8");
     assert.ok(llms.startsWith("# RaidGuild"));
     assert.match(llms, /https:\/\/portal\.raidguild\.org\/join/);
+    // Both audience pages are listed (November 10).
+    assert.match(llms, /\[Hire the DAO \(homepage\)\]\(https:\/\/www\.raidguild\.org\/\)/);
+    assert.doesNotMatch(llms, /raidguild\.org\/agency|raidguild\.org\/#/, "no retired routes or anchors");
+    assert.match(llms, /https:\/\/www\.raidguild\.org\/community/);
     assert.doesNotMatch(llms.toLowerCase(), /todo|placeholder|lorem ipsum/);
   });
 
@@ -25,8 +29,10 @@ describe("agent readiness", () => {
   });
 
   test("limits Markdown to intentional routes", () => {
-    assert.match(markdownForPath("/") ?? "", /# RaidGuild/);
-    assert.match(markdownForPath("/join/") ?? "", /# Join/);
+    // "/" and "/join" serve the page itself (November 10): no separate, stale Markdown copy.
+    assert.equal(markdownForPath("/"), undefined);
+    assert.equal(markdownForPath("/join/"), undefined);
+    assert.match(markdownForPath("/witch/") ?? "", /# The RaidGuild Witch/);
     assert.equal(markdownForPath("/api/contact"), undefined);
   });
 
@@ -43,3 +49,6 @@ describe("agent readiness", () => {
     assert.equal(isInternalNextRequest(new Headers()), false);
   });
 });
+
+// Search and structured-data checks (November 10); run through this file because the test list lives in package.json.
+import "./seo.test.mjs";

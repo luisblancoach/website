@@ -12,12 +12,13 @@ import MemberBenefits from "@/components/venture/sections/MemberBenefits";
 import Faq from "@/components/venture/sections/Faq";
 import Creed from "@/components/venture/sections/Creed";
 import {
-  communityActivity, communityBenefits, communityCapabilities, communityCreed, communityFaq, communityGuild, communityHats, communityHero, communityJoin,
+  communityActivity, communityBenefits, communityCapabilities, communityCreed, communityFaq, communityGuild, communityHats, communityHero, communityJoin, communityMeta,
   communityMoloch, communityRaidaFeature,
 } from "@/lib/narrative/community";
 import { buildersCommunity } from "@/lib/narrative/shared";
 import { crewHorizontal, foundryPortrait, molochArtwork, queenRaidaArtwork } from "@/lib/data/illustrations";
 import { forAudience } from "@/lib/narrative/public";
+import { canonicalUrl, graph, jsonLd, organizationNode, webPageNode, websiteNode, X_HANDLE } from "@/lib/seo";
 
 // Join the DAO architecture (October 29, final pass; November 2, owner order):
 // hero → ideas into working systems (capability gallery, builder side) →
@@ -29,19 +30,24 @@ import { forAudience } from "@/lib/narrative/public";
 // Metadata (October 30): community copy (builder-owned, members, experiments,
 // finding people to build with), drafted for review. A page's openGraph
 // replaces the root's, so site name, type and URL are restated. Share image:
-// the owner-supplied November 2026 Join the DAO card.
-const SHARE_TITLE = "Join the DAO: find your people at RaidGuild";
-const DESCRIPTION =
-  "RaidGuild is a builder-owned community. Meet Guild members, explore their experiments, and find people to build and contribute with.";
-const SHARE_IMAGE = { url: "/images/venture/og/join-dao-2026.png", width: 1731, height: 909, type: "image/png", alt: "Join the DAO: RaidGuild builders looking toward a shared future" };
+// a 1200 × 630 WebP cut of the Moloch rectangle artwork (111 KB; the 5.7 MB
+// original is untouched).
+// Copy (November 9): the strings are narrative copy (communityMeta), with stable ids for Editorial Mode.
+const SHARE_TITLE = communityMeta.shareTitle.text;
+const DESCRIPTION = communityMeta.description.text;
+const SHARE_IMAGE = { url: "/images/venture/og/join-dao-2026.png", width: 1731, height: 909, type: "image/png", alt: communityMeta.shareImageAlt.text };
 export const metadata: Metadata = {
-  alternates: { canonical: "/community" },
-  title: "Join the DAO",
+  alternates: { canonical: canonicalUrl("/community") },
+  title: communityMeta.title.text,
   description: DESCRIPTION,
-  openGraph: { siteName: "RaidGuild", type: "website", url: "/community", title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE] },
-  twitter: { card: "summary_large_image", title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE.url] },
-  robots: { index: false, follow: true },
+  openGraph: { siteName: "RaidGuild", type: "website", url: canonicalUrl("/community"), title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE] },
+  twitter: { card: "summary_large_image", site: X_HANDLE, title: SHARE_TITLE, description: DESCRIPTION, images: [SHARE_IMAGE.url] },
+  // Indexing follows the root layout (lib/seo.ts): noindex until go-live.
 };
+
+// Organization, WebSite and this page (lib/seo.ts; November 10). The page name is
+// the title as it appears in search ("Join the DAO | RaidGuild").
+const structuredData = graph(organizationNode, websiteNode, webPageNode("/community", `${communityMeta.title.text} | RaidGuild`, DESCRIPTION));
 
 // November 3: /community has its own capability gallery (the same six
 // capabilities, framed for builders, with community links and no inquiry) and
@@ -54,6 +60,7 @@ export const metadata: Metadata = {
 export default function CommunityPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       <Hero content={forAudience(communityHero)} grouped curtain still />
       <GuildTicker />
       <GuildPrologue content={forAudience(communityGuild)} metrics={false} kitExpander />

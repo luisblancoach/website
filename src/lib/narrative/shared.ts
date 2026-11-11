@@ -9,7 +9,7 @@ const portalMembers = "https://portal.raidguild.org";
 
 export const buildersClients: BuilderNetworkContent = defineNarrative("shared.builders.clients", {
   title: { lead: existing("A wide network"), em: existing("of builders") },
-  intro: oct23("Find the people behind the work. Explore the skills across our Guild."),
+  intro: oct23("Meet the designers, engineers, and project leads behind our work."),
   link: { label: oct23("Build with the Guild →"), section: "project-inquiry" },
 } satisfies BuilderNetworkContent);
 
@@ -26,8 +26,9 @@ export const buildersCommunity: BuilderNetworkContent = defineNarrative("shared.
 export const peopleClients: StewardshipContent = defineNarrative("shared.people.clients", {
   label: oct23("[ People behind the work ]"),
   title: { lead: approved("The Guild runs on owners,", "owner-approval"), em: approved("not employees.", "owner-approval") },
-  intro: wording("These are some of the builders shipping the work. The full network is deeper.", "Transcribed from the owner's October 28 annotated references; confirm the wording."),
-  roster: { label: existing("Explore all members ↗"), href: portalMembers },
+  intro: wording("Meet the designers, engineers, and project leads of the Guild, and the work they ship alongside you", "Transcribed from the owner's October 28 annotated references; confirm the wording."),
+  // The arrow is drawn by Stewardship.tsx as its own glyph, so it is not part of the copy (November 9).
+  roster: { label: existing("Explore all members"), href: portalMembers },
 } satisfies StewardshipContent);
 
 export const sharedCtas = defineNarrative("shared.cta", {

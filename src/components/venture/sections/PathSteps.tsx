@@ -14,7 +14,7 @@ export default function PathSteps({ id, content }: { id: "path"; content: PathCo
     <section className={`${styles.pathSection} ${arrivalTarget === id ? styles.sectionArriving : ""}`} id={id} aria-labelledby={`${id}-heading`}>
       <header className={styles.narrativeHeading}>
         <p className={styles.sectionLabel}><CopyText copy={content.label} /></p>
-        <h2 id={`${id}-heading`}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+        <h2 id={`${id}-heading`}><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
         <p className={styles.narrativeIntro}><CopyText copy={content.framing} /></p>
       </header>
       <ol className={styles.pathSteps}>

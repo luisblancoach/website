@@ -17,7 +17,7 @@ export default function MemberBenefits({ id, content }: { id: string; content: F
       <div className={`${gallery.head} ${styles.head}`}>
         <div>
           <p className={gallery.label}><CopyText copy={content.label} /></p>
-          <h2 id={titleId} className={gallery.title}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+          <h2 id={titleId} className={gallery.title}><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
         </div>
         {content.intro && <p className={`${gallery.intro} ${styles.intro}`}><CopyText copy={content.intro} /></p>}
       </div>
@@ -32,7 +32,7 @@ export default function MemberBenefits({ id, content }: { id: string; content: F
                 <span className={styles.cardLabel}><CopyText copy={card.label} /></span>
                 <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
               </p>
-              <h3 id={`${id}-card-${index}`} className={styles.cardTitle}><span><CopyText copy={card.title.lead} /></span><br /><em><CopyText copy={card.title.em} /></em></h3>
+              <h3 id={`${id}-card-${index}`} className={styles.cardTitle}><span><CopyText copy={card.title.lead} /></span>{" "}<br /><em><CopyText copy={card.title.em} /></em></h3>
               <p className={styles.body}><CopyText copy={card.body} /></p>
             </article>
           </li>

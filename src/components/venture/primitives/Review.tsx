@@ -3,7 +3,17 @@
 import { Fragment, createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import type { Copy, ReviewReason } from "@/lib/narrative/types";
+import { parseInline, type InlineNode } from "@/lib/narrative/inline";
 import styles from "../venture.module.css";
+
+// Editorial Mode: local development, or an opt-in build
+// (NEXT_PUBLIC_EDITORIAL_MODE=opt-in; see lib/editorial/config.ts). Both values
+// are inlined at build time, so other production builds drop this branch and
+// never bundle the editor.
+const editable: typeof import("../editorial/EditableCopy") | null =
+  process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_EDITORIAL_MODE === "opt-in"
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    ? require("../editorial/EditableCopy") : null;
 
 const ReviewFlagsContext = createContext(false);
 
@@ -17,11 +27,32 @@ export function ReviewFlagsProvider({ enabled, children }: { enabled: boolean; c
 // Renders "**strong**" segments; everything else is plain text. Whitespace
 // before a strong segment stays a separate text node, matching the original
 // hand-written markup so existing pages render pixel-identically.
-function rich(text: string) {
+function legacyRich(text: string) {
   return text.split(/(\*\*[^*]+\*\*|\s+(?=\*\*))/g).filter(Boolean).map((part, index) =>
     part.startsWith("**") && part.endsWith("**")
       ? <strong key={index}>{part.slice(2, -2)}</strong>
       : <Fragment key={index}>{part}</Fragment>);
+}
+
+// November 10 (rich text): _italic_, ++underline++ and [links](https://…) as
+// well (lib/narrative/inline.ts). Text that uses only "**" keeps the exact
+// legacy rendering above. Links are real <a> elements with a sanitized href;
+// other sites open in a new tab.
+function nodesToReact(nodes: InlineNode[], key = "i"): ReactNode[] {
+  return nodes.map((node, index) => {
+    const k = `${key}.${index}`;
+    if (node.type === "text") return <Fragment key={k}>{node.text}</Fragment>;
+    const children = nodesToReact(node.children, k);
+    if (node.type !== "link") return node.type === "strong" ? <strong key={k}>{children}</strong> : node.type === "em" ? <em key={k}>{children}</em> : <u key={k}>{children}</u>;
+    const external = /^(https?:|mailto:)/i.test(node.href);
+    return <a key={k} className={styles.inlineLink} href={node.href} {...(external && !node.href.startsWith("mailto:") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>{children}</a>;
+  });
+}
+export function rich(text: string) {
+  const nodes = parseInline(text);
+  return nodes.some((node) => node.type !== "text" && node.type !== "strong") || nodes.some((node) => node.type === "strong" && node.children.some((child) => child.type !== "text"))
+    ? nodesToReact(nodes)
+    : legacyRich(text);
 }
 
 type FlagProps = { id: string; reason: ReviewReason; note?: string; children: ReactNode; block?: boolean };
@@ -41,9 +72,18 @@ export function ReviewFlag({ id, reason, note, children, block = false }: FlagPr
 }
 
 // `before` / `after` join adjacent literal spacing into the same text node.
-export function CopyText({ copy, before = "", after = "" }: { copy: Copy; before?: string; after?: string }) {
-  if (copy.status === "approved") return <>{rich(before + copy.text + after)}</>;
-  return <>{before}<ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{rich(copy.text)}</ReviewFlag>{after}</>;
+// `display` replaces the default rendering for visitors (the FAQ's marked
+// placeholders); Editorial Mode always edits the plain text.
+export function CopyText({ copy, before = "", after = "", display = rich }: { copy: Copy; before?: string; after?: string; display?: (text: string) => ReactNode }) {
+  const rendered = copy.status === "approved"
+    ? <>{display(before + copy.text + after)}</>
+    : <>{before}<ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{display(copy.text)}</ReviewFlag>{after}</>;
+  // Editorial Mode (`editable` is null in public production builds).
+  if (editable && editable.isEditableId(copy.id)) {
+    const flag = (children: ReactNode) => copy.status === "approved" ? children : <ReviewFlag id={copy.id} reason={copy.reason ?? "claim"} note={copy.note}>{children}</ReviewFlag>;
+    return <editable.default copy={copy} before={before} after={after} fallback={rendered} rich={rich} flag={flag} />;
+  }
+  return rendered;
 }
 
 type Entry = { id: string; reason: ReviewReason; note: string; text: string };

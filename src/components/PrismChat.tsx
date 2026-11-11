@@ -71,7 +71,7 @@ export default function PrismChat() {
   return <main className={styles.page}>
     <div className={styles.frame}>
       <header className={styles.header}>
-        <Link href="/#guild" className={styles.brand}>RAIDGUILD <span aria-hidden="true">↗</span></Link>
+        <Link href="/community#guild" className={styles.brand}>RAIDGUILD <span aria-hidden="true">↗</span></Link>
         <span className={styles.issue}>[ PUBLIC SIGNAL / 001 ]</span>
       </header>
       <section className={styles.intro} aria-labelledby="chat-title">
@@ -97,7 +97,7 @@ export default function PrismChat() {
           <div className={styles.formFoot}><span>Messages are processed by the Guild&apos;s AI service. Please leave out private information.</span><button type="submit" disabled={!ready || busy || !draft.trim()}>Send <span aria-hidden="true">↗</span></button></div>
         </form>
       </section>
-      <footer className={styles.footer}><Link href="/#guild">← Back to the Guild</Link><span>ONE GUILD · MANY EDGES</span></footer>
+      <footer className={styles.footer}><Link href="/community#guild">← Back to the Guild</Link><span>ONE GUILD · MANY EDGES</span></footer>
     </div>
   </main>;
 }

@@ -1,9 +1,13 @@
-// Which route owns each in-page section. "/" still carries every section until
-// the entry experience is reduced; links to a section that is not on the current
-// route navigate to the route that owns it.
+// Which route owns each in-page section; links to a section that is not on the
+// current route navigate to the route that owns it.
+// November 10 (owner, canonical routes): Hire the DAO is the root page "/";
+// /agency and /clients redirect to it permanently (next.config.ts). The former
+// "/" entry page is retired.
 
 export const AUDIENCES = [
-  { id: "clients", label: "Hire the DAO", href: "/clients" },
+  // The id "clients" is internal (data-audience, CSS, narrative and editorial ids);
+  // the route is "/" since November 10, 2026 (/agency until then, /clients before).
+  { id: "clients", label: "Hire the DAO", href: "/" },
   { id: "community", label: "Join the DAO", href: "/community" },
 ] as const;
 
@@ -23,21 +27,20 @@ const sectionHome: Record<SectionId, string> = {
   path: "/community",
   join: "/community",
   raida: "/community",
-  spears: "/clients",
-  capabilities: "/clients",
-  "case-studies": "/clients",
-  contact: "/clients",
-  "project-inquiry": "/clients",
+  spears: "/",
+  capabilities: "/",
+  "case-studies": "/",
+  contact: "/",
+  "project-inquiry": "/",
 };
 
 const routeSections: Record<string, readonly SectionId[]> = {
-  "/": ["guild", "team", "work", "gallery", "uncharted", "spears", "contact", "project-inquiry"],
+  "/": ["case-studies", "spears", "capabilities", "team", "contact", "project-inquiry"],
   "/community": ["guild", "raida", "work", "gallery", "uncharted", "team", "join", "spears", "capabilities"],
-  "/clients": ["case-studies", "spears", "capabilities", "team", "contact", "project-inquiry"],
 };
 
 export function routeHasSection(pathname: string, section: SectionId) {
-  return routeSections[pathname === "/agency" ? "/clients" : pathname]?.includes(section) ?? false;
+  return routeSections[pathname]?.includes(section) ?? false;
 }
 
 export function sectionHref(pathname: string, section: SectionId) {
@@ -45,14 +48,14 @@ export function sectionHref(pathname: string, section: SectionId) {
 }
 
 export function audienceForPath(pathname: string): AudienceId | null {
-  const audiencePath = pathname === "/agency" ? "/clients" : pathname;
-  return AUDIENCES.find((audience) => audiencePath === audience.href || audiencePath.startsWith(`${audience.href}/`))?.id ?? null;
+  // "/" is Hire the DAO itself, never a prefix of the other routes.
+  return AUDIENCES.find((audience) => pathname === audience.href || (audience.href !== "/" && pathname.startsWith(`${audience.href}/`)))?.id ?? null;
 }
 
 // The October 23 review build switched audiences with "/?audience=hire|join".
 // Those links now land on the audience routes. Other query parameters and the
 // hash survive; the audience parameter is dropped, so the target never redirects.
-const legacyAudienceRoutes: Record<string, string> = { hire: "/clients", join: "/community" };
+const legacyAudienceRoutes: Record<string, string> = { hire: "/", join: "/community" };
 
 export function legacyAudienceRedirect(url: URL): URL | null {
   if (url.pathname !== "/") return null;

@@ -60,13 +60,13 @@ export default function CommunityActivity({ content }: { content: ActivityConten
     <section className={`${styles.fieldNotes} ${styles.activity} ${arrivalTarget === "work" ? styles.sectionArriving : ""}`} id="work" aria-labelledby="activity-heading">
       <header className={styles.narrativeHeading}>
         <p className={styles.sectionLabel}><CopyText copy={content.label} /></p>
-        <h2 id="activity-heading"><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+        <h2 id="activity-heading"><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
         <p className={styles.narrativeIntro}><CopyText copy={content.intro} /></p>
       </header>
       <RecentPosts content={content} />
       <header className={styles.collectionHeading}>
         <p className={styles.sectionLabel}><CopyText copy={content.collection.label} /></p>
-        <h3><CopyText copy={content.collection.title.lead} /><br /><em><CopyText copy={content.collection.title.em} /></em></h3>
+        <h3><CopyText copy={content.collection.title.lead} />{" "}<br /><em><CopyText copy={content.collection.title.em} /></em></h3>
       </header>
       <div id="uncharted" className={styles.collectionAnchor}>
         <div id="gallery" className={styles.collectionAnchor}>

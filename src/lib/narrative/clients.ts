@@ -3,7 +3,7 @@ import { services } from "../data/content";
 import { activeSpears } from "../data/venture";
 import {
   approved, claim, defineNarrative, oct23, wording,
-  type CapabilitiesContent, type CreedContent, type FaqContent, type FeatureGalleryContent, type GalleryCard, type HeroContent,
+  type CapabilitiesContent, type CreedContent, type FaqContent, type FeatureGalleryContent, type GalleryCard, type HeroContent, type PageMetaContent,
   type InquiryContent, type NavContent, type PreviousWorksContent, type ReasonsContent, type ServicesContent, type ShowcaseWork,
 } from "./types";
 
@@ -21,11 +21,11 @@ const design = (text: string) => approved(text, "oct27-design");
 export const clientsHero: HeroContent = defineNarrative("clients.hero", {
   // No eyebrow (November 2, hero experiment): "Venture Beyond · Hire the DAO" and its dot were removed.
   title: { lead: design("Hard problems,"), em: design("working products"), long: true, plain: true },
-  // November 3 Figma artboard (Clients / Light / 1440×900, the owner's edit,
-  // approved by the owner the same day): "builders" leads the list, and the
-  // two key phrases are set in bold.
+  // Tae's editorial reviews (she holds editorial authority; owner-approved): batch 01
+  // (November 9, sha256:1f3373b71bc5…) replaced the November 3 artboard wording, batch 02
+  // (November 10, sha256:9e1c68fabd01…) this line. The whole line is bold, as she wrote it.
   dek: approved(
-    "**A decentralized collective of builders**, engineers and designers **building onchain products**, digital experiences and applied AI.",
+    "**Senior designers and engineers, for your next onchain product, digital experience, or AI workflow**",
     "owner-approval",
   ),
   paths: [
@@ -93,6 +93,20 @@ export const clientsCapabilities: CapabilitiesContent = defineNarrative("clients
 // and Pocket Network on October 27, the others on October 28). It replaces the
 // October 23 archive summaries and their titles; no project carries a title
 // line, and nothing is added to Tae's wording.
+// Tae's editorial batch 02 (2026-11-10): each project's link names the site it opens
+// (lib/data/caseStudies.ts hrefs, each project's own site), so every label is its own
+// copy item and literal. Her capitalization is kept ("DAOHaus").
+const visitLabels: Record<string, string> = {
+  daohaus: "Visit DAOHaus",
+  daedalus: "Visit Daedalus",
+  brightid: "Visit BrightID",
+  livepeer: "Visit Livepeer",
+  hypercerts: "Visit Hypercerts",
+  pocket: "Visit Pocket Network",
+  problem: "Visit Problem.tv",
+  gitcoin: "Visit Gitcoin",
+  yieldnest: "Visit YieldNest",
+};
 const work = (id: string, details: Pick<ShowcaseWork, "title" | "description"> = {}): ShowcaseWork => {
   const project = caseStudyProjects.find((item) => item.id === id);
   if (!project) throw new Error(`Not a showcase project: ${id}`);
@@ -102,7 +116,7 @@ const work = (id: string, details: Pick<ShowcaseWork, "title" | "description"> =
     button: project.button,
     snapshot: { src: project.snapshot, alt: wording(`${project.name} website homepage`, "Describes the supplied website screenshot.") },
     ...details,
-    link: { label: design("Read more"), href: project.href },
+    link: { label: approved(visitLabels[id] ?? `Visit ${project.name}`, "owner-approval"), href: project.href },
   };
 };
 const showcaseDetails: Record<string, Pick<ShowcaseWork, "title" | "description">> = {
@@ -112,7 +126,7 @@ const showcaseDetails: Record<string, Pick<ShowcaseWork, "title" | "description"
   livepeer: { description: tae("Livepeer provides decentralized infrastructure for video and AI processing. RaidGuild helped maintain its Explorer and analyzed the staking and delegation experience to identify usability gaps and guide interface improvements.") },
   hypercerts: { description: tae("Hypercerts creates onchain records of impactful work, helping funders understand and support contributions. RaidGuild contributed application and smart contract development to the infrastructure behind those records.") },
   pocket: { description: tae("Pocket Network connects applications to blockchain data through a decentralized network. RaidGuild built wrapped POKT infrastructure and gateway setup tools, including a CLI for wallet creation, staking, and delegation, alongside development of the Gateway OS frontend.") },
-  problem: { description: tae("RaidGuild contributed development and UX work to Problem Media’s Good Game platform, helping bring the application toward delivery.") },
+  problem: { description: tae("Problem Media is an ownership platform that partners with exceptional founders, businesses, and assets to create long-term value. RaidGuild works as a trusted and dependable operating partner - having contributed development and UX work for Problem.") },
   gitcoin: { description: tae("Funding public goods through open-source tools and community coordination. RaidGuild contributed Passport–Snapshot validation work, Moloch-themed creative projects, and development support via our Skunk Squad.") },
   yieldnest: { description: tae("YieldNest develops liquid restaking products that put staked assets to work across DeFi. RaidGuild contributed smart contract engineering, including refactoring deployment scripts to support new baskets of assets and helping its developers take over the resulting tools.") },
 };
@@ -153,6 +167,9 @@ export const clientsServices: ServicesContent = defineNarrative("clients.service
 // working. Facts reused from approved copy only: onchain work since 2019 (the
 // Onchain practice), the named clients (the showcase), handoff with
 // documentation (the showcase and the FAQ). No prices, timelines or guarantees.
+// November 10 (owner): final illustrations, one per card in order, from
+// public/images/illustrations/hire/ (01–06; 1448 × 1086 transparent PNGs,
+// shown whole). The practice art in lib/data/venture.ts is unchanged.
 const cardNote = "Card title from the published service name, set on two lines (November 2 gallery). Confirm.";
 const clientNote = "Client-facing service description (November 3 owner brief: speak to prospective clients). New draft; confirm the offering and wording.";
 const serviceCard = (title: string, lead: string, em: string, label: string, body: string, image: GalleryCard["image"], link?: GalleryCard["link"]): GalleryCard => {
@@ -164,30 +181,30 @@ const appliedAi = activeSpears.find((item) => item.title === "Applied AI")!;
 export const clientsServiceGallery: FeatureGalleryContent = defineNarrative("clients.serviceGallery", {
   label: design("[ Services & capabilities ]"),
   title: { lead: wording("What we can", "Framing from the November 2 brief (“What we can build for you”). Confirm as the heading."), em: wording("build for you", "Framing from the November 2 brief. Confirm as the heading.") },
-  intro: wording("Modernize the business you already run, or launch something new. We bring applied AI, smart contracts and product design to the problem, with a small senior team from scoping to handoff.", "Client-facing intro (November 3 owner brief). Replaces the Guild-internal intro (“The Guild is the center of gravity …”)."),
+  intro: wording("Launch something new or improve what you already run. Work with a small, senior team from scoping to handover.", "Client-facing intro (November 3 owner brief). Replaces the Guild-internal intro (“The Guild is the center of gravity …”)."),
   cards: [
     serviceCard("Full-Stack Development", "Full-stack", "development", "Engineering",
-      "Web apps, dApps, APIs and internal tools, built end to end and deployed, with code your own team can read, run and extend.",
-      { src: "/images/neo/spear-edge-problem-v1.webp", width: 1024, height: 768, fit: "contain" }),
+      "Web apps, dApps, APIs and internal tools, built and deployed with code your team can maintain and extend.",
+      { src: "/images/illustrations/hire/01-technicians-repairing-a-steampunk-engine-core.png", width: 1448, height: 1086, fit: "contain" }),
     {
       label: wording("Onchain"),
       title: { lead: wording("Smart contracts,", "Service name from the November 2 brief (“Smart contracts and onchain systems”), on two lines. Confirm."), em: wording("onchain systems", "Service name from the November 2 brief. Confirm.") },
-      body: claim("Smart contracts, dApps and the infrastructure around them, from contract design to the interface your users touch. Onchain since 2019, for teams such as Pocket Network, YieldNest and Hypercerts.", "draft", `${clientNote} “Since 2019” is the Onchain practice's copy; the three clients are in the showcase.`),
-      image: { src: onchain.art, width: 1024, height: 768, fit: "contain" },
+      body: claim("Smart contracts and onchain infrastructure, from contract design to user interface. Our work includes projects for Pocket Network, YieldNest, and Hypercerts.", "draft", `${clientNote} “Since 2019” is the Onchain practice's copy; the three clients are in the showcase.`),
+      image: { src: "/images/illustrations/hire/02-floating-modular-space-city-workshop.png", width: 1448, height: 1086, fit: "contain" },
       link: { label: existing(onchain.cta), href: onchain.href, destination: claim("Railway production URL", "existing-site", "The practice link points to a railway.app deployment. Confirm the public URL.") },
     },
     serviceCard("AI Solutions & Automation", "Applied AI", "and automation", "Applied AI",
-      "Practical AI and automation for the work your team repeats every day: we find where it saves time, build it into the tools you already use, and keep people reviewing what it produces.",
-      { src: appliedAi.art, width: 1024, height: 768, fit: "contain" }, { label: existing(appliedAi.cta), href: appliedAi.href }),
+      "Reduce repetitive work with AI workflows built into the tools your team already uses. Forward deployed engineers sit inside your stack, with human review where it matters.",
+      { src: "/images/illustrations/hire/03-tech-orchestrator-and-robot-workshop.png", width: 1448, height: 1086, fit: "contain" }, { label: existing(appliedAi.cta), href: appliedAi.href }),
     serviceCard("Product & System Design", "Product and", "system design", "Design",
-      "Complex ideas turned into products people can use: research, flows, interfaces and design systems, carried through to the shipped product.",
-      { src: "/images/neo/guild-builders-v1.png", width: 768, height: 1024, fit: "contain" }),
+      "Turn complex ideas into usable products. Research, user flows, interfaces, and design systems, carried through to launch.",
+      { src: "/images/illustrations/hire/04-architects-of-the-ring-temple.png", width: 1448, height: 1086, fit: "contain" }),
     serviceCard("Marketing & Content Strategy", "Marketing and", "content strategy", "Growth",
-      "Positioning, launch content and documentation that explain what you built to the people you need to reach.",
-      { src: "/images/neo/field-signal-commons.png", width: 1122, height: 1402 }),
+      "Help the right people understand what you’re building. Positioning, launch content, and documentation that make your product’s value clear.",
+      { src: "/images/illustrations/hire/05-fantasy-portal-merchant-hub.png", width: 1448, height: 1086, fit: "contain" }),
     serviceCard("DAO Consulting & Governance", "DAO consulting", "and governance", "Coordination",
-      "Governance, treasury and token design for organizations that coordinate onchain, from people who have built and run that tooling themselves.",
-      { src: "/images/neo/field-autonomous-treasury.png", width: 1003, height: 1568 }),
+      "Governance frameworks, treasury structures, and token models designed by builders with firsthand experience running a DAO.",
+      { src: "/images/illustrations/hire/06-celestial-amphitheater-vote.png", width: 1448, height: 1086, fit: "contain" }),
   ],
   cta: { label: design("Discuss your project"), section: "project-inquiry" },
 } satisfies FeatureGalleryContent);
@@ -208,15 +225,16 @@ const reason = (title: string, body: string, note = reasonNote) => ({
 export const clientsReasons: ReasonsContent = defineNarrative("clients.reasons", {
   label: wording("[ Why RaidGuild ]"),
   title: { lead: wording("Why build"), em: wording("with RaidGuild") },
-  intro: wording("You need more than extra hands: a partner who can scope the problem, build the system and leave it in good shape for your team. This is how we work."),
+  intro: wording("A senior team to scope the problem, build the system, and prepare your team to take it forward."),
   items: [
-    reason("Small, senior, accountable teams", "A few experienced builders matched to your problem, with one project lead as your point of contact from kickoff to handoff.", `${reasonNote} The single project lead is the buyer FAQ's answer.`),
+    reason("Small teams. Clear accountability", "A few experienced builders matched to your problem, with one project lead as your point of contact from kickoff to handoff.", `${reasonNote} The single project lead is the buyer FAQ's answer.`),
     reason("AI and blockchain where they earn their place", "We start from the business you run today and add applied AI or onchain systems where they solve a real problem, not for their own sake."),
     reason("Smart contracts, dApps and onchain products", "We design and ship contracts, decentralized applications and the products around them, and have done so since 2019.", `${reasonNote} “Since 2019” is the Onchain practice's copy.`),
-    reason("From strategy to handoff, one team", "Scoping, design, implementation, documentation and handoff stay with the same team, so nothing is lost between the plan and the code."),
+    reason("One team from scope to handover", "Scoping, design, implementation, documentation and handoff stay with the same team, so nothing is lost between the plan and the code."),
     reason("Focused scope, clear ownership", "Each project starts from an agreed scope and a named owner for every part of it, so you know what is being built and who is responsible."),
-    reason("Progress you can see every week", "Weekly demos of working software, so you can steer early, while changes are still cheap.", `${reasonNote} Weekly demos are the buyer FAQ's process answer.`),
-    reason("Systems your team can maintain", "We hand over the code with its documentation and runbooks, or stay on for maintenance if you prefer. Teams such as Livepeer, Pocket Network, DAOhaus and Gitcoin have shipped with us.", `${reasonNote} Handoff and maintenance are the buyer FAQ's answers; the clients are in the showcase.`),
+    // Retired (Tae's editorial batch 02, 2026-11-10: "DELETE" on both texts, owner-approved): not rendered.
+    { ...reason("Progress you can see every week", "Weekly demos of working software, so you can steer early, while changes are still cheap.", `${reasonNote} Weekly demos are the buyer FAQ's process answer.`), retired: "2026-11-10, Tae's editorial batch 02" },
+    reason("Code and documentation your team can maintain", "We hand over the code with its documentation and runbooks, or stay on for maintenance if you prefer. Teams such as Livepeer, Pocket Network, DAOhaus and Gitcoin have shipped with us.", `${reasonNote} Handoff and maintenance are the buyer FAQ's answers; the clients are in the showcase.`),
   ],
 } satisfies ReasonsContent);
 
@@ -229,12 +247,12 @@ export const clientsFaq: FaqContent = defineNarrative("clients.faq", {
   // No section label (November 3, owner: "[ Before you start ]" removed).
   title: { lead: wording("Questions"), em: wording("before we build") },
   items: [
-    faq("What does it cost?", "Most projects run [$X–$Y]. Fixed scope, fixed price, quoted after a scoping call."),
-    faq("How long does it take?", "Typical projects run [X–Y weeks]. Smaller fixes can start within [X days]."),
+    faq("What does it cost?", "We scope each project around your goals, technical requirements, and budget. Share your goals and budget range so we can recommend a practical approach and provide a proposal."),
+    faq("How long does it take?", "A prototype and a production launch need different timelines. Timelines ultimately depend on scope, complexity, and where you’re starting. We agree on milestones and a delivery schedule before work begins."),
     faq("Who is accountable in a DAO?", "One project lead is your point of contact from kickoff to handoff. You get one contract and one invoice."),
     faq("What is the process?", "Brief, then a scoping call, then a proposal, then the build with weekly demos, then handoff with docs and runbooks."),
-    faq("How do payment and contracts work?", "We invoice in [fiat / USDC / both] under [entity / agreement]."),
-    faq("What happens after launch?", "We document everything and hand it off, or stay on for maintenance."),
+    faq("How do payment and contracts work?", "Deliverables, responsibilities, payment terms, and milestones are agreed in writing before work begins. Any changes to scope are discussed before additional work proceeds. We can accept escrowed payments in stablecoins or accommodate ACH/Wire via our Marshall Islands DAO."),
+    faq("What happens after launch?", "We hand over the code and documentation so your team can continue the work. Maintenance, support, and further development can be arranged separately."),
   ],
 } satisfies FaqContent);
 
@@ -250,7 +268,7 @@ export const clientsInquiry: InquiryContent = defineNarrative("clients.inquiry",
 export const clientsNav: NavContent = defineNarrative("clients.nav", {
   items: [
     // "Previous works" shortened to "Works" at the owner's request (November 3).
-    { label: approved("Works", "owner-approval"), section: "case-studies" },
+    { label: approved("Our Work", "owner-approval"), section: "case-studies" },
     { label: oct23("Services"), section: "capabilities" },
     { label: oct23("Builders"), section: "team" },
   ],
@@ -263,4 +281,18 @@ export const clientsCreed: CreedContent = defineNarrative("clients.creed", {
   cta: { label: tae("Tell us what you're building"), section: "project-inquiry" },
 } satisfies CreedContent);
 
-export const clientsNarrative = { clientsHero, clientsCapabilities, clientsServices, clientsServiceGallery, clientsReasons, clientsPreviousWorks, clientsFaq, clientsInquiry, clientsNav, clientsCreed };
+// Search and sharing (app/(venture)/agency/page.tsx), moved here verbatim on
+// November 9 (Editorial Mode v0.3). October 30 (owner): the page title stands
+// alone (no "| RaidGuild" template); Open Graph and Twitter carry the share title
+// and the same description.
+export const clientsMeta: PageMetaContent = defineNarrative("clients.meta", {
+  title: approved("RaidGuild | Smart Contracts, dApp & AI Development Studio", "owner-approval"),
+  description: approved(
+    "Small senior teams for smart contracts, dApps, product design and applied AI. We've shipped work for Livepeer, Pokt Network, DAOHaus, Gitcoin and more. Start your project brief.",
+    "owner-approval",
+  ),
+  shareTitle: approved("Hire RaidGuild: senior teams for hard onchain and AI builds", "owner-approval"),
+  shareImageAlt: wording("Hire the DAO: RaidGuild builders and AI companions at work", "Describes the 2026 Hire the DAO share card; text from PR #108."),
+} satisfies PageMetaContent);
+
+export const clientsNarrative = { clientsHero, clientsCapabilities, clientsServices, clientsServiceGallery, clientsReasons, clientsPreviousWorks, clientsFaq, clientsInquiry, clientsNav, clientsCreed, clientsMeta };

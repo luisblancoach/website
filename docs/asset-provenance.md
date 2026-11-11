@@ -224,6 +224,72 @@ pill icon masks (`venture.module.css`) use the new files. Untracked until commit
 - After: sha256 `b6492c83b6e714d8e9a143f9117e53360a0577aeba8bcdf96413cb9d7382d362` (2,186,205 bytes).
 - Use: decorative, beside the FAQ on /clients and /community from 1000 px (empty alt, aria-hidden).
 
+## 2026-11-10 — Final card illustrations (owner-supplied, 16 PNGs)
+
+- **Source:** supplied by the owner, placed by hand in `public/images/illustrations/{hire,community,membership}/`
+  on 2026-11-10 as the final illustrations of the Venture Beyond handoff. Used exactly as supplied: no
+  re-encoding, resizing or retouching of the files (`next/image` serves resized variants at request or build time,
+  as for every other image). Transparent RGBA PNGs: Hire and Community 1448 × 1086 (4:3), Membership 1254 × 1254.
+  Provenance and approval as at the top of this file (the owner approved them for public use in this project).
+- **Use:** decorative card art, empty `alt` (the card titles carry the meaning). Gallery cards show them whole
+  (`fit: "contain"`, 4:3 art box); benefit thumbnails show the square art whole (`object-fit: cover` on a square box).
+
+| Destination | Card | File | sha256 |
+|---|---|---|---|
+| /agency services gallery | 01 Full-stack development | `hire/01-technicians-repairing-a-steampunk-engine-core.png` | `a862576188dc4ac2bc118e45ebb06f8d0964033ed03dda03fd0c55124ccd97c9` |
+| /agency services gallery | 02 Smart contracts, onchain systems | `hire/02-floating-modular-space-city-workshop.png` | `5da2f70637939f7dfd7c1cec8b19ca0fde9bdda1dfd98c05b670e92ebdfb6c25` |
+| /agency services gallery | 03 Applied AI and automation | `hire/03-tech-orchestrator-and-robot-workshop.png` | `6b248e5967388a52b97a1e55d9a3696f05502fa4ab5d52dee068620833db5777` |
+| /agency services gallery | 04 Product and system design | `hire/04-architects-of-the-ring-temple.png` | `ddad360d09b9201ddca286e7f6a9f249160b42ed8c46dfee4c6fc97b0f2dcb21` |
+| /agency services gallery | 05 Marketing and content strategy | `hire/05-fantasy-portal-merchant-hub.png` | `e1bdd96a983b01c685cc3479b4b3eb7f90ba0020ac8b95d34ad3f906ac9e241c` |
+| /agency services gallery | 06 DAO consulting and governance | `hire/06-celestial-amphitheater-vote.png` | `890ce45dd03ac63ec92e2dd302c5ee9e1cf2a391b2d8d31c994dcaf6924576cc` |
+| /community capabilities gallery | 01 Ship on real raids | `community/01-engineering-raid-briefing.png` | `28abb3bbcbc68a158fa4606929a525b192f1af5512472a4a8bbd754633583a07` |
+| /community capabilities gallery | 02 The onchain practice | `community/02-onchain-expedition-to-the-floating-hub.png` | `e7ff2414597dfb8fdbb86cbc3dd51fdd5c1ce615335b6363c1b9f4c74abc4a0a` |
+| /community capabilities gallery | 03 The applied AI practice | `community/03-guild-team-beneath-the-queen-s-halo.png` | `fc3b6e4c9bdba2fa7069986d38dcc4e21770158e4b60a4385457cf1d355eb17b` |
+| /community capabilities gallery | 04 Make it understandable | `community/04-sci-fi-archery-workshop-collaboration.png` | `8c86dc60bd9c2bc9a27d5811f677da7f2e757b2f3463dcb67c5a52f46bc71b14` |
+| /community capabilities gallery | 05 Carry the Guild's voice | `community/05-desert-guild-s-waterworks-expedition.png` | `e4ac542a3bd8ac3df2660c36e82b1ea6ff21ad1a26f158b5d82b89d124f69e17` |
+| /community capabilities gallery | 06 Shape how the Guild runs | `community/06-floating-guild-council-assembly.png` | `7fa34d1e2bae35e4a739a353fd5679a22d51dd8db41dd8936f5d3ddb4428fd08` |
+| /community member benefits | 01 Cohorts, bounties and raids | `membership/01-fantasy-map-with-dagger-and-treasure-pouch.png` | `795527c96056507664de7643eadfd94f1ca652f0652a614630452015a404d027` |
+| /community member benefits | 02 Hackathons and hackerhouses | `membership/02-holographic-fantasy-video-call-laptop.png` | `9ef15adc5e40d4e97e1c7fc8c6224d80df6deb3087b58e8640637763d26fb8d1` |
+| /community member benefits | 03 RIPs and shared funding | `membership/03-steampunk-balance-of-knowledge.png` | `b7d39854afedecc9e148dfaaa1c9fb1f7c0862bac2d4aa98ecb668909839a040` |
+| /community member benefits | 04 Guild email and raidguild domain | `membership/04-sci-fi-adventure-kit-and-holographic-tablet.png` | `ce8d6070588d521ba90326b3d6254066220ca39895966a0861e0f99030294a5a` |
+
+- **Replaced art (kept on disk, nothing deleted):** the cards previously used `neo/spear-edge-problem-v1.webp`,
+  `neo/spear-onchain-v1.webp`, `neo/spear-applied-ai-v1.webp`, `neo/guild-builders-v1.png`,
+  `neo/field-signal-commons.png`, `neo/field-autonomous-treasury.png` (both galleries) and
+  `neo/hero-landmarks-v1.png`, `neo/sky-citadel.png`, `neo/field-protocol-garden.png`, `neo/creed-flyer-v1.png`
+  (benefits). Still referenced elsewhere: the two spear files (practice data, `lib/data/venture.ts`),
+  `guild-builders-v1.png` (Guild prologue), `sky-citadel.png` and `field-protocol-garden.png` (portal overlay).
+  **No longer referenced by any page:** `spear-edge-problem-v1.webp`, `field-signal-commons.png`,
+  `field-autonomous-treasury.png`, `hero-landmarks-v1.png`, `creed-flyer-v1.png`; removal needs the owner's approval.
+- The folder's `.DS_Store` is not part of the asset set.
+
+## 2026-11-10 — Final UI polish: logo buttons recentred, footer link icons
+
+- **Company selector buttons** (`public/images/casestudies/custom_buttons/`, 228 × 88): five buttons had their logo
+  off the card's centre inside the SVG (measured on a 4× render: Pocket 1.35 units left, DAOhaus 1.1 right,
+  Hypercerts 0.9 high, Daedalus 0.75 low, Livepeer 0.5 high). Their content is wrapped in one
+  `<g transform="translate(…)">` that cancels the offset; all nine now centre within 0.25 units. The Daedalus card fill
+  changes from #121212 to #0A0A0A, the colour of its embedded logo plate, which showed as a darker box. Nothing else in
+  the files changed. Originals and checksums: `~/Projects/raidguild-backups/2026-11-10/custom_buttons-original/`.
+
+| File | Change | sha256 before | sha256 after |
+|---|---|---|---|
+| `button_pocket.svg` | translate(1.35 0) | `9671ddd322f646f5cab472c51bf894bd0cbdddd970b7f503881572e31166852c` | `42e6217d4670062e680087d99b139e888849af9f649e130bff7dbe13a189c18f` |
+| `button_daohaus.svg` | translate(-1.1 0) | `abadc27adb89b1bf64fd827baa37226f4a734de09bd885dc7b9314d34a5344be` | `93dc0459aa943b73e56b1bba5ec40d34d4742de96f899b8050ce8355ab55d990` |
+| `button_hypercerts.svg` | translate(0 0.9) | `4d8eaccfeb557025d8bf5bb583172dfc66064e302cce60e7419786570b93f05c` | `4f2686ce66f4403e79d9e622f56ebdc4fb6bc3fd8b40d526abf92f26e1c58d2e` |
+| `button_daedalus.svg` | translate(0 -0.75), fill #0A0A0A | `81e9d82365f96587f7051475f6ef59742c26dbc4d25b066c587d0fa660d68031` | `cb2e24922d5e20e099b8de28022ec17d1c5c6a01c57903be0514a10242588cf5` |
+| `button_livepeer.svg` | translate(0 0.5) | `8b35ce67b9a5044484d706211337616e726451cc4114dd65af4f87ef8c14d5bc` | `d8f5852e600744ceea7ae13e0353c0f732e304a4719a23dcfab65ab36c108b2d` |
+
+- **Footer link icons** (24 × 24 SVGs used as CSS masks in the text colour, like the existing pill icons):
+  - `public/images/icons/ico_github.svg`: the GitHub mark (path data as published by Simple Icons, CC0), sha256
+    `9495b5e0fef8fd2fa589e1cfd9dce387847ca62ab6733d809d17589e1e345efd`;
+  - `public/images/icons/ico_x.svg`: the X logo (Simple Icons path data, CC0), sha256
+    `0ad2abf4d9c768306760f323264dc1d6f42e5f163972d459eb971d4dd47361a9`;
+  - `public/images/icons/ico_blog.svg`: Lucide "newspaper" (ISC; Lucide is already a project dependency), sha256
+    `395c9a63b0230bdf80d672e838d7f5a99a234c73fb4a8306004fe358dbf3ccfa`;
+  - Discord and Brand Archive reuse `ico_discord.svg` and `venture/ico-logo.svg` (the RaidGuild mark).
+  The GitHub and X marks identify links to those services' RaidGuild pages only.
+
 ## Social preview cards — 2026-11-11
 
 Supplied directly by the project owner for this social-preview update. Copied unchanged from Downloads: `venturebeyond_thumbnail.png` → `public/opengraph-image.png`; `hire-dao-thumbnail.png` → `public/images/venture/og/hire-dao-2026.png`; `join-dao-thumbnail.png` → `public/images/venture/og/join-dao-2026.png`. Each is 1731 × 909 PNG. No additional authorship or licensing claim is made.

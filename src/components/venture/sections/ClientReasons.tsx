@@ -20,11 +20,11 @@ export default function ClientReasons({ id, content }: { id: string; content: Re
     <section id={id} className={styles.reasons} aria-labelledby={`${id}-title`}>
       <div className={styles.reasonsHead}>
         <p className={styles.label}><CopyText copy={content.label} /></p>
-        <h2 id={`${id}-title`} className={styles.title}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+        <h2 id={`${id}-title`} className={styles.title}><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
         <p className={styles.intro}><CopyText copy={content.intro} /></p>
       </div>
       <div className={styles.reasonList}>
-        {content.items.map((item, index) => {
+        {content.items.filter((item) => !item.retired).map((item, index) => {
           const expanded = open === index;
           return (
             <div key={item.title.id} className={styles.reasonItem}>

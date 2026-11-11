@@ -78,7 +78,7 @@ export default function PreviousWorks({ content, rotate = false }: { content: Pr
       {work.title && <p className={styles.workTitle}><CopyText copy={work.title} /></p>}
       {work.description && <p className={styles.workDescription}><CopyText copy={work.description} /></p>}
       <NarrativeAnchor link={work.link} className={styles.readMore}>
-        <CopyText copy={work.link.label} /><span className={styles.srOnly}> about {work.name.text} (opens the {work.name.text} website)</span>
+        <CopyText copy={work.link.label} /><span className={styles.srOnly}> (opens the {work.name.text} website)</span>
       </NarrativeAnchor>
       <NarrativeAnchor link={content.cta} className={`${venture.pill} ${venture.pillFilled} ${styles.workCta}`}>
         <span><CopyText copy={content.cta.label} /></span>
@@ -96,7 +96,7 @@ export default function PreviousWorks({ content, rotate = false }: { content: Pr
       onFocus={rotate ? (event) => { if ((event.target as HTMLElement).matches(":focus-visible")) setFocused(true); } : undefined}
       onBlur={rotate ? (event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false); } : undefined}
     >
-      <h2 id="previous-title" className={styles.showcaseTitle}><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} /></em></h2>
+      <h2 id="previous-title" className={styles.showcaseTitle}><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} /></em></h2>
       <div
         className={styles.showcaseStage}
         onPointerEnter={rotate ? (event) => { if (event.pointerType === "mouse") setHovering(true); } : undefined}

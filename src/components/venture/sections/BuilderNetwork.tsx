@@ -29,7 +29,7 @@ export default function BuilderNetwork({ content, illustration, masonry = false 
   const tabs = useRef<Array<HTMLButtonElement | null>>([]);
   const filtered = filterMembers(mercenaries, category);
   return <section id="team" className={`${styles.teamNetwork} ${moduleStyles.network}`} aria-labelledby="builders-title">
-    <div className={moduleStyles.heading}><h2 id="builders-title"><CopyText copy={content.title.lead} /><br /><em><CopyText copy={content.title.em} after="." /></em></h2>{illustration && <Image className={moduleStyles.headingArt} src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes="(max-width: 700px) 280px, 440px" aria-hidden="true" />}<p className={moduleStyles.headingIntro}><CopyText copy={content.intro} /></p></div>
+    <div className={moduleStyles.heading}><h2 id="builders-title"><CopyText copy={content.title.lead} />{" "}<br /><em><CopyText copy={content.title.em} after="." /></em></h2>{illustration && <Image className={moduleStyles.headingArt} src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes="(max-width: 700px) 280px, 440px" aria-hidden="true" />}<p className={moduleStyles.headingIntro}><CopyText copy={content.intro} /></p></div>
     <div className={moduleStyles.toolbar}><div className={moduleStyles.tabs} role="tablist" aria-label="Builder skills" onKeyDown={event => {
       const current = memberCategories.indexOf(category);
       const next = event.key === "ArrowRight" ? (current + 1) % memberCategories.length : event.key === "ArrowLeft" ? (current + memberCategories.length - 1) % memberCategories.length : event.key === "Home" ? 0 : event.key === "End" ? memberCategories.length - 1 : null;

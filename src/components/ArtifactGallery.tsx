@@ -14,7 +14,8 @@ type Artifact = GalleryItem;
 // Exported (November 3) so the /community project explorer reuses the same entries; behaviour here is unchanged.
 export const guildPortal: Artifact = {
   id: "raidguild-portal", title: "The Portal", category: "Interactive experience",
-  description: "Step into RaidGuild's world and follow the rabbit to begin a three-clue discovery trail through the site.",
+  // November 10 (owner, option A): the on-page hunt is retired; the Portal opens on its three destinations.
+  description: "Step into RaidGuild's world through the Portal, then choose where to go next: the Guild's practices, a project, or the community.",
   image: "/images/neo/hero-dark-poster.png", kind: "experiment",
 };
 export const fallbackArtifacts: Artifact[] = [
@@ -160,7 +161,7 @@ export default function ArtifactGallery({ collaborators = [], showFeatured = tru
   const card = (item: typeof artifacts[number]) => <article key={item.id} data-artifact={item.id} data-peek={peek === item.id} className={`${styles.card} ${item.id === guildPortal.id ? styles.portalCard : ""}`}>
     <button type="button" aria-expanded={selected === item.id} aria-controls="artifact-detail" aria-label={`Unfold ${item.title}. ${item.description}`} onClick={() => select(item.id)} onFocus={() => setPeek(item.id)} onBlur={() => setPeek(null)}>
       <span className={styles.visual}>{preview(item)}<b aria-hidden="true">+</b></span>
-      <span className={styles.caption} aria-hidden="true"><strong>{item.title}</strong><small>{item.id === guildPortal.id ? "Open the experience · Start the hunt" : item.description}</small></span>
+      <span className={styles.caption} aria-hidden="true"><strong>{item.title}</strong><small>{item.id === guildPortal.id ? "Open the experience" : item.description}</small></span>
     </button>
   </article>;
   const rows = (items: GalleryItem[]) => Array.from({ length: Math.ceil(items.length / columns) }, (_, row) => {
@@ -209,7 +210,7 @@ export default function ArtifactGallery({ collaborators = [], showFeatured = tru
       {!compact && filterButtons}
       {active ? <>
           <button ref={closeButton} className={styles.back} onClick={() => select(null)}>← Back to the collection <span aria-hidden="true">×</span></button>
-          <div className={styles.feature}>{preview(active, true)}<div><p>{active.category}</p><h4>{active.title}</h4><p>{active.description}</p>{active.id === guildPortal.id ? <Dialog.Trigger asChild><button className={styles.portalLaunch} type="button" onClick={onOpenPortal}>Open the Portal · Begin the hunt ↗<small>Opens an experience on this page</small></button></Dialog.Trigger> : (active.href || active.kind !== "collaborator") && <a href={active.href || `https://portal-artifacts-production.up.railway.app/${active.id}/`} target="_blank" rel="noopener noreferrer">{active.kind === "collaborator" ? `Visit ${active.title}` : active.kind === "post" ? "Read the post" : "Explore experiment"} ↗<small>Opens in a new tab</small></a>}</div></div>
+          <div className={styles.feature}>{preview(active, true)}<div><p>{active.category}</p><h4>{active.title}</h4><p>{active.description}</p>{active.id === guildPortal.id ? <Dialog.Trigger asChild><button className={styles.portalLaunch} type="button" onClick={onOpenPortal}>Open the Portal ↗<small>Opens an experience on this page</small></button></Dialog.Trigger> : (active.href || active.kind !== "collaborator") && <a href={active.href || `https://portal-artifacts-production.up.railway.app/${active.id}/`} target="_blank" rel="noopener noreferrer">{active.kind === "collaborator" ? `Visit ${active.title}` : active.kind === "post" ? "Read the post" : "Explore experiment"} ↗<small>Opens in a new tab</small></a>}</div></div>
       </> : <div className={styles.empty}><span aria-hidden="true">↖</span><h4>Follow your curiosity.</h4><p>{compact ? "Select a card to explore a field note, a digital experience, a game or a tool." : collaborators.length ? "Select a card to explore a field note, a public experiment, or someone we’ve built with." : "Select a card to explore a field note or a public experiment."}</p><p>Choose a category above to narrow the collection.</p></div>}
     </aside>
     </div>

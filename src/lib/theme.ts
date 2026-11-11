@@ -11,7 +11,8 @@ export function parseTheme(value: unknown): Theme | null {
 }
 
 export function routeDefaultTheme(pathname: string): Theme | null {
-  if (pathname === "/clients" || pathname.startsWith("/clients/")) return "light";
+  // Hire the DAO ("/" since November 10) opens in Day, Join the DAO in Night.
+  if (pathname === "/") return "light";
   if (pathname === "/community" || pathname.startsWith("/community/")) return "dark";
   return null;
 }
@@ -27,7 +28,7 @@ export function resolveTheme({ stored, pathname, systemPrefersDark }: {
 // Runs before first paint (inlined in the root layout) so the initial render never
 // shows the wrong theme. Keep it in step with resolveTheme; tests/theme.test.mjs
 // checks both against the same cases.
-export const themeBootScript = `(function(){var d=document.documentElement,t=null;try{var s=localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});if(s==="light"||s==="dark")t=s}catch(e){}if(!t){var p=location.pathname;if(p==="/clients"||p.indexOf("/clients/")===0)t="light";else if(p==="/community"||p.indexOf("/community/")===0)t="dark";else{try{t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch(e){t="light"}}}d.dataset.theme=t;d.style.colorScheme=t})();`;
+export const themeBootScript = `(function(){var d=document.documentElement,t=null;try{var s=localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});if(s==="light"||s==="dark")t=s}catch(e){}if(!t){var p=location.pathname;if(p==="/")t="light";else if(p==="/community"||p.indexOf("/community/")===0)t="dark";else{try{t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch(e){t="light"}}}d.dataset.theme=t;d.style.colorScheme=t})();`;
 
 export function readStoredTheme(): Theme | null {
   try {
