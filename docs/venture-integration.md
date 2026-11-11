@@ -1398,3 +1398,12 @@ in `lib/validation.ts`, tests in `tests/inquiry-link.test.mjs`).
 | 404 page title (owner's wording) | "This trail ends here." |
 | 404 page link (owner's wording) | "Back to RaidGuild" |
 | 404 browser tab | "This trail ends here" |
+
+## Why Builders Join the Guild cards — 2026-11-11
+
+`/community#benefits` (`MemberBenefits.tsx`, `benefits.module.css`): each card lays itself out from its own width
+(container query). From 560 px the illustration is a square column on the left, the full interior height of the card,
+on the card's surface and shown whole (contain); below that the illustration sits above the copy in the same card,
+still square (160–240 px). Two cards per row from 700 px. Eyebrows in Ubuntu Mono 14 px with the theme accent; titles
+(Last Duel, 15/18 px) and bodies (Ubuntu 15 px) a step smaller and free to wrap, left-aligned. Copy and editorial ids
+unchanged. Open: the pink eyebrows at 14 px are 3.4:1 (Day) and 4.2:1 (Night), below 4.5:1 for small text, as before.
