@@ -34,7 +34,7 @@
 /* Metadata under the viewport. */
 .meta { display: grid; gap: 10px; margin-top: 24px; max-width: 46em; min-width: 0; }
 .metaCategory { color: var(--ex-accent); font: 700 var(--type-marker, 14px)/1.35 var(--font-marker, var(--font-mono)), monospace; letter-spacing: var(--tracking-marker, .1em); margin: 0; text-transform: uppercase; }
-/* The artifact's title is technical, not display (owner): Last Duel Bold upright, mixed case, one line, fitted to
+/* The artifact's title is technical, not display (owner): Venture Beyond Bold Extended upright, mixed case, one line, fitted to
    the column from its length (--chars, set inline), 16–28 px; anything longer ends in an ellipsis (full title in
    the title attribute). */
 .meta { container-type: inline-size; }
@@ -81,8 +81,8 @@
 .lightbox { background: var(--color-dark-green, #102d2c); border: 2px solid rgba(239, 233, 215, .22); border-radius: 20px; color: var(--color-cream, #efe9d7); display: grid; gap: 14px; left: 50%; max-height: 92vh; padding: 16px; position: fixed; top: 50%; transform: translate(-50%, -50%); width: min(1280px, 94vw); z-index: 91; }
 :global(html[data-theme="dark"]) .lightbox { background: var(--color-navy, #191e4e); }
 .lightboxBar { align-items: center; display: flex; gap: 16px; justify-content: space-between; }
-/* The dialog renders in a portal outside .site, where --font-display is another family: name Last Duel directly. */
-.lightboxTitle { font: 700 clamp(18px, 2vw, 24px)/1.2 var(--font-last-duel), sans-serif; margin: 0; text-transform: uppercase; }
+/* The dialog renders in a portal outside .site, where --font-display is another family: name Venture Beyond directly. */
+.lightboxTitle { font: 700 clamp(18px, 2vw, 24px)/1.2 var(--font-venture-beyond), sans-serif; margin: 0; text-transform: uppercase; }
 .lightboxClose { align-items: center; background: none; border: 2px solid currentColor; border-radius: 100px; color: inherit; cursor: pointer; display: inline-flex; flex: 0 0 auto; font: 700 14px/1 var(--font-mono), monospace; gap: 8px; letter-spacing: .06em; min-height: 44px; padding: 0 18px; text-transform: uppercase; white-space: nowrap; }
 .lightboxClose:focus-visible { outline: 3px solid var(--color-pink, #ee3c78); outline-offset: 3px; }
 .lightboxMedia { border-radius: 12px; min-height: 0; overflow: hidden; }

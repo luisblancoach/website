@@ -6,6 +6,10 @@ Dates are commit dates (UTC-3), and every commit is reachable in this repository
 
 ## Unreleased
 
+- **Venture Beyond replaces Last Duel (owner, 2026-11-24):** open-source display faces (SIL OFL 1.1) from the brand
+  system in `public/fonts/venture-beyond/`; two-level headings in Extended Black Retalic over Extended Black Italic
+  (native, no synthesis); Last Duel files, loaders and variables removed. Tests 144/144, tsc, lint 0 errors, build
+  18/18. Branch `feat/venture-beyond-typeface`; record: `docs/venture-integration.md`, 2026-11-24.
 - **Two-page architecture (owner, 2026-11-10):** Hire the DAO at `/` (unchanged page),
   `/community` unchanged, `/agency` and `/clients` → `/` (308, query kept, no loops); the former `/` entry page
   retired; SEO, sitemap, `llms.txt`, theme, navigation and Editorial Mode follow (copy ids unchanged). Tests 137/137;

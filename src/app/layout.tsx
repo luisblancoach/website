@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
 import {
   afacadFlux,
-  lastDuel,
-  lastDuelRetalic,
-  lastDuelExtended,
   ebGaramond,
   maziusDisplay,
   ubuntu,
   ubuntuMono,
 } from "@/lib/fonts";
 import "./globals.css";
+import "./venture-beyond.css";
 // import { ThemeProvider } from "next-themes";
 import { Providers } from "@/providers/providers";
 import VercelAnalytics from "@/components/VercelAnalytics";
@@ -55,6 +53,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+        {/* Venture Beyond display faces (src/app/venture-beyond.css), preloaded as next/font did for Last Duel. */}
+        <link rel="preload" href="/fonts/venture-beyond/VentureBeyond-Latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/venture-beyond/VentureBeyond-Italic-Latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/venture-beyond/VentureBeyond-Retalic-Latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <script
           async
           src="https://plausible-production-78b3.up.railway.app/js/pa-FkymWO7gixkQ6_9ux01Qn.js"
@@ -67,7 +69,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${lastDuel.variable} ${lastDuelRetalic.variable} ${lastDuelExtended.variable} ${afacadFlux.variable} ${ebGaramond.variable} ${maziusDisplay.variable} ${ubuntu.variable} ${ubuntuMono.variable} antialiased`}
+        className={`${afacadFlux.variable} ${ebGaramond.variable} ${maziusDisplay.variable} ${ubuntu.variable} ${ubuntuMono.variable} antialiased`}
       >
         <VercelAnalytics />
         {/* <ThemeProvider

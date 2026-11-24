@@ -3,6 +3,22 @@
 Current state verified on **2026-11-10 (-0300), evening (editorial cycle 02 close)** from the repository, the remotes, GitHub and the live hosts. Everything
 below "Session log" is history; the sections in this first part are the source of truth.
 
+## Venture Beyond typography migration · 2026-11-24
+
+- **Worktree:** `/Users/louchi/Projects/raidguild-vb-typeface`, a new isolated worktree of `~/Projects/raidguild-venture-beyond`
+  on branch `feat/venture-beyond-typeface`, created from `origin/main` `97b9887` (the commit deployed to www.raidguild.org,
+  GitHub Production deployment of 2026-11-11). The integration worktree and its uncommitted owner files were not touched;
+  stash empty; approved baseline `checkpoint/oct23-iteration` = `40f3910` verified.
+- **Change:** Last Duel → Venture Beyond (brand system PRs #34 and #35, merged 2026-11-23). Decision, metrics and the
+  comparison: `docs/venture-integration.md`, 2026-11-24; files: `docs/asset-provenance.md`, 2026-11-24.
+- **Checks (this branch):** `bun install --frozen-lockfile`; `bun run test` 144/144 (7 new in `tests/typography.test.mjs`);
+  `bunx tsc --noEmit --incremental false` 0 errors; `bun run lint` 0 errors, 1 existing `ThemeAnchor` warning;
+  `SHOW_REVIEW_FLAGS=false bun run build` 18/18 static pages.
+- **Comparison with production:** measured, not pixel-diffed (see the decision record). October 23 reference: not compared
+  (this change is typographic only and production is the approved state). Editorial parity: no copy changed.
+- **Next priority:** owner review of the PR; merge and deployment are owner steps. Open question: Afacad Flux, Mazius
+  Display and EB Garamond still load on every page through `layout.tsx` for the FrontDoor body and pre-redesign pages.
+
 ## Upstream records (raid-guild/website `main`, PRs #107 and #108), kept verbatim
 
 ### Social preview cards · 2026-11-11
