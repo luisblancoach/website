@@ -293,3 +293,19 @@ pill icon masks (`venture.module.css`) use the new files. Untracked until commit
 ## Social preview cards — 2026-11-11
 
 Supplied directly by the project owner for this social-preview update. Copied unchanged from Downloads: `venturebeyond_thumbnail.png` → `public/opengraph-image.png`; `hire-dao-thumbnail.png` → `public/images/venture/og/hire-dao-2026.png`; `join-dao-thumbnail.png` → `public/images/venture/og/join-dao-2026.png`. Each is 1731 × 909 PNG. No additional authorship or licensing claim is made.
+
+## Venture Beyond display fonts (2026-11-24)
+
+Copied unchanged from `raid-guild/brand` `public/fonts/venture-beyond/` at `6e3ed06` (PRs #34 and #35) into
+`public/fonts/venture-beyond/`, with `OFL.txt` and `SHA256SUMS`; `tests/typography.test.mjs` checks the hashes. Venture
+Beyond is derived from Archivo 2.001 (Omnibus-Type) under the SIL Open Font License 1.1; the build pipeline lives in the
+brand repository under `typography/venture-beyond/`. Variable: weight 100–900, width 62–125; Latin subsets.
+
+| File | CSS family / style | SHA-256 |
+|---|---|---|
+| `VentureBeyond-Latin.woff2` | Venture Beyond / normal | `9e3a32c28f2ba7c1a4d5fd226b23ebd9a77bbfb3fd1dbd5b8c81a7abc7fff076` |
+| `VentureBeyond-Italic-Latin.woff2` | Venture Beyond / italic | `e73b3bcb057a50ae23e6949ead450ad48af1bd0d21a1045270799e4ed54310b9` |
+| `VentureBeyond-Retalic-Latin.woff2` | Venture Beyond Retalic / normal (10° reverse slant) | `730d423e8bf0d4b5f4b4b78164416c7b7622b1c43c73cfe627bd12ecfb2d0802` |
+
+They replace the Last Duel OTF files (section of 2026-11-02), removed from the tracked tree the same day; they remain in
+Git history. Rewriting history to purge them would need separate owner approval.

@@ -6,7 +6,7 @@
    Type: section titles take the two-level hierarchy (venture.module.css);
    card titles repeat it at card scale (Retalic over extended italic), each
    line one line: sizes are fitted to the card so the longest lines ("Smart
-   contracts," 15 characters, "and hackerhouses" 16) fit; labels use the section-marker tokens (Last Duel Bold); body,
+   contracts," 15 characters, "and hackerhouses" 16) fit; labels use the section-marker tokens (Venture Beyond Bold Extended); body,
    links and FAQ text are Ubuntu. */
 
 .gallery, .faq, .reasons {
@@ -56,9 +56,9 @@
 /* The audience routes set every h3 in Ubuntu with !important; card titles are
    display text, so they opt back in. */
 :global(html) :global([data-audience]) .card .cardTitle,
-:global(html) .card .cardTitle { font-family: var(--font-last-duel-retalic), var(--font-display), sans-serif !important; font-size: min(17px, 100cqi / 18.6); font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1.1; margin: 0; text-transform: uppercase; white-space: nowrap; }
+:global(html) .card .cardTitle { font-family: var(--font-venture-beyond-retalic), var(--font-display), sans-serif !important; font-size: min(17px, 100cqi / 18.6); font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1.1; margin: 0; text-transform: uppercase; white-space: nowrap; }
 :global(html) :global([data-audience]) .card .cardTitle em,
-:global(html) .card .cardTitle em { color: var(--gal-accent); display: inline-block; font-family: var(--font-last-duel-extended), var(--font-display), sans-serif !important; font-size: min(23px, 100cqi / 16.8); font-style: italic; font-synthesis: style; font-weight: 700; line-height: 1.05; margin-top: .12em; }
+:global(html) .card .cardTitle em { color: var(--gal-accent); display: inline-block; font-family: var(--font-venture-beyond), var(--font-display), sans-serif !important; font-size: min(23px, 100cqi / 16.8); font-style: italic; font-synthesis: none; font-weight: 700; line-height: 1.05; margin-top: .12em; }
 .cardBody { font: 400 16px/1.5 var(--font-body), sans-serif; margin: 0; }
 .cardLink { align-self: flex-start; color: inherit; font: 700 var(--type-ui, 14px)/1.4 var(--font-mono), monospace; letter-spacing: .06em; margin-top: auto; min-height: 44px; padding-top: 8px; text-decoration: underline; text-transform: uppercase; text-underline-offset: 5px; display: inline-flex; align-items: center; gap: 6px; }
 @media (hover: hover) { .cardLink:hover { text-decoration-thickness: 2px; } }

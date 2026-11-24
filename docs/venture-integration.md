@@ -1377,3 +1377,34 @@ The home page uses Venture Beyond; `/clients` and `/agency` use Hire the DAO; `/
 ## Integration with `main` — 2026-11-11
 
 Branch `feat/venture-beyond-agency-community` replays `feat/venture-beyond-integration` (`7417113..c7cd52f`) on `main` `256b2ff`. Hire the DAO renders at `/`; `/agency` and `/clients` redirect permanently to `/` (one hop, query kept), which supersedes the non-redirecting `/agency` alias above. The 2026 cards stay: Hire the DAO on `/`, Join the DAO on `/community`, Venture Beyond as the site-wide default. The share-image descriptions follow the new cards (text from PR #108, marked for editorial approval). The Cloudflare review kit (`deploy/cloudflare/`) is not part of this branch.
+
+## Venture Beyond replaces Last Duel — 2026-11-24
+
+**Decision (owner, approved brand direction):** the landing pages' display family becomes **Venture Beyond**, RaidGuild's
+open-source variable family (SIL OFL 1.1, derived from Archivo 2.001 by Omnibus-Type; brand repository PRs #34 and #35,
+merged 2026-11-23). Last Duel is retired because its documented licence field ("PRIVATE / INTERNAL USE ONLY ... No
+redistribution, sublicensing, web hosting ...", see `docs/asset-provenance.md`, 2026-11-02) restricts redistribution and
+web hosting; this removes that risk. No legal finding is implied.
+
+- **Faces:** two-level headings keep the hierarchy pass's structure, now in native faces: top lines in Venture Beyond
+  **Extended Black Retalic** (10° back-slant), bottom lines in **Extended Black Italic** (the real italic, no synthesis),
+  both at 900 as approved ("HARD PROBLEMS," / "WORKING PRODUCTS"). Standalone labels, markers, case-study, builder and
+  steward names: Venture Beyond Bold Extended, upright, as before in Last Duel Bold Extended 2. Card titles keep 700.
+  Functional typography stays Ubuntu / Ubuntu Mono.
+- **Metrics:** `src/app/venture-beyond.css` registers the three WOFF2 files with `font-stretch: 125%` (single value, so
+  every line is Extended, as Last Duel's only upright width was Extended 2) and `size-adjust: 105.4%` (cap height 0.687 em
+  → Last Duel Extended 2's 0.724 em). Measured display lines are then 2–7% narrower than in Last Duel, so the fitted
+  cqi/vw divisors still hold. Registered with `@font-face` instead of next/font because next/font drops `declarations`
+  under Turbopack (verified in the build output); `layout.tsx` preloads the three files.
+- **/chat:** the "signal." accent now names the real Retalic at 700 in the normal style (Last Duel Retalic only had a
+  700 cut, and the italic request synthesized an oblique on top of the back-slant).
+- **Removed:** `public/fonts/LastDuel-*.otf` (5 tracked files), the `lastDuel`, `lastDuelRetalic` and `lastDuelExtended`
+  loaders and the `--font-last-duel*` variables. Afacad Flux (FrontDoor body), Mazius Display and EB Garamond (pre-redesign
+  pages) are not Last Duel and are unchanged.
+- **Visual comparison** (production build of this branch vs https://www.raidguild.org, `main` `97b9887`, same Chrome):
+  every display-font element measured for line count, text width, height and overflow. `/` at 1440, 768 and 390 px and
+  `/community` at 1600, 768 and 390 px: no new overflow; text widths median 0.93 of Last Duel. Line changes, all one line
+  fewer: the footer tagline at 390 ("INDEPENDENT MINDS." no longer breaks before "MINDS."), the creed at 768 (5 → 4 lines),
+  and on `/community` "A scribe for the Guild." (768) and "and raidguild domain" (390, 768), which Last Duel wrapped although
+  the hierarchy rule fits them on one line. Page height −24 to −100 px. Desktop `/` and `/community`: no line, height or
+  overflow change. Not compared: Night theme on `/` (Day only), widths other than those listed, `/witch` (no display face).

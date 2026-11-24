@@ -1,0 +1,55 @@
+/* Venture Beyond, RaidGuild's open-source display family (November 24, 2026;
+   it replaces Last Duel, whose documented licence restricts redistribution and
+   web hosting). SIL Open Font License 1.1, derived from Archivo 2.001 by
+   Omnibus-Type. The WOFF2 files and OFL.txt in public/fonts/venture-beyond/ are
+   copied unchanged from raid-guild/brand public/fonts/venture-beyond/ at 6e3ed06
+   (SHA256SUMS there and here; tests/typography.test.mjs checks them).
+
+   Two families, as in the brand system: "Venture Beyond" (Upright and a real
+   Italic) and "Venture Beyond Retalic" (10° reverse slant), its own family so
+   that `font-style: normal` selects it. font-synthesis stays off on the landing
+   pages: every weight and slant used here is a native face.
+
+   Registered here rather than with next/font because two descriptors keep the
+   approved compositions, which were fitted to Last Duel's Extended 2 cuts, and
+   next/font under Turbopack drops `declarations`:
+   - font-stretch 125% (one value, not a range): every line renders at the
+     Extended width, as Last Duel's only upright width was Extended 2. Widen the
+     range (and set font-stretch per rule) to use other widths.
+   - size-adjust 105.4%: Venture Beyond's capitals are 0.687 em tall, Last Duel
+     Extended 2's 0.724 em, so every fitted size keeps its visual height. At that
+     size the measured display lines stay 2-7% narrower than in Last Duel, so the
+     fitted widths (cqi and vw divisors) still hold.
+   layout.tsx preloads the three files, as next/font did for Last Duel. */
+@font-face {
+  font-family: "Venture Beyond";
+  src: url("/fonts/venture-beyond/VentureBeyond-Latin.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 125%;
+  size-adjust: 105.4%;
+}
+@font-face {
+  font-family: "Venture Beyond";
+  src: url("/fonts/venture-beyond/VentureBeyond-Italic-Latin.woff2") format("woff2");
+  font-display: swap;
+  font-style: italic;
+  font-weight: 100 900;
+  font-stretch: 125%;
+  size-adjust: 105.4%;
+}
+@font-face {
+  font-family: "Venture Beyond Retalic";
+  src: url("/fonts/venture-beyond/VentureBeyond-Retalic-Latin.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 125%;
+  size-adjust: 105.4%;
+}
+
+:root {
+  --font-venture-beyond: "Venture Beyond";
+  --font-venture-beyond-retalic: "Venture Beyond Retalic", "Venture Beyond";
+}
