@@ -1408,3 +1408,15 @@ web hosting; this removes that risk. No legal finding is implied.
   and on `/community` "A scribe for the Guild." (768) and "and raidguild domain" (390, 768), which Last Duel wrapped although
   the hierarchy rule fits them on one line. Page height −24 to −100 px. Desktop `/` and `/community`: no line, height or
   overflow change. Not compared: Night theme on `/` (Day only), widths other than those listed, `/witch` (no display face).
+
+## Night Moloch CTA: navy instead of dark green — 2026-11-24
+
+**Correction (owner):** in Night, the dark-green CTA should not exist. The Moloch CTA ("Find your path into the Guild",
+`/community`) had been dark green in both themes since the November 10 polish. In Night it now takes the Night navy
+surface with the shared Night secondary-CTA tokens (`--color-navy` #191E4E, hover #20265C, pressed #262D69; edge navy),
+in `feature.module.css`. Label, icon ring and glyph stay cream (12.9:1 on navy; 11.6 and 10.4:1 on hover and pressed).
+Copy, size (390 × 56 at 1600 px), padding, gap, icon, hierarchy, lift, pressed inset and focus ring are unchanged. Day
+keeps the dark green. Audit: every link and button on `/` and `/community` in Night, by computed background and CTA
+tokens. This was the only green CTA; none remain. `tests/cta-contrast.test.mjs` pins it.
+Shipped as a separate hotfix (`fix/night-moloch-cta-navy` from `main` `8164bf6`): PR #111 was squash-merged and deployed
+before this commit reached it, so production kept the dark-green Night CTA.

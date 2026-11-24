@@ -110,4 +110,14 @@
   --cta-secondary-fg: var(--color-cream, #efe9d7);
   --cta-secondary-edge: var(--color-dark-green, #102d2c);
 }
+/* Night (November 24, owner): theme-colour correction only. The dark-green surface belongs to Day; in Night the
+   Moloch CTA takes the Night navy surface, with the same tokens as the shared Night secondary CTA
+   (venture.module.css: navy, #20265C hover, #262D69 pressed). The label, icon ring and glyph stay cream (12.9:1);
+   copy, size, spacing, icon, hierarchy and behaviour are unchanged. Day keeps the dark green above. */
+:global(html[data-theme="dark"]) .moloch .cta {
+  --cta-secondary-bg: var(--color-navy, #191e4e);
+  --cta-secondary-hover-bg: #20265c;
+  --cta-secondary-active-bg: #262d69;
+  --cta-secondary-edge: var(--color-navy, #191e4e);
+}
 :global(html) .moloch .cta.cta > :last-child { background: transparent; border-color: var(--color-cream, #efe9d7); color: var(--color-cream, #efe9d7); }
