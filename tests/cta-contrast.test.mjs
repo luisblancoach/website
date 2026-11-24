@@ -137,4 +137,19 @@ describe("coral scene: Moloch (both themes)", () => {
     assert.ok(contrast(palette["color-white"], onCoral) >= 4.5, "white on deep navy");
     assert.ok(contrast(onCoral, coral) >= 3, "navy edge on coral");
   });
+
+  test("Moloch CTA: dark green in Day, the Night navy surface in Night (no green CTA in Night)", () => {
+    const night = feature.slice(feature.indexOf(':global(html[data-theme="dark"]) .moloch .cta {'));
+    const block = night.slice(0, night.indexOf("}"));
+    assert.match(feature, /\.moloch \.cta \{\s*--cta-secondary-bg: var\(--color-dark-green, #102d2c\);/, "Day: dark green");
+    assert.match(block, /--cta-secondary-bg: var\(--color-navy, #191e4e\);/);
+    assert.match(block, /--cta-secondary-hover-bg: #20265c;/);
+    assert.match(block, /--cta-secondary-active-bg: #262d69;/);
+    assert.match(block, /--cta-secondary-edge: var\(--color-navy, #191e4e\);/);
+    assert.doesNotMatch(block, /dark-green|#102d2c|#1a3f3d|#0a2120/i, "no green token in Night");
+    for (const bg of [palette["color-navy"], "#20265c", "#262d69"]) {
+      assert.ok(contrast(palette["color-cream"], bg) >= 4.5, `cream label on ${bg}: ${contrast(palette["color-cream"], bg).toFixed(2)}:1`);
+    }
+    assert.ok(contrast(palette["color-navy"], coral) >= 3, "navy surface on coral (non-text)");
+  });
 });

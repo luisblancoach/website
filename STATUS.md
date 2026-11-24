@@ -16,6 +16,9 @@ below "Session log" is history; the sections in this first part are the source o
   `SHOW_REVIEW_FLAGS=false bun run build` 18/18 static pages.
 - **Comparison with production:** measured, not pixel-diffed (see the decision record). October 23 reference: not compared
   (this change is typographic only and production is the approved state). Editorial parity: no copy changed.
+- **Night Moloch CTA (same day, owner):** dark green → Night navy in `feature.module.css`; the only green CTA in Night on
+  `/` and `/community` (computed-style audit). Record: `docs/venture-integration.md`, 2026-11-24. Tests 145/145, tsc,
+  lint 0 errors, build 18/18.
 - **Next priority:** owner review of the PR; merge and deployment are owner steps. Open question: Afacad Flux, Mazius
   Display and EB Garamond still load on every page through `layout.tsx` for the FrontDoor body and pre-redesign pages.
 
